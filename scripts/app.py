@@ -7,6 +7,7 @@ import datetime
 import matplotlib.pyplot as plt
 from matplotlib import style
 
+quandl.ApiConfig.api_key = 'yM2zzAs6_DxdeT86rtZY'
 
 df = quandl.get("WIKI/GOOGL")
 

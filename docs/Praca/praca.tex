@@ -1,0 +1,149 @@
+\documentclass[a4paper, twoside, 11pt, openright]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{polski}
+\usepackage{float}
+\raggedbottom
+
+\usepackage[left=3.0cm, right=2.0cm, top=2.5cm, bottom=2.5cm]{geometry}
+
+% PERSONAL data about the thesis
+\newcommand{\myTitle}{Metodyka porównania algorytmów prognozy do wspomagania decyzji giełdowych}
+\newcommand{\myName}{Nikodem Wiśniewski}
+\newcommand{\myNumber}{260907}
+\newcommand{\myThesisType}{Praca dyplomowa magisterska}
+\newcommand{\myCourse}{Informatyka}
+\newcommand{\myProf}{dr hab. inż. Jerzy Balicki}
+\newcommand{\myFaculty}{Wydział Matematyki i Nauk Informacyjnych}
+\newcommand{\myUni}{Politechnika Warszawska}
+\newcommand{\myLocation}{Warszawa}
+\newcommand{\myYear}{2019}
+\newcommand{\myKeywords}{}
+\newcommand{\myKeywordsPL}{}
+
+
+% BIBLIOGRAPHY
+\usepackage{biblatex}
+\usepackage{csquotes}
+\DeclareQuoteStyle[quotes]{polish}
+{\quotedblbase}
+{\textquotedblright}
+[0.05em]
+{\quotesinglbase}
+{\fixligatures\textquoteright}
+\DeclareQuoteAlias[quotes]{polish}{polish}
+\DeclareQuoteOption{polish}
+
+% DOCUMENT settings
+
+
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{indentfirst}
+\usepackage{wrapfig}
+\usepackage[font=footnotesize, % equivalent to 9 pt font
+			labelfont=bf, 
+			justification=justified, 
+			singlelinecheck=false]{caption} 
+\usepackage[justification=centering]{subcaption} % two images side by side captions
+\usepackage{tabularx, booktabs} % pretty LaTeX tables
+\usepackage{siunitx} % units SI e.g. \SI{10}{\kilogram\per\meter\square}
+\usepackage{mathtools} % amsmath, symbols such as brackets, arrows, equation numbering only for referrenced eqs.
+%\usepackage[parfill]{parskip} % spacing between paragraphs instead of indent
+%\parfillskip 0pt plus 0.75\textwidth % get rid of widows at the end of paragraphs
+\frenchspacing % for "Polish" spaces after the sentence
+\usepackage{polski} % Polish rules of hyphenation
+\usepackage{dashrule} % for dotted lines in declarations page
+\usepackage{emptypage} % removes headers on empty pages
+\usepackage{fancyhdr} % header and footer settings
+\pagestyle{fancy}
+\fancyhf{}
+\newcommand{\fncyfront}{%
+	\fancyhead[RO]{}
+	\fancyfoot[RO]{}
+	\fancyhead[LE]{}
+	\fancyfoot[LE]{}
+	\fancyhead[RE,LO]{}
+	\fancyfoot[C]{}
+	\renewcommand{\headrulewidth}{0pt}}
+\newcommand{\fncymain}{%
+	\fancyhead[RO]{{\footnotesize \rightmark}}
+	\fancyfoot[RO]{\thepage}
+	\fancyhead[LE]{{\footnotesize \leftmark}}
+	\fancyfoot[LE]{\thepage}
+	\fancyfoot[C]{}
+	\renewcommand{\headrulewidth}{0.3pt}}
+	
+\renewcommand*{\tablename}{Tabela} 
+	
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
+
+
+
+% FONT settings
+\usepackage[T1]{fontenc}
+\usepackage{uarial} % you can change to 'helvet' for Helvetica clone, 'uarial' for Arial clone, 'lmodern' for Latin Modern
+\renewcommand{\familydefault}{\sfdefault} % change font to sans serif
+\usepackage{amsfonts} % mathematical fonts
+\usepackage{inconsolata} % monospaced font in urls and \texttt
+%\usepackage{url}
+%\urlstyle{same}
+
+% DEBUG
+\usepackage{lipsum}
+\usepackage{etoolbox} % removes page number in table of contents
+\patchcmd{\chapter}{plain}{empty}{}{}
+
+
+\begin{document}
+\fncyfront
+%*******************************************************
+% Titlepage
+%*******************************************************
+\begin{titlepage}
+\begingroup
+\begin{center}		
+			\includegraphics[width=1.0\textwidth]{img/pw_header}
+			
+			\vspace{1.0cm}
+			\includegraphics[width=1.0\textwidth]{img/pw_title}
+			
+
+			na kierunku \myCourse \\
+			\vspace{1cm}
+			{\fontsize{14}{18}\selectfont \myTitle} \\ 
+			
+			\vspace{1.5cm}
+			\fontsize{21}{25}\selectfont \myName \\
+			\fontsize{12}{14}\selectfont
+			Numer albumu \myNumber \\
+
+			\vspace{6.5cm}
+			promotor \\
+			\myProf \\
+			\vspace{0.5cm}
+			\vfill 
+			Warszawa, \myYear
+        \vfill                      
+\end{center}
+\endgroup
+\end{titlepage}
+
+\newpage
+\hfill
+\begin{table}[b]
+\centering
+\begin{tabular}[t]{ccc}
+............................................. & \hspace*{100pt} & .............................................\\
+podpis promotora & \hspace*{100pt} & podpis autora
+\end{tabular}
+\end{table}
+
+\fncymain
+
+\newpage
+
+\section{Opis projektu}
+
+
+\end{document}
