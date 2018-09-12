@@ -1,25 +1,27 @@
 import math
 import numpy as np
-import quandl
 from sklearn import preprocessing, cross_validation, svm
 from sklearn.linear_model import LinearRegression
 import datetime
 import matplotlib.pyplot as plt
 from matplotlib import style
+import scripts.stock as stck
 
-quandl.ApiConfig.api_key = 'yM2zzAs6_DxdeT86rtZY'
+alpha = stck.AlphaVantage()
+df = alpha.daily_adjusted('GOOGL')
 
-df = quandl.get("WIKI/GOOGL")
+PCT_CHANGE = 'PCT_change'
+HL_PCT = 'HL_PCT'
 
 print(df.tail())
 
-df = df[['Adj. Open', 'Adj. High', 'Adj. Low', 'Adj. Close', 'Adj. Volume']]
+df = df[[alpha.OPEN_COL, alpha.HIGH_COL, alpha.LOW_COL, alpha.ADJUSTED_CLOSE_COL, alpha.VOLUME_COL]]
 
-df['HL_PCT'] = (df['Adj. High'] - df['Adj. Low']) / df['Adj. Low'] * 100.0
-df['PCT_change'] = (df['Adj. Close'] - df['Adj. Open']) / df['Adj. Open'] * 100.0
-df = df[['Adj. Close', 'HL_PCT', 'PCT_change', 'Adj. Volume']]
+df[HL_PCT] = (df[alpha.HIGH_COL] - df[alpha.LOW_COL]) / df[alpha.LOW_COL] * 100.0
+df[PCT_CHANGE] = (df[alpha.ADJUSTED_CLOSE_COL] - df[alpha.OPEN_COL]) / df[alpha.OPEN_COL] * 100.0
+df = df[[alpha.ADJUSTED_CLOSE_COL, HL_PCT, PCT_CHANGE, alpha.VOLUME_COL]]
 
-forecast_col = 'Adj. Close'
+forecast_col = alpha.ADJUSTED_CLOSE_COL
 df.fillna(value=-99999, inplace=True)
 forecast_out = int(math.ceil(0.01 * len(df)))
 df['label'] = df[forecast_col].shift(-forecast_out)
@@ -55,7 +57,7 @@ for i in forecast_set:
     next_unix += one_day_seconds
     df.loc[next_date] = [np.nan for _ in range(len(df.columns)-1)]+[i]
 
-df['Adj. Close'].plot()
+df[alpha.ADJUSTED_CLOSE_COL].plot()
 df['Forecast'].plot()
 plt.legend(loc=4)
 plt.xlabel('Date')

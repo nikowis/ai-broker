@@ -10,7 +10,7 @@ class AlphaVantage:
 
     OPEN_COL = '1. open'
     CLOSE_COL = '2. high'
-    HIGH = '3. low'
+    HIGH_COL = '3. low'
     LOW_COL = '4. close'
     ADJUSTED_CLOSE_COL = '5. adjusted close'
     VOLUME_COL = '6. volume'
@@ -30,7 +30,8 @@ class AlphaVantage:
         json = self.daily_adjusted_raw(ticker)
         keys = list(json.keys())
         series = keys[1]
-        dateframe = pd.DataFrame.from_dict(json[series], orient='index')
-        dateframe = dateframe.astype(float)
-        return dateframe
+        df = pd.DataFrame.from_dict(json[series], orient='index')
+        df = df.astype(float)
+        df.index = pd.to_datetime(df.index)
+        return df
 

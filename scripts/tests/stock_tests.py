@@ -19,7 +19,7 @@ class AlphaVantageTests(unittest.TestCase):
         result = s.daily_adjusted('GOOGL')
         self.assertTrue(result[stck.AlphaVantage.OPEN_COL].size > 1000)
         self.assertTrue(result[stck.AlphaVantage.CLOSE_COL].size > 1000)
-        self.assertTrue(result[stck.AlphaVantage.HIGH].size > 1000)
+        self.assertTrue(result[stck.AlphaVantage.HIGH_COL].size > 1000)
         self.assertTrue(result[stck.AlphaVantage.LOW_COL].size > 1000)
         self.assertTrue(result[stck.AlphaVantage.ADJUSTED_CLOSE_COL].size > 1000)
         self.assertTrue(result[stck.AlphaVantage.VOLUME_COL].size > 1000)
