@@ -1,5 +1,5 @@
 import numpy as np
-from sklearn import preprocessing, model_selection, svm
+from sklearn import preprocessing, model_selection
 import datetime
 import matplotlib.pyplot as plt
 from matplotlib import style
@@ -7,17 +7,18 @@ from matplotlib import style
 
 def predict(forecast_col, predictor, dateframe, forecast_days, plot=False):
     df = dateframe.copy()
+    df.dropna(inplace=True)
     df.fillna(value=-99999, inplace=True)
     df['label'] = df[forecast_col].shift(-forecast_days)
 
     X = np.array(df.drop(['label'], 1))
-    # X = preprocessing.scale(X)
+    #X = preprocessing.scale(X)
     X_lately = X[-forecast_days:]
     X = X[:-forecast_days]
 
-    df.dropna(inplace=True)
+    df_removed = df.dropna()
 
-    y = np.array(df['label'])
+    y = np.array(df_removed['label'])
 
     X_train, X_test, y_train, y_test = model_selection.train_test_split(X, y, test_size=0.2)
     predictor.fit(X_train, y_train)
