@@ -1,5 +1,5 @@
 import numpy as np
-from sklearn import preprocessing, cross_validation, svm
+from sklearn import preprocessing, model_selection, svm
 import datetime
 import matplotlib.pyplot as plt
 from matplotlib import style
@@ -18,7 +18,7 @@ def predict(forecast_col, predictor, dateframe, forecast_days):
 
     y = np.array(dateframe['label'])
 
-    X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y, test_size=0.2)
+    X_train, X_test, y_train, y_test = model_selection.train_test_split(X, y, test_size=0.2)
     predictor.fit(X_train, y_train)
     confidence = predictor.score(X_test, y_test)
 
