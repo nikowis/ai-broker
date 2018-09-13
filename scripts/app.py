@@ -5,7 +5,7 @@ from sklearn.linear_model import LinearRegression
 import datetime
 import matplotlib.pyplot as plt
 from matplotlib import style
-import scripts.stock as stck
+import scripts.alpha as stck
 
 alpha = stck.AlphaVantage()
 df = alpha.daily_adjusted('GOOGL')

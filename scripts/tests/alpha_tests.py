@@ -1,5 +1,5 @@
 import unittest
-import scripts.stock as stck
+import scripts.alpha as stck
 
 
 class AlphaVantageTests(unittest.TestCase):
