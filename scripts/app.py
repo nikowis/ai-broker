@@ -8,6 +8,7 @@ df = alpha.daily_adjusted('GOOGL')
 
 PCT_CHANGE = 'PCT_change'
 HL_PCT = 'HL_PCT'
+        
 
 print(df.tail())
 
@@ -17,4 +18,5 @@ df[HL_PCT] = (df[alpha.HIGH_COL] - df[alpha.LOW_COL]) / df[alpha.LOW_COL] * 100.
 df[PCT_CHANGE] = (df[alpha.ADJUSTED_CLOSE_COL] - df[alpha.OPEN_COL]) / df[alpha.OPEN_COL] * 100.0
 df = df[[alpha.ADJUSTED_CLOSE_COL, HL_PCT, PCT_CHANGE, alpha.VOLUME_COL]]
 
-model_runner.predict(alpha.ADJUSTED_CLOSE_COL, LinearRegression(n_jobs=-1), df, int(math.ceil(0.01 * len(df))))
+model_runner.predict(alpha.ADJUSTED_CLOSE_COL, LinearRegression(n_jobs=-1), df, 2, True)
+
