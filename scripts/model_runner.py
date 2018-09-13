@@ -1,11 +1,12 @@
 import numpy as np
+import pandas as pd
 from sklearn import preprocessing, model_selection
 import datetime
 import matplotlib.pyplot as plt
 from matplotlib import style
 
 
-def predict(forecast_col, predictor, dateframe, forecast_days, plot=False):
+def predict(forecast_col, predictor, dateframe, forecast_days, plot=False, plot_full_prediction=True):
     df = dateframe.copy()
     df.dropna(inplace=True)
     df.fillna(value=-99999, inplace=True)
@@ -42,6 +43,9 @@ def predict(forecast_col, predictor, dateframe, forecast_days, plot=False):
         df.loc[next_date] = [np.nan for _ in range(len(df.columns) - 1)] + [i]
 
     if plot:
+        if plot_full_prediction:
+            full_predictions = predictor.predict(X)
+            df['Forecast'][forecast_days:-forecast_days] = full_predictions
         df[forecast_col].plot()
         df['Forecast'].plot()
         plt.legend(loc=4)
