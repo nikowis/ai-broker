@@ -47,10 +47,12 @@ def predict(forecast_col, predictor, dateframe, forecast_days, plot=False, plot_
         if plot_full_prediction:
             full_predictions = predictor.predict(X)
             df['Forecast'][forecast_days:-forecast_days] = full_predictions
-        df[forecast_col].plot()
-        df['Forecast'].plot()
+
+        df[forecast_col].plot(label='Cena zamknięcia')
+        df['Forecast'].plot(label='Prognoza')
+
         plt.legend(loc=4)
         plt.xlabel('Data')
-        plt.ylabel('Cena zamknięcia')
+        plt.ylabel('Cena zamknięcia (USD)')
         plt.show()
     return df
