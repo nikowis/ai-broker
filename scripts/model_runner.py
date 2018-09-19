@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from sklearn.linear_model import LinearRegression
 from sklearn import preprocessing, model_selection
 import datetime
 import matplotlib.pyplot as plt
@@ -13,7 +14,7 @@ def predict(forecast_col, predictor, dateframe, forecast_days, plot=False, plot_
     df['label'] = df[forecast_col].shift(-forecast_days)
 
     X = np.array(df.drop(['label'], 1))
-    #X = preprocessing.scale(X)
+    # X = preprocessing.scale(X)
     X_lately = X[-forecast_days:]
     X = X[:-forecast_days]
 
@@ -49,7 +50,7 @@ def predict(forecast_col, predictor, dateframe, forecast_days, plot=False, plot_
         df[forecast_col].plot()
         df['Forecast'].plot()
         plt.legend(loc=4)
-        plt.xlabel('Date')
-        plt.ylabel('Price')
+        plt.xlabel('Data')
+        plt.ylabel('Cena zamknięcia')
         plt.show()
     return df

@@ -11,7 +11,7 @@ df = alpha.daily_adjusted('GOOGL')
 PCT_CHANGE = 'PCT_change'
 HL_PCT = 'HL_PCT'
 
-print(df.tail())
+#print(df.tail())
 
 df = df[[alpha.OPEN_COL, alpha.HIGH_COL, alpha.LOW_COL, alpha.ADJUSTED_CLOSE_COL, alpha.VOLUME_COL]]
 

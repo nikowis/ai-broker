@@ -148,22 +148,74 @@ podpis promotora & \hspace*{100pt} & podpis autora
 
 \subsection{Giełda}
 
+\subsection{Hipoteza błądzenia losowego}
+
+Zgodnie z hipotezą błądzenia losowego ceny akcji zmieniają się według losowych zmian ceny, a wyszukiwanie wzorców z przeszłości nie ma korzystnego wpływu na strategie inwestycyjne  \cite{randwalk}. 
+
 \section{Predykcja}
 
-\subsection{Przewidywanie wartości spółek}
+Przewidywanie wartości akcji jest główną zagwostką zarówno inwestorów indywidualnych jak i instytucjonalnych. Skuteczne odgadywanie przyszłych wzrostów lub spadków pozwoliłoby na osiąganie ponadprzeciętnych zysków i unikanie strat.
 
-Do tematu można podejść na dwa sposoby:
+\subsection{Dostępne dane}
 
+Przed przystąpieniem do wyboru metod warto również zastanowić się nad danymi wejściowymi do algorytmu przewidującego. Podstawowymi danymi prezentowanymi na giełdzie są:
 \begin{itemize}
-\item{przewidywanie konkretnych wartości}
-\item{predyckja binarna wzrostu/spadku ceny}
+\item{Data}
+\item{Cena zamknięcia} cena akcji pod koniec dnia
+\item{Cena otwarcia} cena akcji na początku dnia
+\item{Ilość akcji w obrocie danego dnia}
+\item{Najniższa cena akcji danego dnia}
+\item{Najwyższa cena akcji danego dnia}
 \end{itemize}
 
-Dużo bardziej przydatnym podejściem jest przewidywanie konkretnych wyników.
+Wszystkie te dane mogą być wykorzystywane do przewidywania cen akcji.
 
-Jakie spółki wybrać do porównania wyników? Najlepiej różnorodne, prezentujące małe/duże przedsiębiorstwa z różnych sektorów o różnych wariancjach ceny i niskiej korelacji. Warto porównać również różne okresy np. w momencie kryzysu 2008/9.
+ Przy korzystaniu z wartości cen akcji należy również uwzględnić tak zwane \textit{splity}. W momencie gdy jakaś spółka decyduje się na split oznacza to wówczas że każda z jej akcji dzieli się na dwie akcje o cenie wynoszącej połowe pierwotnej ceny za sztukę. Taki zabieg pozwala na zmniejszenie ceny pojedyńczej akcji dzięki czemu może stać się ona dostępna dla większej ilości inwestorów. 
 
-\section{Granie na giełdzie}
-Przy graniu jedną z ważniejszych rzeczy do przewidzenia jest opłacalność każdej operacji. Ponieważ każda operacja jest obarczona prowizją domu maklerskiego, a zyski podatkiem kapitałowym. Mocno utrudnia to zadanie wykonywania transakcji o wysokiej częstotliwości.
+
+\subsection{Parametr przewidywany}
+
+Najbardziej pożytecznym parametrem akcji, którego przewidywanie daje inwestorowi największe szanse na zysk jest \textit{cena zamknięcia}. Do tematu prognozowania można podejść na dwa sposoby:
+\begin{itemize}
+\item{\textbf{dokładny}, przewidywanie konkretnych wartości akcji}
+\item{\textbf{dyskretny}, predyckja wzrostu, spadku lub utrzymania ceny}
+\end{itemize}
+
+Korzystniejszym podejściem jest przewidywanie dokładnych cen akcji, gdyż pozwoli na lepsze wykorzystanie uzyskanej wiedzy. Druga metoda ze względu na ograniczenie dziedziny wyników daje szanse na dokładniejsze odwzorowanie wartości akcji w przyszłości.
+
+\subsection{Metodyka i ocena metod}
+
+Ponieważ zagadnienie przewidywania giełdy jest nietrywialne ze względu na losowe wahania wpływające na ceny akcji, do oceny każdej z metod predykcji zostaną wykorzystane zróżnicowane parametry:
+	
+\begin{itemize}
+\item{\textbf{Prognozowanie dokładne/dyskretne} }
+\item{\textbf{Liczba dni}, z których prognozowana jest wartość.}
+\item{\textbf{Dobór danych pobranych z giełdy} - selekcja wartości wejściowych}
+
+\end{itemize}
+
+Ze względu na fakt, iż przy prognozowaniu na pare dni do przodu dochodzi do nałożenia się błędów predykcji. Na przykład jeżeli prognozowana jest wartość z dwóch dni historii na trzy dni do przodu, to wówczas trzeci prognozowany dzień będzie oparty na prognozach dwóch poprzednich dni. Z tego powodu przewidywać będziemy wartość ceny następnego dnia.
+
+
+
+%Jakie spółki wybrać do porównania wyników? Najlepiej różnorodne, prezentujące małe/duże przedsiębiorstwa z różnych sektorów o różnych wariancjach ceny i niskiej korelacji. Warto porównać również różne okresy np. w momencie kryzysu 2008/9.
+
+
+\subsection{Regresja liniowa}
+
+Pierwszym eksperymentem będzie przewidywanie wartości spółek regresją liniową. 
+
+\newpage
+
+\renewcommand{\refname}{Bibliografia}
+\begin{thebibliography}{9}
+
+\bibitem{randwalk}
+  Burton G. Malkiel,
+  \textit{Random Walk Down Wall Street: The Time-Tested Strategy for Successful Investing}.
+  W. W. Norton Company,
+  2007.
+
+\end{thebibliography}
 
 \end{document}
