@@ -22,7 +22,7 @@ predictor = LinearRegression(n_jobs=-1)
 df = model_runner.predict_exact(predictor, df, 1)
 
 df[alpha.ADJUSTED_CLOSE_COL].plot(label='Cena zamknięcia')
-df['Forecast'].plot(label='Prognoza')
+#df['Forecast'].plot(label='Prognoza')
 plt.legend(loc=4)
 plt.xlabel('Data')
 plt.ylabel('Cena zamknięcia (USD)')
