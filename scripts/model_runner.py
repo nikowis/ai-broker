@@ -1,27 +1,26 @@
 import datetime
 
-import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib import style
+
 from sklearn import model_selection
 import alpha
 
 
 def predict_exact(predictor, dateframe, forecast_days):
-    forecast_col = alpha.AlphaVantage.ADJUSTED_CLOSE_COL
+
     df = dateframe.copy()
     df.dropna(inplace=True)
     df.fillna(value=-99999, inplace=True)
-    df['label'] = df[forecast_col].shift(-forecast_days)
+    df[alpha.LABEL_COL] = df[alpha.ADJUSTED_CLOSE_COL].shift(-forecast_days)
 
-    X = np.array(df.drop(['label'], 1))
+    X = np.array(df.drop([alpha.LABEL_COL], 1))
     # X = preprocessing.scale(X)
     X_lately = X[-forecast_days:]
     X = X[:-forecast_days]
 
     df_removed = df.dropna()
 
-    y = np.array(df_removed['label'])
+    y = np.array(df_removed[alpha.LABEL_COL])
 
     X_train, X_test, y_train, y_test = model_selection.train_test_split(X, y, test_size=0.2)
     predictor.fit(X_train, y_train)
@@ -31,8 +30,7 @@ def predict_exact(predictor, dateframe, forecast_days):
 
     print('Confidence {}'.format(confidence))
 
-    style.use('ggplot')
-    df['Forecast'] = np.nan
+    df[alpha.FORECAST_COL] = np.nan
 
     last_date = df.iloc[-1].name
     last_unix = last_date.timestamp()
@@ -45,6 +43,8 @@ def predict_exact(predictor, dateframe, forecast_days):
         df.loc[next_date] = [np.nan for _ in range(len(df.columns) - 1)] + [i]
 
     full_predictions = predictor.predict(X)
-    df['Forecast'][forecast_days:-forecast_days] = full_predictions
+    df[alpha.FORECAST_COL][forecast_days:-forecast_days] = full_predictions
+
+    df[alpha.DAILY_PCT_CHANGE_COL] = abs(df[alpha.ADJUSTED_CLOSE_COL] - df[alpha.LABEL_COL] - 1)
 
     return df

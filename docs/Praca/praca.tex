@@ -44,7 +44,7 @@
 			labelfont=bf, 
 			justification=justified, 
 			singlelinecheck=false]{caption} 
-\usepackage[justification=centering]{subcaption} % two images side by side captions
+%\usepackage[justification=centering]{subcaption} % two images side by side captions
 \usepackage{tabularx, booktabs} % pretty LaTeX tables
 \usepackage{siunitx} % units SI e.g. \SI{10}{\kilogram\per\meter\square}
 \usepackage{mathtools} % amsmath, symbols such as brackets, arrows, equation numbering only for referrenced eqs.
@@ -55,6 +55,8 @@
 \usepackage{dashrule} % for dotted lines in declarations page
 \usepackage{emptypage} % removes headers on empty pages
 \usepackage{fancyhdr} % header and footer settings
+\usepackage{subfigure}
+
 \pagestyle{fancy}
 \fancyhf{}
 \newcommand{\fncyfront}{%
@@ -83,7 +85,7 @@
 % FONT settings
 \usepackage[T1]{fontenc}
 \usepackage{uarial} % you can change to 'helvet' for Helvetica clone, 'uarial' for Arial clone, 'lmodern' for Latin Modern
-\renewcommand{\familydefault}{\sfdefault} % change font to sans serif
+%\renewcommand{\familydefault}{\sfdefault} % change font to sans serif
 \usepackage{amsfonts} % mathematical fonts
 \usepackage{inconsolata} % monospaced font in urls and \texttt
 %\usepackage{url}
@@ -202,8 +204,45 @@ Ze względu na fakt, iż przy prognozowaniu na pare dni do przodu dochodzi do na
 
 
 \subsection{Regresja liniowa}
+%Po 1 wrzucic wykres z wnioskami.z predykcji regresja wartosci dokladnych
+%Po 2 przekuć to na predykcje wzrostu spadku utrzymania cen i wykazac ze jest to slaba metoda
+%Ad 1 zrobic metode ktora rysuje caly wkyres tylko dla 1 miesoaca
 
-Jedną z naiwnych metod przewidywania wartości funkcji jest regresja liniowa. 
+Jedną z naiwnych metod przewidywania wartości funkcji jest regresja liniowa. Pierwszą próbą dla tego modelu było przewidzenie ceny zamknięcia z kolejnego dnia przy posiadaniu danych z dnia poprzedniego.
+
+\begin{figure}[H]%
+\centering
+\subfigure[Wykres rzeczywistych wartości]{%
+\label{l_r_stock_data}
+\includegraphics[scale=0.46]{img/linear_regression/l_r_stock_data}}%
+\qquad
+\subfigure[Wkyres rzeczywistych oraz przewidywanych wartości]{%
+\label{l_r_1_day_full}
+\includegraphics[scale=0.46]{img/linear_regression/l_r_1_day_full}}%
+\caption{Wykres dla spółki \textit{GOOGL}}
+\label{linear_regression_1}
+\end{figure}
+
+Z rysunku \ref{linear_regression_1} wynika iż prognozowane wartości pokrywają się z rzeczywistymi. Po obliczeniu błędu model daje nam dokładność na poziomie około  $99,934\%$. Wydaje się to być doskonałym wynikiem. Aby upewnić się o wartości modelu należy przyjrzeć się wykresowi z bliska.
+
+\begin{figure}[H]
+\centering \includegraphics[scale=0.9]{img/linear_regression/l_r_1_day_last_30}
+\caption{Wykres dla spólki \textit{GOOGL} z ostatnich 30 dni}
+\label{l_r_1_day_last_30}
+\end{figure}
+
+Na rysunku \ref{l_r_1_day_last_30} widać że prognozowane wartości są w rzeczywistości delikatnie zniekształconym obrazem przeszłych notowań spółki. Dokładność na poziomie $~99\%$ została osiągnięta ze względu na małe wahania w cenie. Logicznie rzecz biorąc nie jest to dobra metoda przewidywania przyszłości. Gdy cena jest w lokalnym maksimum wówczas inwestor powinien sprzedać posiadane akcje, jednak model przewiduje dalsze wzrosty ceny i wprowadza inwestora w błąd. Analogiczna sytuacja dzieje się przy minimach lokalnych ceny akcji.
+
+\bigskip
+
+W celu skutecznej oceny modelu, który ma służyć do celów inwestycyjnych, zamiast przewidywania dokładnej ceny zamknięcia należy przewidywać wzrosty oraz spadki ceny. Binarne przewidywanie z dnia na dzień może jednak okazać się nieprzydatne ze względu na to jak przebiega obrót akcjami. Akcje kupuje i sprzedaje się za pomocą domu maklerskiego, który pobiera prowizje za każdą transakcję. Obecnie najniższe prowizje na polskim rynku są na poziomie $0,19\%$ za transakcje. Pojedyńcza operacja dająca zarobić na przewidzianej cenie wymaga kupienia, a następnie sprzedania akcji, wobec czego łączna prowizja wyniesie przy zaokrągleniu $0,4\%$. Wszystkie wahania cen poniżej tej wartości są teoretycznie bez znaczenia dla inwestora. W związku z powyższym wnioskowaniem należy zastosować model, który przewiduje trzy wartości:
+\begin{itemize}
+\item spadek ceny poniżej $0,4\%$
+\item wzrost ceny powyżej $0,4\%$
+\item utrzymanie zmiany ceny w przedziale $(-0,4, 0.4)\%$
+\end{itemize}
+
+
 
 \newpage
 

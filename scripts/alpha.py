@@ -1,5 +1,17 @@
-import requests
 import pandas as pd
+import requests
+
+OPEN_COL = '1. open'
+CLOSE_COL = '2. high'
+HIGH_COL = '3. low'
+LOW_COL = '4. close'
+ADJUSTED_CLOSE_COL = '5. adjusted close'
+VOLUME_COL = '6. volume'
+DIVIDENT_AMOUNT_COL = '7. dividend amount'
+SPLIT_COEFFICIENT_COL = '8. split coefficient'
+LABEL_COL = 'Label'
+FORECAST_COL = 'Forecast'
+DAILY_PCT_CHANGE_COL = 'DAILY_PCT_CHANGE'
 
 
 class AlphaVantage:
@@ -7,15 +19,6 @@ class AlphaVantage:
     API_KEY = 'yM2zzAs6_DxdeT86rtZY'
     DAILY_ADJUSTED = 'TIME_SERIES_DAILY_ADJUSTED'
     FULL = 'full'
-
-    OPEN_COL = '1. open'
-    CLOSE_COL = '2. high'
-    HIGH_COL = '3. low'
-    LOW_COL = '4. close'
-    ADJUSTED_CLOSE_COL = '5. adjusted close'
-    VOLUME_COL = '6. volume'
-    DIVIDENT_AMOUT = '7. dividend amount'
-    SPLIT_COEFFICIENT = '8. split coefficient'
 
     def daily_adjusted_raw(self, ticker):
         data = {"apikey": self.API_KEY,
@@ -34,4 +37,3 @@ class AlphaVantage:
         df = df.astype(float)
         df.index = pd.to_datetime(df.index)
         return df
-

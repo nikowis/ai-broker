@@ -23,8 +23,8 @@ class AlphaVantageTests(unittest.TestCase):
         self.assertTrue(result[stck.AlphaVantage.LOW_COL].size > 1000)
         self.assertTrue(result[stck.AlphaVantage.ADJUSTED_CLOSE_COL].size > 1000)
         self.assertTrue(result[stck.AlphaVantage.VOLUME_COL].size > 1000)
-        self.assertTrue(result[stck.AlphaVantage.DIVIDENT_AMOUT].size > 1000)
-        self.assertTrue(result[stck.AlphaVantage.SPLIT_COEFFICIENT].size > 1000)
+        self.assertTrue(result[stck.AlphaVantage.DIVIDENT_AMOUNT_COL].size > 1000)
+        self.assertTrue(result[stck.AlphaVantage.SPLIT_COEFFICIENT_COL].size > 1000)
         self.assertTrue(result[stck.AlphaVantage.OPEN_COL].size > 1000)
         with self.assertRaises(KeyError):
             var = result["randomcolssa32"]

@@ -24,7 +24,6 @@ wheels/
 .installed.cfg
 *.egg
 MANIFEST
-target/*
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -112,3 +111,7 @@ venv.bak/
 *.pdf
 *.bcf
 docs/Praca/praca.run.xml
+
+
+target/*
+*-eps-converted-to.pdf
