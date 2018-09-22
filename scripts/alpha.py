@@ -11,7 +11,8 @@ DIVIDENT_AMOUNT_COL = '7. dividend amount'
 SPLIT_COEFFICIENT_COL = '8. split coefficient'
 LABEL_COL = 'Label'
 FORECAST_COL = 'Forecast'
-DAILY_PCT_CHANGE_COL = 'DAILY_PCT_CHANGE'
+DAILY_PCT_CHANGE_COL = 'Daily pct change'
+HL_PCT_CHANGE_COL = 'H/L pct change'
 
 
 class AlphaVantage:

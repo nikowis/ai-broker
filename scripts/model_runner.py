@@ -45,6 +45,4 @@ def predict_exact(predictor, dateframe, forecast_days):
     full_predictions = predictor.predict(X)
     df[alpha.FORECAST_COL][forecast_days:-forecast_days] = full_predictions
 
-    df[alpha.DAILY_PCT_CHANGE_COL] = abs(df[alpha.ADJUSTED_CLOSE_COL] - df[alpha.LABEL_COL] - 1)
-
     return df
