@@ -250,7 +250,7 @@ W celu skutecznej oceny modelu, który ma służyć do celów inwestycyjnych, za
 \end{figure}
 
 
-Na rysunku \ref{l_r_pct_change_last_30} można zaobserwować, iż zmiany w kursie często przekraczają $0,4\%$ w związku z czym transakcje przynoszące zysk można wykonywać regularnie. Ten wniosek potwierdza zasadność tej metody do oceny modelu do predykcji. Dla tych samych prognoz została przeprowadzona ocena z progiem $\pm0,4\%$ dla pomijalności zmiany w cenie. Na rysunku \ref{l_r_discrete_score} widoczna jest zależność między przeszłym, a prognozowanym wykresem. Niemal wszystkie prognozy oscylują w granicach, które są nieopłacalne dla inwestora. Ocena tą metodą dała wynik $0.257\%$ co udowadnia nieoplacalność tego modelu. Jego wynik jest gorszy od losowania dowolnej liczby z rozkładem jednostajnym.
+Na rysunku \ref{l_r_pct_change_last_30} można zaobserwować, iż zmiany w kursie często przekraczają $0,4\%$ w związku z czym transakcje przynoszące zysk można wykonywać regularnie. Ten wniosek potwierdza zasadność tej metody do oceny modelu do predykcji. Dla tych samych prognoz została przeprowadzona ocena z progiem $\pm0,4\%$ dla pomijalności zmiany w cenie. Na rysunku \ref{l_r_discrete_score} widoczna jest zależność między przeszłym, a prognozowanym wykresem. Niemal wszystkie prognozy oscylują w granicach, które są nieopłacalne dla inwestora. Ocena tą metodą dała wynik $0.257\%$ co udowadnia nieoplacalność tego modelu. Losowanie zmiany w cenach z rozkładem jednostajnym dałoby wynik na poziomie $0.(3)\%$.
 
 
 \begin{figure}[H]
@@ -258,6 +258,14 @@ Na rysunku \ref{l_r_pct_change_last_30} można zaobserwować, iż zmiany w kursi
 \caption{Histogram zmian cen akcji spółki \textit{GOOGL}}
 \label{l_r_discrete_score}
 \end{figure}
+
+\subsection{Sieci neuronowe}
+
+\subsubsection{Sieci jednokierunkowe}
+
+Jednym z najprostszych przykładów sieci neuronowych są sieci jednokierunkowe. Na wejściu przyjmują one dane wejściowe, przetwarzają dane i zwracają dane wyjściowe. Najprostsza implementacja sieci do predykcji danych giełdowych jest sieć przyjmująca na wejściu wektor informacji o akcjach spółki z jednego dnia, zwracająca na wyjściu przewidywaną wartość ceny akcji następnego dnia.
+
+
 
 \newpage
 
