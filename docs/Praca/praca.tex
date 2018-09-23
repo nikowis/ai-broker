@@ -248,11 +248,18 @@ W celu skutecznej oceny modelu, który ma służyć do celów inwestycyjnych, za
 \caption{Dzeinna zmiana ceny akcji spółki \textit{GOOGL} z 30 dni}
 \label{l_r_pct_change_last_30}
 \end{figure}
+
+
+Na rysunku \ref{l_r_pct_change_last_30} można zaobserwować, iż zmiany w kursie często przekraczają $0,4\%$ w związku z czym transakcje przynoszące zysk można wykonywać regularnie. Ten wniosek potwierdza zasadność tej metody do oceny modelu do predykcji. Dla tych samych prognoz została przeprowadzona ocena z progiem $\pm0,4\%$ dla pomijalności zmiany w cenie. Na rysunku \ref{l_r_discrete_score} widoczna jest zależność między przeszłym, a prognozowanym wykresem. Niemal wszystkie prognozy oscylują w granicach, które są nieopłacalne dla inwestora. Ocena tą metodą dała wynik $0.257\%$ co udowadnia nieoplacalność tego modelu. Jego wynik jest gorszy od losowania dowolnej liczby z rozkładem jednostajnym.
+
+
+\begin{figure}[H]
+\centering \includegraphics[scale=0.9]{img/linear_regression/l_r_discrete_score}
+\caption{Histogram zmian cen akcji spółki \textit{GOOGL}}
+\label{l_r_discrete_score}
+\end{figure}
+
 \newpage
-
-Na rysunku \ref{l_r_pct_change_last_30} można zaobserwować, iż zmiany w kursie prawie codziennie przekraczają $0,4\%$ w związku z czym transakcje przynoszące zysk można wykonywać regularnie. Ten wniosek potwierdza zasadność tej metody oceny modelu do predykcji. 
-
-
 
 \renewcommand{\refname}{Bibliografia}
 \begin{thebibliography}{9}

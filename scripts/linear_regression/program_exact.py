@@ -22,7 +22,7 @@ if not os.path.exists(base_path):
     os.makedirs(base_path)
 
 df = df[[alpha.ADJUSTED_CLOSE_COL]]
-one_percent = int(math.ceil(0.01 * len(df)))
+
 predictor = LinearRegression(n_jobs=-1)
 df = model_runner.predict_exact(predictor, df, 1)
 
@@ -42,7 +42,7 @@ plt.savefig('%s/l_r_stock_data.png' % base_path)
 plt.close()
 
 df[alpha.ADJUSTED_CLOSE_COL].plot(label=CLOSE_PRICE_LABEL)
-df[alpha.FORECAST_COL].plot(label=FORECAST_LABEL)
+df[alpha.FORECAST_FOR_TODAY_COL].plot(label=FORECAST_LABEL)
 plt.legend(loc=4)
 plt.xlabel(DATE_LABEL)
 plt.ylabel(CLOSE_PRICE_USD_LABEL)
@@ -54,7 +54,7 @@ plt.close()
 df_30 = df[-30:]
 
 df_30[alpha.ADJUSTED_CLOSE_COL].plot(label=CLOSE_PRICE_LABEL)
-df_30[alpha.FORECAST_COL].plot(label=FORECAST_LABEL)
+df_30[alpha.FORECAST_FOR_TODAY_COL].plot(label=FORECAST_LABEL)
 plt.legend(loc=4)
 plt.xlabel(DATE_LABEL)
 plt.ylabel(CLOSE_PRICE_USD_LABEL)
