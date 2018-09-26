@@ -1,5 +1,7 @@
 import pandas as pd
 import requests
+import os
+import json
 
 OPEN_COL = '1. open'
 CLOSE_COL = '2. high'
@@ -24,6 +26,7 @@ class AlphaVantage:
     API_KEY = 'yM2zzAs6_DxdeT86rtZY'
     DAILY_ADJUSTED = 'TIME_SERIES_DAILY_ADJUSTED'
     FULL = 'full'
+    API_CACHE_PATH = './../target/api_cache/'
 
     def daily_adjusted_raw(self, ticker):
         data = {"apikey": self.API_KEY,
@@ -34,11 +37,21 @@ class AlphaVantage:
         r = requests.get(self.API_URL, params=data)
         return r.json()
 
-    def daily_adjusted(self, ticker):
-        json = self.daily_adjusted_raw(ticker)
-        keys = list(json.keys())
+    def daily_adjusted(self, ticker, cache=True):
+        cache_file_path = self.API_CACHE_PATH + ticker + '_' + self.DAILY_ADJUSTED + '.json'
+        if not cache or not os.path.exists(cache_file_path):
+            if not os.path.exists(self.API_CACHE_PATH):
+                os.makedirs(self.API_CACHE_PATH)
+            response = self.daily_adjusted_raw(ticker)
+            with open(cache_file_path, "w") as text_file:
+                text_file.write(json.dumps(response))
+        else:
+            with open(cache_file_path, "r") as text_file:
+                response = json.loads(text_file.read())
+                
+        keys = list(response.keys())
         series = keys[1]
-        df = pd.DataFrame.from_dict(json[series], orient='index')
+        df = pd.DataFrame.from_dict(response[series], orient='index')
         df = df.astype(float)
         df.index = pd.to_datetime(df.index)
         return df
