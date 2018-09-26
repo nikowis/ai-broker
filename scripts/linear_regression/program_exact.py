@@ -14,7 +14,7 @@ from plot_constants import *
 TICKER = 'GOOGL'
 
 api = alpha.AlphaVantage()
-df = api.daily_adjusted(TICKER)
+df = api.data(TICKER)
 
 base_path = './../../target/linear_regression'
 

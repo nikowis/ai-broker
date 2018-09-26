@@ -1,14 +1,16 @@
+import json
+import os
+
 import pandas as pd
 import requests
-import os
-import json
 
 OPEN_COL = '1. open'
-CLOSE_COL = '2. high'
-HIGH_COL = '3. low'
-LOW_COL = '4. close'
+HIGH_COL = '2. high'
+LOW_COL = '3. low'
+CLOSE_COL = '4. close'
 ADJUSTED_CLOSE_COL = '5. adjusted close'
 VOLUME_COL = '6. volume'
+VOLUME_INTRADAY_COL = '5. volume'
 DIVIDENT_AMOUNT_COL = '7. dividend amount'
 SPLIT_COEFFICIENT_COL = '8. split coefficient'
 LABEL_COL = 'Label'
@@ -22,33 +24,41 @@ HL_PCT_CHANGE_COL = 'H/L pct change'
 
 
 class AlphaVantage:
+    class DataType:
+        DAILY_ADJUSTED = 'TIME_SERIES_DAILY_ADJUSTED'
+        INTRADAY = 'TIME_SERIES_INTRADAY'
+
     API_URL = 'https://www.alphavantage.co/query'
     API_KEY = 'yM2zzAs6_DxdeT86rtZY'
-    DAILY_ADJUSTED = 'TIME_SERIES_DAILY_ADJUSTED'
+
     FULL = 'full'
+    COMPACT = 'compact'
     API_CACHE_PATH = './../target/api_cache/'
 
-    def daily_adjusted_raw(self, ticker):
+    def data_raw(self, ticker, data_type):
         data = {"apikey": self.API_KEY,
                 "symbol": ticker,
-                "function": self.DAILY_ADJUSTED,
+                "function": data_type,
                 "outputsize": self.FULL
                 }
+        if data_type == AlphaVantage.DataType.INTRADAY:
+            data['interval'] = '1min'
+
         r = requests.get(self.API_URL, params=data)
         return r.json()
 
-    def daily_adjusted(self, ticker, cache=True):
-        cache_file_path = self.API_CACHE_PATH + ticker + '_' + self.DAILY_ADJUSTED + '.json'
+    def data(self, ticker, data_type=DataType.DAILY_ADJUSTED, cache=True):
+        cache_file_path = self.API_CACHE_PATH + ticker + '_' + data_type + '.json'
         if not cache or not os.path.exists(cache_file_path):
             if not os.path.exists(self.API_CACHE_PATH):
                 os.makedirs(self.API_CACHE_PATH)
-            response = self.daily_adjusted_raw(ticker)
+            response = self.data_raw(ticker, data_type)
             with open(cache_file_path, "w") as text_file:
                 text_file.write(json.dumps(response))
         else:
             with open(cache_file_path, "r") as text_file:
                 response = json.loads(text_file.read())
-                
+
         keys = list(response.keys())
         series = keys[1]
         df = pd.DataFrame.from_dict(response[series], orient='index')

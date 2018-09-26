@@ -9,7 +9,7 @@ import model_runner as model_runner
 from plot_constants import *
 
 api = alpha.AlphaVantage()
-df = api.daily_adjusted('GOOGL')
+df = api.data('GOOGL')
 
 df[alpha.HL_PCT_CHANGE_COL] = (df[alpha.HIGH_COL] - df[alpha.LOW_COL]) / df[alpha.LOW_COL] * 100.0
 df[alpha.DAILY_PCT_CHANGE_COL] = ((df[alpha.CLOSE_COL] - df[alpha.OPEN_COL]) / df[alpha.CLOSE_COL]) * 100.0

@@ -10,7 +10,7 @@ import alpha
 TICKER = 'GOOGL'
 
 api = alpha.AlphaVantage()
-df = api.daily_adjusted(TICKER)
+df = api.data(TICKER, api.DataType.INTRADAY, False)
 
 base_path = './../../target/neural_networks'
 
@@ -21,8 +21,8 @@ mnist = tf.keras.datasets.mnist
 forecast_days = 1
 df.dropna(inplace=True)
 df.fillna(value=-99999, inplace=True)
-df = df[[alpha.ADJUSTED_CLOSE_COL, alpha.VOLUME_COL]]
-df[alpha.LABEL_COL] = df[alpha.ADJUSTED_CLOSE_COL].shift(-forecast_days)
+df = df[[alpha.CLOSE_COL, alpha.VOLUME_INTRADAY_COL]]
+df[alpha.LABEL_COL] = df[alpha.CLOSE_COL].shift(-forecast_days)
 
 X = np.array(df.drop([alpha.LABEL_COL], 1))
 input_size = X.shape[1]
