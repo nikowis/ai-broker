@@ -1,4 +1,3 @@
-import math
 import os
 
 import matplotlib.pyplot as plt
@@ -6,7 +5,7 @@ from matplotlib import style
 from sklearn.linear_model import LinearRegression
 
 import alpha
-import model_runner as model_runner
+from linear_regression import model_runner as model_runner
 from plot_constants import *
 
 

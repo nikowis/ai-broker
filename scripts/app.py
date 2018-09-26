@@ -5,7 +5,7 @@ from matplotlib import style
 from sklearn.linear_model import LinearRegression
 
 import alpha
-import model_runner as model_runner
+from linear_regression import model_runner as model_runner
 from plot_constants import *
 
 api = alpha.AlphaVantage()
