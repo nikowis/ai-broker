@@ -2,7 +2,7 @@ import os
 
 import matplotlib.pyplot as plt
 import numpy as np
-from keras.layers import Dense, Activation
+from keras.layers import Dense
 from keras.models import Sequential
 
 import alpha
@@ -39,18 +39,18 @@ df_cpy = df.copy()
 
 model = Sequential([
     Dense(1, input_shape=(input_size,)),
-    Activation('relu'),
-    Dense(1),
+    Dense(1, )
 ])
 
 model.compile(optimizer='adam',
               loss='mse',
               metrics=['accuracy'])
 
-model.fit(X_train, y_train, epochs=3, batch_size=10)
-accuracy = model.evaluate(X_test, y_test)
+epochs = 10
+model.fit(X_train, y_train, epochs=epochs, batch_size=10)
+loss, accuracy = model.evaluate(X_test, y_test)
 
-print("Accuracy: ", accuracy, " epochs: ", 10)
+print("Loss: ", loss, " Accuracy: ", accuracy, " epochs: ", epochs)
 
 predicted = model.predict(X)
 
