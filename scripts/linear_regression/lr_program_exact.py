@@ -37,6 +37,7 @@ plt.title(TICKER)
 
 plt.savefig('%s/l_r_stock_data.eps' % base_path, format='eps', dpi=1000)
 plt.savefig('%s/l_r_stock_data.png' % base_path)
+plt.show()
 
 plt.close()
 
@@ -48,6 +49,7 @@ plt.ylabel(CLOSE_PRICE_USD_LABEL)
 plt.title(TICKER)
 plt.savefig('%s/l_r_1_day_full.eps' % base_path, format='eps', dpi=1000)
 plt.savefig('%s/l_r_1_day_full.png' % base_path)
+plt.show()
 plt.close()
 
 df_30 = df[-30:]
@@ -60,6 +62,7 @@ plt.ylabel(CLOSE_PRICE_USD_LABEL)
 plt.title(TICKER)
 plt.savefig('%s/l_r_1_day_last_30.eps' % base_path, format='eps', dpi=1000)
 plt.savefig('%s/l_r_1_day_last_30.png' % base_path)
+plt.show()
 plt.close()
 
 df_30 = df_30.copy()

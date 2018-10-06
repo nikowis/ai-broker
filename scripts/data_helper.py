@@ -4,8 +4,12 @@ from sklearn.preprocessing import MinMaxScaler
 
 import alpha
 
+FALL_VALUE = -1
+IDLE_VALUE = 0
+RISE_VALUE = 1
 
-def train_test_split(X, y, scale=True):
+
+def train_test_split(X, y, scale=False):
     """
     Function for train test split.
 
@@ -35,7 +39,7 @@ def train_test_split(X, y, scale=True):
     return X_train, X_test, y_train, y_test
 
 
-def prepare_label_extract_data(df, forecast_days):
+def prepare_label_extract_data(df, forecast_days,stay_tresh=0.4 ):
     """
     Function preparing dateframe data for machine learning.
 
@@ -47,9 +51,15 @@ def prepare_label_extract_data(df, forecast_days):
     df = df.copy()
     df.dropna(inplace=True)
     df.fillna(value=-99999, inplace=True)
-    df = df[[alpha.ADJUSTED_CLOSE_COL]]
     df[alpha.LABEL_COL] = df[alpha.ADJUSTED_CLOSE_COL].shift(-forecast_days)
-    X = np.array(df.drop([alpha.LABEL_COL], 1))
+    df[alpha.DAILY_PCT_CHANGE_COL] = (df[alpha.LABEL_COL] - df[alpha.ADJUSTED_CLOSE_COL]) / df[
+        alpha.ADJUSTED_CLOSE_COL] * 100.0
+
+    df[alpha.LABEL_DISCRETE_COL] = df[alpha.DAILY_PCT_CHANGE_COL].apply(
+        lambda pct: FALL_VALUE if pct < -stay_tresh else RISE_VALUE if pct > stay_tresh else IDLE_VALUE)
+
+    X = np.array(df.drop([alpha.LABEL_COL, alpha.LABEL_DISCRETE_COL, alpha.DAILY_PCT_CHANGE_COL], 1))
+
     X_lately = X[-forecast_days:]
     X = X[:-forecast_days]
     df = df[:-forecast_days]

@@ -5,12 +5,13 @@ from keras.layers import Dense
 from keras.models import Sequential
 
 import alpha
-import neural_networks.data_helper as data_helper
+import data_helper as data_helper
 
 TICKER = 'GOOGL'
 
 api = alpha.AlphaVantage()
 df = api.data(TICKER)
+df = df[[alpha.ADJUSTED_CLOSE_COL]]
 
 base_path = './../../target/neural_networks'
 
@@ -41,11 +42,7 @@ loss, accuracy = model.evaluate(X_test, y_test)
 print("Loss: ", loss, " Accuracy: ", accuracy, " epochs: ", epochs)
 
 predicted = model.predict(X)
-
-# print('Predicted value ', predicted)
-
 df_cpy[alpha.FORECAST_FUTURE_COL] = predicted
-
 df_plt = df_cpy[[alpha.ADJUSTED_CLOSE_COL, alpha.LABEL_COL, alpha.FORECAST_FUTURE_COL]]
 df_plt.plot()
 plt.show()

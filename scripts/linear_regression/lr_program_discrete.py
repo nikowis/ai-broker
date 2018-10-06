@@ -21,7 +21,7 @@ if not os.path.exists(base_path):
 df = df[[alpha.ADJUSTED_CLOSE_COL]]
 
 predictor = LinearRegression(n_jobs=-1)
-df = model_runner.predict_rise_fall_stay(predictor, df, 1)
+df = model_runner.predict_discrete(predictor, df, 1)
 
 style.use('ggplot')
 fig, ax = plt.subplots()
