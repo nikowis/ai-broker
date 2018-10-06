@@ -2,6 +2,8 @@
 \usepackage[utf8]{inputenc}
 \usepackage{polski}
 \usepackage{float}
+\usepackage[T1]{fontenc}
+
 \raggedbottom
 
 \usepackage[left=3.0cm, right=2.0cm, top=2.5cm, bottom=2.5cm]{geometry}
@@ -152,19 +154,33 @@ podpis promotora & \hspace*{100pt} & podpis autora
 
 \section{Opis pracy}
 
+Celem tej pracy było opracowanie, ocena i porównanie różnych modeli predykcji cen akcji na giełdzie papierów wartościowych lub innych alternatywnych giełdach np. giełda kryptowalut.
+
 \subsection{Giełda}
+
+Giełda z definicji jest miejscem wymiany towarów przez sprzedawców i kupców. Giełdy można podzielić na giełdy towarowe, pieniężne lub usługowe. Wymiany na tradycyjnych giełdach przebiegają przede wszystkim podczas sesji, które są organizowane w określonych dniach i godzinach. Najpopularniejszym rodzajem giełd są giełdy pieniężne, a w szczególności giełdy papierów wartościowych. Największymi giełdami papierów wartościowych są \textit{NYSE (New York Stock Exchange)}, \textit{NASDAQ} oraz \textit{JPX (Japan Exchange Group)}. Na każdej z tych giełd w dniach, w których prowadzone są sesje, dochodzi do transakcji opiewających na łączną kwotę rzędu miliardów dolarów amerykańskich.
+
+\bigskip
+
+ Jednym z wymienianych na giełdzie towarów są akcje różnorodnych spółek. Każda spółka, która jest obecna na giełdzie ma przypisany symbol giełdowy (\textit{ticker}). Symbol giełdowy jest skrótowym kodem do identyfikowania spółek na określonej giełdzie (przykładowe symbole: \textit{GOOGL}, \textit{MSFT}, \textit{AMZN}). Podczas każdej sesji dokonywane są transakcje milionów akcji, których cena regulowana jest jedynie przez wolny rynek. Wynikiem tego jest duża zmienność cen akcji, spowodowana różnymi spekulacjami lub upublicznianiem informacji o konkretnej spółce.
+
+\begin{figure}[H]
+\centering \includegraphics[scale=0.9]{img/linear_regression/l_r_stock_data}
+\caption{Wykres cen akcji spólki \textit{Alphabet Inc}}
+\label{alphabet_history}
+\end{figure}
+
+\subsection{Predykcja}
+
+Na rysunku \ref{alphabet_history} widoczne są zmiany cen akcji spółki \textit{Alphabet Inc.} w latach 2004-2018. Analizując ten wykres można z łatwością wskazać daty, w których opłacalnym było zainwestowanie w akcje, a następnie je sprzedać by osiągnąć zysk. Niestety stwierdzenie czy wartość akcji w przyszłości spadnie, czy wzrośnie, nie jest tak trywialne jak odczytywanie danych historycznych. Przewidywanie przyszłych cen akcji jest główną zagwostką zarówno inwestorów indywidualnych jak i instytucjonalnych. Skuteczne odgadywanie przyszłych wzrostów lub spadków cen pozwoliłoby na osiąganie ponadprzeciętnych zysków i unikanie strat.
 
 \subsection{Hipoteza błądzenia losowego}
 
-Zgodnie z hipotezą błądzenia losowego ceny akcji zmieniają się według losowych zmian ceny, a wyszukiwanie wzorców z przeszłości nie ma korzystnego wpływu na strategie inwestycyjne  \cite{randwalk}. 
-
-\section{Predykcja}
-
-Przewidywanie wartości akcji jest główną zagwostką zarówno inwestorów indywidualnych jak i instytucjonalnych. Skuteczne odgadywanie przyszłych wzrostów lub spadków pozwoliłoby na osiąganie ponadprzeciętnych zysków i unikanie strat.
+Zgodnie z hipotezą błądzenia losowego \cite{randwalk}, krótkoterminowo, ceny akcji zmieniają się według nieprzewidywalnych schematów. Zmiany minutowe cen akcji są więc dużo cięższe do przewidzenia niż zmiany dobowe. Z tego względu przewidywanie wartości w okresie krótszym niż jedna doba, nie zostało uwzględnione w obszarze badań tej pracy.
 
 \subsection{Dostępne dane}
 
-Przed przystąpieniem do wyboru metod warto również zastanowić się nad danymi wejściowymi do algorytmu przewidującego. Podstawowymi danymi prezentowanymi na giełdzie są:
+Przed przystąpieniem do wyboru metod należy zastanowić się nad danymi wejściowymi do algorytmów przewidujących. Podstawowe dane dostępne na giełdzie to:
 \begin{itemize}
 \item{Data}
 \item{Cena zamknięcia} cena akcji pod koniec dnia
@@ -176,7 +192,7 @@ Przed przystąpieniem do wyboru metod warto również zastanowić się nad danym
 
 Wszystkie te dane mogą być wykorzystywane do przewidywania cen akcji.
 
- Przy korzystaniu z wartości cen akcji należy również uwzględnić tak zwane \textit{splity}. W momencie gdy jakaś spółka decyduje się na split oznacza to wówczas że każda z jej akcji dzieli się na dwie akcje o cenie wynoszącej połowe pierwotnej ceny za sztukę. Taki zabieg pozwala na zmniejszenie ceny pojedyńczej akcji dzięki czemu może stać się ona dostępna dla większej ilości inwestorów. 
+ Przy korzystaniu z wartości cen akcji należy również uwzględnić podział akcji(tak zwany \textit{split}). Gdy jakaś spółka decyduje się na podział swoich akcji oznacza to, że każda z akcji dzieli się na dwie akcje o cenie wynoszącej połowe pierwotnej ceny. Taki zabieg pozwala na zmniejszenie ceny pojedyńczej akcji dzięki czemu może stać się ona dostępna dla większej ilości inwestorów. 
 
 
 \subsection{Parametr przewidywany}
@@ -275,7 +291,6 @@ Jednym z najprostszych przykładów sieci neuronowych są sieci jednokierunkowe.
 
 \renewcommand{\refname}{Bibliografia}
 \begin{thebibliography}{9}
-
 \bibitem{randwalk}
   Burton G. Malkiel,
   \textit{Random Walk Down Wall Street: The Time-Tested Strategy for Successful Investing}.
