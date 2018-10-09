@@ -247,44 +247,6 @@ Modele oceniane na podstawie danych poszczególnych spółek mogą dawać w skra
 
 \subsection{Regresja liniowa}
 
-Jedną z naiwnych metod przewidywania wartości funkcji jest regresja liniowa. Pierwszą próbą dla tego modelu było przewidzenie ceny zamknięcia z kolejnego dnia przy posiadaniu danych z dnia poprzedniego.
-
-\begin{figure}[H]%
-\centering
-\subfigure[Wykres rzeczywistych wartości]{%
-\label{l_r_stock_data}
-\includegraphics[scale=0.46]{img/linear_regression/l_r_stock_data}}%
-\qquad
-\subfigure[Wkyres rzeczywistych oraz przewidywanych wartości]{%
-\label{l_r_1_day_full}
-\includegraphics[scale=0.46]{img/linear_regression/l_r_1_day_full}}%
-\caption{Wykres dla spółki \textit{GOOGL}}
-\label{linear_regression_1}
-\end{figure}
-
-Z rysunku \ref{linear_regression_1} wynika iż prognozowane wartości pokrywają się z rzeczywistymi. Po obliczeniu błędu model daje nam dokładność na poziomie około  $99,934\%$. Wydaje się to być doskonałym wynikiem. Aby upewnić się o wartości modelu należy przyjrzeć się wykresowi z bliska.
-
-\begin{figure}[H]
-\centering \includegraphics[scale=0.9]{img/linear_regression/l_r_1_day_last_30}
-\caption{Wykres dla spólki \textit{GOOGL} z 30 dni}
-\label{l_r_1_day_last_30}
-\end{figure}
-
-Na rysunku \ref{l_r_1_day_last_30} widać że prognozowane wartości są w rzeczywistości delikatnie zniekształconym obrazem przeszłych notowań spółki. Dokładność na poziomie $~99\%$ została osiągnięta ze względu na małe wahania w cenie. Logicznie rzecz biorąc nie jest to dobra metoda przewidywania przyszłości. Gdy cena jest w lokalnym maksimum wówczas inwestor powinien sprzedać posiadane akcje, jednak model przewiduje dalsze wzrosty ceny i wprowadza inwestora w błąd. Analogiczna sytuacja dzieje się przy minimach lokalnych ceny akcji. 
-
-
-
-\bigskip
-
-Wobec powyższych obserwacji należy sprawdzić jakość tego modelu w metodą dyskretnej. Dla tych samych prognoz została przeprowadzona ocena dyskretna z progiem $\pm0,4\%$. Na rysunku \ref{l_r_discrete_score} widoczna są przewidywane oraz rzeczywiste wartości oceny dyskretnej. Ze względu na charakterystyke regresji liniowej, niemal wszystkie prognozy oscylują w granicach, które są nieznaczące dla inwestora. Ocena tą metodą dała wynik $0.257\%$ co udowadnia bezużyteczność tego modelu. Dla porównania model losowy z rozkładem jednostajnym dałby wynik na poziomie $0.(3)\%$.
-
-
-\begin{figure}[H]
-\centering \includegraphics[scale=0.9]{img/linear_regression/l_r_discrete_score}
-\caption{Histogram zmian cen akcji spółki \textit{GOOGL}}
-\label{l_r_discrete_score}
-\end{figure}
-
 \subsection{Regresja logistyczna}
 
 \subsection{SVM}
@@ -292,8 +254,6 @@ Wobec powyższych obserwacji należy sprawdzić jakość tego modelu w metodą d
 \subsection{Sieci neuronowe}
 
 \subsubsection{Sieci jednokierunkowe}
-
-Jednym z najprostszych przykładów sieci neuronowych są sieci jednokierunkowe. Na wejściu przyjmują one dane wejściowe, przetwarzają dane i zwracają dane wyjściowe. Najprostsza implementacja sieci do predykcji danych giełdowych jest sieć przyjmująca na wejściu wektor informacji o akcjach spółki z jednego dnia, zwracająca na wyjściu przewidywaną wartość ceny akcji następnego dnia.
 
 \subsubsection{Sieci rekurencyjne}
 
