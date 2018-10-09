@@ -213,7 +213,7 @@ Ponieważ zagadnienie przewidywania giełdy jest nietrywialne ze względu na los
 \item{\textbf{Dobór spółek uczących i testujących}}
 \end{itemize}
 
-\subsubsection{Prognozowanie dokładne/dyskretne}
+\subsubsection{Prognozowanie - regresja czy klasyfikacja?}
 
 Potencjalnie korzystniejszym podejściem jest przewidywanie dokładnych cen akcji, gdyż pozwoli na dokładniejsze aproksymowanie ceny. Jednak w celu skutecznej oceny modelu, który ma służyć do celów inwestycyjnych, zamiast przewidywania dokładnej ceny zamknięcia należy przewidywać wzrosty oraz spadki ceny. Binarne przewidywanie z dnia na dzień może jednak okazać się nieprzydatne ze względu na to jak przebiega obrót akcjami. Akcje kupuje i sprzedaje się za pomocą domu maklerskiego, który pobiera prowizje za każdą transakcję. Obecnie najniższe prowizje na polskim rynku są na poziomie $0,19\%$ za transakcję. Pojedyncza operacja dająca zarobić na przewidzianej cenie wymaga kupienia, a następnie sprzedania akcji, wobec czego łączna prowizja wyniesie przy zaokrągleniu $0,4\%$. Wszystkie wahania cen poniżej tej wartości są teoretycznie bez znaczenia dla inwestora. W związku z powyższym wnioskowaniem należy zastosować model, który przewiduje trzy wartości:
 \begin{itemize}
@@ -243,8 +243,9 @@ Według niektórych badań wolumen obrotów akcji nie jest skorelowany w żaden 
 
 Modele oceniane na podstawie danych poszczególnych spółek mogą dawać w skrajnych przypadkach zafałszowane wyniki. Wiele spółek wykazuje wysoką korelację cen akcji między sobą. W celu uniknięcia pułapki przetrenowania, do uczenia i testowania użyte zostały dane spółek o niskiej korelacji i różnych trendach wzrostu/spadku.
 
+\section{Prognozowanie}
 
-\section{Regresja liniowa}
+\subsection{Regresja liniowa}
 
 Jedną z naiwnych metod przewidywania wartości funkcji jest regresja liniowa. Pierwszą próbą dla tego modelu było przewidzenie ceny zamknięcia z kolejnego dnia przy posiadaniu danych z dnia poprzedniego.
 
@@ -284,12 +285,27 @@ Wobec powyższych obserwacji należy sprawdzić jakość tego modelu w metodą d
 \label{l_r_discrete_score}
 \end{figure}
 
-\section{Sieci neuronowe}
+\subsection{Regresja logistyczna}
 
-\subsection{Sieci jednokierunkowe}
+\subsection{SVM}
+
+\subsection{Sieci neuronowe}
+
+\subsubsection{Sieci jednokierunkowe}
 
 Jednym z najprostszych przykładów sieci neuronowych są sieci jednokierunkowe. Na wejściu przyjmują one dane wejściowe, przetwarzają dane i zwracają dane wyjściowe. Najprostsza implementacja sieci do predykcji danych giełdowych jest sieć przyjmująca na wejściu wektor informacji o akcjach spółki z jednego dnia, zwracająca na wyjściu przewidywaną wartość ceny akcji następnego dnia.
 
+\subsubsection{Sieci rekurencyjne}
+
+\subsection{GASEN}
+
+\subsection{Sieć Bayesa}
+
+\subsection{Średnia ważona zespołu klasyfikatorów}
+
+\subsection{Wykorzystanie wykrywania sentymentu do poprawienia predykcji}
+
+\section{Wspomaganie decyzji giełdowych}
 
 
 \newpage
@@ -301,6 +317,7 @@ Jednym z najprostszych przykładów sieci neuronowych są sieci jednokierunkowe.
   \textit{Random Walk Down Wall Street: The Time-Tested Strategy for Successful Investing}.
   W. W. Norton Company,
   2007.
+
 
 \end{thebibliography}
 
