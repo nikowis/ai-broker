@@ -6,7 +6,7 @@ class AlphaVantageTests(unittest.TestCase):
 
     def test_daily_adjusted_raw(self):
         s = stck.AlphaVantage()
-        result = s.data_raw('GOOGL', s.DataType.DAILY_ADJUSTED)
+        result = s.data_raw('GOOGL', s.DataType.DAILY_ADJUSTED).json()
         self.assertEqual(len(result), 2)
 
     def test_daily_adjusted(self):

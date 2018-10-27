@@ -35,7 +35,7 @@ class AlphaVantage:
     COMPACT = 'compact'
     API_CACHE_PATH = './../target/api_cache/'
 
-    def data_raw(self, ticker, data_type):
+    def data_raw(self, ticker, data_type=DataType.DAILY_ADJUSTED):
         data = {"apikey": self.API_KEY,
                 "symbol": ticker,
                 "function": data_type,
@@ -44,15 +44,14 @@ class AlphaVantage:
         if data_type == AlphaVantage.DataType.INTRADAY:
             data['interval'] = '1min'
 
-        r = requests.get(self.API_URL, params=data)
-        return r.json()
+        return requests.get(self.API_URL, params=data)
 
     def data(self, ticker, data_type=DataType.DAILY_ADJUSTED, cache=True):
         cache_file_path = self.API_CACHE_PATH + ticker + '_' + data_type + '.json'
         if not cache or not os.path.exists(cache_file_path):
             if not os.path.exists(self.API_CACHE_PATH):
                 os.makedirs(self.API_CACHE_PATH)
-            response = self.data_raw(ticker, data_type)
+            response = self.data_raw(ticker, data_type).json()
             with open(cache_file_path, "w") as text_file:
                 text_file.write(json.dumps(response))
         else:
