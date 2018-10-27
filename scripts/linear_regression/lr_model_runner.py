@@ -2,8 +2,7 @@ import math
 
 import numpy as np
 
-import alpha
-import data_helper
+from helpers import alpha, data_helper
 
 FALL_VALUE = -1
 IDLE_VALUE = 0

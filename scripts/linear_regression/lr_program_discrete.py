@@ -3,9 +3,9 @@ import os
 from matplotlib import style
 from sklearn.linear_model import LinearRegression
 
-import alpha
+from helpers import alpha
 from linear_regression import lr_model_runner as model_runner
-from plot_helper import *
+from helpers.plot_helper import *
 
 TICKER = 'GOOGL'
 

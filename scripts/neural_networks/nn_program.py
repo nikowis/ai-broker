@@ -4,8 +4,7 @@ import matplotlib.pyplot as plt
 from keras.layers import Dense
 from keras.models import Sequential
 
-import alpha
-import data_helper as data_helper
+from helpers import alpha, data_helper as data_helper
 
 TICKER = 'GOOGL'
 
