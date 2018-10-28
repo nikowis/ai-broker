@@ -30,6 +30,9 @@ class AlphaVantage:
 
     API_URL = 'https://www.alphavantage.co/query'
     API_KEY = 'yM2zzAs6_DxdeT86rtZY'
+    #TX1OLY36K73S9MS9
+    #I7RUE3LA4PSXDJU6
+    #ULDORYWPDU2S2E6X
 
     FULL = 'full'
     COMPACT = 'compact'
