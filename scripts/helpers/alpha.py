@@ -29,17 +29,17 @@ class AlphaVantage:
         INTRADAY = 'TIME_SERIES_INTRADAY'
 
     API_URL = 'https://www.alphavantage.co/query'
-    API_KEY = 'yM2zzAs6_DxdeT86rtZY'
-    #TX1OLY36K73S9MS9
-    #I7RUE3LA4PSXDJU6
-    #ULDORYWPDU2S2E6X
+
+    def __init__(self, key='yM2zzAs6_DxdeT86rtZY') -> None:
+        super().__init__()
+        self.key=key
 
     FULL = 'full'
     COMPACT = 'compact'
     API_CACHE_PATH = './../target/api_cache/'
 
     def data_raw(self, ticker, data_type=DataType.DAILY_ADJUSTED):
-        data = {"apikey": self.API_KEY,
+        data = {"apikey": self.key,
                 "symbol": ticker,
                 "function": data_type,
                 "outputsize": self.FULL

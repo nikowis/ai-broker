@@ -2,6 +2,7 @@ import pymongo
 
 DB = "ai-broker"
 STOCK_COLLECTION = "stock"
+PROCESSED_STOCK_COLLECTION = "processed_stock"
 
 
 def create_db_connection():
@@ -10,5 +11,8 @@ def create_db_connection():
     return db
 
 
-def stock_collection(db):
-    return db[STOCK_COLLECTION]
+def stock_collection(db, processed=False):
+    if processed:
+        return db[PROCESSED_STOCK_COLLECTION]
+    else:
+        return db[STOCK_COLLECTION]

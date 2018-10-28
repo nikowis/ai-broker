@@ -1,30 +1,29 @@
 import time
 
 from helpers import alpha
-from helpers.db_helper import create_db_connection,stock_collection
+from db.db_helper import create_db_connection, stock_collection
 
 SYMBOL_KEY = "symbol"
 
 API_MAX_PER_MINUTE_CALLS = 5
 API_MAX_DAILY = 500
 
-
 SYMBOLS = ["AAIT", "AAL", "AAME", "AAOI", "AAON", "AAPL", "AAVL", "AAWW", "AAXJ", "ABAC", "ABAX", "ABCB", "ABCD",
            "ABCO", "ABCW", "ABDC", "ABGB", "ABIO", "ABMD", "ABTL", "ABY", "ACAD", "ACAS", "ACAT", "ACET", "ACFC",
-           "ACFN", "ACGL", "ACHC", "ACHN", "ACIW", "ACLS", "ACNB", "ACOR", "ACPW", "ACRX", "ACSF", "ACST", "ACTA",
+           "ACFN", "ACGL", "ACHC", "ACHN", "ACIW", "ACLS", "ACNB", "ACOR", "ACRX", "ACSF", "ACST", "ACTA",
            "ACTG", "ACTS", "ACUR", "ACWI", "ACWX", "ACXM", "ADAT", "ADBE", "ADEP", "ADES", "ADHD", "ADI", "ADMA",
            "ADMP", "ADMS", "ADNC", "ADP", "ADRA", "ADRD", "ADRE", "ADRU", "ADSK", "ADTN", "ADUS", "ADVS", "ADXS",
            "ADXSW", "AEGN", "AEGR", "AEHR", "AEIS", "AEPI", "AERI", "AETI", "AEY", "AEZS", "AFAM", "AFCB", "AFFX",
            "AFH", "AFMD", "AFOP", "AFSI", "AGEN", "AGII", "AGIIL", "AGIO", "AGNC", "AGNCB", "AGNCP", "AGND", "AGRX",
            "AGTC", "AGYS", "AGZD", "AHGP", "AHPI", "AIMC", "AINV", "AIQ", "AIRM", "AIRR", "AIRT", "AIXG", "AKAM",
-           "AKAO", "AKBA", "AKER", "AKRX", "ALCO", "ALDR", "ALDX", "ALGN", "ALGT", "ALIM", "ALKS", "ALLB", "ALLT",
+           "AKAO", "AKBA", "AKER", "AKRX", "ALCO", "ALDR", "ALDX", "ALGN", "ALGT", "ALIM", "ALKS", "ALLT",
            "ALNY", "ALOG", "ALOT", "ALQA", "ALSK", "ALTR", "ALXA", "ALXN", "AMAG", "AMAT", "AMBA", "AMBC", "AMBCW",
            "AMCC", "AMCF", "AMCN", "AMCX", "AMD", "AMDA", "AMED", "AMGN", "AMIC", "AMKR", "AMNB", "AMOT", "AMOV",
            "AMPH", "AMRB", "AMRI", "AMRK", "AMRN", "AMRS", "AMSC", "AMSF", "AMSG", "AMSGP", "AMSWA", "AMTX", "AMWD",
            "AMZN", "ANAC", "ANAD", "ANAT", "ANCB", "ANCI", "ANCX", "ANDE", "ANGI", "ANGO", "ANIK", "ANIP", "ANSS",
-           "ANTH", "ANY", "AOSL", "APAGF", "APDN", "APDNW", "APEI", "APOG", "APOL", "APPY", "APRI", "APSA", "APTO",
+           "ANTH", "ANY", "AOSL", "APAGF", "APDN", "APDNW", "APEI", "APOG", "APOL", "APRI", "APTO",
            "APWC", "AQXP", "ARAY", "ARCB", "ARCC", "ARCI", "ARCP", "ARCPP", "ARCW", "ARDM", "ARDX", "AREX", "ARGS",
-           "ARIA", "ARII", "ARIS", "ARKR", "ARLP", "ARMH", "ARNA", "AROW", "ARQL", "ARRS", "ARRY", "ARTNA", "ARTW",
+           "ARIA", "ARII", "ARIS", "ARKR", "ARLP", "ARMH", "ARNA", "AROW", "ARQL", "ARTW",
            "ARTX", "ARUN", "ARWR", "ASBB", "ASBI", "ASCMA", "ASEI", "ASFI", "ASMB", "ASMI", "ASML", "ASNA", "ASPS",
            "ASPX", "ASRV", "ASRVP", "ASTC", "ASTE", "ASTI", "ASUR", "ASYS", "ATAI", "ATAX", "ATEA", "ATEC", "ATHN",
            "ATHX", "ATLC", "ATLO", "ATML", "ATNI", "ATNY", "ATOS", "ATRA", "ATRC", "ATRI", "ATRM", "ATRO", "ATRS",
@@ -244,7 +243,12 @@ class Importer:
         self.minute_count = 0
         self.daily_count = 0
         self.db = create_db_connection()
-        self.api = alpha.AlphaVantage()
+        self.api = alpha.AlphaVantage('ULDORYWPDU2S2E6X')
+        # yM2zzAs6_DxdeT86rtZY
+        # TX1OLY36K73S9MS9
+        # I7RUE3LA4PSXDJU6
+        # ULDORYWPDU2S2E6X
+
 
     def import_one(self, sym):
         if stock_collection(self.db).count({SYMBOL_KEY: sym}) > 0:
@@ -253,6 +257,9 @@ class Importer:
             print('Didnt find object with symbol ', sym)
             raw_json = self.api.data_raw(sym).json(object_pairs_hook=self.remove_dots)
             keys = list(raw_json.keys())
+            if len(keys) < 2:
+                print('Symbol ', sym, 'not existing in alpha vantage')
+                return
             time_series_key = keys[1]
             time_series = raw_json[time_series_key]
             time_series[SYMBOL_KEY] = sym
