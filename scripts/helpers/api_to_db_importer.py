@@ -1,61 +1,13 @@
 import time
 
 from helpers import alpha
-from helpers.db_helper import create_db_connection
+from helpers.db_helper import create_db_connection,stock_collection
 
-DB = "ai-broker"
-DB_COLLECTION = "stock"
+SYMBOL_KEY = "symbol"
 
 API_MAX_PER_MINUTE_CALLS = 5
 API_MAX_DAILY = 500
 
-
-class Importer:
-
-    def __init__(self) -> None:
-        super().__init__()
-        self.minute_count = 0
-        self.daily_count = 0
-        self.db = create_db_connection()
-        self.api = alpha.AlphaVantage()
-
-    def import_one(self, sym):
-        self.minute_count = self.minute_count + 1
-        self.daily_count = self.daily_count + 1
-        if self.daily_count >= API_MAX_DAILY:
-            raise Exception('Maximum api calls per day reached.')
-        if self.minute_count >= API_MAX_PER_MINUTE_CALLS:
-            print('Sleeping.')
-            time.sleep(60)
-            self.minute_count = 0
-
-        # if sym in self.db.list_collection_names():
-        #     pass
-        #     # load data from db
-        # else:
-        raw_json = self.api.data_raw(sym).json(object_pairs_hook=self.remove_dots)
-        keys = list(raw_json.keys())
-        time_series_key = keys[1]
-        time_series = raw_json[time_series_key]
-        time_series['symbol'] = sym
-        self.db['stock'].insert(time_series)
-
-    def remove_dots(self, items):
-        result = {}
-        for key, value in items:
-            key = key.replace('.', ' ')
-            result[key] = value
-        return result
-
-    def import_all(self):
-        for sym in SYMBOLS:
-            self.import_one(sym)
-
-
-if __name__ == "__main__":
-    imp = Importer()
-    # imp.import_all()
-    imp.import_one('GOOGL')
 
 SYMBOLS = ["AAIT", "AAL", "AAME", "AAOI", "AAON", "AAPL", "AAVL", "AAWW", "AAXJ", "ABAC", "ABAX", "ABCB", "ABCD",
            "ABCO", "ABCW", "ABDC", "ABGB", "ABIO", "ABMD", "ABTL", "ABY", "ACAD", "ACAS", "ACAT", "ACET", "ACFC",
@@ -283,3 +235,49 @@ SYMBOLS = ["AAIT", "AAL", "AAME", "AAOI", "AAON", "AAPL", "AAVL", "AAWW", "AAXJ"
            "YDLE", "YHOO", "YNDX", "YOD", "YORW", "YPRO", "YRCW", "YY", "Z", "ZAGG", "ZAZA", "ZBRA", "ZEUS", "ZFGN",
            "ZGNX", "ZHNE", "ZINC", "ZION", "ZIONW", "ZIONZ", "ZIOP", "ZIV", "ZIXI", "ZLTQ", "ZN", "ZNGA", "ZSPH", "ZU",
            "ZUMZ"]
+
+
+class Importer:
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.minute_count = 0
+        self.daily_count = 0
+        self.db = create_db_connection()
+        self.api = alpha.AlphaVantage()
+
+    def import_one(self, sym):
+        if stock_collection(self.db).count({SYMBOL_KEY: sym}) > 0:
+            print('Found object with symbol ', sym)
+        else:
+            print('Didnt find object with symbol ', sym)
+            raw_json = self.api.data_raw(sym).json(object_pairs_hook=self.remove_dots)
+            keys = list(raw_json.keys())
+            time_series_key = keys[1]
+            time_series = raw_json[time_series_key]
+            time_series[SYMBOL_KEY] = sym
+            stock_collection(self.db).insert(time_series)
+            self.minute_count = self.minute_count + 1
+            self.daily_count = self.daily_count + 1
+            if self.daily_count >= API_MAX_DAILY:
+                raise Exception('Maximum api calls per day reached.')
+            if self.minute_count >= API_MAX_PER_MINUTE_CALLS:
+                print('Sleeping.')
+                time.sleep(60)
+                self.minute_count = 0
+
+    def remove_dots(self, items):
+        result = {}
+        for key, value in items:
+            key = key.replace('.', ' ')
+            result[key] = value
+        return result
+
+    def import_all(self, symbols):
+        for sym in symbols:
+            self.import_one(sym)
+
+
+if __name__ == "__main__":
+    imp = Importer()
+    imp.import_all(SYMBOLS)
