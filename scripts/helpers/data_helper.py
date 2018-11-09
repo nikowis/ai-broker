@@ -2,7 +2,7 @@ import numpy as np
 from sklearn import model_selection
 from sklearn.preprocessing import MinMaxScaler
 
-from helpers import alpha
+from data_processing import alpha
 
 FALL_VALUE = -1
 IDLE_VALUE = 0

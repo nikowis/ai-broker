@@ -3,7 +3,7 @@ import os
 from matplotlib import style
 from sklearn.linear_model import LinearRegression
 
-from helpers import alpha
+from data_processing import alpha
 from linear_regression import lr_model_runner as model_runner
 from helpers.plot_helper import *
 

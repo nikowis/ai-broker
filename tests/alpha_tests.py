@@ -1,5 +1,5 @@
 import unittest
-import helpers.alpha as stck
+import data_processing.alpha as stck
 
 
 class AlphaVantageTests(unittest.TestCase):

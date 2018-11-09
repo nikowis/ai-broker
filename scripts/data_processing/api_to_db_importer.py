@@ -1,6 +1,6 @@
 import time
 
-from helpers import alpha
+from data_processing import alpha
 from db.db_access import create_db_connection, stock_collection
 
 SYMBOL_KEY = "symbol"
