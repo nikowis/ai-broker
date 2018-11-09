@@ -5,13 +5,15 @@ from keras.layers import Dense
 from keras.models import Sequential
 
 from helpers import data_helper as data_helper
+from db import db_access
+import db.stock_constants as const
 from data_processing import alpha
 
 TICKER = 'GOOGL'
 
-api = alpha.AlphaVantage()
-df = api.data(TICKER)
-df = df[[alpha.ADJUSTED_CLOSE_COL]]
+db_conn = db_access.create_db_connection()
+
+df = db_access.find_one_by_ticker_dateframe(db_conn, TICKER)
 
 base_path = './../../target/neural_networks'
 
@@ -25,7 +27,7 @@ X_train, X_test, y_train, y_test = data_helper.train_test_split(X, y)
 
 df_cpy = df.copy()
 
-input_size = X.shape[1]
+input_size = 1
 model = Sequential([
     Dense(1, input_shape=(input_size,)),
     Dense(1, )
@@ -42,7 +44,7 @@ loss, accuracy = model.evaluate(X_test, y_test)
 print("Loss: ", loss, " Accuracy: ", accuracy, " epochs: ", epochs)
 
 predicted = model.predict(X)
-df_cpy[alpha.FORECAST_FUTURE_COL] = predicted
-df_plt = df_cpy[[alpha.ADJUSTED_CLOSE_COL, alpha.LABEL_COL, alpha.FORECAST_FUTURE_COL]]
+df_cpy[const.FORECAST_FUTURE_COL] = predicted
+df_plt = df_cpy[[const.ADJUSTED_CLOSE_COL, const.LABEL_COL, const.FORECAST_FUTURE_COL]]
 df_plt.plot()
 plt.show()

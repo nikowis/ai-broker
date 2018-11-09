@@ -5,9 +5,10 @@ from db import db_access
 import db.stock_constants as const
 
 
+
 def process_data():
     db = db_access.create_db_connection()
-    stock_collection_raw = db_access.stock_collection(db)
+    stock_collection_raw = db_access.stock_collection(db, False)
     stock_processed_collection = db_access.stock_collection(db, True)
 
     for stock in stock_collection_raw.find():
@@ -15,7 +16,7 @@ def process_data():
         print(symbol)
         if len(stock) > 3000 and stock_processed_collection.count({const.SYMBOL: symbol}) < 1:
             df = prepare_df(stock)
-            processed_dict = df.to_dict('index')
+            processed_dict = df.to_dict(const.INDEX)
             processed_dict[const.SYMBOL] = symbol
             stock_processed_collection.insert(processed_dict)
 
@@ -23,7 +24,7 @@ def process_data():
 def prepare_df(stock):
     stock.pop(const.ID, None)
     stock.pop(const.SYMBOL, None)
-    df = pd.DataFrame.from_dict(stock, orient='index')
+    df = pd.DataFrame.from_dict(stock, orient=const.INDEX)
     df = df.astype(float)
     # df.index = pd.to_datetime(df.index)
     df[const.LABEL_COL] = df[const.ADJUSTED_CLOSE_COL].shift(-const.FORECAST_DAYS)

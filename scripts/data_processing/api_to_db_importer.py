@@ -251,7 +251,7 @@ class Importer:
 
 
     def import_one(self, sym):
-        if stock_collection(self.db).count({SYMBOL_KEY: sym}) > 0:
+        if stock_collection(self.db, False).count({SYMBOL_KEY: sym}) > 0:
             print('Found object with symbol ', sym)
         else:
             print('Didnt find object with symbol ', sym)
@@ -263,7 +263,7 @@ class Importer:
             time_series_key = keys[1]
             time_series = raw_json[time_series_key]
             time_series[SYMBOL_KEY] = sym
-            stock_collection(self.db).insert(time_series)
+            stock_collection(self.db, False).insert(time_series)
             self.minute_count = self.minute_count + 1
             self.daily_count = self.daily_count + 1
             if self.daily_count >= API_MAX_DAILY:
