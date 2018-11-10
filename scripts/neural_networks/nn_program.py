@@ -1,50 +1,53 @@
-import os
-
 import matplotlib.pyplot as plt
 from keras.layers import Dense
 from keras.models import Sequential
 
-from helpers import data_helper as data_helper
-from db import db_access
 import db.stock_constants as const
-from data_processing import alpha
+from db import db_access
+from helpers import data_helper as data_helper
+import keras
+import numpy as np
 
-TICKER = 'GOOGL'
+def run():
+    TICKER = 'GOOGL'
 
-db_conn = db_access.create_db_connection()
+    db_conn = db_access.create_db_connection()
 
-df = db_access.find_one_by_ticker_dateframe(db_conn, TICKER)
+    df = db_access.find_one_by_ticker_dateframe(db_conn, TICKER)
 
-base_path = './../../target/neural_networks'
+    forecast_days = 1
 
-if not os.path.exists(base_path):
-    os.makedirs(base_path)
+    df, X, y, X_lately = data_helper.prepare_label_extract_data(df, forecast_days)
+    X_train, X_test, y_train, y_test = data_helper.train_test_split(X, y)
 
-forecast_days = 1
+    input_size = 1
+    model = Sequential([
+        Dense(1, input_shape=(input_size,)),
+        Dense(3, )
+    ])
 
-df, X, y, X_lately = data_helper.prepare_label_extract_data(df, forecast_days)
-X_train, X_test, y_train, y_test = data_helper.train_test_split(X, y)
+    model.compile(optimizer='adam',
+                  loss='categorical_crossentropy',
+                  metrics=['categorical_accuracy'])
 
-df_cpy = df.copy()
+    epochs = 10
+    y_train_binary = keras.utils.to_categorical(y_train)
+    model.fit(X_train, y_train_binary, epochs=epochs, batch_size=10)
+    y_test_binary = keras.utils.to_categorical(y_test)
+    loss, accuracy = model.evaluate(X_test, y_test_binary)
 
-input_size = 1
-model = Sequential([
-    Dense(1, input_shape=(input_size,)),
-    Dense(1, )
-])
+    print("Loss: ", loss, " Accuracy: ", accuracy, " epochs: ", epochs)
 
-model.compile(optimizer='adam',
-              loss='mse',
-              metrics=['accuracy'])
+    predicted_binary = model.predict(X)
 
-epochs = 10
-model.fit(X_train, y_train, epochs=epochs, batch_size=10)
-loss, accuracy = model.evaluate(X_test, y_test)
+    predicted = [np.argmax(pred, axis=None, out=None) for pred in predicted_binary]
 
-print("Loss: ", loss, " Accuracy: ", accuracy, " epochs: ", epochs)
+    df[const.FORECAST_DISCRETE_COL] = predicted
 
-predicted = model.predict(X)
-df_cpy[const.FORECAST_FUTURE_COL] = predicted
-df_plt = df_cpy[[const.ADJUSTED_CLOSE_COL, const.LABEL_COL, const.FORECAST_FUTURE_COL]]
-df_plt.plot()
-plt.show()
+    # df_plt = df[[const.LABEL_DISCRETE_COL, const.FORECAST_DISCRETE_COL]]
+    # df_plt.plot()
+    # plt.show()
+
+
+if __name__ == "__main__":
+    run()

@@ -52,5 +52,5 @@ def prepare_label_extract_data(df, forecast_days):
     X = X[:-forecast_days]
     df = df[:-forecast_days]
     df_removed = df.dropna()
-    y = np.array(df_removed[const.LABEL_COL])
+    y = np.array(df_removed[const.LABEL_DISCRETE_COL])
     return df, X, y, X_lately
