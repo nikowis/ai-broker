@@ -1,6 +1,6 @@
 import numpy as np
 from sklearn import model_selection
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import StandardScaler
 
 import db.stock_constants as const
 
@@ -17,21 +17,11 @@ def train_test_split(X, y, scale=False):
     """
     X_train, X_test, y_train, y_test = model_selection.train_test_split(X, y, test_size=0.2)
     if scale:
-        expanded_y_train = np.expand_dims(y_train, axis=1)
-        expanded_y_test = np.expand_dims(y_test, axis=1)
-        scaler = MinMaxScaler()
-        train_data = np.append(X_train, expanded_y_train, axis=1)
-        test_data = np.append(X_test, expanded_y_test, axis=1)
-        scaler.fit(train_data)
-        train_data = scaler.transform(train_data)
-        test_data = scaler.transform(test_data)
-
-        X_size = X_train.shape[1]
-
-        X_train = train_data[:, :X_size]
-        y_train = train_data[:, X_size]
-        X_test = test_data[:, :X_size]
-        y_test = test_data[:, X_size]
+        X_train = np.expand_dims(X_train, axis=1)
+        X_test = np.expand_dims(X_test, axis=1)
+        std_scale = StandardScaler().fit(X_train)
+        X_train = std_scale.transform(X_train)
+        X_test = std_scale.transform(X_test)
     return X_train, X_test, y_train, y_test
 
 
@@ -39,15 +29,13 @@ def prepare_label_extract_data(df, forecast_days):
     """
     Function stplitting dateframe data for machine learning.
 
-    :param df: Dateframe data to modify.
+    :param df: dateframe data
     :param forecast_days: how many days to forecast out
     :return:
-        (df, X, y, X_lately) # Tuple of (modified dateframe with label column, learning data, labels, data without labels)
+        (df, X, y, X_lately) # tuple of (modified df, learning data, labels, data without labels)
     """
-    df = df.copy()
 
     X = np.array(df[const.ADJUSTED_CLOSE_COL])
-
     X_lately = X[-forecast_days:]
     X = X[:-forecast_days]
     df = df[:-forecast_days]

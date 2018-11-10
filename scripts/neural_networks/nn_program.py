@@ -3,14 +3,13 @@ import os
 import keras
 import matplotlib.pyplot as plt
 import numpy as np
-from keras.layers import Dense
-from keras.models import Sequential
 from matplotlib import style
 
 import db.stock_constants as const
 from db import db_access
 from helpers import data_helper as data_helper
 from helpers import plot_helper
+from neural_networks import nn_model
 
 base_path = './../../target/neural_networks'
 
@@ -28,19 +27,13 @@ def run():
     forecast_days = 1
 
     df, X, y, X_lately = data_helper.prepare_label_extract_data(df, forecast_days)
-    X_train, X_test, y_train, y_test = data_helper.train_test_split(X, y)
+    X_train, X_test, y_train, y_test = data_helper.train_test_split(X, y, scale=True)
 
-    input_size = 1
-    model = Sequential([
-        Dense(1, input_shape=(input_size,)),
-        Dense(3, )
-    ])
+    layers = [5, 5]
 
-    model.compile(optimizer='adam',
-                  loss='categorical_crossentropy',
-                  metrics=['categorical_accuracy'])
+    model = nn_model.create_seq_model(layers)
 
-    epochs = 10
+    epochs = 40
     y_train_binary = keras.utils.to_categorical(y_train)
     model.fit(X_train, y_train_binary, epochs=epochs, batch_size=10)
     y_test_binary = keras.utils.to_categorical(y_test)
@@ -53,15 +46,9 @@ def run():
     predicted = [np.argmax(pred, axis=None, out=None) for pred in predicted_binary]
 
     df[const.FORECAST_DISCRETE_COL] = predicted
-
-    # df_plt = df[[const.LABEL_DISCRETE_COL, const.FORECAST_DISCRETE_COL]]
-    # df_plt.plot()
-    # plt.show()
     style.use('ggplot')
-    fig, ax = plt.subplots()
-
-    df[const.LABEL_DISCRETE_COL].plot(kind='hist', xticks=[-1, 0, 1], label=plot_helper.RATE_CHANGE_LABEL)
-    df[const.FORECAST_DISCRETE_COL].plot(kind='hist', xticks=[-1, 0, 1], label=plot_helper.RATE_CHANGE_FORECAST_LABEL)
+    df[const.LABEL_DISCRETE_COL].plot(kind='hist', xticks=[0, 1, 2], label=plot_helper.RATE_CHANGE_LABEL)
+    df[const.FORECAST_DISCRETE_COL].plot(kind='hist', xticks=[0, 1, 2], label=plot_helper.RATE_CHANGE_FORECAST_LABEL)
     plt.xticks([0, 1, 2], [plot_helper.FALL_LABEL, plot_helper.IDLE_LABEL, plot_helper.RISE_LABEL])
     plot_helper.legend_labels_save_files(TICKER, 'nn_discrete_score', base_path, plot_helper.VALUE_CHANGE_LABEL,
                                          plot_helper.FORECAST_COUNT_LABEL, 2)
