@@ -1,12 +1,22 @@
+import os
+
+import keras
 import matplotlib.pyplot as plt
+import numpy as np
 from keras.layers import Dense
 from keras.models import Sequential
+from matplotlib import style
 
 import db.stock_constants as const
 from db import db_access
 from helpers import data_helper as data_helper
-import keras
-import numpy as np
+from helpers import plot_helper
+
+base_path = './../../target/neural_networks'
+
+if not os.path.exists(base_path):
+    os.makedirs(base_path)
+
 
 def run():
     TICKER = 'GOOGL'
@@ -47,6 +57,14 @@ def run():
     # df_plt = df[[const.LABEL_DISCRETE_COL, const.FORECAST_DISCRETE_COL]]
     # df_plt.plot()
     # plt.show()
+    style.use('ggplot')
+    fig, ax = plt.subplots()
+
+    df[const.LABEL_DISCRETE_COL].plot(kind='hist', xticks=[-1, 0, 1], label=plot_helper.RATE_CHANGE_LABEL)
+    df[const.FORECAST_DISCRETE_COL].plot(kind='hist', xticks=[-1, 0, 1], label=plot_helper.RATE_CHANGE_FORECAST_LABEL)
+    plt.xticks([0, 1, 2], [plot_helper.FALL_LABEL, plot_helper.IDLE_LABEL, plot_helper.RISE_LABEL])
+    plot_helper.legend_labels_save_files(TICKER, 'nn_discrete_score', base_path, plot_helper.VALUE_CHANGE_LABEL,
+                                         plot_helper.FORECAST_COUNT_LABEL, 2)
 
 
 if __name__ == "__main__":
