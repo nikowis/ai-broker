@@ -19,7 +19,7 @@ if not os.path.exists(base_path):
     os.makedirs(base_path)
 
 LAYERS = [10, 10, 10]
-EPOCHS = 50
+EPOCHS = 1
 FORECAST_DAYS = 1
 SCALE = True
 ACTIVATION = None
@@ -62,15 +62,37 @@ def run():
     predicted = [np.argmax(pred, axis=None, out=None) for pred in predicted_binary]
 
     df[const.FORECAST_DISCRETE_COL] = predicted
+
+    fig = plt.figure(figsize=(10, 6))
+
     style.use('ggplot')
+
+    main_title = "Loss: " + str(round(loss, 4)) + ", accuracy: " + str(round(accuracy, 4)) + ", epochs: " + str(
+        EPOCHS) + '\n'
+    main_title += 'Layers: [' + ''.join(
+        str(e) + " " for e in LAYERS) + '], optimizer: ' + OPTIMIZER + ', loss: ' + LOSS + ', activation: ' + str(
+        ACTIVATION)
+
+    plt.suptitle(main_title)
+
+    plt.subplot(1, 2, 1)
+
     df[const.LABEL_DISCRETE_COL].plot(kind='hist', xticks=[0, 1, 2], label=plot_helper.RATE_CHANGE_LABEL)
-    plot_helper.legend_labels_save_files(TICKER, 'nn_discrete_labels', base_path, plot_helper.VALUE_CHANGE_LABEL,
-                                         plot_helper.FORECAST_COUNT_LABEL, 2)
-    plt.close()
+    plt.xticks([0, 1, 2], [plot_helper.FALL_LABEL, plot_helper.IDLE_LABEL, plot_helper.RISE_LABEL])
+    plt.xlabel(plot_helper.VALUE_CHANGE_LABEL)
+    plt.ylabel(plot_helper.FORECAST_COUNT_LABEL)
+    plt.title(plot_helper.REAL_VALUES_LABEL + TICKER)
+
+    plt.subplot(1, 2, 2)
     df[const.FORECAST_DISCRETE_COL].plot(kind='hist', xticks=[0, 1, 2], label=plot_helper.RATE_CHANGE_FORECAST_LABEL)
     plt.xticks([0, 1, 2], [plot_helper.FALL_LABEL, plot_helper.IDLE_LABEL, plot_helper.RISE_LABEL])
-    plot_helper.legend_labels_save_files(TICKER, 'nn_discrete_predictions', base_path, plot_helper.VALUE_CHANGE_LABEL,
-                                         plot_helper.FORECAST_COUNT_LABEL, 2)
+    plt.xlabel(plot_helper.VALUE_CHANGE_LABEL)
+    plt.ylabel(plot_helper.FORECAST_COUNT_LABEL)
+    plt.title(plot_helper.PREDICTED_VALUES_LABEL + TICKER)
+
+    # plt.subplots_adjust(hspace=0.5, wspace=0.5)
+    plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+    plt.show()
     plt.close()
 
 

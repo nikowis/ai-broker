@@ -12,6 +12,8 @@ RATE_CHANGE_LABEL = 'Zmiana kursu'
 RISE_LABEL = 'wzrost'
 IDLE_LABEL = 'utrzymanie'
 FALL_LABEL = 'spadek'
+REAL_VALUES_LABEL = 'Rzeczywiste wartości '
+PREDICTED_VALUES_LABEL = 'Przewidywane wartości '
 
 
 def legend_labels_save_files(title, file_name='img', base_img_path='/target', xlabel=DATE_LABEL,
