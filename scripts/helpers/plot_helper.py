@@ -14,6 +14,11 @@ IDLE_LABEL = 'utrzymanie'
 FALL_LABEL = 'spadek'
 REAL_VALUES_LABEL = 'Rzeczywiste wartości '
 PREDICTED_VALUES_LABEL = 'Przewidywane wartości '
+EPOCH_LABEL = 'iteracja'
+ACCURACY_LABEL = 'dokładność'
+LOSS_LABEL = 'wartość funkcji straty'
+LOSS_TITLE = 'Strata modelu'
+ACCURACY_TITLE = 'Dokładność modelu'
 
 
 def legend_labels_save_files(title, file_name='img', base_img_path='/target', xlabel=DATE_LABEL,

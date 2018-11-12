@@ -19,7 +19,7 @@ if not os.path.exists(base_path):
     os.makedirs(base_path)
 
 LAYERS = [10, 10, 10]
-EPOCHS = 1
+EPOCHS = 6
 FORECAST_DAYS = 1
 SCALE = True
 ACTIVATION = None
@@ -51,7 +51,7 @@ def run():
                                       loss=LOSS)
 
     y_train_binary = keras.utils.to_categorical(y_train)
-    model.fit(X_train, y_train_binary, epochs=EPOCHS, batch_size=BATCH_SIZE)
+    history = model.fit(X_train, y_train_binary, epochs=EPOCHS, batch_size=BATCH_SIZE)
     y_test_binary = keras.utils.to_categorical(y_test)
     loss, accuracy = model.evaluate(X_test, y_test_binary)
 
@@ -63,7 +63,7 @@ def run():
 
     df[const.FORECAST_DISCRETE_COL] = predicted
 
-    fig = plt.figure(figsize=(10, 6))
+    fig = plt.figure(figsize=(12, 12))
 
     style.use('ggplot')
 
@@ -75,7 +75,7 @@ def run():
 
     plt.suptitle(main_title)
 
-    plt.subplot(1, 2, 1)
+    plt.subplot(2, 2, 1)
 
     df[const.LABEL_DISCRETE_COL].plot(kind='hist', xticks=[0, 1, 2], label=plot_helper.RATE_CHANGE_LABEL)
     plt.xticks([0, 1, 2], [plot_helper.FALL_LABEL, plot_helper.IDLE_LABEL, plot_helper.RISE_LABEL])
@@ -83,12 +83,24 @@ def run():
     plt.ylabel(plot_helper.FORECAST_COUNT_LABEL)
     plt.title(plot_helper.REAL_VALUES_LABEL + TICKER)
 
-    plt.subplot(1, 2, 2)
+    plt.subplot(2, 2, 2)
     df[const.FORECAST_DISCRETE_COL].plot(kind='hist', xticks=[0, 1, 2], label=plot_helper.RATE_CHANGE_FORECAST_LABEL)
     plt.xticks([0, 1, 2], [plot_helper.FALL_LABEL, plot_helper.IDLE_LABEL, plot_helper.RISE_LABEL])
     plt.xlabel(plot_helper.VALUE_CHANGE_LABEL)
     plt.ylabel(plot_helper.FORECAST_COUNT_LABEL)
     plt.title(plot_helper.PREDICTED_VALUES_LABEL + TICKER)
+
+    plt.subplot(2, 2, 3)
+    plt.plot(history.history['loss'])
+    plt.title(plot_helper.LOSS_TITLE)
+    plt.ylabel(plot_helper.LOSS_LABEL)
+    plt.xlabel(plot_helper.EPOCH_LABEL)
+
+    plt.subplot(2, 2, 4)
+    plt.plot(history.history['categorical_accuracy'])
+    plt.title(plot_helper.ACCURACY_TITLE)
+    plt.ylabel(plot_helper.ACCURACY_LABEL)
+    plt.xlabel(plot_helper.EPOCH_LABEL)
 
     # plt.subplots_adjust(hspace=0.5, wspace=0.5)
     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
