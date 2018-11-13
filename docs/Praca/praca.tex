@@ -167,8 +167,11 @@ Przed przystąpieniem do wyboru metod należy zastanowić się nad danymi wejśc
 \item{Najwyższa cena akcji danego dnia}
 \end{itemize}
 
- Przy korzystaniu z wartości cen akcji należy również uwzględnić podział akcji(tak zwany \textit{split}). Gdy jakaś spółka decyduje się na podział swoich akcji oznacza to, że każda z akcji dzieli się na dwie akcje o cenie wynoszącej połowe pierwotnej ceny. Taki zabieg pozwala na zmniejszenie ceny pojedynczej akcji dzięki czemu może stać się ona dostępna dla większej ilości inwestorów. 
+ Przy korzystaniu z wartości cen akcji należy również uwzględnić podział akcji(tak zwany \textit{split}). Gdy jakaś spółka decyduje się na podział swoich akcji oznacza to, że każda z akcji dzieli się na dwie akcje o cenie wynoszącej połowę pierwotnej ceny. Taki zabieg pozwala na zmniejszenie ceny pojedynczej akcji dzięki czemu może stać się ona dostępna dla większej ilości inwestorów. 
 
+\subsection{Źródło danych}
+
+Ze względu na małą dostępność gotowych danych do trenowania modeli predykcyjnych w pracy zostało wykorzystane darmowe źródło danych giełdowych \textit{Alpha Vantage} \cite{alphavantage}. Jest to API pozwalające na pobranie danych historycznych dla konkretnej spółki poprzez podanie symbolu giełdowego. Do pobrania danych została wykorzystana lista symboli z giełdy NASDAQ \cite{nasdaq}. Spośród wszystkich spółek zostały odrzucone te, których historia giełdowa była niepełna, zaburzona lub miała mniej niż 3000 dni giełdowych. Pozwoliło to na wyselekcjonowanie zbioru ponad 900 spółek na podstawie których trenowane i testowane były wybrane modele. Wszystkie dane po pobraniu zostały zapisane w lokalnej bazie \textit{MongoDB} \cite{mongodb} w celu trwałego przechowania danych i optymalizacji w ich pobieraniu do pamięci.
 
 \subsection{Predykcja}
 
@@ -341,6 +344,15 @@ Strona główna NASDAQ
  \bibitem{jpx}
 Strona główna JPX
 \\\url{https://www.jpx.co.jp/english/}
+
+ \bibitem{alphavantage}
+Strona główna Alpha Vantage
+\\\url{https://www.alphavantage.co/}
+
+ \bibitem{mongodb}
+Strona główna MongoDB
+\\\url{https://www.mongodb.com/}
+
 
 
 \bibitem{randwalk}
