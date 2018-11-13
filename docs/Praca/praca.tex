@@ -3,6 +3,7 @@
 \usepackage{polski}
 \usepackage{float}
 \usepackage[T1]{fontenc}
+\usepackage{url}
 
 \raggedbottom
 
@@ -158,17 +159,12 @@ Celem tej pracy było opracowanie, ocena i porównanie różnych modeli predykcj
 
 \subsection{Giełda}
 
-Giełda z definicji jest miejscem wymiany towarów przez sprzedawców i kupców. Giełdy można podzielić na giełdy towarowe, pieniężne lub usługowe. Wymiany na tradycyjnych giełdach przebiegają przede wszystkim podczas sesji, które są organizowane w określonych dniach i godzinach. Najpopularniejszym rodzajem giełd są giełdy pieniężne, a w szczególności giełdy papierów wartościowych. Największymi giełdami papierów wartościowych są \textit{NYSE (New York Stock Exchange)}, \textit{NASDAQ} oraz \textit{JPX (Japan Exchange Group)}. Na każdej z tych giełd w dniach, w których prowadzone są sesje, dochodzi do transakcji opiewających na łączną kwotę rzędu miliardów dolarów amerykańskich.
+Giełda z definicji jest miejscem wymiany towarów przez sprzedawców i kupców. Giełdy można podzielić na giełdy towarowe, pieniężne lub usługowe. Wymiany na tradycyjnych giełdach przebiegają przede wszystkim podczas sesji, które są organizowane w określonych dniach i godzinach. Najpopularniejszym rodzajem giełd są giełdy pieniężne, a w szczególności giełdy papierów wartościowych. Największymi giełdami papierów wartościowych są \textit{NYSE (New York Stock Exchange)}\cite{nyse}, \textit{NASDAQ}\cite{nasdaq} oraz \textit{JPX (Japan Exchange Group)}\cite{jpx}. Na każdej z tych giełd w dniach, w których prowadzone są sesje, dochodzi do transakcji opiewających na łączną kwotę rzędu miliardów dolarów amerykańskich.
 
 \bigskip
 
  Jednym z wymienianych na giełdzie towarów są akcje różnorodnych spółek. Każda spółka, która jest obecna na giełdzie ma przypisany symbol giełdowy (\textit{ticker}). Symbol giełdowy jest skrótowym kodem do identyfikowania spółek na określonej giełdzie (przykładowe symbole: \textit{GOOGL}, \textit{MSFT}, \textit{AMZN}). Podczas każdej sesji dokonywane są transakcje milionów akcji, których cena regulowana jest jedynie przez wolny rynek. Wynikiem tego jest duża zmienność cen akcji, spowodowana różnymi spekulacjami lub upublicznianiem informacji o konkretnej spółce.
 
-\begin{figure}[H]
-\centering \includegraphics[scale=0.9]{img/linear_regression/l_r_stock_data}
-\caption{Wykres cen akcji spółki \textit{Alphabet Inc}}
-\label{alphabet_history}
-\end{figure}
 
 \subsection{Dostępne dane}
 
@@ -189,6 +185,11 @@ Przed przystąpieniem do wyboru metod należy zastanowić się nad danymi wejśc
 
 Na rysunku \ref{alphabet_history} widoczne są zmiany cen akcji spółki \textit{Alphabet Inc.} w latach 2004-2018. Analizując ten wykres można z łatwością wskazać daty, w których opłacalnym było zainwestowanie w akcje, a następnie je sprzedać by osiągnąć zysk. Niestety stwierdzenie czy wartość akcji w przyszłości spadnie, czy wzrośnie, nie jest tak trywialne jak odczytywanie danych historycznych. Przewidywanie przyszłych cen akcji jest głównym zajęciem zarówno inwestorów indywidualnych jak i instytucjonalnych. Skuteczne odgadywanie przyszłych wzrostów lub spadków cen pozwoliłoby na osiąganie ponadprzeciętnych zysków i unikanie strat.
 
+\begin{figure}[H]
+\centering \includegraphics[scale=0.9]{img/linear_regression/l_r_stock_data}
+\caption{Wykres cen akcji spółki \textit{Alphabet Inc}}
+\label{alphabet_history}
+\end{figure}
 
 \subsubsection{Przewidywany parametr}
 
@@ -202,9 +203,9 @@ Najbardziej pożytecznym parametrem akcji, którego przewidywanie daje inwestoro
 
 Zgodnie z hipotezą błądzenia losowego \cite{randwalk}, krótkoterminowo, ceny akcji zmieniają się według nieprzewidywalnych schematów. Zmiany minutowe cen akcji są więc dużo cięższe do przewidzenia niż zmiany dobowe. Z tego względu przewidywanie wartości w okresie krótszym niż jedna doba, nie zostało uwzględnione w obszarze badań tej pracy.
 
-\subsection{Metodyka i ocena modeli}
+\subsection{Metodyka tworzenia modeli}
 
-Ponieważ zagadnienie przewidywania giełdy jest nietrywialne ze względu na losowe wahania wpływające na ceny akcji, do oceny każdego z modeli do predykcji, zostaną wykorzystane zróżnicowane parametry testujące:
+Ponieważ zagadnienie przewidywania giełdy jest nietrywialne ze względu na losowe wahania wpływające na ceny akcji, do stworzenia każdego z modeli do predykcji, należy rozważyć wykorzystanie zróżnicowanych założeń:
 	
 \begin{itemize}
 \item{\textbf{Prognozowanie dokładne/dyskretne} }
@@ -219,9 +220,11 @@ Potencjalnie korzystniejszym podejściem jest przewidywanie dokładnych cen akcj
 \begin{itemize}
 \item spadek ceny poniżej $0,4\%$
 \item wzrost ceny powyżej $0,4\%$
-\item utrzymanie zmiany ceny w przedziale $(-0,4, 0.4)\%$
+\item utrzymanie zmiany ceny w przedziale $(-0,4; 0,4)\%$
 \end{itemize}
 
+
+Na rysunku \ref{l_r_pct_change_last_30} można zaobserwować, iż zmiany w kursie często przekraczają $0,4\%$ w związku z czym transakcje przynoszące zysk można wykonywać regularnie. Ten wniosek potwierdza zasadność tej metody do oceny modeli.
 
 \begin{figure}[H]
 \centering \includegraphics[scale=0.9]{img/linear_regression/l_r_pct_change_last_30}
@@ -229,7 +232,6 @@ Potencjalnie korzystniejszym podejściem jest przewidywanie dokładnych cen akcj
 \label{l_r_pct_change_last_30}
 \end{figure}
 
-Na rysunku \ref{l_r_pct_change_last_30} można zaobserwować, iż zmiany w kursie często przekraczają $0,4\%$ w związku z czym transakcje przynoszące zysk można wykonywać regularnie. Ten wniosek potwierdza zasadność tej metody do oceny modeli.
 
 \subsubsection{Liczba dni}
 
@@ -243,11 +245,38 @@ Według niektórych badań wolumen obrotów akcji nie jest skorelowany w żaden 
 
 Modele oceniane na podstawie danych poszczególnych spółek mogą dawać w skrajnych przypadkach zafałszowane wyniki. Wiele spółek wykazuje wysoką korelację cen akcji między sobą. W celu uniknięcia pułapki przetrenowania, do uczenia i testowania użyte zostały dane spółek o niskiej korelacji i różnych trendach wzrostu/spadku.
 
+\subsection{Ocena modeli}
+
+Podczas oceny modelu wzięto pod uwagę różne kryteria mierzenia dokładności nauczonych klasyfikatorów.
+\begin{itemize}
+\item procent prawidłowych klasyfikacji
+\item pole pod krzywą ROC
+\item częściowy indeks Gini
+\item statystyka H
+\item współczynnik Briera
+\item statystyka Kołomogrowa-Smirnova
+\end{itemize}
+
+\subsubsection{Procent prawidłowych klasyfikacji}
+
+\subsubsection{Pole pod krzywą ROC}
+
+\subsubsection{Częściowy indeks Gini}
+
+\subsubsection{Statystyka H}
+
+\subsubsection{Współczynnik Briera}
+
+\subsubsection{Statystyka Kołomogrowa-Smirnova}
+
 \section{Prognozowanie}
 
 \subsection{Regresja liniowa}
 
 Jedną z naiwnych metod przewidywania wartości funkcji jest regresja liniowa. Pierwszą próbą dla tego modelu było przewidzenie ceny zamknięcia z kolejnego dnia przy posiadaniu danych z dnia poprzedniego.
+
+Z rysunku \ref{linear_regression_1} wynika iż prognozowane wartości pokrywają się z rzeczywistymi. Po obliczeniu błędu model daje nam dokładność na poziomie około  $99,934\%$. Wydaje się to być doskonałym wynikiem. Aby upewnić się o wartości modelu należy przyjrzeć się wykresowi z bliska.
+
 
 \begin{figure}[H]%
 \centering
@@ -262,16 +291,14 @@ Jedną z naiwnych metod przewidywania wartości funkcji jest regresja liniowa. P
 \label{linear_regression_1}
 \end{figure}
 
-Z rysunku \ref{linear_regression_1} wynika iż prognozowane wartości pokrywają się z rzeczywistymi. Po obliczeniu błędu model daje nam dokładność na poziomie około  $99,934\%$. Wydaje się to być doskonałym wynikiem. Aby upewnić się o wartości modelu należy przyjrzeć się wykresowi z bliska.
+
+Na rysunku \ref{l_r_1_day_last_30} widać że prognozowane wartości są w rzeczywistości delikatnie zniekształconym obrazem przeszłych notowań spółki. Dokładność na poziomie $~99\%$ została osiągnięta ze względu na małe wahania w cenie. Logicznie rzecz biorąc nie jest to dobra metoda przewidywania przyszłości. Gdy cena jest w lokalnym maksimum wówczas inwestor powinien sprzedać posiadane akcje, jednak model przewiduje dalsze wzrosty ceny i wprowadza inwestora w błąd. Analogiczna sytuacja dzieje się przy minimach lokalnych ceny akcji. 
 
 \begin{figure}[H]
 \centering \includegraphics[scale=0.9]{img/linear_regression/l_r_1_day_last_30}
 \caption{Wykres dla spólki \textit{GOOGL} z 30 dni}
 \label{l_r_1_day_last_30}
 \end{figure}
-
-Na rysunku \ref{l_r_1_day_last_30} widać że prognozowane wartości są w rzeczywistości delikatnie zniekształconym obrazem przeszłych notowań spółki. Dokładność na poziomie $~99\%$ została osiągnięta ze względu na małe wahania w cenie. Logicznie rzecz biorąc nie jest to dobra metoda przewidywania przyszłości. Gdy cena jest w lokalnym maksimum wówczas inwestor powinien sprzedać posiadane akcje, jednak model przewiduje dalsze wzrosty ceny i wprowadza inwestora w błąd. Analogiczna sytuacja dzieje się przy minimach lokalnych ceny akcji. 
-
 
 
 \bigskip
@@ -312,6 +339,20 @@ Jednym z najprostszych przykładów sieci neuronowych jest perceptron wielowarst
 
 \renewcommand{\refname}{Bibliografia}
 \begin{thebibliography}{9}
+  
+ \bibitem{nyse}
+Strona główna NYSE
+\\\url{https://www.nyse.com}
+ 
+ \bibitem{nasdaq}
+Strona główna NASDAQ
+\\\url{https://www.nasdaq.com/}
+
+ \bibitem{jpx}
+Strona główna JPX
+\\\url{https://www.jpx.co.jp/english/}
+
+
 \bibitem{randwalk}
   Burton G. Malkiel,
   \textit{Random Walk Down Wall Street: The Time-Tested Strategy for Successful Investing}.
