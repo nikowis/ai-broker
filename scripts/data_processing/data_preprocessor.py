@@ -5,7 +5,6 @@ from db import db_access
 import db.stock_constants as const
 
 
-
 def process_data():
     db = db_access.create_db_connection()
     stock_collection_raw = db_access.stock_collection(db, False)
@@ -28,10 +27,15 @@ def prepare_df(stock):
     df = df.astype(float)
     # df.index = pd.to_datetime(df.index)
     df[const.LABEL_COL] = df[const.ADJUSTED_CLOSE_COL].shift(-const.FORECAST_DAYS)
-    df[const.DAILY_PCT_CHANGE_COL] = (df[const.LABEL_COL] - df[const.ADJUSTED_CLOSE_COL]) / df[const.ADJUSTED_CLOSE_COL] * 100.0
+    df[const.DAILY_PCT_CHANGE_COL] = (df[const.LABEL_COL] - df[const.ADJUSTED_CLOSE_COL]) / df[
+        const.ADJUSTED_CLOSE_COL] * 100.0
     df[const.LABEL_DISCRETE_COL] = df[const.DAILY_PCT_CHANGE_COL].apply(
-        lambda pct: np.NaN if pd.isna(
-            pct) else const.FALL_VALUE if pct < -const.TRESHOLD else const.RISE_VALUE if pct > const.TRESHOLD else const.IDLE_VALUE)
+        lambda pct: np.NaN if pd.isna(pct)
+        else const.FALL_VALUE if pct < -const.TRESHOLD else const.RISE_VALUE if pct > const.TRESHOLD else const.IDLE_VALUE)
+    df[const.LABEL_BINARY_COL] = df[const.DAILY_PCT_CHANGE_COL].apply(
+        lambda pct: np.NaN if pd.isna(pct)
+        else const.FALL_VALUE if pct < 0 else const.IDLE_VALUE if pct >= 0 else const.RISE_VALUE)
+
     return df
 
 

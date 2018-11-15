@@ -42,6 +42,8 @@ def run(layers=LAYERS, epochs=EPOCHS, forecast_days=FORECAST_DAYS, activation=AC
     predicted_binary = model.predict(x_standarized)
     predicted = [np.argmax(pred, axis=None, out=None) for pred in predicted_binary]
     df[const.FORECAST_DISCRETE_COL] = predicted
+    # count_matching = np.count_nonzero(np.where(df[const.FORECAST_DISCRETE_COL] == df[const.LABEL_DISCRETE_COL], 1, 0))
+    # print('Accuracy on full data:', count_matching/len(predicted))
 
     main_title = "Loss: " + str(round(loss, 4)) + ", accuracy: " + str(round(accuracy, 4)) + ", epochs: " + str(
         epochs) + ', history days:' + str(history_days) + '\n'
