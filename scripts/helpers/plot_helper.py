@@ -1,7 +1,13 @@
+import os
+
 import matplotlib.pyplot as plt
 from matplotlib import style
 
 import db.stock_constants as const
+
+BASE_IMG_PATH = './../../target'
+if not os.path.exists(BASE_IMG_PATH):
+    os.makedirs(BASE_IMG_PATH)
 
 CLOSE_PRICE_USD_LABEL = 'Cena zamknięcia (USD)'
 DATE_LABEL = 'Data'
@@ -24,7 +30,7 @@ LOSS_TITLE = 'Strata modelu'
 ACCURACY_TITLE = 'Dokładność modelu'
 
 
-def legend_labels_save_files(title, file_name='img', base_img_path='/target', xlabel=DATE_LABEL,
+def legend_labels_save_files(title, file_name='img', base_img_path=BASE_IMG_PATH, xlabel=DATE_LABEL,
                              ylabel=CLOSE_PRICE_USD_LABEL, legend=4):
     if not legend == -1:
         plt.legend(loc=legend)
@@ -37,7 +43,7 @@ def legend_labels_save_files(title, file_name='img', base_img_path='/target', xl
     plt.close()
 
 
-def plot_result(ticker, df, history, main_title):
+def plot_result(ticker, df, history, main_title, file_name):
     fig = plt.figure(figsize=(12, 12))
     style.use('ggplot')
 
@@ -66,5 +72,7 @@ def plot_result(ticker, df, history, main_title):
     plt.xlabel(EPOCH_LABEL)
     # plt.subplots_adjust(hspace=0.5, wspace=0.5)
     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+    plt.savefig('{}/{}.eps'.format(BASE_IMG_PATH, file_name), format='eps', dpi=1000)
+    plt.savefig('{}/{}.png'.format(BASE_IMG_PATH, file_name))
     plt.show()
     plt.close()
