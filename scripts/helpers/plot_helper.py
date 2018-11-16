@@ -9,6 +9,10 @@ BASE_IMG_PATH = './../../target'
 if not os.path.exists(BASE_IMG_PATH):
     os.makedirs(BASE_IMG_PATH)
 
+OUTSTANDING_PATH = BASE_IMG_PATH + '_outstanding'
+if not os.path.exists(OUTSTANDING_PATH):
+    os.makedirs(OUTSTANDING_PATH)
+
 CLOSE_PRICE_USD_LABEL = 'Cena zamknięcia (USD)'
 DATE_LABEL = 'Data'
 FORECAST_LABEL = 'Prognoza'
@@ -43,7 +47,7 @@ def legend_labels_save_files(title, file_name='img', base_img_path=BASE_IMG_PATH
     plt.close()
 
 
-def plot_result(ticker, df, history, main_title, file_name):
+def plot_result(df, history, main_title, file_name, outstanding=False):
     fig = plt.figure(figsize=(12, 12))
     style.use('ggplot')
 
@@ -53,13 +57,13 @@ def plot_result(ticker, df, history, main_title, file_name):
     plt.xticks([0, 1, 2], [FALL_LABEL, IDLE_LABEL, RISE_LABEL])
     plt.xlabel(VALUE_CHANGE_LABEL)
     plt.ylabel(FORECAST_COUNT_LABEL)
-    plt.title(REAL_VALUES_LABEL + ticker)
+    plt.title(REAL_VALUES_LABEL)
     plt.subplot(2, 2, 2)
     df[const.FORECAST_DISCRETE_COL].plot(kind='hist', xticks=[0, 1, 2], label=RATE_CHANGE_FORECAST_LABEL)
     plt.xticks([0, 1, 2], [FALL_LABEL, IDLE_LABEL, RISE_LABEL])
     plt.xlabel(VALUE_CHANGE_LABEL)
     plt.ylabel(FORECAST_COUNT_LABEL)
-    plt.title(PREDICTED_VALUES_LABEL + ticker)
+    plt.title(PREDICTED_VALUES_LABEL)
     plt.subplot(2, 2, 3)
     plt.plot(history.history['loss'])
     plt.title(LOSS_TITLE)
@@ -72,7 +76,12 @@ def plot_result(ticker, df, history, main_title, file_name):
     plt.xlabel(EPOCH_LABEL)
     # plt.subplots_adjust(hspace=0.5, wspace=0.5)
     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
-    plt.savefig('{}/{}.eps'.format(BASE_IMG_PATH, file_name), format='eps', dpi=1000)
-    plt.savefig('{}/{}.png'.format(BASE_IMG_PATH, file_name))
-    plt.show()
+
+    if outstanding:
+        #plt.savefig('{}/{}.eps'.format(OUTSTANDING_PATH, file_name), format='eps', dpi=1000)
+        plt.savefig('{}/{}.png'.format(OUTSTANDING_PATH, file_name))
+    else:
+        #plt.savefig('{}/{}.eps'.format(BASE_IMG_PATH, file_name), format='eps', dpi=1000)
+        plt.savefig('{}/{}.png'.format(BASE_IMG_PATH, file_name))
+    #plt.show()
     plt.close()
