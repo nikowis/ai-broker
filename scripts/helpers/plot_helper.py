@@ -9,7 +9,7 @@ BASE_IMG_PATH = './../../target'
 if not os.path.exists(BASE_IMG_PATH):
     os.makedirs(BASE_IMG_PATH)
 
-OUTSTANDING_PATH = BASE_IMG_PATH + '_outstanding'
+OUTSTANDING_PATH = BASE_IMG_PATH + '/outstanding'
 if not os.path.exists(OUTSTANDING_PATH):
     os.makedirs(OUTSTANDING_PATH)
 
