@@ -4,12 +4,12 @@ from neural_networks import nn_runner
 
 
 def main():
-    ticker = 'GOOGL'
-    db_conn = db_access.create_db_connection()
+    ticker = 'CALM'
+    db_conn = db_access.create_db_connection(remote=True)
     df = db_access.find_one_by_ticker_dateframe(db_conn, ticker)
 
-    epochs = 100
-    layers = [20, 20, 20]
+    epochs = 200
+    layers = [20, 20, 20, 20]
     skip_iterations = 0
 
     losses = ['mean_squared_error', 'logcosh',
@@ -21,7 +21,7 @@ def main():
     optimizers = ['adam', 'sgd', 'rmsprop']
 
     iteration = 0
-    for hist_dayz in range(6, 20, 1):
+    for hist_dayz in range(0, 50, 1):
         df, x_standarized, x_train, x_test, y_train_binary, y_test_binary = data_helper.extract_data(df, 1, hist_dayz)
         for optmzr in optimizers:
             for actv in activations:

@@ -13,7 +13,7 @@ def process_data():
     for stock in stock_collection_raw.find():
         symbol = stock[const.SYMBOL]
         print(symbol)
-        if len(stock) > 3000 and stock_processed_collection.count({const.SYMBOL: symbol}) < 1:
+        if len(stock) > 5000 and stock_processed_collection.count({const.SYMBOL: symbol}) < 1:
             df = prepare_df(stock)
             processed_dict = df.to_dict(const.INDEX)
             processed_dict[const.SYMBOL] = symbol
