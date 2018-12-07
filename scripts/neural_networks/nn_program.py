@@ -13,13 +13,15 @@ def main():
     layers = [20, 20, 20, 20]
     skip_iterations = 0
 
-    losses = ['mean_squared_error', 'logcosh',
+    losses = ['mean_squared_error',
               # 'categorical_crossentropy'
               ]
 
     activations = ['relu']
 
-    optimizers = ['adam', 'sgd']
+    # adam tends to overfit
+    optimizers = [#'adam',
+                  'sgd']
     total_time = time.time()
     iteration = 0
     for hist_dayz in range(0, 50, 1):
