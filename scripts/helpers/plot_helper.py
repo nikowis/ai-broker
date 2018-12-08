@@ -32,6 +32,9 @@ ACCURACY_LABEL = 'dokładność (%)'
 LOSS_LABEL = 'wartość funkcji straty'
 LOSS_TITLE = 'Strata'
 ACCURACY_TITLE = 'Dokładność'
+TEST_DATA = 'Dane testowe'
+TRAIN_DATA = 'Dane treningowe'
+
 
 def legend_labels_save_files(title, file_name='img', base_img_path=BASE_IMG_PATH, xlabel=DATE_LABEL,
                              ylabel=CLOSE_PRICE_USD_LABEL, legend=4):
@@ -52,7 +55,9 @@ def plot_result(df, history, main_title, file_name, outstanding=False):
 
     plt.suptitle(main_title)
     plt.subplot(2, 2, 1)
-    df[const.LABEL_DISCRETE_COL].plot(kind='hist', xticks=[0, 1, 2], label=RATE_CHANGE_LABEL)
+    df[const.LABEL_DISCRETE_COL].plot(kind='hist', xticks=[0, 1, 2],alpha=0.7, label=RATE_CHANGE_LABEL)
+    df[const.FORECAST_DISCRETE_COL].plot(kind='hist', xticks=[0, 1, 2],alpha=0.7, label=RATE_CHANGE_FORECAST_LABEL)
+    plt.legend(['Rzeczywiste', 'Przewidywane'], loc='upper left')
     plt.xticks([0, 1, 2], [FALL_LABEL, IDLE_LABEL, RISE_LABEL])
     plt.xlabel(VALUE_CHANGE_LABEL)
     plt.ylabel(FORECAST_COUNT_LABEL)
@@ -69,23 +74,23 @@ def plot_result(df, history, main_title, file_name, outstanding=False):
     plt.title(LOSS_TITLE)
     plt.ylabel(LOSS_LABEL)
     plt.xlabel(EPOCH_LABEL)
-    plt.legend(['Dane treningowe', 'Dane testowe'], loc='upper left')
+    plt.legend([TRAIN_DATA, TEST_DATA], loc='upper left')
     plt.subplot(2, 2, 4)
     plt.plot(history.history['categorical_accuracy'])
     plt.plot(history.history['val_categorical_accuracy'])
     plt.title(ACCURACY_TITLE)
     plt.ylabel(ACCURACY_LABEL)
     plt.xlabel(EPOCH_LABEL)
-    plt.legend(['Dane treningowe', 'Dane testowe'], loc='upper left')
+    plt.legend([TRAIN_DATA, TEST_DATA], loc='upper left')
 
     # plt.subplots_adjust(hspace=0.5, wspace=0.5)
     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
 
     if outstanding:
-        #plt.savefig('{}/{}.eps'.format(OUTSTANDING_PATH, file_name), format='eps', dpi=1000)
+        # plt.savefig('{}/{}.eps'.format(OUTSTANDING_PATH, file_name), format='eps', dpi=1000)
         plt.savefig('{}/{}.png'.format(OUTSTANDING_PATH, file_name))
     else:
-        #plt.savefig('{}/{}.eps'.format(BASE_IMG_PATH, file_name), format='eps', dpi=1000)
+        # plt.savefig('{}/{}.eps'.format(BASE_IMG_PATH, file_name), format='eps', dpi=1000)
         plt.savefig('{}/{}.png'.format(BASE_IMG_PATH, file_name))
-    plt.show()
+    #plt.show()
     plt.close()
