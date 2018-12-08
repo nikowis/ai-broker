@@ -28,11 +28,10 @@ FALL_LABEL = 'spadek'
 REAL_VALUES_LABEL = 'Rzeczywiste wartości '
 PREDICTED_VALUES_LABEL = 'Przewidywane wartości '
 EPOCH_LABEL = 'iteracja'
-ACCURACY_LABEL = 'dokładność'
+ACCURACY_LABEL = 'dokładność (%)'
 LOSS_LABEL = 'wartość funkcji straty'
-LOSS_TITLE = 'Strata modelu'
-ACCURACY_TITLE = 'Dokładność modelu'
-
+LOSS_TITLE = 'Strata'
+ACCURACY_TITLE = 'Dokładność'
 
 def legend_labels_save_files(title, file_name='img', base_img_path=BASE_IMG_PATH, xlabel=DATE_LABEL,
                              ylabel=CLOSE_PRICE_USD_LABEL, legend=4):
@@ -66,14 +65,19 @@ def plot_result(df, history, main_title, file_name, outstanding=False):
     plt.title(PREDICTED_VALUES_LABEL)
     plt.subplot(2, 2, 3)
     plt.plot(history.history['loss'])
+    plt.plot(history.history['val_loss'])
     plt.title(LOSS_TITLE)
     plt.ylabel(LOSS_LABEL)
     plt.xlabel(EPOCH_LABEL)
+    plt.legend(['Dane treningowe', 'Dane testowe'], loc='upper left')
     plt.subplot(2, 2, 4)
     plt.plot(history.history['categorical_accuracy'])
+    plt.plot(history.history['val_categorical_accuracy'])
     plt.title(ACCURACY_TITLE)
     plt.ylabel(ACCURACY_LABEL)
     plt.xlabel(EPOCH_LABEL)
+    plt.legend(['Dane treningowe', 'Dane testowe'], loc='upper left')
+
     # plt.subplots_adjust(hspace=0.5, wspace=0.5)
     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
 
@@ -83,5 +87,5 @@ def plot_result(df, history, main_title, file_name, outstanding=False):
     else:
         #plt.savefig('{}/{}.eps'.format(BASE_IMG_PATH, file_name), format='eps', dpi=1000)
         plt.savefig('{}/{}.png'.format(BASE_IMG_PATH, file_name))
-    #plt.show()
+    plt.show()
     plt.close()

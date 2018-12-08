@@ -23,7 +23,7 @@ def run(df, x_standarized, x_train, x_test, y_train_binary, y_test_binary, layer
     model = nn_model.create_seq_model(layers, input_size=x_train.shape[1], activation=activation, optimizer=optimizer,
                                       loss=loss_fun)
 
-    history = model.fit(x_train, y_train_binary, epochs=epochs, batch_size=batch_size, verbose=0)
+    history = model.fit(x_train, y_train_binary,validation_data=(x_test, y_test_binary), epochs=epochs, batch_size=batch_size, verbose=0)
     loss, accuracy = model.evaluate(x_test, y_test_binary, verbose=0)
 
     print("Loss: ", loss, " Accuracy: ", accuracy, " epochs: ", epochs)

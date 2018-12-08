@@ -10,8 +10,8 @@ def main():
     df = db_access.find_one_by_ticker_dateframe(db_conn, ticker)
 
     epochs = 200
-    layers = [10,10,10]
-    skip_iterations = 0
+    layers = [20,20,20,20]
+    skip_iterations = 49
 
     losses = ['mean_squared_error',
               # 'categorical_crossentropy'
