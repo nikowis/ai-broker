@@ -10,7 +10,7 @@ def main():
     df = db_access.find_one_by_ticker_dateframe(db_conn, ticker)
 
     epochs = 200
-    layers = [20, 20, 20, 20]
+    layers = [10,10,10]
     skip_iterations = 0
 
     losses = ['mean_squared_error',
@@ -31,21 +31,20 @@ def main():
                 for lss in losses:
                     iteration += 1
                     if iteration > skip_iterations:
-                        if ~is_bad_combination(actv, optmzr):
-                            file_name = str(iteration) + '_LOSS_' + str(lss) + '_ACTIVATION_' + str(
-                                actv) + '_OPTIMIZER_' + str(
-                                optmzr) + '_HIST_' + str(hist_dayz)
-                            print('\nSTARTING TRAINING FOR ' + file_name)
-                            iter_time = time.time()
-                            nn_runner.run(df, x_standarized, x_train, x_test, y_train_binary, y_test_binary,
-                                          epochs=epochs,
-                                          layers=layers, optimizer=optmzr, loss_fun=lss, activation=actv,
-                                          history_days=hist_dayz, file_name=file_name, outstanding_treshold=0.40)
-                            print('Total time ', str(int(time.time()-total_time)), 's, iteration '+str(iteration)+' time ', str(int(time.time() - iter_time)), 's.')
+                        file_name = get_report_file_name(actv, hist_dayz, iteration, lss, optmzr)
+                        print('\nSTARTING TRAINING FOR ' + file_name)
+                        iter_time = time.time()
+                        nn_runner.run(df, x_standarized, x_train, x_test, y_train_binary, y_test_binary,
+                                      epochs=epochs,
+                                      layers=layers, optimizer=optmzr, loss_fun=lss, activation=actv,
+                                      history_days=hist_dayz, file_name=file_name, outstanding_treshold=0.40)
+                        print('Total time ', str(int(time.time()-total_time)), 's, iteration '+str(iteration)+' time ', str(int(time.time() - iter_time)), 's.')
 
 
-def is_bad_combination(actv, optmzr):
-    return (optmzr == 'sgd' and actv == 'softmax')
+def get_report_file_name(actv, hist_dayz, iteration, lss, optmzr):
+    return str(iteration) + '_LOSS_' + str(lss) + '_ACTIVATION_' + str(
+        actv) + '_OPTIMIZER_' + str(
+        optmzr) + '_HIST_' + str(hist_dayz)
 
 
 if __name__ == '__main__':
