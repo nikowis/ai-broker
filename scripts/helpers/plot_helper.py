@@ -45,8 +45,8 @@ FPR_LABEL = 'False Positive Rate'
 TPR_LABEL = 'True Positive Rate'
 ROC_TITLE = 'Krzywe ROC'
 MICRO_ROC_KEY = "micro"
-CLASS_ROC_LABEL = "Klasa '{0}' (obszar = {1:0.2f})"
-MICRO_AVG_ROC_LABEL = 'Mikro-średnia klas (obszar = {0:0.2f})'
+CLASS_ROC_LABEL = "Klasa '{0}' (obszar {1:0.2f})"
+MICRO_AVG_ROC_LABEL = 'Mikro-średnia klas (obszar {0:0.2f})'
 
 
 def legend_labels_save_files(title, file_name='img', base_img_path=BASE_IMG_PATH, xlabel=DATE_LABEL,

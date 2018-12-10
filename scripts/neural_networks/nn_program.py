@@ -6,22 +6,22 @@ from neural_networks import nn_runner
 
 
 def main():
-    ticker = 'CALM'
+    ticker = 'HSKA'
     db_conn = db_access.create_db_connection(remote=False)
     df = db_access.find_one_by_ticker_dateframe(db_conn, ticker)
 
-    epochs = 100
-    layers = [10,10,10]
+    epochs = 200
+    layers = [50, 50, 50]
     skip_iterations = 0
 
-    # 'mean_squared_error', 'logcosh'
-    losses = ['logcosh']
+    # 'mean_squared_error', 'logcosh', 'categorical_crossentropy'
+    losses = ['categorical_crossentropy']
 
     #'relu, 'softmax'
     activations = ['relu']
 
     # 'sgd', 'adam', 'rmsprop'
-    optimizers = ['sgd']
+    optimizers = ['adam']
 
     total_time = time.time()
     iteration = 0

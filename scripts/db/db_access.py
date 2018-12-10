@@ -1,20 +1,22 @@
-import pymongo
 import pandas as pd
+import pymongo
+
 import db.stock_constants as const
 
 DB = "ai-broker"
 STOCK_COLLECTION = "stock"
 PROCESSED_STOCK_COLLECTION = "processed_stock"
-LOCAL_URL="mongodb://localhost:27017/"
-REMOTE_URL="mongodb://admin:<pswd>@ds125574.mlab.com:25574/ai-broker"
+LOCAL_URL = "mongodb://localhost:27017/"
+REMOTE_URL = "mongodb://admin:<pswd>@ds125574.mlab.com:25574/ai-broker"
 
-def create_db_connection(remote=False):
+
+def create_db_connection(remote=False, db_name=DB):
     if not remote:
         url = LOCAL_URL
     else:
         url = REMOTE_URL
     mongo_client = pymongo.MongoClient(url)
-    db_conn = mongo_client[DB]
+    db_conn = mongo_client[db_name]
     return db_conn
 
 
@@ -31,8 +33,22 @@ def find_one_by_ticker(db_conn, symbol, processed=True):
 
 def find_one_by_ticker_dateframe(db_conn, symbol, processed=True):
     data = find_one_by_ticker(db_conn, symbol, processed)
+    if data is None:
+        raise Exception('Data with ticker ' + symbol + ' not found.')
     data.pop(const.ID, None)
     data.pop(const.SYMBOL, None)
     df = pd.DataFrame.from_dict(data, orient=const.INDEX)
     df = df.astype(float)
     return df
+
+
+def find_all_parse_to_df_list(db_conn, processed=True):
+    all_db = stock_collection(db_conn, processed).find()
+    df_list = []
+    for document in all_db:
+        document.pop(const.ID, None)
+        document.pop(const.SYMBOL, None)
+        df = pd.DataFrame.from_dict(document, orient=const.INDEX)
+        df = df.astype(float)
+        df_list.append(df)
+    return df_list
