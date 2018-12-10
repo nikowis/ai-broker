@@ -1,3 +1,5 @@
+import random
+
 import keras
 import numpy as np
 from sklearn import model_selection
@@ -40,6 +42,62 @@ def extract_data(df, history_days=0, forecast_days=1):
     y_train_binary = keras.utils.to_categorical(y_train)
     y_test_binary = keras.utils.to_categorical(y_test)
     return df, x_standardized, x_train, x_test, y_train_binary, y_test_binary
+
+
+def extract_data_list(df_list, history_days=0, forecast_days=1, test_size=0.2):
+    data_count = len(df_list)
+    test_count = int(data_count * test_size)
+    test_indices = random.sample(range(1, data_count), test_count)
+    test_dfs = [df_list[i] for i in test_indices]
+    train_dfs = [i for j, i in enumerate(df_list) if j not in test_indices]
+
+    total_x_train = None
+    total_x_test = None
+    total_y_train = None
+    total_y_test = None
+
+    for test_df in train_dfs:
+        test_df[const.HL_PCT_CHANGE_COL] = (test_df[const.HIGH_COL] - test_df[const.LOW_COL]) / test_df[
+            const.HIGH_COL] * 100
+        x = np.array(test_df[[const.VOLUME_COL, const.ADJUSTED_CLOSE_COL, const.HL_PCT_CHANGE_COL]])
+        if history_days > 0:
+            input_rows = x.shape[0]
+            input_columns = x.shape[1]
+            extended_x = np.zeros((input_rows, input_columns + history_days * input_columns))
+            extended_x[:, :] = np.nan
+            extended_x[:, 0:input_columns] = x
+            for i in range(1, history_days + 1):
+                extended_x[i:, i * input_columns:(i + 1) * input_columns] = x[:input_rows - i, :]
+            nan_row_count = np.count_nonzero(np.isnan(extended_x).any(axis=1))
+            x = extended_x[~np.isnan(extended_x).any(axis=1)]
+            test_df = test_df[nan_row_count:]
+
+        x = x[:-forecast_days]
+        test_df = test_df[:-forecast_days]
+        y = np.array(test_df[const.LABEL_DISCRETE_COL])
+
+        # first iteration
+        if total_x_train is None:
+            total_x_train = x
+            total_y_train = y
+        else :
+            # append to existing numpy arrays
+            total_x_rows = total_x_train.shape[0]
+            total_x_cols = total_x_train.shape[1]
+            total_y_rows = total_y_train.shape[0]
+            extended_total_x_train = np.zeros((total_x_rows + x.shape[0], total_x_cols))
+            extended_total_y_train = np.zeros((total_y_rows + y.shape[0]))
+            extended_total_x_train[0:total_x_rows, :] = total_x_train
+            extended_total_x_train[total_x_rows:, :] = x
+            extended_total_y_train[0:total_y_rows] = total_y_train
+            extended_total_y_train[total_y_rows:] = y
+            total_x_train = extended_total_x_train
+            total_y_train = extended_total_y_train
+
+    _, x_test, x_train = standardize(total_x_test, total_x_test, total_x_train)
+    y_train_binary = keras.utils.to_categorical(total_y_train)
+    y_test_binary = keras.utils.to_categorical(total_y_test)
+    return x_train, x_test, y_train_binary, y_test_binary
 
 
 def standardize(x, x_test, x_train):
