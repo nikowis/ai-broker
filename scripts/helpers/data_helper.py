@@ -6,7 +6,7 @@ from sklearn.preprocessing import StandardScaler
 import db.stock_constants as const
 
 
-def extract_data(df, forecast_days=1, history_days=0):
+def extract_data(df, history_days=0, forecast_days=1):
     """
     Function stplitting dateframe data for machine learning.
 

@@ -2,10 +2,10 @@ import os
 from itertools import cycle
 
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 from matplotlib import style
 from sklearn.metrics import roc_curve, auc
-
-import db.stock_constants as const
 
 BASE_IMG_PATH = './../../target'
 if not os.path.exists(BASE_IMG_PATH):
@@ -31,8 +31,7 @@ CLASS_LABELS = [FALL_LABEL, IDLE_LABEL, RISE_LABEL]
 PREDICTED_LEGEND = 'Przewidywane'
 REAL_LEGEND = 'Rzeczywiste'
 
-REAL_VALUES_LABEL = 'Rzeczywiste wartości '
-PREDICTED_VALUES_LABEL = 'Przewidywane wartości '
+HISTOGRAM_TITLE = 'Histogram predykcji dla zbioru testowego'
 EPOCH_LABEL = 'iteracja'
 ACCURACY_LABEL = 'dokładność (%)'
 LOSS_LABEL = 'wartość funkcji straty'
@@ -41,13 +40,14 @@ ACCURACY_TITLE = 'Dokładność'
 TEST_DATA = 'Dane testowe'
 TRAIN_DATA = 'Dane treningowe'
 
-#ROC
+# ROC
 FPR_LABEL = 'False Positive Rate'
 TPR_LABEL = 'True Positive Rate'
 ROC_TITLE = 'Krzywe ROC'
 MICRO_ROC_KEY = "micro"
 CLASS_ROC_LABEL = "Klasa '{0}' (obszar = {1:0.2f})"
 MICRO_AVG_ROC_LABEL = 'Mikro-średnia klas (obszar = {0:0.2f})'
+
 
 def legend_labels_save_files(title, file_name='img', base_img_path=BASE_IMG_PATH, xlabel=DATE_LABEL,
                              ylabel=CLOSE_PRICE_USD_LABEL, legend=4):
@@ -76,21 +76,27 @@ def calculate_roc_auc(y_test, y_test_score, classes_count):
     return fpr, tpr, roc_auc
 
 
-def plot_result(df,y_test, y_test_score, classes_count, history, main_title, file_name, outstanding=False):
-    fpr, tpr, roc_auc = calculate_roc_auc(y_test,y_test_score, classes_count)
+def plot_result(y_test_one_hot, y_test_score_one_hot, classes_count, history, main_title, file_name, outstanding=False):
+    fpr, tpr, roc_auc = calculate_roc_auc(y_test_one_hot, y_test_score_one_hot, classes_count)
 
     plt.figure(figsize=(12, 12))
     style.use('ggplot')
     plt.suptitle(main_title)
 
     plt.subplot(2, 2, 1)
-    df[const.LABEL_DISCRETE_COL].plot(kind='hist', xticks=[0, 1, 2],alpha=0.7, label=RATE_CHANGE_LABEL)
-    df[const.FORECAST_DISCRETE_COL].plot(kind='hist', xticks=[0, 1, 2],alpha=0.7, label=RATE_CHANGE_FORECAST_LABEL)
+
+    y_test = [np.argmax(pred, axis=None, out=None) for pred in y_test_one_hot]
+    dftmp = pd.DataFrame({'tmpcol': y_test})
+    dftmp['tmpcol'].plot(kind='hist', xticks=[0, 1, 2], alpha=0.7, label=RATE_CHANGE_LABEL)
+    y_test_score = [np.argmax(pred, axis=None, out=None) for pred in y_test_score_one_hot]
+    dftmp = pd.DataFrame({'tmpcol': y_test_score})
+    dftmp['tmpcol'].plot(kind='hist', xticks=[0, 1, 2], alpha=0.7, label=RATE_CHANGE_LABEL)
+
     plt.legend([REAL_LEGEND, PREDICTED_LEGEND], loc='upper left')
     plt.xticks([0, 1, 2], CLASS_LABELS)
     plt.xlabel(VALUE_CHANGE_LABEL)
     plt.ylabel(FORECAST_COUNT_LABEL)
-    plt.title(REAL_VALUES_LABEL)
+    plt.title(HISTOGRAM_TITLE)
 
     plt.subplot(2, 2, 2)
     plt.plot(fpr[(MICRO_ROC_KEY)], tpr[MICRO_ROC_KEY],
