@@ -10,7 +10,7 @@ def create_seq_model(hidden_layer_neuron_arr, activation=None, optimizer='adam',
         for layer in hidden_layer_neuron_arr[1:]:
             model.add(Dense(layer, activation=activation, use_bias=use_bias))
 
-    model.add(Dense(class_count))
+    model.add(Dense(class_count, activation='softmax'))
     model.compile(optimizer=optimizer,
                   loss=loss,
                   metrics=[metric])
