@@ -6,9 +6,9 @@ from neural_networks import nn_runner
 
 
 def main():
-    db_conn = db_access.create_db_connection(remote=False, db_name='ai-broker-clone')
+    db_conn = db_access.create_db_connection(remote=False, db_name='ai-broker')
 
-    df_list = db_access.find_all_parse_to_df_list(db_conn)
+    df_list = db_access.find_by_tickers_to_dateframe_parse_to_df_list(db_conn, db_access.SELECTED_SYMBOLS_LIST)
 
     epochs = 20
     layers = [50, 50, 50]

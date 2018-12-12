@@ -6,9 +6,9 @@ from neural_networks import nn_runner
 
 
 def main():
-    ticker = 'HSKA'
+    ticker = 'DXYN'
     db_conn = db_access.create_db_connection(remote=False)
-    df = db_access.find_one_by_ticker_dateframe(db_conn, ticker)
+    df = db_access.find_by_tickers_to_dateframe_parse_to_df_list(db_conn, [ticker])[0]
 
     epochs = 200
     layers = [50, 50, 50]
