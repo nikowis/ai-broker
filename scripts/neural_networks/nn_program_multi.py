@@ -8,16 +8,17 @@ from neural_networks import nn_runner
 def main():
     db_conn = db_access.create_db_connection(remote=False, db_name='ai-broker')
 
-    df_list = db_access.find_by_tickers_to_dateframe_parse_to_df_list(db_conn, db_access.SELECTED_SYMBOLS_LIST)
+    symbols = db_access.SELECTED_SYMBOLS_LIST[:10]
+    df_list = db_access.find_by_tickers_to_dateframe_parse_to_df_list(db_conn, symbols)
 
-    epochs = 20
-    layers = [50, 50, 50]
+    epochs = 50
+    layers = [5, 5, 5]
     skip_iterations = 0
 
     # 'mean_squared_error', 'logcosh', 'categorical_crossentropy'
     losses = ['categorical_crossentropy']
 
-    #'relu, 'softmax'
+    # 'relu, 'softmax'
     activations = ['relu']
 
     # 'sgd', 'adam', 'rmsprop'
@@ -25,8 +26,8 @@ def main():
 
     total_time = time.time()
     iteration = 0
-    for hist_dayz in range(5, 10, 1):
-        df_modified, x_standardized, x_train, x_test, y_train_binary, y_test_binary = data_helper.extract_data_list(df_list, hist_dayz)
+    for hist_dayz in range(0, 50, 5):
+        x_train, x_test, y_train_one_hot, y_test_one_hot = data_helper.extract_data_from_list(df_list, hist_dayz)
         for optmzr in optimizers:
             for actv in activations:
                 for lss in losses:
@@ -35,8 +36,8 @@ def main():
                         file_name = get_report_file_name(actv, hist_dayz, iteration, lss, optmzr)
                         print('\nSTARTING TRAINING FOR ' + file_name)
                         iter_time = time.time()
-                        nn_runner.run(x_standardized, x_train, x_test, y_train_binary, y_test_binary,
-                                      epochs=epochs,
+                        nn_runner.run(x_train, x_test, y_train_one_hot, y_test_one_hot,
+                                      epochs=epochs, batch_size=30,
                                       layers=layers, optimizer=optmzr, loss_fun=lss, activation=actv,
                                       history_days=hist_dayz, file_name=file_name, outstanding_treshold=0.40)
                         print('Total time ', str(int(time.time() - total_time)),

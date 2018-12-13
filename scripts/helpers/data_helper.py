@@ -16,35 +16,21 @@ def extract_data(df, history_days=0, forecast_days=1):
     :param forecast_days: how many days to forecast out
     :param history_days: how many days from history to put in each row
     :return:
-        (df, x_standardized, x_train, x_test, y_train_binary, y_test_binary) # tuple of (modified df, standardized x,
+        (df, x_standardized, x_train, x_test, y_train_one_hot, y_test_one_hot) # tuple of (modified df, standardized x,
         learning x, testing x, learning y (one hot), test y (one hot))
     """
-    df[const.HL_PCT_CHANGE_COL] = (df[const.HIGH_COL] - df[const.LOW_COL]) / df[const.HIGH_COL] * 100
-    x = np.array(df[[const.VOLUME_COL, const.ADJUSTED_CLOSE_COL, const.HL_PCT_CHANGE_COL]])
-    if history_days > 0:
-        input_rows = x.shape[0]
-        input_columns = x.shape[1]
-        extended_x = np.zeros((input_rows, input_columns + history_days * input_columns))
-        extended_x[:, :] = np.nan
-        extended_x[:, 0:input_columns] = x
-        for i in range(1, history_days + 1):
-            extended_x[i:, i * input_columns:(i + 1) * input_columns] = x[:input_rows - i, :]
-        nan_row_count = np.count_nonzero(np.isnan(extended_x).any(axis=1))
-        x = extended_x[~np.isnan(extended_x).any(axis=1)]
-        df = df[nan_row_count:]
+    x = None
+    y = None
+    df, x, y = calculate_append_x_y(forecast_days, history_days, x, y, df)
 
-    x_lately = x[-forecast_days:]
-    x = x[:-forecast_days]
-    df = df[:-forecast_days]
-    y = np.array(df[const.LABEL_DISCRETE_COL])
     x_train, x_test, y_train, y_test = model_selection.train_test_split(x, y, test_size=0.2)
-    x_standardized, x_test, x_train = standardize(x, x_test, x_train)
-    y_train_binary = keras.utils.to_categorical(y_train)
-    y_test_binary = keras.utils.to_categorical(y_test)
-    return df, x_standardized, x_train, x_test, y_train_binary, y_test_binary
+
+    x_standardized, x_train, x_test, y_train_one_hot, y_test_one_hot = standardize(x, x_train, x_test, y_train, y_test)
+
+    return df, x_standardized, x_train, x_test, y_train_one_hot, y_test_one_hot
 
 
-def extract_data_list(df_list, history_days=0, forecast_days=1, test_size=0.2):
+def extract_data_from_list(df_list, history_days=0, forecast_days=1, test_size=0.2):
     data_count = len(df_list)
     test_count = int(data_count * test_size)
     test_indices = random.sample(range(1, data_count), test_count)
@@ -56,51 +42,69 @@ def extract_data_list(df_list, history_days=0, forecast_days=1, test_size=0.2):
     total_y_train = None
     total_y_test = None
 
-    for test_df in train_dfs:
-        test_df[const.HL_PCT_CHANGE_COL] = (test_df[const.HIGH_COL] - test_df[const.LOW_COL]) / test_df[
-            const.HIGH_COL] * 100
-        x = np.array(test_df[[const.VOLUME_COL, const.ADJUSTED_CLOSE_COL, const.HL_PCT_CHANGE_COL]])
-        if history_days > 0:
-            input_rows = x.shape[0]
-            input_columns = x.shape[1]
-            extended_x = np.zeros((input_rows, input_columns + history_days * input_columns))
-            extended_x[:, :] = np.nan
-            extended_x[:, 0:input_columns] = x
-            for i in range(1, history_days + 1):
-                extended_x[i:, i * input_columns:(i + 1) * input_columns] = x[:input_rows - i, :]
-            nan_row_count = np.count_nonzero(np.isnan(extended_x).any(axis=1))
-            x = extended_x[~np.isnan(extended_x).any(axis=1)]
-            test_df = test_df[nan_row_count:]
+    for train_df in train_dfs:
+        train_df, total_x_train, total_y_train = calculate_append_x_y(forecast_days, history_days, total_x_train,
+                                                                      total_y_train,
+                                                                      train_df)
+    for test_df in test_dfs:
+        test_df, total_x_test, total_y_test = calculate_append_x_y(forecast_days, history_days, total_x_test,
+                                                                   total_y_test,
+                                                                   test_df)
 
-        x = x[:-forecast_days]
-        test_df = test_df[:-forecast_days]
-        y = np.array(test_df[const.LABEL_DISCRETE_COL])
-
-        # first iteration
-        if total_x_train is None:
-            total_x_train = x
-            total_y_train = y
-        else :
-            # append to existing numpy arrays
-            total_x_rows = total_x_train.shape[0]
-            total_x_cols = total_x_train.shape[1]
-            total_y_rows = total_y_train.shape[0]
-            extended_total_x_train = np.zeros((total_x_rows + x.shape[0], total_x_cols))
-            extended_total_y_train = np.zeros((total_y_rows + y.shape[0]))
-            extended_total_x_train[0:total_x_rows, :] = total_x_train
-            extended_total_x_train[total_x_rows:, :] = x
-            extended_total_y_train[0:total_y_rows] = total_y_train
-            extended_total_y_train[total_y_rows:] = y
-            total_x_train = extended_total_x_train
-            total_y_train = extended_total_y_train
-
-    _, x_test, x_train = standardize(total_x_test, total_x_test, total_x_train)
-    y_train_binary = keras.utils.to_categorical(total_y_train)
-    y_test_binary = keras.utils.to_categorical(total_y_test)
-    return x_train, x_test, y_train_binary, y_test_binary
+    _, x_train, x_test, y_train_one_hot, y_test_one_hot = standardize(total_x_test, total_x_train, total_x_test,
+                                                                      total_y_train, total_y_test)
+    return x_train, x_test, y_train_one_hot, y_test_one_hot
 
 
-def standardize(x, x_test, x_train):
+def calculate_history_columns(df, x, history_days, forecast_days):
+    if history_days > 0:
+        input_rows = x.shape[0]
+        input_columns = x.shape[1]
+        extended_x = np.zeros((input_rows, input_columns + history_days * input_columns))
+        extended_x[:, :] = np.nan
+        extended_x[:, 0:input_columns] = x
+        for i in range(1, history_days + 1):
+            extended_x[i:, i * input_columns:(i + 1) * input_columns] = x[:input_rows - i, :]
+        nan_row_count = np.count_nonzero(np.isnan(extended_x).any(axis=1))
+        x = extended_x[~np.isnan(extended_x).any(axis=1)]
+        df = df[nan_row_count:]
+    x = x[:-forecast_days]
+    df = df[:-forecast_days]
+    return df, x
+
+
+def calculate_append_x_y(forecast_days, history_days, total_x, total_y, df):
+    df, x = calculate_extra_columns_get_x(df)
+    df, x = calculate_history_columns(df, x, history_days, forecast_days)
+    y = np.array(df[const.LABEL_DISCRETE_COL])
+    # first iteration
+    if total_x is None:
+        total_x = x
+        total_y = y
+    else:
+        # append to existing numpy arrays
+        total_x_rows = total_x.shape[0]
+        total_x_cols = total_x.shape[1]
+        total_y_rows = total_y.shape[0]
+        extended_total_x_train = np.zeros((total_x_rows + x.shape[0], total_x_cols))
+        extended_total_y_train = np.zeros((total_y_rows + y.shape[0]))
+        extended_total_x_train[0:total_x_rows, :] = total_x
+        extended_total_x_train[total_x_rows:, :] = x
+        extended_total_y_train[0:total_y_rows] = total_y
+        extended_total_y_train[total_y_rows:] = y
+        total_x = extended_total_x_train
+        total_y = extended_total_y_train
+    return df, total_x, total_y
+
+
+def calculate_extra_columns_get_x(df):
+    df[const.HL_PCT_CHANGE_COL] = (df[const.HIGH_COL] - df[const.LOW_COL]) / df[
+        const.HIGH_COL] * 100
+    x = np.array(df[[const.VOLUME_COL, const.ADJUSTED_CLOSE_COL, const.HL_PCT_CHANGE_COL]])
+    return df, x
+
+
+def standardize(x, x_train, x_test, y_train, y_test):
     # standardize
     if len(x_train.shape) == 1:
         x_train = np.expand_dims(x_train, axis=1)
@@ -109,4 +113,7 @@ def standardize(x, x_test, x_train):
     x_train = std_scale.transform(x_train)
     x_test = std_scale.transform(x_test)
     x_standardized = std_scale.transform(x)
-    return x_standardized, x_test, x_train
+    y_train_one_hot = keras.utils.to_categorical(y_train)
+    y_test_one_hot = keras.utils.to_categorical(y_test)
+
+    return x_standardized, x_train, x_test, y_train_one_hot, y_test_one_hot

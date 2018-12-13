@@ -140,5 +140,5 @@ def plot_result(y_test_one_hot, y_test_score_one_hot, classes_count, history, ma
     else:
         # plt.savefig('{}/{}.eps'.format(BASE_IMG_PATH, file_name), format='eps', dpi=1000)
         plt.savefig('{}/{}.png'.format(BASE_IMG_PATH, file_name))
-    plt.show()
+    #plt.show()
     plt.close()
