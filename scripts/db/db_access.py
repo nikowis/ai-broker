@@ -12,11 +12,11 @@ REMOTE_URL = "mongodb://admin:<pswd>@ds125574.mlab.com:25574/ai-broker"
 """Symbols with large history (over 5200 days)"""
 SELECTED_SYMBOLS_LIST = ['AVNW', 'AWRE', 'BPFH', 'CALM', 'CAMP', 'CASH', 'CASS', 'CENX', 'CERN',
                          'CERS', 'CETV', 'CFNB', 'CHKE', 'CHKP', 'CHNR', 'CLWT', 'CMCO', 'CMCSA', 'CMCT', 'CNMD',
-                         'CREE', 'CRZO', 'CTAS', 'CUBA', 'CVTI', 'CYTR', 'DAVE', 'DEST', 'DJCO', 'DLHC', 'DSPG', 'DSWL',
+                         'CREE', 'CRZO', 'CTAS', 'CUBA', 'CVTI', 'CYTR', 'DAVE', 'DEST', 'DLHC', 'DSPG', 'DSWL',
                          'DWCH', 'DXYN', 'EDUC', 'EEFT', 'EEI', 'ELSE', 'ELTK', 'EMCI', 'EMITF', 'EMKR', 'EML', 'EMMS',
                          'ENG', 'EVLV', 'FBNC', 'FELE', 'FFIC', 'FFIN', 'FISV', 'FITB', 'FIZZ', 'FLEX', 'FLIC', 'FLIR',
                          'FLL', 'FMBI', 'FRBK', 'FRME', 'FTEK', 'FTR', 'FULT', 'FUNC', 'FUND', 'GPIC', 'GRIF', 'GSBC',
-                         'GT', 'GTIM', 'HA', 'HAFC', 'HAIN', 'HALL', 'HBHC', 'HCSG', 'HMNY', 'HMSY', 'HRTX', 'HSIC',
+                         'GT', 'GTIM', 'HA', 'HAFC', 'HAIN', 'HBHC', 'HCSG', 'HMNY', 'HMSY', 'HSIC',
                          'HUBG', 'HURC', 'HWKN', 'IBKC', 'IBOC', 'ICAD', 'ICCC', 'ICON', 'ICUI', 'IDCC', 'IDRA', 'IDSA',
                          'IDTI', 'IDXX', 'IEP', 'IIIN', 'IIN', 'IIVI', 'IMKTA', 'IMMU', 'INOD', 'INTC', 'INTL', 'INTU',
                          'INVE', 'IPAR', 'IRIX', 'ISCA', 'JBSS', 'JCS', 'JCTCF', 'JJSF', 'JKHY', 'JOUT', 'KBAL', 'KCLI',

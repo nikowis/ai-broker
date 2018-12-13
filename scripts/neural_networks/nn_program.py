@@ -8,9 +8,9 @@ from neural_networks import nn_runner
 def main():
     ticker = 'DXYN'
     db_conn = db_access.create_db_connection(remote=False)
-    df = db_access.find_by_tickers_to_dateframe_parse_to_df_list(db_conn, [ticker])[0]
-
-    epochs = 50
+    df_list, sym_list = db_access.find_by_tickers_to_dateframe_parse_to_df_list(db_conn, [ticker])
+    df=df_list[0]
+    epochs = 5
     layers = [7, 7, 7]
     skip_iterations = 0
 

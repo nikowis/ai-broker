@@ -11,14 +11,14 @@ def main():
     symbols = db_access.SELECTED_SYMBOLS_LIST[10:100]
     df_list, symbols = db_access.find_by_tickers_to_dateframe_parse_to_df_list(db_conn, symbols)
 
-    for i in range(0, len(symbols)):
-        sym = symbols[i]
-        df = df_list[i]
-        plth.plot_company_summary(df, sym)
+    # for i in range(0, len(symbols)):
+    #     sym = symbols[i]
+    #     df = df_list[i]
+    #     plth.plot_company_summary(df, sym)
 
 
-    epochs = 100
-    layers = [50, 50, 50]
+    epochs = 50
+    layers = [100,100,100]
     skip_iterations = 0
 
     # 'mean_squared_error', 'logcosh', 'categorical_crossentropy'
@@ -32,7 +32,7 @@ def main():
 
     total_time = time.time()
     iteration = 0
-    for hist_dayz in range(0, 10, 2):
+    for hist_dayz in range(0, 22, 2):
         x_train, x_test, y_train_one_hot, y_test_one_hot = data_helper.extract_data_from_list(df_list, hist_dayz)
         for optmzr in optimizers:
             for actv in activations:
@@ -43,7 +43,7 @@ def main():
                         print('\nSTARTING TRAINING FOR ' + file_name)
                         iter_time = time.time()
                         nn_runner.run(x_train, x_test, y_train_one_hot, y_test_one_hot,
-                                      epochs=epochs, batch_size=30,
+                                      epochs=epochs, batch_size=100,
                                       layers=layers, optimizer=optmzr, loss_fun=lss, activation=actv,
                                       history_days=hist_dayz, file_name=file_name, outstanding_treshold=0.40)
                         print('Total time ', str(int(time.time() - total_time)),

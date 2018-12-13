@@ -19,13 +19,22 @@ def extract_data(df, history_days=0, forecast_days=1):
         (df, x_standardized, x_train, x_test, y_train_one_hot, y_test_one_hot) # tuple of (modified df, standardized x,
         learning x, testing x, learning y (one hot), test y (one hot))
     """
-    x = None
-    y = None
-    df, x, y = calculate_append_x_y(forecast_days, history_days, x, y, df)
+
+    df, x = calculate_extra_columns_get_x(df)
+    df, x = calculate_history_columns(df, x, history_days, forecast_days)
+    y = np.array(df[const.LABEL_DISCRETE_COL])
 
     x_train, x_test, y_train, y_test = model_selection.train_test_split(x, y, test_size=0.2)
 
-    x_standardized, x_train, x_test, y_train_one_hot, y_test_one_hot = standardize(x, x_train, x_test, y_train, y_test)
+    if len(x_train.shape) == 1:
+        x_train = np.expand_dims(x_train, axis=1)
+        x_test = np.expand_dims(x_test, axis=1)
+    std_scale = StandardScaler().fit(x_train)
+    x_train = std_scale.transform(x_train)
+    x_test = std_scale.transform(x_test)
+    x_standardized = std_scale.transform(x)
+    y_train_one_hot = keras.utils.to_categorical(y_train)
+    y_test_one_hot = keras.utils.to_categorical(y_test)
 
     return df, x_standardized, x_train, x_test, y_train_one_hot, y_test_one_hot
 
@@ -51,9 +60,9 @@ def extract_data_from_list(df_list, history_days=0, forecast_days=1, test_size=0
                                                                    total_y_test,
                                                                    test_df)
 
-    _, x_train, x_test, y_train_one_hot, y_test_one_hot = standardize(total_x_test, total_x_train, total_x_test,
-                                                                      total_y_train, total_y_test)
-    return x_train, x_test, y_train_one_hot, y_test_one_hot
+    y_train_one_hot = keras.utils.to_categorical(total_y_train)
+    y_test_one_hot = keras.utils.to_categorical(total_y_test)
+    return total_x_train, total_x_test, y_train_one_hot, y_test_one_hot
 
 
 def calculate_history_columns(df, x, history_days, forecast_days):
@@ -77,6 +86,9 @@ def calculate_append_x_y(forecast_days, history_days, total_x, total_y, df):
     df, x = calculate_extra_columns_get_x(df)
     df, x = calculate_history_columns(df, x, history_days, forecast_days)
     y = np.array(df[const.LABEL_DISCRETE_COL])
+    std_scale = StandardScaler().fit(x)
+    x = std_scale.transform(x)
+
     # first iteration
     if total_x is None:
         total_x = x
@@ -102,18 +114,3 @@ def calculate_extra_columns_get_x(df):
         const.HIGH_COL] * 100
     x = np.array(df[[const.VOLUME_COL, const.ADJUSTED_CLOSE_COL, const.HL_PCT_CHANGE_COL]])
     return df, x
-
-
-def standardize(x, x_train, x_test, y_train, y_test):
-    # standardize
-    if len(x_train.shape) == 1:
-        x_train = np.expand_dims(x_train, axis=1)
-        x_test = np.expand_dims(x_test, axis=1)
-    std_scale = StandardScaler().fit(x_train)
-    x_train = std_scale.transform(x_train)
-    x_test = std_scale.transform(x_test)
-    x_standardized = std_scale.transform(x)
-    y_train_one_hot = keras.utils.to_categorical(y_train)
-    y_test_one_hot = keras.utils.to_categorical(y_test)
-
-    return x_standardized, x_train, x_test, y_train_one_hot, y_test_one_hot

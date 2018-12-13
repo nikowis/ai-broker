@@ -182,5 +182,5 @@ def plot_company_summary(df, symbol):
         os.makedirs(COMPANY_INFO_PATH)
     plt.savefig('{}/{}.png'.format(COMPANY_INFO_PATH, symbol))
 
-    plt.show()
+    #plt.show()
     plt.close()
