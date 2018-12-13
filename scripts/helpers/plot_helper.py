@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 from matplotlib import style
 from sklearn.metrics import roc_curve, auc
+import db.stock_constants as const
 
 BASE_IMG_PATH = './../../target'
 if not os.path.exists(BASE_IMG_PATH):
@@ -141,4 +142,45 @@ def plot_result(y_test_one_hot, y_test_score_one_hot, classes_count, history, ma
         # plt.savefig('{}/{}.eps'.format(BASE_IMG_PATH, file_name), format='eps', dpi=1000)
         plt.savefig('{}/{}.png'.format(BASE_IMG_PATH, file_name))
     #plt.show()
+    plt.close()
+
+def plot_company_summary(df, symbol):
+    plt.figure(figsize=(12, 12))
+    style.use('ggplot')
+    plt.suptitle(symbol)
+
+    plt.subplot(2, 2, 1)
+    df[const.ADJUSTED_CLOSE_COL].plot(kind='line')
+    plt.title('Cena zamknięcia')
+    plt.ylabel('cena')
+    plt.xlabel('data')
+
+    plt.subplot(2, 2, 2)
+    df[const.DAILY_PCT_CHANGE_COL].plot(kind='line')
+    plt.title('Zmiana % względem dnia następnego')
+    plt.ylabel('%')
+    plt.xlabel('data')
+
+    plt.subplot(2, 2, 3)
+    df[const.HL_PCT_CHANGE_COL] = (df[const.HIGH_COL] - df[const.LOW_COL]) / df[
+        const.HIGH_COL] * 100
+    df[const.HL_PCT_CHANGE_COL].plot(kind='line')
+    plt.title('Procentowa zmiana H/L')
+    plt.ylabel('%')
+    plt.xlabel('data')
+
+    plt.subplot(2, 2, 4)
+    df[const.LABEL_DISCRETE_COL].plot(kind='hist', xticks=[0, 1, 2], label=RATE_CHANGE_LABEL)
+    plt.xticks([0, 1, 2], CLASS_LABELS)
+    plt.xlabel(VALUE_CHANGE_LABEL)
+    plt.ylabel(FORECAST_COUNT_LABEL)
+    plt.title(HISTOGRAM_TITLE)
+
+    plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+    COMPANY_INFO_PATH = BASE_IMG_PATH + '/company_info'
+    if not os.path.exists(COMPANY_INFO_PATH):
+        os.makedirs(COMPANY_INFO_PATH)
+    plt.savefig('{}/{}.png'.format(COMPANY_INFO_PATH, symbol))
+
+    plt.show()
     plt.close()

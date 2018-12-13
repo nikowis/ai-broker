@@ -10,7 +10,7 @@ LOCAL_URL = "mongodb://localhost:27017/"
 REMOTE_URL = "mongodb://admin:<pswd>@ds125574.mlab.com:25574/ai-broker"
 
 """Symbols with large history (over 5200 days)"""
-SELECTED_SYMBOLS_LIST = ['AVNW', 'AWRE', 'BPFH', 'CALL', 'CALM', 'CAMP', 'CARV', 'CASH', 'CASI', 'CASS', 'CENX', 'CERN',
+SELECTED_SYMBOLS_LIST = ['AVNW', 'AWRE', 'BPFH', 'CALM', 'CAMP', 'CASH', 'CASS', 'CENX', 'CERN',
                          'CERS', 'CETV', 'CFNB', 'CHKE', 'CHKP', 'CHNR', 'CLWT', 'CMCO', 'CMCSA', 'CMCT', 'CNMD',
                          'CREE', 'CRZO', 'CTAS', 'CUBA', 'CVTI', 'CYTR', 'DAVE', 'DEST', 'DJCO', 'DLHC', 'DSPG', 'DSWL',
                          'DWCH', 'DXYN', 'EDUC', 'EEFT', 'EEI', 'ELSE', 'ELTK', 'EMCI', 'EMITF', 'EMKR', 'EML', 'EMMS',
@@ -56,7 +56,9 @@ def stock_collection(db_conn, processed=True):
 def find_by_tickers_to_dateframe_parse_to_df_list(db_conn, symbol_list, processed=True):
     data = stock_collection(db_conn, processed).find({const.SYMBOL: {"$in": symbol_list}})
     df_list = []
+    symbol_output_list = []
     for document in data:
+        symbol_output_list.append(document[const.SYMBOL])
         document.pop(const.ID, None)
         document.pop(const.SYMBOL, None)
         df = pd.DataFrame.from_dict(document, orient=const.INDEX)
@@ -64,4 +66,4 @@ def find_by_tickers_to_dateframe_parse_to_df_list(db_conn, symbol_list, processe
         df_list.append(df)
     if len(df_list) == 0:
         raise Exception('No data with any ticker of ' + symbol_list + ' was found.')
-    return df_list
+    return df_list, symbol_output_list

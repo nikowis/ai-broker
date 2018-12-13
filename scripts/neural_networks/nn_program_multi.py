@@ -3,16 +3,22 @@ import time
 from db import db_access
 from helpers import data_helper
 from neural_networks import nn_runner
-
+import helpers.plot_helper as plth
 
 def main():
     db_conn = db_access.create_db_connection(remote=False, db_name='ai-broker')
 
-    symbols = db_access.SELECTED_SYMBOLS_LIST[:10]
-    df_list = db_access.find_by_tickers_to_dateframe_parse_to_df_list(db_conn, symbols)
+    symbols = db_access.SELECTED_SYMBOLS_LIST[10:100]
+    df_list, symbols = db_access.find_by_tickers_to_dateframe_parse_to_df_list(db_conn, symbols)
 
-    epochs = 50
-    layers = [5, 5, 5]
+    for i in range(0, len(symbols)):
+        sym = symbols[i]
+        df = df_list[i]
+        plth.plot_company_summary(df, sym)
+
+
+    epochs = 100
+    layers = [50, 50, 50]
     skip_iterations = 0
 
     # 'mean_squared_error', 'logcosh', 'categorical_crossentropy'
@@ -26,7 +32,7 @@ def main():
 
     total_time = time.time()
     iteration = 0
-    for hist_dayz in range(0, 50, 5):
+    for hist_dayz in range(0, 10, 2):
         x_train, x_test, y_train_one_hot, y_test_one_hot = data_helper.extract_data_from_list(df_list, hist_dayz)
         for optmzr in optimizers:
             for actv in activations:
