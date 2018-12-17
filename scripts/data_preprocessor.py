@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
 
-from db import db_access
-import db.stock_constants as const
+import db_access
+import stock_constants as const
 
 
 def process_data():

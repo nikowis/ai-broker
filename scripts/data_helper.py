@@ -5,7 +5,7 @@ import numpy as np
 from sklearn import model_selection
 from sklearn.preprocessing import StandardScaler
 
-import db.stock_constants as const
+import stock_constants as const
 
 
 def extract_data(df, history_days=0, forecast_days=1):

@@ -1,6 +1,7 @@
-from db import db_access
-from helpers import plot_helper, data_helper
-from neural_networks import nn_model
+import db_access
+import data_helper
+import plot_helper
+import nn_model
 
 LAYERS = [20, 20, 20]
 EPOCHS = 5
@@ -9,7 +10,7 @@ ACTIVATION = 'relu'
 OPTIMIZER = 'adam'
 LOSS_FUN = 'mean_squared_error'
 BATCH_SIZE = 10
-TICKER = 'CALM'
+TICKER = 'DXYN'
 HISTORY_DAYS = 1
 
 
@@ -40,7 +41,7 @@ def run(x_train, x_test, y_train_one_hot, y_test_one_hot, layers=LAYERS, epochs=
 
 if __name__ == '__main__':
     db_conn = db_access.create_db_connection()
-    df = db_access.find_by_tickers_to_dateframe_parse_to_df_list(db_conn, [TICKER])[0]
-    df, x_standardized, x_train, x_test, y_train_one_hot, y_test_one_hot = data_helper.extract_data(df, HISTORY_DAYS)
+    df = db_access.find_by_tickers_to_dateframe_parse_to_df_list(db_conn, [TICKER])[0][0]
+    df_modified, x_standardized, x_train, x_test, y_train_one_hot, y_test_one_hot = data_helper.extract_data(df, HISTORY_DAYS)
 
-    run(x_standardized, x_train, x_test, y_train_one_hot, y_test_one_hot)
+    run(x_train, x_test, y_train_one_hot, y_test_one_hot)

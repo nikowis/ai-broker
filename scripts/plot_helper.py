@@ -6,9 +6,9 @@ import numpy as np
 import pandas as pd
 from matplotlib import style
 from sklearn.metrics import roc_curve, auc
-import db.stock_constants as const
+import stock_constants as const
 
-BASE_IMG_PATH = './../../target'
+BASE_IMG_PATH = './../target'
 if not os.path.exists(BASE_IMG_PATH):
     os.makedirs(BASE_IMG_PATH)
 

@@ -1,7 +1,7 @@
 import pandas as pd
 import pymongo
 
-import db.stock_constants as const
+import stock_constants as const
 
 DB = "ai-broker"
 STOCK_COLLECTION = "stock"
