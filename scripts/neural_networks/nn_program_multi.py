@@ -3,12 +3,12 @@ import time
 from db import db_access
 from helpers import data_helper
 from neural_networks import nn_runner
-import helpers.plot_helper as plth
+
 
 def main():
     db_conn = db_access.create_db_connection(remote=False, db_name='ai-broker')
 
-    symbols = db_access.SELECTED_SYMBOLS_LIST[10:100]
+    symbols = db_access.SELECTED_SYMBOLS_LIST[0:50]
     df_list, symbols = db_access.find_by_tickers_to_dateframe_parse_to_df_list(db_conn, symbols)
 
     # for i in range(0, len(symbols)):
@@ -17,8 +17,8 @@ def main():
     #     plth.plot_company_summary(df, sym)
 
 
-    epochs = 50
-    layers = [100,100,100]
+    epochs = 200
+    #layers = [20,20,20]
     skip_iterations = 0
 
     # 'mean_squared_error', 'logcosh', 'categorical_crossentropy'
@@ -32,7 +32,7 @@ def main():
 
     total_time = time.time()
     iteration = 0
-    for hist_dayz in range(0, 22, 2):
+    for hist_dayz in range(1, 5, 1):
         x_train, x_test, y_train_one_hot, y_test_one_hot = data_helper.extract_data_from_list(df_list, hist_dayz)
         for optmzr in optimizers:
             for actv in activations:
@@ -40,6 +40,8 @@ def main():
                     iteration += 1
                     if iteration > skip_iterations:
                         file_name = get_report_file_name(actv, hist_dayz, iteration, lss, optmzr)
+                        neuron_count = x_train.shape[1] - 1
+                        layers = [neuron_count, neuron_count, neuron_count]
                         print('\nSTARTING TRAINING FOR ' + file_name)
                         iter_time = time.time()
                         nn_runner.run(x_train, x_test, y_train_one_hot, y_test_one_hot,
