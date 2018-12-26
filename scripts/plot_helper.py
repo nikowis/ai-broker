@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 from matplotlib import style
 from sklearn.metrics import roc_curve, auc
+
 import stock_constants as const
 
 BASE_IMG_PATH = './../target'
@@ -28,7 +29,6 @@ RATE_CHANGE_LABEL = 'Zmiana kursu'
 RISE_LABEL = 'wzrost'
 IDLE_LABEL = 'utrzymanie'
 FALL_LABEL = 'spadek'
-CLASS_LABELS = [FALL_LABEL, IDLE_LABEL, RISE_LABEL]
 PREDICTED_LEGEND = 'Przewidywane'
 REAL_LEGEND = 'Rzeczywiste'
 
@@ -78,6 +78,13 @@ def calculate_roc_auc(y_test, y_test_score, classes_count):
 
 
 def plot_result(y_test_one_hot, y_test_score_one_hot, classes_count, history, main_title, file_name, outstanding=False):
+    if classes_count == 2:
+        class_labels = [FALL_LABEL, RISE_LABEL]
+        xticks = [0, 1]
+    else:
+        class_labels = [FALL_LABEL, IDLE_LABEL, RISE_LABEL]
+        xticks = [0, 1, 2]
+
     fpr, tpr, roc_auc = calculate_roc_auc(y_test_one_hot, y_test_score_one_hot, classes_count)
 
     plt.figure(figsize=(12, 12))
@@ -88,13 +95,14 @@ def plot_result(y_test_one_hot, y_test_score_one_hot, classes_count, history, ma
 
     y_test = [np.argmax(pred, axis=None, out=None) for pred in y_test_one_hot]
     dftmp = pd.DataFrame({'tmpcol': y_test})
-    dftmp['tmpcol'].plot(kind='hist', xticks=[0, 1, 2], alpha=0.7, label=RATE_CHANGE_LABEL)
+
+    dftmp['tmpcol'].plot(kind='hist', xticks=xticks, alpha=0.7, label=RATE_CHANGE_LABEL)
     y_test_score = [np.argmax(pred, axis=None, out=None) for pred in y_test_score_one_hot]
     dftmp = pd.DataFrame({'tmpcol': y_test_score})
-    dftmp['tmpcol'].plot(kind='hist', xticks=[0, 1, 2], alpha=0.7, label=RATE_CHANGE_LABEL)
+    dftmp['tmpcol'].plot(kind='hist', xticks=xticks, alpha=0.7, label=RATE_CHANGE_LABEL)
 
     plt.legend([REAL_LEGEND, PREDICTED_LEGEND], loc='upper left')
-    plt.xticks([0, 1, 2], CLASS_LABELS)
+    plt.xticks(xticks, class_labels)
     plt.xlabel(VALUE_CHANGE_LABEL)
     plt.ylabel(FORECAST_COUNT_LABEL)
     plt.title(HISTOGRAM_TITLE)
@@ -107,7 +115,7 @@ def plot_result(y_test_one_hot, y_test_score_one_hot, classes_count, history, ma
     colors = cycle(['aqua', 'darkorange', 'cornflowerblue'])
     for i, color in zip(range(classes_count), colors):
         plt.plot(fpr[i], tpr[i], color=color, lw=2,
-                 label=CLASS_ROC_LABEL.format(CLASS_LABELS[i], roc_auc[i]))
+                 label=CLASS_ROC_LABEL.format(class_labels[i], roc_auc[i]))
     plt.plot([0, 1], [0, 1], 'k--', lw=2)
     plt.xlim([0.0, 1.0])
     plt.ylim([0.0, 1.05])
@@ -141,8 +149,9 @@ def plot_result(y_test_one_hot, y_test_score_one_hot, classes_count, history, ma
     else:
         # plt.savefig('{}/{}.eps'.format(BASE_IMG_PATH, file_name), format='eps', dpi=1000)
         plt.savefig('{}/{}.png'.format(BASE_IMG_PATH, file_name))
-    #plt.show()
+    # plt.show()
     plt.close()
+
 
 def plot_company_summary(df, symbol):
     plt.figure(figsize=(12, 12))
@@ -182,5 +191,5 @@ def plot_company_summary(df, symbol):
         os.makedirs(COMPANY_INFO_PATH)
     plt.savefig('{}/{}.png'.format(COMPANY_INFO_PATH, symbol))
 
-    #plt.show()
+    # plt.show()
     plt.close()

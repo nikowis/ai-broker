@@ -1,7 +1,7 @@
 import time
 
-import db_access
 import data_helper
+import db_access
 import nn_runner
 
 
@@ -16,9 +16,8 @@ def main():
     #     df = df_list[i]
     #     plth.plot_company_summary(df, sym)
 
-
     epochs = 5
-    #layers = [20,20,20]
+    # layers = [20,20,20]
     skip_iterations = 0
 
     losses = ['categorical_crossentropy']
@@ -29,8 +28,9 @@ def main():
 
     total_time = time.time()
     iteration = 0
-    for hist_dayz in range(1, 5, 1):
-        x_train, x_test, y_train_one_hot, y_test_one_hot = data_helper.extract_data_from_list(df_list, hist_dayz)
+    for hist_dayz in range(11, 12, 1):
+        x_train, x_test, y_train_one_hot, y_test_one_hot = data_helper.extract_data_from_list(df_list, hist_dayz,
+                                                                                              binary_classification=True)
         for optmzr in optimizers:
             for actv in activations:
                 for lss in losses:

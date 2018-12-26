@@ -8,7 +8,7 @@ from sklearn.preprocessing import StandardScaler
 import stock_constants as const
 
 
-def extract_data(df, history_days=0, forecast_days=1):
+def extract_data(df, history_days=0, forecast_days=1, binary_classification=False):
     """
     Function stplitting dateframe data for machine learning.
 
@@ -22,7 +22,10 @@ def extract_data(df, history_days=0, forecast_days=1):
 
     df, x = calculate_extra_columns_get_x(df)
     df, x = calculate_history_columns(df, x, history_days, forecast_days)
-    y = np.array(df[const.LABEL_DISCRETE_COL])
+    if binary_classification:
+        y = np.array(df[const.LABEL_BINARY_COL])
+    else:
+        y = np.array(df[const.LABEL_DISCRETE_COL])
 
     x_train, x_test, y_train, y_test = model_selection.train_test_split(x, y, test_size=0.2)
 
@@ -39,7 +42,7 @@ def extract_data(df, history_days=0, forecast_days=1):
     return df, x_standardized, x_train, x_test, y_train_one_hot, y_test_one_hot
 
 
-def extract_data_from_list(df_list, history_days=0, forecast_days=1, test_size=0.2):
+def extract_data_from_list(df_list, history_days=0, forecast_days=1, test_size=0.2, binary_classification=False):
     data_count = len(df_list)
     test_count = int(data_count * test_size)
     test_indices = random.sample(range(1, data_count), test_count)
@@ -54,11 +57,11 @@ def extract_data_from_list(df_list, history_days=0, forecast_days=1, test_size=0
     for train_df in train_dfs:
         train_df, total_x_train, total_y_train = calculate_append_x_y(forecast_days, history_days, total_x_train,
                                                                       total_y_train,
-                                                                      train_df)
+                                                                      train_df, binary_classification)
     for test_df in test_dfs:
         test_df, total_x_test, total_y_test = calculate_append_x_y(forecast_days, history_days, total_x_test,
                                                                    total_y_test,
-                                                                   test_df)
+                                                                   test_df, binary_classification)
 
     y_train_one_hot = keras.utils.to_categorical(total_y_train)
     y_test_one_hot = keras.utils.to_categorical(total_y_test)
@@ -82,10 +85,13 @@ def calculate_history_columns(df, x, history_days, forecast_days):
     return df, x
 
 
-def calculate_append_x_y(forecast_days, history_days, total_x, total_y, df):
+def calculate_append_x_y(forecast_days, history_days, total_x, total_y, df, binary_classification):
     df, x = calculate_extra_columns_get_x(df)
     df, x = calculate_history_columns(df, x, history_days, forecast_days)
-    y = np.array(df[const.LABEL_DISCRETE_COL])
+    if binary_classification:
+        y = np.array(df[const.LABEL_BINARY_COL])
+    else:
+        y = np.array(df[const.LABEL_DISCRETE_COL])
     std_scale = StandardScaler().fit(x)
     x = std_scale.transform(x)
 
