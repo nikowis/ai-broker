@@ -15,7 +15,7 @@
 \newcommand{\myNumber}{260907}
 \newcommand{\myThesisType}{Praca dyplomowa magisterska}
 \newcommand{\myCourse}{Informatyka}
-\newcommand{\myProf}{dr hab. inż. Jerzy Balicki}
+\newcommand{\myProf}{dr hab. inż. Jerzy Balicki, profesor PW}
 \newcommand{\myFaculty}{Wydział Matematyki i Nauk Informacyjnych}
 \newcommand{\myUni}{Politechnika Warszawska}
 \newcommand{\myLocation}{Warszawa}
@@ -124,7 +124,23 @@
 \endgroup
 \end{titlepage}
 
-\newpage
+\cleardoublepage
+
+\begingroup
+\fontsize{12pt}{14.4pt}\selectfont
+
+
+\begin{abstract}
+	Głównym celem pracy było opracowanie oraz porównanie modeli predykcyjnych pomagających w podejmowaniu decyzji maklerowi giełdowemu.
+
+\bigskip
+
+	\noindent \textbf{Słowa kluczowe:} giełda, predykcja, klasyfikacja, sieci neuronowe
+\end{abstract}
+
+\cleardoublepage
+
+
 \hfill
 \begin{table}[b]
 \centering
@@ -136,38 +152,79 @@ podpis promotora & \hspace*{100pt} & podpis autora
 
 \fncymain
 
-\newpage
+
+
+\cleardoublepage
 
 \tableofcontents
 
-\newpage
+\cleardoublepage
 
-\section{Opis pracy}
+\section{Modele prognozy na giełdzie oraz kryteria ich oceny}
 
-Celem tej pracy było opracowanie, ocena i porównanie różnych modeli predykcji cen akcji na giełdzie papierów wartościowych lub innych alternatywnych giełdach np. giełda kryptowalut.
+Celem tej pracy jest opracowanie, ocena i porównanie różnych modeli predykcji cen akcji na giełdzie papierów wartościowych lub innych alternatywnych giełdach np. giełda kryptowalut.
 
-\subsection{Giełda}
+\subsection{Charakterystyka giełdy}
 
 Giełda z definicji jest miejscem wymiany towarów przez sprzedawców i kupców. Giełdy można podzielić na giełdy towarowe, pieniężne lub usługowe. Wymiany na tradycyjnych giełdach przebiegają przede wszystkim podczas sesji, które są organizowane w określonych dniach i godzinach. Najpopularniejszym rodzajem giełd są giełdy pieniężne, a w szczególności giełdy papierów wartościowych. Największymi giełdami papierów wartościowych są \textit{NYSE (New York Stock Exchange)}\cite{nyse}, \textit{NASDAQ}\cite{nasdaq} oraz \textit{JPX (Japan Exchange Group)}\cite{jpx}. Na każdej z tych giełd w dniach, w których prowadzone są sesje, dochodzi do transakcji opiewających na łączną kwotę rzędu miliardów dolarów amerykańskich.
 
 \bigskip
 
- Jednym z wymienianych na giełdzie towarów są akcje różnorodnych spółek. Każda spółka, która jest obecna na giełdzie ma przypisany symbol giełdowy (\textit{ticker}). Symbol giełdowy jest skrótowym kodem do identyfikowania spółek na określonej giełdzie (przykładowe symbole: \textit{GOOGL}, \textit{MSFT}, \textit{AMZN}). Podczas każdej sesji dokonywane są transakcje milionów akcji, których cena regulowana jest jedynie przez wolny rynek. Wynikiem tego jest duża zmienność cen akcji, spowodowana różnymi spekulacjami lub upublicznianiem informacji o konkretnej spółce.
+ Jednym z wymienianych na giełdzie towarów są akcje różnorodnych spółek. Każda spółka, która jest obecna na giełdzie ma przypisany do siebie symbol giełdowy (\textit{ticker}). Symbol giełdowy jest skrótowym kodem do identyfikowania spółek na określonej giełdzie (przykładowe symbole: \textit{GOOGL}, \textit{MSFT}, \textit{AMZN}). Podczas każdej sesji dokonywane są transakcje milionów akcji, których cena regulowana jest jedynie przez wolny rynek. Wynikiem tego jest duża zmienność cen akcji, spowodowana różnymi spekulacjami lub upublicznianiem informacji o konkretnej spółce.
 
 
-\subsection{Dostępne dane}
+\subsection{Dane giełdowe}
 
-Przed przystąpieniem do wyboru metod należy zastanowić się nad danymi wejściowymi do algorytmów przewidujących. Podstawowe dane dostępne na giełdzie to:
+Przed przystąpieniem do wyboru metod należy zastanowić się nad danymi wejściowymi do algorytmów przewidujących. 
+
+\subsubsection{Dane podstawowe}
+
+Podstawowymi (dziennymi) danymi wynikającymi bezpośrednio z funkcjonowania giełdy są:
+
 \begin{itemize}
 \item{Data}
-\item{Cena zamknięcia} cena akcji pod koniec dnia
-\item{Cena otwarcia} cena akcji na początku dnia
+\item{Cena zamknięcia} - cena akcji pod koniec dnia
+\item{Cena otwarcia} - cena akcji na początku dnia
 \item{Ilość akcji w obrocie danego dnia}
 \item{Najniższa cena akcji danego dnia}
 \item{Najwyższa cena akcji danego dnia}
 \end{itemize}
 
  Przy korzystaniu z wartości cen akcji należy również uwzględnić podział akcji(tak zwany \textit{split}). Gdy jakaś spółka decyduje się na podział swoich akcji oznacza to, że każda z akcji dzieli się na dwie akcje o cenie wynoszącej połowę pierwotnej ceny. Taki zabieg pozwala na zmniejszenie ceny pojedynczej akcji dzięki czemu może stać się ona dostępna dla większej ilości inwestorów. 
+ 
+\bigskip
+
+Te dane są jednak mało szczegółowe, i w związku z dużą losowością ruchów giełdowych, są niewystarczające aby skutecznie przewidzieć zmiany cen akcji. Zawodowi maklerzy do podejmowania swoich decyzji korzystają z dwóch podstawowych technik: \textbf{analizy fundamentalnej} oraz \textbf{analizy technicznej}.
+
+\subsubsection{Analiza fundamentalna \cite{fundamentalanalysis}}
+
+Analiza fundamentalna spółek jest analizą kondycji ekonomicznej spółek w zestawieniu z wartością ich akcji. Ten rodzaj analizy ma odpowiedzieć na pytanie czy cena akcji tej spółki odpowiada jej sytuacji na rynku. Przy takim badaniu spółki brane jest pod uwagę wiele różnych czynników takich jak:
+\begin{itemize}
+\item{analiza finansowa spółki}
+\item{analiza sektorowa}
+\item{analiza makroekonomiczna}
+\item{analiza ogólnej sytuacji spółki}
+\end{itemize}
+
+Ten rodzaj badania spółki jest niezwykle czasochłonny i często wymaga eksperckiej wiedzy w dziedzinie finansów. Dodatkowo analiza fundamentalna wymaga posiadania danych publicznych, aczkolwiek czasami ciężko dostępnych, o spółkach i sektorach, w których się znajdują. Analizę fundamentalną stosuje się w szczególności przy inwestycjach długoterminowych, czyli co najmniej kilkumiesięcznych. 
+
+Najsłynniejszym analitykiem technicznym świata jest \textit{Warren Buffet} prezes amerykańskiego holdingu \textit{Berkshire Hathaway \cite{berkeshire}}. 
+
+\bigskip
+
+Analiza fundamentalna ze względu na swoją długoterminową naturę (raporty finansowe spółek publikowane kwartalnie) jest mało przydatna przy dziennych predykcjach giełdowych. Z tego względu zostanie ona pominięta w tej pracy.
+
+\subsubsection{Analiza techniczna \cite{technicalanalysis}}
+
+Analiza techniczna jest zbiorem technik mających na celu wspomaganie inwestora w podejmowaniu decyzji na podstawie historycznych danych giełdowych. Analiza ta bada zachowania rynku oraz poszukuje trendów i ich kształtów. Szczególnie istotne są liczne wskaźniki techniczne oraz narzędzia analizy statystycznej.
+Najpopularniejsze wskaźniki techniczne obejmują:
+\begin{itemize}
+\item{\textbf{SMA}} - średnia krocząca. Jest to średnia cen z kilku ostatnich dni (np. 3, 7, 14, 30),
+\item{\textbf{EMA}} - wykładnicza średnia krocząca. Jest to wykładnicza średnia cen z kilku ostatnich dni (np. 3, 7, 14, 30),
+\item{\textbf{MACD}} -  miara zbieżności i rozbieżności średnich ruchomych,
+\item{\textbf{RSI}} -  indeks równowagi ceny do liczby akcji,
+\item{\textbf{Oscylator stochastyczny}} -  indeks równowagi ceny do liczby akcji.
+\end{itemize}
 
 \subsection{Źródło danych}
 
@@ -196,7 +253,7 @@ Najbardziej pożytecznym parametrem akcji, którego przewidywanie daje inwestoro
 
 Zgodnie z hipotezą błądzenia losowego \cite{randwalk}, krótkoterminowo, ceny akcji zmieniają się według nieprzewidywalnych schematów. Zmiany minutowe cen akcji są więc dużo cięższe do przewidzenia niż zmiany dobowe. Z tego względu przewidywanie wartości w okresie krótszym niż jedna doba, nie zostało uwzględnione w obszarze badań tej pracy.
 
-\subsection{Metodyka tworzenia modeli}
+\subsection{Metodyka konstruowania modeli}
 
 Ponieważ zagadnienie przewidywania giełdy jest nietrywialne ze względu na losowe wahania wpływające na ceny akcji, do stworzenia każdego z modeli do predykcji, należy rozważyć wykorzystanie zróżnicowanych założeń:
 	
@@ -262,7 +319,11 @@ Podczas oceny modelu wzięto pod uwagę różne kryteria mierzenia dokładności
 
 \subsubsection{Statystyka Kołomogrowa-Smirnova}
 
-\section{Prognozowanie}
+\subsection{Wnioski i uwagi}
+
+\newpage
+
+\section{Wybrane algorytmy do prognozowania}
 
 \subsection{Regresja liniowa}
 
@@ -327,12 +388,28 @@ Jednym z najprostszych przykładów sieci neuronowych jest perceptron wielowarst
 
 \subsection{Wykorzystanie wykrywania sentymentu do poprawienia predykcji}
 
+\subsection{Wnioski i uwagi}
+
+\newpage
+
 \section{Wspomaganie decyzji giełdowych}
+
+\newpage
+
+\section{Projekt aplikacji}
+
+\newpage
+
+\section{Eksperymenty numeryczne}
+
+\newpage
+
+\section{Podsumowanie}
 
 
 \newpage
 
-\renewcommand{\refname}{Bibliografia}
+\section{Bibliografia}
 \begin{thebibliography}{9}
   
  \bibitem{nyse}
@@ -346,6 +423,22 @@ Strona główna NASDAQ
  \bibitem{jpx}
 Strona główna JPX
 \\\url{https://www.jpx.co.jp/english/}
+
+\bibitem{fundamentalanalysis}
+  John C. Ritchie,
+  \textit{Analiza fundamentalna}.
+  Wig-Press,
+  1997.
+  
+  \bibitem{berkeshire}
+Strona główna Berkeshire Hathaway
+\\\url{http://www.berkshirehathaway.com/}
+
+\bibitem{technicalanalysis}
+  John J. Murphy,
+  \textit{Analiza techniczna rynków finansowych}.
+  Maklerska.pl,
+  2017.
 
  \bibitem{alphavantage}
 Strona główna Alpha Vantage
@@ -363,7 +456,8 @@ Strona główna MongoDB
   W. W. Norton Company,
   2007.
 
-\bibitem{randwalk}
+
+\bibitem{pythonmachinelearning}
   John Hearty
   \textit{Advanced Machine Learning with Python}.
   Packt Publishing,
@@ -371,5 +465,18 @@ Strona główna MongoDB
 
 
 \end{thebibliography}
+
+\newpage
+
+\section{Wykaz rysunków}
+
+\newpage
+
+\section{Wykaz tabel}
+
+\newpage
+
+\section{Charakterystyka aplikacji}
+
 
 \end{document}
