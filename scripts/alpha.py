@@ -26,7 +26,7 @@ class AlphaVantage:
 
     API_URL = 'https://www.alphavantage.co/query'
 
-    def __init__(self, key='yM2zzAs6_DxdeT86rtZY') -> None:
+    def __init__(self, key) -> None:
         super().__init__()
         self.key = key
 

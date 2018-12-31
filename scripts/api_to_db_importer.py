@@ -86,6 +86,8 @@ SYMBOLS = ['AAME', 'AAON', 'AAPL', 'AAWW', 'AAXJ', 'ABCB', 'ABIO', 'ABMD', 'ACAD
            'VIRC', 'VOD', 'VOXX', 'VRML', 'VVUS', 'WASH', 'WDC', 'WDFC', 'WEN', 'WERN', 'WETF', 'WEYS', 'WIRE', 'WLDN',
            'WLFC', 'WRLD', 'WSBC', 'WSBF', 'WSCI', 'WSFS', 'YRCW', 'ZAGG', 'ZION', 'ZIOP', 'ZN', 'ZUMZ']
 
+API_KEYS = ['yM2zzAs6_DxdeT86rtZY', 'TX1OLY36K73S9MS9', 'I7RUE3LA4PSXDJU6', 'ULDORYWPDU2S2E6X']
+
 
 class Importer:
 
@@ -93,12 +95,9 @@ class Importer:
         super().__init__()
         self.minute_count = 0
         self.daily_count = 0
+        self.api_key_index = 0
         self.db = create_db_connection()
-        self.api = alpha.AlphaVantage('yM2zzAs6_DxdeT86rtZY')
-        # yM2zzAs6_DxdeT86rtZY
-        # TX1OLY36K73S9MS9
-        # I7RUE3LA4PSXDJU6
-        # ULDORYWPDU2S2E6X
+        self.api = alpha.AlphaVantage(API_KEYS[self.api_key_index])
 
     def json_to_df(self, json):
         json.pop(const.ID, None)
@@ -132,7 +131,12 @@ class Importer:
         self.minute_count = self.minute_count + 1
         self.daily_count = self.daily_count + 1
         if self.daily_count >= API_MAX_DAILY:
-            raise Exception('Maximum api calls per day reached.')
+            self.minute_count = 0
+            self.daily_count = 0
+            self.api_key_index = self.api_key_index + 1
+            self.api = alpha.AlphaVantage(API_KEYS[self.api_key_index])
+            print('####################CHANGING API KEY##################')
+            time.sleep(10)
         if self.minute_count >= API_MAX_PER_MINUTE_CALLS:
             print('Sleeping.')
             time.sleep(65)
