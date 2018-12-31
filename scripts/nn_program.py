@@ -4,18 +4,19 @@ import data_helper
 import db_access
 import nn_runner
 
+MIN_DATE = '2009-01-01'
 
 def main():
-    ticker = 'DXYN'
+    ticker = 'CRZO'
     db_conn = db_access.create_db_connection(remote=False)
-    df_list, sym_list = db_access.find_by_tickers_to_dateframe_parse_to_df_list(db_conn, [ticker])
+    df_list, sym_list = db_access.find_by_tickers_to_dateframe_parse_to_df_list(db_conn, [ticker], min_date=MIN_DATE)
     df = df_list[0]
-    epochs = 100
+    epochs = 30
     # layers = [7, 7, 7]
     skip_iterations = 0
 
-    # 'mean_squared_error', 'logcosh', 'categorical_crossentropy'
-    losses = ['categorical_crossentropy']
+    # 'mean_squared_error', 'logcosh', 'categorical_crossentropy', 'binary_crossentropy'
+    losses = ['binary_crossentropy']
 
     # 'relu, 'softmax'
     activations = ['relu']

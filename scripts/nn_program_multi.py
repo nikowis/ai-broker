@@ -4,23 +4,25 @@ import data_helper
 import db_access
 import nn_runner
 
+MIN_DATE = '2009-01-01'
+
 
 def main():
     db_conn = db_access.create_db_connection(remote=False, db_name='ai-broker')
 
     symbols = db_access.SELECTED_SYMBOLS_LIST[0:50]
-    df_list, symbols = db_access.find_by_tickers_to_dateframe_parse_to_df_list(db_conn, symbols)
+    df_list, symbols = db_access.find_by_tickers_to_dateframe_parse_to_df_list(db_conn, symbols, min_date=MIN_DATE)
 
     # for i in range(0, len(symbols)):
     #     sym = symbols[i]
     #     df = df_list[i]
     #     plth.plot_company_summary(df, sym)
 
-    epochs = 5
+    epochs = 30
     # layers = [20,20,20]
     skip_iterations = 0
 
-    losses = ['categorical_crossentropy']
+    losses = ['binary_crossentropy']
 
     activations = ['relu']
 
@@ -28,7 +30,7 @@ def main():
 
     total_time = time.time()
     iteration = 0
-    for hist_dayz in range(11, 12, 1):
+    for hist_dayz in range(0, 12, 1):
         x_train, x_test, y_train_one_hot, y_test_one_hot = data_helper.extract_data_from_list(df_list, hist_dayz,
                                                                                               binary_classification=True)
         for optmzr in optimizers:

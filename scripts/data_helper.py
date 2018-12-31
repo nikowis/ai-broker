@@ -116,7 +116,7 @@ def calculate_append_x_y(forecast_days, history_days, total_x, total_y, df, bina
 
 
 def calculate_extra_columns_get_x(df):
-    df[const.HL_PCT_CHANGE_COL] = (df[const.HIGH_COL] - df[const.LOW_COL]) / df[
-        const.HIGH_COL] * 100
-    x = np.array(df[[const.VOLUME_COL, const.ADJUSTED_CLOSE_COL, const.HL_PCT_CHANGE_COL]])
+    # df[const.HL_PCT_CHANGE_COL] = (df[const.HIGH_COL] - df[const.LOW_COL]) / df[
+    #     const.HIGH_COL] * 100
+    x = np.array(df[[const.VOLUME_COL, const.ADJUSTED_CLOSE_COL, const.HIGH_COL, const.LOW_COL, const.OPEN_COL]])
     return df, x
