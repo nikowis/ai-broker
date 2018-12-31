@@ -10,9 +10,9 @@ from db_access import create_db_connection, stock_collection
 SYMBOL_KEY = "symbol"
 
 API_MAX_PER_MINUTE_CALLS = 5
-API_MAX_DAILY = 500
+API_MAX_DAILY = 400
 
-SYMBOLS = ['AAL', 'AAME', 'AAON', 'AAPL', 'AAWW', 'AAXJ', 'ABCB', 'ABIO', 'ABMD', 'ACAD', 'ACET', 'ACFN', 'ACGL',
+SYMBOLS = ['AAME', 'AAON', 'AAPL', 'AAWW', 'AAXJ', 'ABCB', 'ABIO', 'ABMD', 'ACAD', 'ACET', 'ACFN', 'ACGL',
            'ACHC', 'ACHN', 'ACIW', 'ACLS', 'ACNB', 'ACOR', 'ACTG', 'ACUR', 'ACWI', 'ACWX', 'ACXM', 'ADBE', 'ADES',
            'ADI', 'ADMP', 'ADP', 'ADRA', 'ADRD', 'ADRE', 'ADRU', 'ADSK', 'ADTN', 'ADXS', 'AEGN', 'AEHR', 'AEIS', 'AETI',
            'AEY', 'AEZS', 'AFSI', 'AGEN', 'AGNC', 'AGYS', 'AHPI', 'AIMC', 'AINV', 'AIRT', 'AKAM', 'AKRX', 'ALCO',
@@ -94,7 +94,7 @@ class Importer:
         self.minute_count = 0
         self.daily_count = 0
         self.db = create_db_connection()
-        self.api = alpha.AlphaVantage('ULDORYWPDU2S2E6X')
+        self.api = alpha.AlphaVantage('yM2zzAs6_DxdeT86rtZY')
         # yM2zzAs6_DxdeT86rtZY
         # TX1OLY36K73S9MS9
         # I7RUE3LA4PSXDJU6
@@ -126,14 +126,17 @@ class Importer:
             time_series = raw_json[time_series_key]
             time_series[SYMBOL_KEY] = sym
             stock_collection(self.db, False).insert(time_series)
-            self.minute_count = self.minute_count + 1
-            self.daily_count = self.daily_count + 1
-            if self.daily_count >= API_MAX_DAILY:
-                raise Exception('Maximum api calls per day reached.')
-            if self.minute_count >= API_MAX_PER_MINUTE_CALLS:
-                print('Sleeping.')
-                time.sleep(60)
-                self.minute_count = 0
+            self.increment_counters_sleep()
+
+    def increment_counters_sleep(self):
+        self.minute_count = self.minute_count + 1
+        self.daily_count = self.daily_count + 1
+        if self.daily_count >= API_MAX_DAILY:
+            raise Exception('Maximum api calls per day reached.')
+        if self.minute_count >= API_MAX_PER_MINUTE_CALLS:
+            print('Sleeping.')
+            time.sleep(65)
+            self.minute_count = 0
 
     def remove_dots(self, items):
         result = {}
@@ -150,8 +153,49 @@ class Importer:
         for ticker in tickers:
             json = stock_collection(self.db, False).find_one({const.SYMBOL: ticker})
             df = self.json_to_df(json)
-            # if const.SMA in df.columns
-            pass
+            self.import_technical_indicator(ticker, df, 'SMA', const.SMA_10_COL, time_period=10)
+            self.import_technical_indicator(ticker, df, 'SMA', const.SMA_20_COL, time_period=20)
+            self.import_technical_indicator(ticker, df, 'EMA', const.EMA_10_COL, time_period=10)
+            self.import_technical_indicator(ticker, df, 'EMA', const.EMA_20_COL, time_period=20)
+            self.import_technical_indicator(ticker, df, 'MACD', const.MACD_COL)
+            self.import_technical_indicator(ticker, df, 'STOCH', const.STOCH_COL)
+            self.import_technical_indicator(ticker, df, 'RSI', const.RSI_10_COL, time_period=10)
+            self.import_technical_indicator(ticker, df, 'RSI', const.RSI_20_COL, time_period=20)
+            self.import_technical_indicator(ticker, df, 'BBANDS', const.BBANDS_10_COL, time_period=10)
+            self.import_technical_indicator(ticker, df, 'BBANDS', const.BBANDS_20_COL, time_period=20)
+
+    def import_technical_indicator(self, ticker, df, indicator, col_name, time_period=None):
+        if col_name not in df.columns:
+            print('Importing ', col_name, ' for ', ticker)
+            raw_json = self.api.technical_indicator(ticker, indicator, time_period=time_period).json(
+                object_pairs_hook=self.remove_dots)
+            keys = list(raw_json.keys())
+            if len(keys) < 2:
+                print('Symbol ', ticker, 'not existing in alpha vantage')
+                return
+            time_series_key = keys[1]
+            time_series = raw_json[time_series_key]
+            indicator_df = self.json_to_df(time_series)
+            if 'MACD' == indicator:
+                prefix = col_name + ' '
+                df[col_name] = indicator_df[indicator]
+                df[prefix + 'Hist'] = indicator_df['MACD_Hist']
+                df[prefix + 'Signal'] = indicator_df['MACD_Signal']
+            elif 'STOCH' == indicator:
+                prefix = col_name + ' '
+                df[prefix + 'SlowK'] = indicator_df['SlowK']
+                df[prefix + 'SlowD'] = indicator_df['SlowD']
+            elif 'BBANDS' == indicator:
+                prefix = col_name + ' '
+                df[prefix + 'Real Lower Band'] = indicator_df['Real Lower Band']
+                df[prefix + 'Real Upper Band'] = indicator_df['Real Upper Band']
+                df[prefix + 'Real Middle Band'] = indicator_df['Real Middle Band']
+            else:
+                df[col_name] = indicator_df[indicator]
+            processed_json = self.df_to_json(df, ticker)
+            stock_collection(self.db, False).remove({const.SYMBOL: ticker})
+            stock_collection(self.db, False).insert(processed_json)
+            self.increment_counters_sleep()
 
     def process_data(self):
         stock_collection_raw = stock_collection(self.db, False)
@@ -180,5 +224,5 @@ if __name__ == "__main__":
     print(len(SYMBOLS))
     imp = Importer()
     # imp.import_all(SYMBOLS)
-    imp.process_data()
-    # imp.import_all_technical_indicators(SYMBOLS[0:1])
+    # imp.process_data()
+    imp.import_all_technical_indicators(SYMBOLS)

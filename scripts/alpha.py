@@ -1,7 +1,3 @@
-import json
-import os
-
-import pandas as pd
 import requests
 
 OPEN_COL = '1. open'
@@ -32,7 +28,7 @@ class AlphaVantage:
 
     def __init__(self, key='yM2zzAs6_DxdeT86rtZY') -> None:
         super().__init__()
-        self.key=key
+        self.key = key
 
     FULL = 'full'
     COMPACT = 'compact'
@@ -49,21 +45,14 @@ class AlphaVantage:
 
         return requests.get(self.API_URL, params=data)
 
-    def data(self, ticker, data_type=DataType.DAILY_ADJUSTED, cache=True):
-        cache_file_path = self.API_CACHE_PATH + ticker + '_' + data_type + '.json'
-        if not cache or not os.path.exists(cache_file_path):
-            if not os.path.exists(self.API_CACHE_PATH):
-                os.makedirs(self.API_CACHE_PATH)
-            response = self.data_raw(ticker, data_type).json()
-            with open(cache_file_path, "w") as text_file:
-                text_file.write(json.dumps(response))
-        else:
-            with open(cache_file_path, "r") as text_file:
-                response = json.loads(text_file.read())
+    def technical_indicator(self, ticker, indicator, time_period=None, interval='daily', series_type='close'):
+        data = {"apikey": self.key,
+                "symbol": ticker,
+                "interval": interval,
+                "function": indicator,
+                "series_type": series_type
+                }
+        if time_period is not None:
+            data['time_period'] = time_period
 
-        keys = list(response.keys())
-        series = keys[1]
-        df = pd.DataFrame.from_dict(response[series], orient='index')
-        df = df.astype(float)
-        df.index = pd.to_datetime(df.index)
-        return df
+        return requests.get(self.API_URL, params=data)
