@@ -8,20 +8,19 @@ from sklearn.preprocessing import StandardScaler
 import stock_constants as const
 
 
-def extract_data(df, history_days=0, forecast_days=1, binary_classification=False):
+def extract_data(df, history_days=0, binary_classification=False):
     """
     Function stplitting dateframe data for machine learning.
 
     :param df: dateframe data
-    :param forecast_days: how many days to forecast out
     :param history_days: how many days from history to put in each row
     :return:
         (df, x_standardized, x_train, x_test, y_train_one_hot, y_test_one_hot) # tuple of (modified df, standardized x,
         learning x, testing x, learning y (one hot), test y (one hot))
     """
 
-    df, x = calculate_extra_columns_get_x(df)
-    df, x = calculate_history_columns(df, x, history_days, forecast_days)
+    df, x = get_x_columns(df)
+    df, x = calculate_history_columns(df, x, history_days)
     if binary_classification:
         y = np.array(df[const.LABEL_BINARY_COL])
     else:
@@ -42,7 +41,7 @@ def extract_data(df, history_days=0, forecast_days=1, binary_classification=Fals
     return df, x_standardized, x_train, x_test, y_train_one_hot, y_test_one_hot
 
 
-def extract_data_from_list(df_list, history_days=0, forecast_days=1, test_size=0.2, binary_classification=False):
+def extract_data_from_list(df_list, history_days=0, test_size=0.2, binary_classification=False):
     data_count = len(df_list)
     test_count = int(data_count * test_size)
     test_indices = random.sample(range(1, data_count), test_count)
@@ -55,11 +54,11 @@ def extract_data_from_list(df_list, history_days=0, forecast_days=1, test_size=0
     total_y_test = None
 
     for train_df in train_dfs:
-        train_df, total_x_train, total_y_train = calculate_append_x_y(forecast_days, history_days, total_x_train,
+        train_df, total_x_train, total_y_train = calculate_append_x_y(history_days, total_x_train,
                                                                       total_y_train,
                                                                       train_df, binary_classification)
     for test_df in test_dfs:
-        test_df, total_x_test, total_y_test = calculate_append_x_y(forecast_days, history_days, total_x_test,
+        test_df, total_x_test, total_y_test = calculate_append_x_y(history_days, total_x_test,
                                                                    total_y_test,
                                                                    test_df, binary_classification)
 
@@ -68,7 +67,7 @@ def extract_data_from_list(df_list, history_days=0, forecast_days=1, test_size=0
     return total_x_train, total_x_test, y_train_one_hot, y_test_one_hot
 
 
-def calculate_history_columns(df, x, history_days, forecast_days):
+def calculate_history_columns(df, x, history_days):
     if history_days > 0:
         input_rows = x.shape[0]
         input_columns = x.shape[1]
@@ -80,14 +79,14 @@ def calculate_history_columns(df, x, history_days, forecast_days):
         nan_row_count = np.count_nonzero(np.isnan(extended_x).any(axis=1))
         x = extended_x[~np.isnan(extended_x).any(axis=1)]
         df = df[nan_row_count:]
-    x = x[:-forecast_days]
-    df = df[:-forecast_days]
+    x = x[:-const.FORECAST_DAYS]
+    df = df[:-const.FORECAST_DAYS]
     return df, x
 
 
-def calculate_append_x_y(forecast_days, history_days, total_x, total_y, df, binary_classification):
-    df, x = calculate_extra_columns_get_x(df)
-    df, x = calculate_history_columns(df, x, history_days, forecast_days)
+def calculate_append_x_y(history_days, total_x, total_y, df, binary_classification):
+    df, x = get_x_columns(df)
+    df, x = calculate_history_columns(df, x, history_days)
     if binary_classification:
         y = np.array(df[const.LABEL_BINARY_COL])
     else:
@@ -115,8 +114,6 @@ def calculate_append_x_y(forecast_days, history_days, total_x, total_y, df, bina
     return df, total_x, total_y
 
 
-def calculate_extra_columns_get_x(df):
-    # df[const.HL_PCT_CHANGE_COL] = (df[const.HIGH_COL] - df[const.LOW_COL]) / df[
-    #     const.HIGH_COL] * 100
+def get_x_columns(df):
     x = np.array(df[[const.VOLUME_COL, const.ADJUSTED_CLOSE_COL, const.HIGH_COL, const.LOW_COL, const.OPEN_COL]])
     return df, x

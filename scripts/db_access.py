@@ -42,7 +42,7 @@ def find_by_tickers_to_dateframe_parse_to_df_list(db_conn, symbol_list, processe
         df = df[(df.index > min_date)]
         df_list.append(df)
     if len(df_list) == 0:
-        raise Exception('No data with any ticker of ' + symbol_list + ' was found.')
+        raise Exception('No data with any ticker of ' + str(symbol_list) + ' was found.')
     return df_list, symbol_output_list
 
 
@@ -55,5 +55,5 @@ if __name__ == "__main__":
         sym = document[const.SYMBOL]
         symbol_list.append(sym)
 
-    symbol_list.sort()
     print(symbol_list)
+

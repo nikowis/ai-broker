@@ -5,7 +5,6 @@ import nn_model
 
 LAYERS = [20, 20, 20]
 EPOCHS = 5
-FORECAST_DAYS = 1
 ACTIVATION = 'relu'
 OPTIMIZER = 'adam'
 LOSS_FUN = 'mean_squared_error'

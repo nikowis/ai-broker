@@ -1,10 +1,10 @@
 import time
 
+import api_to_db_importer
 import data_helper
 import db_access
-import api_to_db_importer
 import nn_runner
-import plot_helper as plth
+
 
 def main():
     db_conn = db_access.create_db_connection(remote=False, db_name='ai-broker')
@@ -17,7 +17,7 @@ def main():
     #     df = df_list[i]
     #     plth.plot_company_summary(df, sym)
     #
-    epochs = 200
+    epochs = 10
     # layers = [20,20,20]
     skip_iterations = 0
 

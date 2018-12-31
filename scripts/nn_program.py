@@ -7,7 +7,7 @@ import nn_runner
 MIN_DATE = '2009-01-01'
 
 def main():
-    ticker = 'CRZO'
+    ticker = 'ACUR'
     db_conn = db_access.create_db_connection(remote=False)
     df_list, sym_list = db_access.find_by_tickers_to_dateframe_parse_to_df_list(db_conn, [ticker], min_date=MIN_DATE)
     df = df_list[0]
