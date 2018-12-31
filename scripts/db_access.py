@@ -9,33 +9,7 @@ PROCESSED_STOCK_COLLECTION = "processed_stock"
 LOCAL_URL = "mongodb://localhost:27017/"
 REMOTE_URL = "mongodb://admin:<pswd>@ds125574.mlab.com:25574/ai-broker"
 
-MIN_DATE = '1950-01-01'
-
-"""Symbols with large history (over 5200 days)"""
-SELECTED_SYMBOLS_LIST = ['AVNW', 'AWRE', 'BPFH', 'CALM', 'CAMP', 'CASH', 'CASS', 'CENX', 'CERN',
-                         'CERS', 'CETV', 'CFNB', 'CHKE', 'CHKP', 'CHNR', 'CLWT', 'CMCO', 'CMCSA', 'CMCT', 'CNMD',
-                         'CREE', 'CRZO', 'CTAS', 'CUBA', 'CVTI', 'CYTR', 'DAVE', 'DEST', 'DLHC', 'DSPG', 'DSWL',
-                         'DWCH', 'DXYN', 'EDUC', 'EEFT', 'EEI', 'ELSE', 'ELTK', 'EMCI', 'EMITF', 'EMKR', 'EML', 'EMMS',
-                         'ENG', 'EVLV', 'FBNC', 'FELE', 'FFIC', 'FFIN', 'FISV', 'FITB', 'FIZZ', 'FLEX', 'FLIC', 'FLIR',
-                         'FLL', 'FMBI', 'FRBK', 'FRME', 'FTEK', 'FTR', 'FULT', 'FUNC', 'FUND', 'GPIC', 'GRIF', 'GSBC',
-                         'GT', 'GTIM', 'HA', 'HAFC', 'HAIN', 'HBHC', 'HCSG', 'HMNY', 'HMSY', 'HSIC',
-                         'HUBG', 'HURC', 'HWKN', 'IBKC', 'IBOC', 'ICAD', 'ICCC', 'ICON', 'ICUI', 'IDCC', 'IDRA', 'IDSA',
-                         'IDTI', 'IDXX', 'IEP', 'IIIN', 'IIN', 'IIVI', 'IMKTA', 'IMMU', 'INOD', 'INTC', 'INTL', 'INTU',
-                         'INVE', 'IPAR', 'IRIX', 'ISCA', 'JBSS', 'JCS', 'JCTCF', 'JJSF', 'JKHY', 'JOUT', 'KBAL', 'KCLI',
-                         'KELYA', 'KELYB', 'KEQU', 'KLAC', 'KLIC', 'KOOL', 'KOPN', 'KTCC', 'LCUT', 'LECO', 'LNDC',
-                         'LOGI', 'LPTH', 'LRAD', 'LRCX', 'LSCC', 'LSTR', 'LTRE', 'LWAY', 'LYTS', 'MAG', 'MAGS', 'MAR',
-                         'MARPS', 'MBFI', 'MDCA', 'MGEE', 'MIND', 'MINI', 'MITK', 'MLAB', 'MLHR', 'MMAC', 'MNST',
-                         'MPAA', 'MPB', 'MSEX', 'MSFT', 'MSON', 'MTSC', 'MTSL', 'MU', 'MXWL', 'MYGN', 'MYL', 'NAII',
-                         'NANO', 'NATH', 'NAVG', 'NBIX', 'NBN', 'NBTB', 'NEOG', 'NEON', 'NNBR', 'NTRS', 'NVAX', 'NVEC',
-                         'ODFL', 'ODP', 'OFIX', 'OHGI', 'OLED', 'ONB', 'PATK', 'PAYX', 'PCAR', 'PCH', 'PEBK', 'PEBO',
-                         'PEGA', 'PENN', 'PGNX', 'PHII', 'PHIIK', 'PLCE', 'PLUS', 'PLXS', 'PMD', 'PNBK', 'PNTR', 'POPE',
-                         'POWI', 'POWL', 'PPBI', 'PPC', 'PROV', 'PRPH', 'PTC', 'PTEN', 'PTSI', 'PTX', 'PWOD', 'QUMU',
-                         'RADA', 'RAVE', 'RAVN', 'RDCM', 'REFR', 'REGN', 'RELL', 'RELV', 'RICK', 'RITT', 'RMCF', 'RNST',
-                         'RNWK', 'ROST', 'RRD', 'RYAAY', 'SAFM', 'SASR', 'SBCF', 'SBGI', 'SBUX', 'SCHL', 'SCHN', 'SFNC',
-                         'SIEB', 'SIRI', 'SIVB', 'SMIT', 'SMRT', 'SMTC', 'SNHY', 'SNPS', 'SONC', 'SPAR', 'SSYS', 'STAA',
-                         'SYMC', 'SYNL', 'THFF', 'THRM', 'TILE', 'TRIB', 'TTEK', 'TWIN', 'TWMC', 'UBCP', 'UHAL', 'ULBI',
-                         'USAK', 'USAP', 'USEG', 'USLM', 'VIRC', 'VVUS', 'WDC', 'WDFC', 'WEN', 'WERN', 'WETF', 'WEYS',
-                         'WIRE', 'WRLD', 'WSBC', 'WSCI', 'WSFS', 'YRCW']
+MIN_DATE = '2009-01-01'
 
 
 def create_db_connection(remote=False, db_name=DB):
@@ -70,3 +44,16 @@ def find_by_tickers_to_dateframe_parse_to_df_list(db_conn, symbol_list, processe
     if len(df_list) == 0:
         raise Exception('No data with any ticker of ' + symbol_list + ' was found.')
     return df_list, symbol_output_list
+
+
+if __name__ == "__main__":
+    db_conn = create_db_connection()
+    raw_collection = stock_collection(db_conn, False)
+    data = raw_collection.find()
+    symbol_list = []
+    for document in data:
+        sym = document[const.SYMBOL]
+        symbol_list.append(sym)
+
+    symbol_list.sort()
+    print(symbol_list)
