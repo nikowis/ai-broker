@@ -29,7 +29,7 @@ def run(x_train, x_test, y_train_one_hot, y_test_one_hot, layers=LAYERS, epochs=
     main_title = "Loss: " + str(round(loss, 4)) + ", accuracy: " + str(round(accuracy, 4)) + ", epochs: " + str(
         epochs) + ', history days:' + str(history_days) + '\n'
     main_title += 'Layers: [' + ''.join(
-        str(e) + " " for e in layers) + '], optimizer: ' + optimizer + ', loss: ' + str(
+        str(e) + " " for e in layers) + '], optimizer: ' + str(optimizer) + ', loss: ' + str(
         loss_fun) + ', activation: ' + str(
         activation)
     y_test_score = model.predict(x_test)

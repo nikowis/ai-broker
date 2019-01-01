@@ -115,5 +115,7 @@ def calculate_append_x_y(history_days, total_x, total_y, df, binary_classificati
 
 
 def get_x_columns(df):
-    x = np.array(df[[const.VOLUME_COL, const.ADJUSTED_CLOSE_COL, const.HIGH_COL, const.LOW_COL, const.OPEN_COL]])
+    x = np.array(df[[const.VOLUME_COL, const.ADJUSTED_CLOSE_COL, const.HL_PCT_CHANGE_COL
+        , const.SMA_10_COL, const.SMA_20_COL, const.EMA_10_COL, const.EMA_20_COL, const.MACD_COL, const.RSI_10_COL
+        , const.RSI_20_COL]])
     return df, x

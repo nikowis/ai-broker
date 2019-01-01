@@ -93,7 +93,7 @@ SYMBOLS = ['AAME', 'AAON', 'AAPL', 'AAWW', 'AAXJ', 'ABCB', 'ABIO', 'ABMD', 'ACAD
            'VIRC', 'VOD', 'VOXX', 'VRML', 'VVUS', 'WASH', 'WDC', 'WDFC', 'WEN', 'WERN', 'WETF', 'WEYS', 'WIRE', 'WLDN',
            'WLFC', 'WRLD', 'WSBC', 'WSBF', 'WSCI', 'WSFS', 'YRCW', 'ZAGG', 'ZION', 'ZIOP', 'ZN', 'ZUMZ']
 
-API_KEYS = ['ULDORYWPDU2S2E6X', 'I7RUE3LA4PSXDJU6', '41KVI2PCCMZ09Y69', 'yM2zzAs6_DxdeT86rtZY', 'TX1OLY36K73S9MS9']
+API_KEYS = [ 'yM2zzAs6_DxdeT86rtZY', 'TX1OLY36K73S9MS9', 'ULDORYWPDU2S2E6X', 'I7RUE3LA4PSXDJU6', '41KVI2PCCMZ09Y69']
 
 
 class Importer:
@@ -217,20 +217,21 @@ class Importer:
         for stock in stock_collection_raw.find():
             symbol = stock[const.SYMBOL]
             df = self.json_to_df(stock)
-            df[const.LABEL_COL] = df[const.ADJUSTED_CLOSE_COL].shift(-const.FORECAST_DAYS)
-            df[const.DAILY_PCT_CHANGE_COL] = (df[const.LABEL_COL] - df[const.ADJUSTED_CLOSE_COL]) / df[
-                const.ADJUSTED_CLOSE_COL] * 100.0
-            df[const.HL_PCT_CHANGE_COL] = (df[const.HIGH_COL] - df[const.LOW_COL]) / df[
-                const.HIGH_COL] * 100
-            df[const.LABEL_DISCRETE_COL] = df[const.DAILY_PCT_CHANGE_COL].apply(
-                lambda pct: np.NaN if pd.isna(pct)
-                else const.FALL_VALUE if pct < -const.TRESHOLD else const.RISE_VALUE if pct > const.TRESHOLD else const.IDLE_VALUE)
-            df[const.LABEL_BINARY_COL] = df[const.DAILY_PCT_CHANGE_COL].apply(
-                lambda pct: np.NaN if pd.isna(pct)
-                else const.FALL_VALUE if pct < 0 else const.IDLE_VALUE if pct >= 0 else const.RISE_VALUE)
-            processed_dict = self.df_to_json(df, symbol)
-            stock_processed_collection.insert(processed_dict)
-            print('Processed ', symbol)
+            if const.SMA_10_COL in df.columns and const.BBANDS_20_RUB_COL in df.columns:
+                df[const.LABEL_COL] = df[const.ADJUSTED_CLOSE_COL].shift(-const.FORECAST_DAYS)
+                df[const.DAILY_PCT_CHANGE_COL] = (df[const.LABEL_COL] - df[const.ADJUSTED_CLOSE_COL]) / df[
+                    const.ADJUSTED_CLOSE_COL] * 100.0
+                df[const.HL_PCT_CHANGE_COL] = (df[const.HIGH_COL] - df[const.LOW_COL]) / df[
+                    const.HIGH_COL] * 100
+                df[const.LABEL_DISCRETE_COL] = df[const.DAILY_PCT_CHANGE_COL].apply(
+                    lambda pct: np.NaN if pd.isna(pct)
+                    else const.FALL_VALUE if pct < -const.TRESHOLD else const.RISE_VALUE if pct > const.TRESHOLD else const.IDLE_VALUE)
+                df[const.LABEL_BINARY_COL] = df[const.DAILY_PCT_CHANGE_COL].apply(
+                    lambda pct: np.NaN if pd.isna(pct)
+                    else const.FALL_VALUE if pct < 0 else const.IDLE_VALUE if pct >= 0 else const.RISE_VALUE)
+                processed_dict = self.df_to_json(df, symbol)
+                stock_processed_collection.insert(processed_dict)
+                print('Processed ', symbol)
 
 
 if __name__ == "__main__":
