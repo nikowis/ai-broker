@@ -7,6 +7,13 @@ import alpha
 import stock_constants as const
 from db_access import create_db_connection, stock_collection
 
+TI_BBANDS = 'BBANDS'
+TI_RSI = 'RSI'
+TI_STOCH = 'STOCH'
+TI_MACD = 'MACD'
+TI_EMA = 'EMA'
+TI_SMA = 'SMA'
+
 SYMBOL_KEY = "symbol"
 
 API_MAX_PER_MINUTE_CALLS = 5
@@ -86,7 +93,7 @@ SYMBOLS = ['AAME', 'AAON', 'AAPL', 'AAWW', 'AAXJ', 'ABCB', 'ABIO', 'ABMD', 'ACAD
            'VIRC', 'VOD', 'VOXX', 'VRML', 'VVUS', 'WASH', 'WDC', 'WDFC', 'WEN', 'WERN', 'WETF', 'WEYS', 'WIRE', 'WLDN',
            'WLFC', 'WRLD', 'WSBC', 'WSBF', 'WSCI', 'WSFS', 'YRCW', 'ZAGG', 'ZION', 'ZIOP', 'ZN', 'ZUMZ']
 
-API_KEYS = ['yM2zzAs6_DxdeT86rtZY', 'TX1OLY36K73S9MS9', 'I7RUE3LA4PSXDJU6', 'ULDORYWPDU2S2E6X']
+API_KEYS = ['ULDORYWPDU2S2E6X', 'I7RUE3LA4PSXDJU6', '41KVI2PCCMZ09Y69', 'yM2zzAs6_DxdeT86rtZY', 'TX1OLY36K73S9MS9']
 
 
 class Importer:
@@ -120,6 +127,7 @@ class Importer:
             keys = list(raw_json.keys())
             if len(keys) < 2:
                 print('Symbol ', sym, 'not existing in alpha vantage')
+                print(str(raw_json))
                 return
             time_series_key = keys[1]
             time_series = raw_json[time_series_key]
@@ -157,25 +165,26 @@ class Importer:
         for ticker in tickers:
             json = stock_collection(self.db, False).find_one({const.SYMBOL: ticker})
             df = self.json_to_df(json)
-            self.import_technical_indicator(ticker, df, 'SMA', const.SMA_10_COL, time_period=10)
-            self.import_technical_indicator(ticker, df, 'SMA', const.SMA_20_COL, time_period=20)
-            self.import_technical_indicator(ticker, df, 'EMA', const.EMA_10_COL, time_period=10)
-            self.import_technical_indicator(ticker, df, 'EMA', const.EMA_20_COL, time_period=20)
-            self.import_technical_indicator(ticker, df, 'MACD', const.MACD_COL)
-            self.import_technical_indicator(ticker, df, 'STOCH', const.STOCH_COL)
-            self.import_technical_indicator(ticker, df, 'RSI', const.RSI_10_COL, time_period=10)
-            self.import_technical_indicator(ticker, df, 'RSI', const.RSI_20_COL, time_period=20)
-            self.import_technical_indicator(ticker, df, 'BBANDS', const.BBANDS_10_COL, time_period=10)
-            self.import_technical_indicator(ticker, df, 'BBANDS', const.BBANDS_20_COL, time_period=20)
+            self.import_technical_indicator(ticker, df, TI_SMA, const.SMA_10_COL, time_period=10)
+            self.import_technical_indicator(ticker, df, TI_SMA, const.SMA_20_COL, time_period=20)
+            self.import_technical_indicator(ticker, df, TI_EMA, const.EMA_10_COL, time_period=10)
+            self.import_technical_indicator(ticker, df, TI_EMA, const.EMA_20_COL, time_period=20)
+            self.import_technical_indicator(ticker, df, TI_MACD, const.MACD_COL)
+            self.import_technical_indicator(ticker, df, TI_STOCH, const.STOCH_K_COL)
+            self.import_technical_indicator(ticker, df, TI_RSI, const.RSI_10_COL, time_period=10)
+            self.import_technical_indicator(ticker, df, TI_RSI, const.RSI_20_COL, time_period=20)
+            self.import_technical_indicator(ticker, df, TI_BBANDS, const.BBANDS_10_RLB_COL, time_period=10)
+            self.import_technical_indicator(ticker, df, TI_BBANDS, const.BBANDS_20_RLB_COL, time_period=20)
 
     def import_technical_indicator(self, ticker, df, indicator, col_name, time_period=None):
         if col_name not in df.columns:
-            print('Importing ', col_name, ' for ', ticker)
+            print('Importing ', indicator, ' for ', ticker)
             raw_json = self.api.technical_indicator(ticker, indicator, time_period=time_period).json(
                 object_pairs_hook=self.remove_dots)
             keys = list(raw_json.keys())
             if len(keys) < 2:
                 print('Symbol ', ticker, 'not existing in alpha vantage')
+                print(str(raw_json))
                 return
             time_series_key = keys[1]
             time_series = raw_json[time_series_key]
