@@ -238,5 +238,5 @@ if __name__ == "__main__":
     print(len(SYMBOLS))
     imp = Importer()
     # imp.import_all(SYMBOLS)
-    # imp.process_data()
-    imp.import_all_technical_indicators(SYMBOLS)
+    imp.process_data()
+    # imp.import_all_technical_indicators(SYMBOLS)

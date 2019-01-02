@@ -16,7 +16,7 @@ def main():
     skip_iterations = 0
 
     # 'mean_squared_error', 'logcosh', 'categorical_crossentropy', 'binary_crossentropy'
-    losses = ['binary_crossentropy']
+    losses = ['categorical_crossentropy']
 
     # 'relu, 'softmax'
     activations = ['relu']

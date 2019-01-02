@@ -11,11 +11,6 @@ def main():
     symbols = api_to_db_importer.SYMBOLS[0:45]
     df_list, symbols = db_access.find_by_tickers_to_dateframe_parse_to_df_list(db_conn, symbols)
 
-    # for i in range(0, len(symbols)):
-    #     sym = symbols[i]
-    #     df = df_list[i]
-    #     plth.plot_company_summary(df, sym)
-    #
     epochs = 100
     layers = [7,5,3]
     skip_iterations = 0
