@@ -93,7 +93,7 @@ SYMBOLS = ['AAME', 'AAON', 'AAPL', 'AAWW', 'AAXJ', 'ABCB', 'ABIO', 'ABMD', 'ACAD
            'VIRC', 'VOD', 'VOXX', 'VRML', 'VVUS', 'WASH', 'WDC', 'WDFC', 'WEN', 'WERN', 'WETF', 'WEYS', 'WIRE', 'WLDN',
            'WLFC', 'WRLD', 'WSBC', 'WSBF', 'WSCI', 'WSFS', 'YRCW', 'ZAGG', 'ZION', 'ZIOP', 'ZN', 'ZUMZ']
 
-API_KEYS = [ 'yM2zzAs6_DxdeT86rtZY', 'TX1OLY36K73S9MS9', 'ULDORYWPDU2S2E6X', 'I7RUE3LA4PSXDJU6', '41KVI2PCCMZ09Y69']
+API_KEYS = ['ULDORYWPDU2S2E6X', 'yM2zzAs6_DxdeT86rtZY', 'TX1OLY36K73S9MS9', 'I7RUE3LA4PSXDJU6', '41KVI2PCCMZ09Y69']
 
 
 class Importer:
@@ -195,11 +195,11 @@ class Importer:
                 df[prefix + 'Hist'] = indicator_df['MACD_Hist']
                 df[prefix + 'Signal'] = indicator_df['MACD_Signal']
             elif 'STOCH' == indicator:
-                prefix = col_name + ' '
+                prefix = indicator + ' '
                 df[prefix + 'SlowK'] = indicator_df['SlowK']
                 df[prefix + 'SlowD'] = indicator_df['SlowD']
             elif 'BBANDS' == indicator:
-                prefix = col_name + ' '
+                prefix = str(time_period) + '-' + indicator + ' '
                 df[prefix + 'Real Lower Band'] = indicator_df['Real Lower Band']
                 df[prefix + 'Real Upper Band'] = indicator_df['Real Upper Band']
                 df[prefix + 'Real Middle Band'] = indicator_df['Real Middle Band']
@@ -238,5 +238,5 @@ if __name__ == "__main__":
     print(len(SYMBOLS))
     imp = Importer()
     # imp.import_all(SYMBOLS)
-    imp.process_data()
-    # imp.import_all_technical_indicators(SYMBOLS)
+    # imp.process_data()
+    imp.import_all_technical_indicators(SYMBOLS)
