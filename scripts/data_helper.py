@@ -117,6 +117,7 @@ def calculate_append_x_y(history_days, total_x, total_y, df, binary_classificati
 def get_x_columns(df):
     df[const.ADJUSTED_CLOSE_COL] = df[const.ADJUSTED_CLOSE_COL].diff().fillna(0)
     df[const.OPEN_COL] = df[const.OPEN_COL].diff().fillna(0)
+    df[const.CLOSE_COL] = df[const.CLOSE_COL].diff().fillna(0)
     df[const.HIGH_COL] = df[const.HIGH_COL].diff().fillna(0)
     df[const.LOW_COL] = df[const.LOW_COL].diff().fillna(0)
     df[const.VOLUME_COL] = df[const.VOLUME_COL].diff().fillna(0)
@@ -125,6 +126,6 @@ def get_x_columns(df):
     df[const.EMA_10_COL] = df[const.EMA_10_COL].diff().fillna(0)
     df[const.EMA_20_COL] = df[const.EMA_20_COL].diff().fillna(0)
 
-    # x = np.array(df[[const.ADJUSTED_CLOSE_COL, const.VOLUME_COL, const.OPEN_COL, const.HL_PCT_CHANGE_COL]])
-    x = np.array(df[[const.ADJUSTED_CLOSE_COL]])
+    x = np.array(df[[const.VOLUME_COL, const.OPEN_COL, const.ADJUSTED_CLOSE_COL, const.HIGH_COL, const.LOW_COL, const.HL_PCT_CHANGE_COL]])
+
     return df, x
