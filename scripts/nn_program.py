@@ -11,12 +11,12 @@ def main():
     db_conn = db_access.create_db_connection(remote=False)
     df_list, sym_list = db_access.find_by_tickers_to_dateframe_parse_to_df_list(db_conn, [ticker], min_date=MIN_DATE)
     df = df_list[0]
-    epochs = 30
-    # layers = [7, 7, 7]
+    epochs = 100
+    layers = [4, 4, 4]
     skip_iterations = 0
 
     # 'mean_squared_error', 'logcosh', 'categorical_crossentropy', 'binary_crossentropy'
-    losses = ['categorical_crossentropy']
+    losses = ['binary_crossentropy']
 
     # 'relu, 'softmax'
     activations = ['relu']
@@ -26,7 +26,7 @@ def main():
 
     total_time = time.time()
     iteration = 0
-    for hist_dayz in range(0, 10, 1):
+    for hist_dayz in range(0, 3, 1):
         df_modified, x_standardized, x_train, x_test, y_train_one_hot, y_test_one_hot = data_helper.extract_data(df,
                                                                                                                  hist_dayz,
                                                                                                                  binary_classification=True)
@@ -37,7 +37,7 @@ def main():
                     if iteration > skip_iterations:
                         file_name = get_report_file_name(actv, hist_dayz, iteration, lss, optmzr)
                         print('\nSTARTING TRAINING FOR ' + file_name)
-                        neuron_count = x_train.shape[1] - 1
+                        neuron_count = int(x_train.shape[1]/2)+1
                         layers = [neuron_count, neuron_count, neuron_count]
                         iter_time = time.time()
                         nn_runner.run(x_train, x_test, y_train_one_hot, y_test_one_hot,

@@ -26,7 +26,7 @@ def extract_data(df, history_days=0, binary_classification=False):
     else:
         y = np.array(df[const.LABEL_DISCRETE_COL])
 
-    x_train, x_test, y_train, y_test = model_selection.train_test_split(x, y, test_size=0.2)
+    x_train, x_test, y_train, y_test = model_selection.train_test_split(x, y, test_size=0.2, shuffle=False)
 
     if len(x_train.shape) == 1:
         x_train = np.expand_dims(x_train, axis=1)
@@ -115,7 +115,16 @@ def calculate_append_x_y(history_days, total_x, total_y, df, binary_classificati
 
 
 def get_x_columns(df):
-    x = np.array(df[[const.VOLUME_COL, const.ADJUSTED_CLOSE_COL, const.HL_PCT_CHANGE_COL
-        , const.SMA_10_COL, const.SMA_20_COL, const.EMA_10_COL, const.EMA_20_COL, const.MACD_COL, const.RSI_10_COL
-        , const.RSI_20_COL]])
+    df[const.ADJUSTED_CLOSE_COL] = df[const.ADJUSTED_CLOSE_COL].diff().fillna(0)
+    df[const.OPEN_COL] = df[const.OPEN_COL].diff().fillna(0)
+    df[const.HIGH_COL] = df[const.HIGH_COL].diff().fillna(0)
+    df[const.LOW_COL] = df[const.LOW_COL].diff().fillna(0)
+    df[const.VOLUME_COL] = df[const.VOLUME_COL].diff().fillna(0)
+    df[const.SMA_10_COL] = df[const.SMA_10_COL].diff().fillna(0)
+    df[const.SMA_20_COL] = df[const.SMA_20_COL].diff().fillna(0)
+    df[const.EMA_10_COL] = df[const.EMA_10_COL].diff().fillna(0)
+    df[const.EMA_20_COL] = df[const.EMA_20_COL].diff().fillna(0)
+
+    # x = np.array(df[[const.ADJUSTED_CLOSE_COL, const.VOLUME_COL, const.OPEN_COL, const.HL_PCT_CHANGE_COL]])
+    x = np.array(df[[const.ADJUSTED_CLOSE_COL]])
     return df, x
