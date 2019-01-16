@@ -19,7 +19,7 @@ def main(days_in_window):
     db_conn = db_access.create_db_connection(remote=False)
     df_list, sym_list = db_access.find_by_tickers_to_dateframe_parse_to_df_list(db_conn, symbols)
 
-    epochs = 50
+    epochs = 200
     batch_size = 10
     skip_iterations = 0
 
@@ -34,7 +34,7 @@ def main(days_in_window):
     _, class_count = y_test_one_hot.shape
 
     model = Sequential()
-    model.add(keras.layers.LSTM(40, input_shape=(batch_size, days_in_window, x_train_lstm.shape[2])))
+    model.add(keras.layers.LSTM(40, input_shape=(days_in_window, x_train_lstm.shape[2])))
     model.add(keras.layers.Dropout(0.2))
 
     model.add(keras.layers.Dense(class_count, activation='softmax'))
@@ -43,7 +43,7 @@ def main(days_in_window):
                   metrics=['categorical_accuracy'])
 
     history = model.fit(x_train_lstm, y_train_one_hot, validation_data=(x_test_lstm, y_test_one_hot), epochs=epochs,
-                        verbose=0)
+                        verbose=0, batch_size=batch_size)
     loss, accuracy = model.evaluate(x_test_lstm, y_test_one_hot, verbose=0)
 
     print("Days:", days_in_window, " time:", str(int(time.time() - total_time)), " Loss: ", loss, " Accuracy: ",
