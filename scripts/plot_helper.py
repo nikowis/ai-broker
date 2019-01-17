@@ -33,7 +33,7 @@ PREDICTED_LEGEND = 'Przewidywane'
 REAL_LEGEND = 'Rzeczywiste'
 
 HISTOGRAM_TITLE = 'Histogram predykcji dla zbioru testowego'
-EPOCH_LABEL = 'iteracja'
+EPOCH_LABEL = 'Epoka'
 ACCURACY_LABEL = 'dokładność (%)'
 LOSS_LABEL = 'wartość funkcji straty'
 LOSS_TITLE = 'Strata'

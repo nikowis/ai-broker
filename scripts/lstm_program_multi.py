@@ -2,27 +2,42 @@ import time
 
 import keras
 import numpy as np
+from keras.callbacks import EarlyStopping, ModelCheckpoint
 from keras.models import Sequential
-from random import randint
 
 import api_to_db_importer
 import data_helper
 import db_access
 import plot_helper
 
+DROPUT_RATE = 0.2
+NEURON_COUNT = 40
+STOCK_COMPANIES = 30
+BINARY_CLASSIFICATION = True
+actv = 'softmax'
+optmzr = 'Adam'
+lss = 'categorical_crossentropy'
+epochs = 100
+batch_size = 5
+
 
 def main(days_in_window):
+    model_filepath = './../target/model.days' + str(
+        days_in_window) + '.neurons' + str(NEURON_COUNT) + '.epochs{epoch:02d}-accuracy{val_categorical_accuracy:.3f}.hdf5'
     total_time = time.time()
+    callbacks = [
+        EarlyStopping(monitor='val_loss', min_delta=0.005, patience=20, verbose=0, mode='auto'),
+        ModelCheckpoint(model_filepath, monitor='val_categorical_accuracy', verbose=0, save_best_only=True, mode='auto',
+                        period=5)
+    ]
 
-    symbols = api_to_db_importer.SYMBOLS[0:10]
+    symbols = api_to_db_importer.SYMBOLS[0:STOCK_COMPANIES]
 
     db_conn = db_access.create_db_connection(remote=False)
     df_list, sym_list = db_access.find_by_tickers_to_dateframe_parse_to_df_list(db_conn, symbols)
 
-    epochs = 50
-    batch_size = 10
-
-    x_train, x_test, y_train_one_hot, y_test_one_hot = data_helper.extract_data_from_list(df_list, 0)
+    x_train, x_test, y_train_one_hot, y_test_one_hot = data_helper.extract_data_from_list(df_list, 0,
+                                                                                          binary_classification=BINARY_CLASSIFICATION)
 
     x_train_lstm = prepare_lstm_data(days_in_window, x_train)
     x_test_lstm = prepare_lstm_data(days_in_window, x_test)
@@ -32,29 +47,31 @@ def main(days_in_window):
     _, class_count = y_test_one_hot.shape
 
     model = Sequential()
-    model.add(keras.layers.LSTM(40, input_shape=(days_in_window, x_train_lstm.shape[2])))
-    model.add(keras.layers.Dropout(0.2))
+    model.add(keras.layers.LSTM(NEURON_COUNT, input_shape=(days_in_window, x_train_lstm.shape[2])))
+    model.add(keras.layers.Dropout(DROPUT_RATE))
 
-    model.add(keras.layers.Dense(class_count, activation='softmax'))
-    model.compile(optimizer='Adam',
-                  loss='categorical_crossentropy',
+    model.add(keras.layers.Dense(class_count, activation=actv))
+
+    model.compile(optimizer=optmzr,
+                  loss=lss,
                   metrics=['categorical_accuracy'])
 
     history = model.fit(x_train_lstm, y_train_one_hot, validation_data=(x_test_lstm, y_test_one_hot), epochs=epochs,
-                        verbose=0, batch_size=batch_size)
+                        verbose=0, batch_size=batch_size, callbacks=callbacks)
     loss, accuracy = model.evaluate(x_test_lstm, y_test_one_hot, verbose=0)
 
     print("Days:", days_in_window, " time:", str(int(time.time() - total_time)), " Loss: ", loss, " Accuracy: ",
-          accuracy, " epochs: ", epochs)
+          accuracy, " epochs: ", len(history.epoch))
 
-    main_title = "Loss: " + str(round(loss, 4)) + ", accuracy: " + str(round(accuracy, 4)) + ", epochs: " + str(
-        epochs) + ', history days:' + str(days_in_window) + '\n'
+    main_title = get_report_title(accuracy, actv, len(history.epoch), days_in_window, loss, lss, optmzr)
 
     y_test_score = model.predict(x_test_lstm)
 
+    report_file_name = get_report_file_name(actv, days_in_window, lss, optmzr)
+
     plot_helper.plot_result(y_test_one_hot, y_test_score, class_count, history, main_title,
-                            'lstm-test-7-days-' + str(randint(0, 99999)),
-                            accuracy >= 0.99)
+                            report_file_name,
+                            accuracy >= 0.7)
 
     print("finished " + str(days_in_window))
 
@@ -70,7 +87,21 @@ def prepare_lstm_data(days_in_window, data):
     return lstm_data
 
 
+def get_report_title(accuracy, actv, epochs, days_in_window, loss, lss, optmzr):
+    main_title = "Loss: " + str(round(loss, 4)) + ", accuracy: " + str(
+        round(accuracy, 4)) + ", epochs: " + str(
+        epochs) + ', history days:' + str(days_in_window) + '\n'
+    main_title += 'LSTM: [' + str(NEURON_COUNT) + '], optimizer: ' + str(optmzr) + ', loss: ' + str(
+        lss) + ', activation: ' + str(actv)
+    return main_title
+
+
+def get_report_file_name(actv, days_in_window, lss, optmzr):
+    return str(NEURON_COUNT) + '_LOSS_' + str(lss) + '_ACTIVATION_' + str(
+        actv) + '_OPTIMIZER_' + str(
+        optmzr) + '_HIST_' + str(days_in_window)
+
+
 if __name__ == '__main__':
-    #for i in range(1, 10):
-        # main(i)
-    main(7)
+    for i in range(1, 40):
+        main(i)
