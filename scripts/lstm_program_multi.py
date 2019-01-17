@@ -14,17 +14,15 @@ import plot_helper
 def main(days_in_window):
     total_time = time.time()
 
-    symbols = api_to_db_importer.SYMBOLS[0:20]
+    symbols = api_to_db_importer.SYMBOLS[0:10]
 
     db_conn = db_access.create_db_connection(remote=False)
     df_list, sym_list = db_access.find_by_tickers_to_dateframe_parse_to_df_list(db_conn, symbols)
 
-    epochs = 200
+    epochs = 50
     batch_size = 10
-    skip_iterations = 0
 
-    x_train, x_test, y_train_one_hot, y_test_one_hot = data_helper.extract_data_from_list(df_list, 0,
-                                                                                          binary_classification=True)
+    x_train, x_test, y_train_one_hot, y_test_one_hot = data_helper.extract_data_from_list(df_list, 0)
 
     x_train_lstm = prepare_lstm_data(days_in_window, x_train)
     x_test_lstm = prepare_lstm_data(days_in_window, x_test)
