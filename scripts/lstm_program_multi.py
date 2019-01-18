@@ -7,18 +7,22 @@ from keras.models import Sequential
 
 import api_to_db_importer
 import data_helper
-import db_access
 import plot_helper
+
+import stock_constants as const
+
+CSV_FILES_PATH = './../target/data'
 
 DROPUT_RATE = 0.2
 NEURON_COUNT = 10
 STOCK_COMPANIES = 20
 BINARY_CLASSIFICATION = True
-actv = 'softmax'
-optmzr = 'Adam'
-lss = 'categorical_crossentropy'
-epochs = 5
-batch_size = 5
+ACTIVATION = 'softmax'
+OPTIMIZER = 'Adam'
+LOSS_FUN = 'categorical_crossentropy'
+EPOCHS = 5
+BATCH_SIZE = 5
+COLUMNS = [const.VOLUME_COL, const.OPEN_COL, const.ADJUSTED_CLOSE_COL, const.HIGH_COL, const.LOW_COL, const.HL_PCT_CHANGE_COL]
 
 
 def main(days_in_window):
@@ -34,8 +38,9 @@ def main(days_in_window):
 
     symbols = api_to_db_importer.SYMBOLS[0:STOCK_COMPANIES]
 
-    db_conn = db_access.create_db_connection(remote=False)
-    df_list, sym_list = db_access.find_by_tickers_to_dateframe_parse_to_df_list(db_conn, symbols)
+    # db_conn = db_access.create_db_connection(remote=False)
+    # df_list, sym_list = db_access.find_by_tickers_to_dateframe_parse_to_df_list(db_conn, symbols)
+    df_list = api_to_db_importer.Importer().import_data_from_files(symbols, CSV_FILES_PATH)
 
     x_train, x_test, y_train_one_hot, y_test_one_hot = data_helper.extract_data_from_list(df_list, 0,
                                                                                           binary_classification=BINARY_CLASSIFICATION)
@@ -51,21 +56,21 @@ def main(days_in_window):
     model.add(keras.layers.LSTM(NEURON_COUNT, input_shape=(days_in_window, x_train_lstm.shape[2])))
     model.add(keras.layers.Dropout(DROPUT_RATE))
 
-    model.add(keras.layers.Dense(class_count, activation=actv))
+    model.add(keras.layers.Dense(class_count, activation=ACTIVATION))
 
-    model.compile(optimizer=optmzr,
-                  loss=lss,
+    model.compile(optimizer=OPTIMIZER,
+                  loss=LOSS_FUN,
                   metrics=['categorical_accuracy'])
 
-    history = model.fit(x_train_lstm, y_train_one_hot, validation_data=(x_test_lstm, y_test_one_hot), epochs=epochs,
-                        verbose=0, batch_size=batch_size, callbacks=callbacks)
+    history = model.fit(x_train_lstm, y_train_one_hot, validation_data=(x_test_lstm, y_test_one_hot), epochs=EPOCHS,
+                        verbose=0, batch_size=BATCH_SIZE, callbacks=callbacks)
     loss, accuracy = model.evaluate(x_test_lstm, y_test_one_hot, verbose=0)
 
     history_epochs = len(history.epoch)
     print("Days:", days_in_window, " time:", str(int(time.time() - total_time)), " Loss: ", loss, " Accuracy: ",
           accuracy, " epochs: ", history_epochs)
 
-    main_title = get_report_title(accuracy, actv, history_epochs, days_in_window, loss, lss, optmzr)
+    main_title = get_report_title(accuracy, ACTIVATION, history_epochs, days_in_window, loss, LOSS_FUN, OPTIMIZER)
 
     y_test_score = model.predict(x_test_lstm)
 
@@ -99,7 +104,7 @@ def get_report_title(accuracy, actv, history_epochs, days_in_window, loss, lss, 
 
 
 def get_report_file_name(accuracy, days_in_window, history_epochs):
-    return str(NEURON_COUNT) + + '_HIST_' + str(days_in_window) + '_ACCURACY_' + "{0:.3f}".format(
+    return str(NEURON_COUNT) + '_HIST_' + str(days_in_window) + '_ACCURACY_' + "{0:.3f}".format(
         accuracy) + "_EPOCHS_" + str(history_epochs)
 
 

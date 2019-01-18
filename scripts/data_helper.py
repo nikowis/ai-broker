@@ -121,10 +121,6 @@ def get_x_columns(df):
     df[const.HIGH_COL] = df[const.HIGH_COL].diff().fillna(0)
     df[const.LOW_COL] = df[const.LOW_COL].diff().fillna(0)
     df[const.VOLUME_COL] = df[const.VOLUME_COL].diff().fillna(0)
-    df[const.SMA_10_COL] = df[const.SMA_10_COL].diff().fillna(0)
-    df[const.SMA_20_COL] = df[const.SMA_20_COL].diff().fillna(0)
-    df[const.EMA_10_COL] = df[const.EMA_10_COL].diff().fillna(0)
-    df[const.EMA_20_COL] = df[const.EMA_20_COL].diff().fillna(0)
 
     x = np.array(df[[const.VOLUME_COL, const.OPEN_COL, const.ADJUSTED_CLOSE_COL, const.HIGH_COL, const.LOW_COL, const.HL_PCT_CHANGE_COL]])
 

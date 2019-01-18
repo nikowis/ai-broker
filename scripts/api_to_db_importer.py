@@ -261,9 +261,19 @@ class Importer:
                        const.LABEL_COL, const.DAILY_PCT_CHANGE_COL, const.HL_PCT_CHANGE_COL, const.LABEL_DISCRETE_COL,
                        const.LABEL_BINARY_COL]
             df = df[columns]
-            df.to_csv(path + '/' + symbol + '.csv', encoding='utf-8')
+            file = path + '/' + symbol + '.csv'
+            df.to_csv(file, encoding='utf-8')
 
             print('Processed ', symbol)
+
+    def import_data_from_files(self, tickers, path):
+        df_list = []
+        for ticker in tickers:
+            file = path + '/' + ticker + '.csv'
+            df = pd.read_csv(file, index_col=0)
+            df_list.append(df)
+        print('Retreived all data from files')
+        return df_list
 
 
 if __name__ == "__main__":
@@ -272,4 +282,5 @@ if __name__ == "__main__":
     # imp.import_all(SYMBOLS)
     # imp.process_data()
     # imp.import_all_technical_indicators(SYMBOLS)
-    imp.export_to_csv_files('./../target/data')
+    # imp.export_to_csv_files('./../target/data')
+    dflist = imp.import_data_from_files(SYMBOLS, './../target/data')
