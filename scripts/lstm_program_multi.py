@@ -8,42 +8,42 @@ from keras.models import Sequential
 import api_to_db_importer
 import data_helper
 import plot_helper
-
 import stock_constants as const
+
+VERBOSE = 2
 
 CSV_FILES_PATH = './../target/data'
 
 DROPUT_RATE = 0.2
-NEURON_COUNT = 10
+NEURON_COUNT = 100
 STOCK_COMPANIES = 20
 BINARY_CLASSIFICATION = True
 ACTIVATION = 'softmax'
 OPTIMIZER = 'Adam'
 LOSS_FUN = 'categorical_crossentropy'
-EPOCHS = 5
-BATCH_SIZE = 5
-COLUMNS = [const.VOLUME_COL, const.OPEN_COL, const.ADJUSTED_CLOSE_COL, const.HIGH_COL, const.LOW_COL, const.HL_PCT_CHANGE_COL]
+EPOCHS = 50
+BATCH_SIZE = 10
+COLUMNS = [const.VOLUME_COL, const.OPEN_COL, const.ADJUSTED_CLOSE_COL, const.HIGH_COL, const.LOW_COL,
+           const.HL_PCT_CHANGE_COL]
 
 
 def main(days_in_window):
-    model_filepath = './../target/model.days' + str(
+    model_filepath = './../target/data/model.days' + str(
         days_in_window) + '.neurons' + str(
         NEURON_COUNT) + '.epochs{epoch:02d}-accuracy{val_categorical_accuracy:.3f}.hdf5'
     total_time = time.time()
     callbacks = [
         EarlyStopping(monitor='val_loss', min_delta=0.005, patience=20, verbose=0, mode='auto'),
         ModelCheckpoint(model_filepath, monitor='val_categorical_accuracy', verbose=0, save_best_only=True, mode='auto',
-                        period=5)
+                         period=5)
     ]
 
     symbols = api_to_db_importer.SYMBOLS[0:STOCK_COMPANIES]
 
-    # db_conn = db_access.create_db_connection(remote=False)
-    # df_list, sym_list = db_access.find_by_tickers_to_dateframe_parse_to_df_list(db_conn, symbols)
     df_list = api_to_db_importer.Importer().import_data_from_files(symbols, CSV_FILES_PATH)
 
     x_train, x_test, y_train_one_hot, y_test_one_hot = data_helper.extract_data_from_list(df_list, 0,
-                                                                                          binary_classification=BINARY_CLASSIFICATION)
+                                                                                           binary_classification=BINARY_CLASSIFICATION)
 
     x_train_lstm = prepare_lstm_data(days_in_window, x_train)
     x_test_lstm = prepare_lstm_data(days_in_window, x_test)
@@ -63,8 +63,8 @@ def main(days_in_window):
                   metrics=['categorical_accuracy'])
 
     history = model.fit(x_train_lstm, y_train_one_hot, validation_data=(x_test_lstm, y_test_one_hot), epochs=EPOCHS,
-                        verbose=0, batch_size=BATCH_SIZE, callbacks=callbacks)
-    loss, accuracy = model.evaluate(x_test_lstm, y_test_one_hot, verbose=0)
+                        verbose=VERBOSE, batch_size=BATCH_SIZE, callbacks=callbacks)
+    loss, accuracy = model.evaluate(x_test_lstm, y_test_one_hot, verbose=VERBOSE)
 
     history_epochs = len(history.epoch)
     print("Days:", days_in_window, " time:", str(int(time.time() - total_time)), " Loss: ", loss, " Accuracy: ",
@@ -109,5 +109,5 @@ def get_report_file_name(accuracy, days_in_window, history_epochs):
 
 
 if __name__ == '__main__':
-    for i in range(1, 40):
+    for i in range(1, 100):
         main(i)

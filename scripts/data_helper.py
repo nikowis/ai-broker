@@ -8,7 +8,7 @@ from sklearn.preprocessing import StandardScaler
 import stock_constants as const
 
 
-def extract_data(df, history_days=0, binary_classification=False):
+def extract_data(df, history_days=0, binary_classification=False, input_columns=None):
     """
     Function stplitting dateframe data for machine learning.
 
@@ -19,7 +19,7 @@ def extract_data(df, history_days=0, binary_classification=False):
         learning x, testing x, learning y (one hot), test y (one hot))
     """
 
-    df, x = get_x_columns(df)
+    df, x = get_x_columns(df, input_columns)
     df, x = calculate_history_columns(df, x, history_days)
     if binary_classification:
         y = np.array(df[const.LABEL_BINARY_COL])
@@ -41,7 +41,7 @@ def extract_data(df, history_days=0, binary_classification=False):
     return df, x_standardized, x_train, x_test, y_train_one_hot, y_test_one_hot
 
 
-def extract_data_from_list(df_list, history_days=0, test_size=0.2, binary_classification=False):
+def extract_data_from_list(df_list, history_days=0, test_size=0.2, binary_classification=False, input_columns=None):
     data_count = len(df_list)
     test_count = int(data_count * test_size)
     test_indices = random.sample(range(1, data_count), test_count)
@@ -56,11 +56,11 @@ def extract_data_from_list(df_list, history_days=0, test_size=0.2, binary_classi
     for train_df in train_dfs:
         train_df, total_x_train, total_y_train = calculate_append_x_y(history_days, total_x_train,
                                                                       total_y_train,
-                                                                      train_df, binary_classification)
+                                                                      train_df, binary_classification, input_columns)
     for test_df in test_dfs:
         test_df, total_x_test, total_y_test = calculate_append_x_y(history_days, total_x_test,
                                                                    total_y_test,
-                                                                   test_df, binary_classification)
+                                                                   test_df, binary_classification, input_columns)
 
     y_train_one_hot = keras.utils.to_categorical(total_y_train)
     y_test_one_hot = keras.utils.to_categorical(total_y_test)
@@ -84,8 +84,8 @@ def calculate_history_columns(df, x, history_days):
     return df, x
 
 
-def calculate_append_x_y(history_days, total_x, total_y, df, binary_classification):
-    df, x = get_x_columns(df)
+def calculate_append_x_y(history_days, total_x, total_y, df, binary_classification, input_columns):
+    df, x = get_x_columns(df, input_columns)
     df, x = calculate_history_columns(df, x, history_days)
     if binary_classification:
         y = np.array(df[const.LABEL_BINARY_COL])
@@ -114,14 +114,19 @@ def calculate_append_x_y(history_days, total_x, total_y, df, binary_classificati
     return df, total_x, total_y
 
 
-def get_x_columns(df):
-    df[const.ADJUSTED_CLOSE_COL] = df[const.ADJUSTED_CLOSE_COL].diff().fillna(0)
-    df[const.OPEN_COL] = df[const.OPEN_COL].diff().fillna(0)
-    df[const.CLOSE_COL] = df[const.CLOSE_COL].diff().fillna(0)
-    df[const.HIGH_COL] = df[const.HIGH_COL].diff().fillna(0)
-    df[const.LOW_COL] = df[const.LOW_COL].diff().fillna(0)
-    df[const.VOLUME_COL] = df[const.VOLUME_COL].diff().fillna(0)
-
-    x = np.array(df[[const.VOLUME_COL, const.OPEN_COL, const.ADJUSTED_CLOSE_COL, const.HIGH_COL, const.LOW_COL, const.HL_PCT_CHANGE_COL]])
-
+def get_x_columns(df, input_columns=None):
+    if input_columns is None:
+        df[const.ADJUSTED_CLOSE_COL] = df[const.ADJUSTED_CLOSE_COL].diff().fillna(0)
+        df[const.OPEN_COL] = df[const.OPEN_COL].diff().fillna(0)
+        df[const.CLOSE_COL] = df[const.CLOSE_COL].diff().fillna(0)
+        df[const.HIGH_COL] = df[const.HIGH_COL].diff().fillna(0)
+        df[const.LOW_COL] = df[const.LOW_COL].diff().fillna(0)
+        df[const.VOLUME_COL] = df[const.VOLUME_COL].diff().fillna(0)
+        x = np.array(df[[const.VOLUME_COL, const.OPEN_COL, const.ADJUSTED_CLOSE_COL, const.HIGH_COL, const.LOW_COL,
+                         const.HL_PCT_CHANGE_COL]])
+    else:
+        for col in input_columns:
+            if not col == const.HL_PCT_CHANGE_COL:
+                df[col] = df[col].diff().fillna(0)
+        x = np.array(df[input_columns])
     return df, x
