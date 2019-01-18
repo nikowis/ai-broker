@@ -1,3 +1,4 @@
+import os
 import time
 
 import numpy as np
@@ -233,10 +234,42 @@ class Importer:
                 stock_processed_collection.insert(processed_dict)
                 print('Processed ', symbol)
 
+    def export_to_csv_files(self, path):
+        if not os.path.exists(path):
+            os.makedirs(path)
+        stock_collection_raw = stock_collection(self.db, False)
+        stock_processed_collection = stock_collection(self.db, True)
+
+        for stock in stock_collection_raw.find():
+            symbol = stock[const.SYMBOL]
+            df = self.json_to_df(stock)
+            df[const.LABEL_COL] = df[const.ADJUSTED_CLOSE_COL].shift(-const.FORECAST_DAYS)
+            df[const.DAILY_PCT_CHANGE_COL] = (df[const.LABEL_COL] - df[const.ADJUSTED_CLOSE_COL]) / df[
+                const.ADJUSTED_CLOSE_COL] * 100.0
+            df[const.HL_PCT_CHANGE_COL] = (df[const.HIGH_COL] - df[const.LOW_COL]) / df[
+                const.HIGH_COL] * 100
+            df[const.LABEL_DISCRETE_COL] = df[const.DAILY_PCT_CHANGE_COL].apply(
+                lambda pct: np.NaN if pd.isna(pct)
+                else const.FALL_VALUE if pct < -const.TRESHOLD else const.RISE_VALUE if pct > const.TRESHOLD else const.IDLE_VALUE)
+            df[const.LABEL_BINARY_COL] = df[const.DAILY_PCT_CHANGE_COL].apply(
+                lambda pct: np.NaN if pd.isna(pct)
+                else const.FALL_VALUE if pct < 0 else const.IDLE_VALUE if pct >= 0 else const.RISE_VALUE)
+            # processed_dict = self.df_to_json(df, symbol)
+            # stock_processed_collection.insert(processed_dict)
+            columns = [const.OPEN_COL, const.CLOSE_COL, const.LOW_COL, const.HIGH_COL, const.ADJUSTED_CLOSE_COL,
+                       const.VOLUME_COL,
+                       const.LABEL_COL, const.DAILY_PCT_CHANGE_COL, const.HL_PCT_CHANGE_COL, const.LABEL_DISCRETE_COL,
+                       const.LABEL_BINARY_COL]
+            df = df[columns]
+            df.to_csv(path + '/' + symbol + '.csv', encoding='utf-8')
+
+            print('Processed ', symbol)
+
 
 if __name__ == "__main__":
     print(len(SYMBOLS))
     imp = Importer()
     # imp.import_all(SYMBOLS)
     # imp.process_data()
-    imp.import_all_technical_indicators(SYMBOLS)
+    # imp.import_all_technical_indicators(SYMBOLS)
+    imp.export_to_csv_files('./../target/data')

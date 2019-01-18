@@ -11,19 +11,20 @@ import db_access
 import plot_helper
 
 DROPUT_RATE = 0.2
-NEURON_COUNT = 40
-STOCK_COMPANIES = 30
+NEURON_COUNT = 10
+STOCK_COMPANIES = 20
 BINARY_CLASSIFICATION = True
 actv = 'softmax'
 optmzr = 'Adam'
 lss = 'categorical_crossentropy'
-epochs = 100
+epochs = 5
 batch_size = 5
 
 
 def main(days_in_window):
     model_filepath = './../target/model.days' + str(
-        days_in_window) + '.neurons' + str(NEURON_COUNT) + '.epochs{epoch:02d}-accuracy{val_categorical_accuracy:.3f}.hdf5'
+        days_in_window) + '.neurons' + str(
+        NEURON_COUNT) + '.epochs{epoch:02d}-accuracy{val_categorical_accuracy:.3f}.hdf5'
     total_time = time.time()
     callbacks = [
         EarlyStopping(monitor='val_loss', min_delta=0.005, patience=20, verbose=0, mode='auto'),
@@ -60,14 +61,15 @@ def main(days_in_window):
                         verbose=0, batch_size=batch_size, callbacks=callbacks)
     loss, accuracy = model.evaluate(x_test_lstm, y_test_one_hot, verbose=0)
 
+    history_epochs = len(history.epoch)
     print("Days:", days_in_window, " time:", str(int(time.time() - total_time)), " Loss: ", loss, " Accuracy: ",
-          accuracy, " epochs: ", len(history.epoch))
+          accuracy, " epochs: ", history_epochs)
 
-    main_title = get_report_title(accuracy, actv, len(history.epoch), days_in_window, loss, lss, optmzr)
+    main_title = get_report_title(accuracy, actv, history_epochs, days_in_window, loss, lss, optmzr)
 
     y_test_score = model.predict(x_test_lstm)
 
-    report_file_name = get_report_file_name(actv, days_in_window, lss, optmzr)
+    report_file_name = get_report_file_name(accuracy, days_in_window, history_epochs)
 
     plot_helper.plot_result(y_test_one_hot, y_test_score, class_count, history, main_title,
                             report_file_name,
@@ -87,19 +89,18 @@ def prepare_lstm_data(days_in_window, data):
     return lstm_data
 
 
-def get_report_title(accuracy, actv, epochs, days_in_window, loss, lss, optmzr):
+def get_report_title(accuracy, actv, history_epochs, days_in_window, loss, lss, optmzr):
     main_title = "Loss: " + str(round(loss, 4)) + ", accuracy: " + str(
         round(accuracy, 4)) + ", epochs: " + str(
-        epochs) + ', history days:' + str(days_in_window) + '\n'
+        history_epochs) + ', history days:' + str(days_in_window) + '\n'
     main_title += 'LSTM: [' + str(NEURON_COUNT) + '], optimizer: ' + str(optmzr) + ', loss: ' + str(
         lss) + ', activation: ' + str(actv)
     return main_title
 
 
-def get_report_file_name(actv, days_in_window, lss, optmzr):
-    return str(NEURON_COUNT) + '_LOSS_' + str(lss) + '_ACTIVATION_' + str(
-        actv) + '_OPTIMIZER_' + str(
-        optmzr) + '_HIST_' + str(days_in_window)
+def get_report_file_name(accuracy, days_in_window, history_epochs):
+    return str(NEURON_COUNT) + + '_HIST_' + str(days_in_window) + '_ACCURACY_' + "{0:.3f}".format(
+        accuracy) + "_EPOCHS_" + str(history_epochs)
 
 
 if __name__ == '__main__':
