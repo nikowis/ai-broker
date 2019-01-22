@@ -46,8 +46,7 @@ def main(days_in_window):
 
     y_test_score = model.predict(x_test_lstm)
 
-    plot_helper.plot_result(y_test_one_hot, y_test_score, class_count, history, main_title, 'lstm-test-' + str(days_in_window),
-                            accuracy >= 0.99)
+    plot_helper.plot_result(y_test_one_hot, y_test_score, class_count, history, main_title, 'lstm-test-' + str(days_in_window))
 
     print("finished " + str(days_in_window))
 

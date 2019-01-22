@@ -1,81 +1,87 @@
 import time
 
+from keras.callbacks import EarlyStopping, ModelCheckpoint
+
 import api_to_db_importer
 import data_helper
-import db_access
 import nn_model
 import plot_helper
+import stock_constants as const
+
+VERBOSE = 2
+
+TARGET_DIR = './../target'
+CSV_FILES_DIR = TARGET_DIR + '/data'
+DAYS_IN_WINDOW = 5
+STOCK_COMPANIES = 10
+BINARY_CLASSIFICATION = True
+ACTIVATION = 'relu'
+OPTIMIZER = 'Adam'
+LOSS_FUN = 'categorical_crossentropy'
+EPOCHS = 50
+BATCH_SIZE = 10
+LAYERS = [10, 10, 10]
+
+COLUMNS = [const.VOLUME_COL, const.OPEN_COL, const.ADJUSTED_CLOSE_COL, const.HIGH_COL, const.LOW_COL,
+           const.HL_PCT_CHANGE_COL]
 
 
 def main():
-    db_conn = db_access.create_db_connection(remote=False, db_name='ai-broker')
 
-    symbols = api_to_db_importer.SYMBOLS[0:10]
-    df_list, symbols = db_access.find_by_tickers_to_dateframe_parse_to_df_list(db_conn, symbols)
-    batch_size=10
-    epochs = 50
-    layers = [7,5,3]
-    skip_iterations = 0
-
-    losses = ['binary_crossentropy']
-
-    activations = ['relu']
-
-    optimizers = ['adam']
-
+    model_filepath = TARGET_DIR +'/model.days' + str(
+        DAYS_IN_WINDOW) + '.epochs{epoch:02d}-accuracy{val_categorical_accuracy:.3f}.hdf5'
     total_time = time.time()
-    iteration = 0
-    for hist_dayz in range(0, 1, 1):
-        x_train, x_test, y_train_one_hot, y_test_one_hot = data_helper.extract_data_from_list(df_list, hist_dayz,
-                                                                                              binary_classification=True)
-        for optmzr in optimizers:
-            for actv in activations:
-                for lss in losses:
-                    iteration += 1
-                    if iteration > skip_iterations:
-                        file_name = get_report_file_name(actv, hist_dayz, iteration, lss, optmzr)
-                        neuron_count = x_train.shape[1] - 1
-                        #layers = [neuron_count, neuron_count, neuron_count]
-                        print('\nSTARTING TRAINING FOR ' + file_name)
-                        iter_time = time.time()
+    callbacks = [
+        #EarlyStopping(monitor='val_loss', min_delta=0.005, patience=20, verbose=0, mode='auto'),
+        # ModelCheckpoint(model_filepath, monitor='val_categorical_accuracy', verbose=0, save_best_only=True, mode='auto',
+        #                 period=5)
+    ]
 
-                        _, classes_count = y_test_one_hot.shape
-                        model = nn_model.create_seq_model(layers, input_size=x_train.shape[1], activation=actv,
-                                                          optimizer=optmzr,
-                                                          loss=lss, class_count=classes_count)
+    symbols = api_to_db_importer.SYMBOLS[0:STOCK_COMPANIES]
+    df_list = api_to_db_importer.Importer().import_data_from_files(symbols, CSV_FILES_DIR)
 
-                        history = model.fit(x_train, y_train_one_hot, validation_data=(x_test, y_test_one_hot),
-                                            epochs=epochs,
-                                            batch_size=batch_size, verbose=0)
-                        loss, accuracy = model.evaluate(x_test, y_test_one_hot, verbose=0)
-                        print("Loss: ", loss, " Accuracy: ", accuracy, " epochs: ", epochs)
+    x_train, x_test, y_train_one_hot, y_test_one_hot = data_helper.extract_data_from_list(df_list, 0,
+                                                                                          binary_classification=BINARY_CLASSIFICATION)
 
-                        main_title = get_report_title(accuracy, actv, epochs, hist_dayz, layers, loss, lss, optmzr)
-                        y_test_score = model.predict(x_test)
+    file_name = get_report_file_name(ACTIVATION, DAYS_IN_WINDOW, LOSS_FUN, OPTIMIZER)
 
-                        plot_helper.plot_result(y_test_one_hot, y_test_score, classes_count, history, main_title,
-                                                file_name,
-                                                accuracy >= 0.4)
+    print('\nSTARTING TRAINING FOR ' + file_name)
 
-                        print('Total time ', str(int(time.time() - total_time)),
-                              's, iteration ' + str(iteration) + ' time ', str(int(time.time() - iter_time)), 's.')
+    _, classes_count = y_test_one_hot.shape
+    model = nn_model.create_seq_model(LAYERS, input_size=x_train.shape[1], activation=ACTIVATION,
+                                      optimizer=OPTIMIZER,
+                                      loss=LOSS_FUN, class_count=classes_count)
+
+    history = model.fit(x_train, y_train_one_hot, validation_data=(x_test, y_test_one_hot),
+                        epochs=EPOCHS,
+                        batch_size=BATCH_SIZE, verbose=VERBOSE, callbacks=callbacks)
+    loss, accuracy = model.evaluate(x_test, y_test_one_hot, verbose=0)
+    print("Loss: ", loss, " Accuracy: ", accuracy, " EPOCHS: ", EPOCHS)
+
+    main_title = get_report_title(accuracy, ACTIVATION, EPOCHS, DAYS_IN_WINDOW, LAYERS, loss, LOSS_FUN, OPTIMIZER)
+    y_test_score = model.predict(x_test)
+
+    plot_helper.plot_result(y_test_one_hot, y_test_score, classes_count, history, main_title,
+                            file_name,target_dir=TARGET_DIR)
+
+    print('Total time ', str(int(time.time() - total_time)), 's')
 
 
-def get_report_title(accuracy, actv, epochs, hist_dayz, layers, loss, lss, optmzr):
+def get_report_title(accuracy, ACTIVATION, EPOCHS, DAYS_IN_WINDOW, LAYERS, loss, LOSS_FUN, OPTIMIZER):
     main_title = "Loss: " + str(round(loss, 4)) + ", accuracy: " + str(
-        round(accuracy, 4)) + ", epochs: " + str(
-        epochs) + ', history days:' + str(hist_dayz) + '\n'
+        round(accuracy, 4)) + ", EPOCHS: " + str(
+        EPOCHS) + ', history days:' + str(DAYS_IN_WINDOW) + '\n'
     main_title += 'Layers: [' + ''.join(
-        str(e) + " " for e in layers) + '], optimizer: ' + str(optmzr) + ', loss: ' + str(
-        lss) + ', activation: ' + str(
-        actv)
+        str(e) + " " for e in LAYERS) + '], optimizer: ' + str(OPTIMIZER) + ', loss: ' + str(
+        LOSS_FUN) + ', activation: ' + str(
+        ACTIVATION)
     return main_title
 
 
-def get_report_file_name(actv, hist_dayz, iteration, lss, optmzr):
-    return str(iteration) + '_LOSS_' + str(lss) + '_ACTIVATION_' + str(
-        actv) + '_OPTIMIZER_' + str(
-        optmzr) + '_HIST_' + str(hist_dayz)
+def get_report_file_name(ACTIVATION, DAYS_IN_WINDOW, LOSS_FUN, OPTIMIZER):
+    return str(DAYS_IN_WINDOW) + 'LOSS_' + str(LOSS_FUN) + '_ACTIVATION_' + str(
+        ACTIVATION) + '_OPTIMIZER_' + str(
+        OPTIMIZER) + '_HIST_' + str(DAYS_IN_WINDOW)
 
 
 if __name__ == '__main__':

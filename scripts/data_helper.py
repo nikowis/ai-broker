@@ -115,18 +115,15 @@ def calculate_append_x_y(history_days, total_x, total_y, df, binary_classificati
 
 
 def get_x_columns(df, input_columns=None):
+    df[const.ADJUSTED_CLOSE_COL] = df[const.ADJUSTED_CLOSE_COL].diff().fillna(0)
+    df[const.OPEN_COL] = df[const.OPEN_COL].diff().fillna(0)
+    df[const.CLOSE_COL] = df[const.CLOSE_COL].diff().fillna(0)
+    df[const.HIGH_COL] = df[const.HIGH_COL].diff().fillna(0)
+    df[const.LOW_COL] = df[const.LOW_COL].diff().fillna(0)
+
     if input_columns is None:
-        df[const.ADJUSTED_CLOSE_COL] = df[const.ADJUSTED_CLOSE_COL].diff().fillna(0)
-        df[const.OPEN_COL] = df[const.OPEN_COL].diff().fillna(0)
-        df[const.CLOSE_COL] = df[const.CLOSE_COL].diff().fillna(0)
-        df[const.HIGH_COL] = df[const.HIGH_COL].diff().fillna(0)
-        df[const.LOW_COL] = df[const.LOW_COL].diff().fillna(0)
-        df[const.VOLUME_COL] = df[const.VOLUME_COL].diff().fillna(0)
         x = np.array(df[[const.VOLUME_COL, const.OPEN_COL, const.ADJUSTED_CLOSE_COL, const.HIGH_COL, const.LOW_COL,
                          const.HL_PCT_CHANGE_COL]])
     else:
-        for col in input_columns:
-            if not col == const.HL_PCT_CHANGE_COL:
-                df[col] = df[col].diff().fillna(0)
         x = np.array(df[input_columns])
     return df, x

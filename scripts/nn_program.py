@@ -58,8 +58,7 @@ def main():
                         y_test_score = model.predict(x_test)
 
                         plot_helper.plot_result(y_test_one_hot, y_test_score, classes_count, history, main_title,
-                                                file_name,
-                                                accuracy >= 0.6)
+                                                file_name)
 
                         print('Total time ', str(int(time.time() - total_time)),
                               's, iteration ' + str(iteration) + ' time ', str(int(time.time() - iter_time)), 's.')
