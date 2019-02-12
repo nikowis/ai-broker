@@ -232,7 +232,7 @@ Ze względu na małą dostępność gotowych danych do trenowania modeli predykc
 
 \subsection{Predykcja}
 
-Na rysunku \ref{alphabet_history} widoczne są zmiany cen akcji spółki \textit{Alphabet Inc.} w latach 2004-2018. Analizując ten wykres można z łatwością wskazać daty, w których opłacalnym było zainwestowanie w akcje, a następnie je sprzedać by osiągnąć zysk. Niestety stwierdzenie czy wartość akcji w przyszłości spadnie, czy wzrośnie, nie jest tak trywialne jak odczytywanie danych historycznych. Przewidywanie przyszłych cen akcji jest głównym zajęciem zarówno inwestorów indywidualnych jak i instytucjonalnych. Skuteczne odgadywanie przyszłych wzrostów lub spadków cen pozwoliłoby na osiąganie ponadprzeciętnych zysków i unikanie strat.
+Na rysunku \ref{alphabet_history} widoczne są zmiany cen akcji spółki \textit{Alphabet Inc.} w latach 2004-2018. Analizując ten wykres z łatwością można wskazać daty, w których opłacalnym było zainwestowanie w akcje, aby następnie je sprzedać w póżniejszym terminie by osiągnąć zysk. Niestety stwierdzenie czy wartość akcji w przyszłości spadnie, czy wzrośnie, nie jest tak trywialne jak odczytywanie danych historycznych. Przewidywanie przyszłych cen akcji jest głównym zajęciem zarówno inwestorów indywidualnych jak i instytucjonalnych. Skuteczne odgadywanie przyszłych wzrostów lub spadków cen pozwoliłoby na osiąganie ponadprzeciętnych zysków i unikanie strat.
 
 
 \begin{figure}[H]
@@ -260,13 +260,13 @@ Ponieważ zagadnienie przewidywania giełdy jest nietrywialne ze względu na los
 \begin{itemize}
 \item{\textbf{Prognozowanie dokładne/dyskretne} }
 \item{\textbf{Liczba dni}, z których prognozowana jest wartość.}
-\item{\textbf{Dobór danych pobranych z giełdy}, selekcja wartości wejściowych}
+\item{\textbf{Dobór danych wejściowych}, selekcja wartości wejściowych}
 \item{\textbf{Dobór spółek uczących i testujących}}
 \end{itemize}
 
 \subsubsection{Prognozowanie - regresja czy klasyfikacja?}
 
-Potencjalnie korzystniejszym podejściem jest przewidywanie dokładnych cen akcji, gdyż pozwoli na dokładniejsze aproksymowanie ceny. Jednak w celu skutecznej oceny modelu, który ma służyć do celów inwestycyjnych, zamiast przewidywania dokładnej ceny zamknięcia należy przewidywać wzrosty oraz spadki ceny. Binarne przewidywanie z dnia na dzień może jednak okazać się nieprzydatne ze względu na to jak przebiega obrót akcjami. Akcje kupuje i sprzedaje się za pomocą domu maklerskiego, który pobiera prowizje za każdą transakcję. Obecnie najniższe prowizje na polskim rynku są na poziomie $0,19\%$ za transakcję. Pojedyncza operacja dająca zarobić na przewidzianej cenie wymaga kupienia, a następnie sprzedania akcji, wobec czego łączna prowizja wyniesie przy zaokrągleniu $0,4\%$. Wszystkie wahania cen poniżej tej wartości są teoretycznie bez znaczenia dla inwestora. W związku z powyższym wnioskowaniem należy zastosować model, który przewiduje trzy wartości:
+Potencjalnie korzystniejszym podejściem jest przewidywanie dokładnych cen akcji, gdyż pozwoli na dokładniejsze aproksymowanie ceny. Jednakże z perspektywy inwestora istotniejszym od dokładnych wartości ceny są trendy. Wobec czego zamiast przewidywania dokładnej ceny zamknięcia należy przewidywać wzrosty oraz spadki cen. Binarne przewidywanie z dnia na dzień może jednak okazać się nieprzydatne ze względu na to jak przebiega obrót akcjami. Akcje kupuje i sprzedaje się za pomocą domu maklerskiego, który pobiera prowizje za każdą transakcję. Obecnie najniższe prowizje na polskim rynku są na poziomie $0,19\%$ za transakcję. Pojedyncza operacja dająca zarobić na przewidzianej cenie wymaga kupienia, a następnie sprzedania akcji, wobec czego łączna prowizja wyniesie przy zaokrągleniu $0,4\%$. Wszystkie wahania cen poniżej tej wartości są teoretycznie bez znaczenia dla inwestora. W związku z powyższym wnioskowaniem należy zastosować model, który przewiduje trzy wartości:
 \begin{itemize}
 \item spadek ceny poniżej $0,4\%$
 \item wzrost ceny powyżej $0,4\%$
@@ -276,6 +276,7 @@ Potencjalnie korzystniejszym podejściem jest przewidywanie dokładnych cen akcj
 
 Na rysunku \ref{l_r_pct_change_last_30} można zaobserwować, iż zmiany w kursie często przekraczają $0,4\%$ w związku z czym transakcje przynoszące zysk można wykonywać regularnie. Ten wniosek potwierdza zasadność tej metody do oceny modeli.
 
+%TODO dodać paski -0.4%   +0.4% do wykresu
 \begin{figure}[H]
 \centering \includegraphics[scale=0.9]{img/linear_regression/l_r_pct_change_last_30}
 \caption{Dzeinna zmiana ceny akcji spółki \textit{GOOGL} z 30 dni}
@@ -283,13 +284,17 @@ Na rysunku \ref{l_r_pct_change_last_30} można zaobserwować, iż zmiany w kursi
 \end{figure}
 
 
-\subsubsection{Liczba dni}
+\subsubsection{Przewidywana liczba dni}
 
-Model przewidujący może na wyjściu przyjąć parametry z więcej niż jednego dnia sesji giełdowej. Należy uważać jednak na nakładanie się błędów predykcji i uważnie dobierać parametr przewidywanej ilości dni do przodu. Na przykład jeżeli prognozowana jest wartość z dwóch dni historii na trzy dni do przodu, to wówczas trzeci prognozowany dzień będzie oparty na prognozach dwóch poprzednich dni. W związku z czym dojdzie złączenia się błędu i mniej dokładnych wyników.
+Model przewidujący może na wyjściu zwrócić predykcje z więcej niż jednego dnia sesji giełdowej. Należy uważać jednak na nakładanie się błędów predykcji i uważnie dobierać parametr przewidywanej liczby dni. Na przykład, jeżeli prognozowana jest wartość na dwa dni do przodu, to wówczas trzeci prognozowany dzień będzie oparty na prognozie z poprzedniego dnia. W związku z czym dojdzie złączenia się błędu i zwiększenia zaburzenia wyników.
+
+\subsubsection{Liczba dni historycznych}
+
+Wektor wejściowy do modelu może składać się z wielu parametrów giełdowych z jednego wybranego dnia z przeszłości. Możliwa jest również konkatenacja takich wektorów z kilku poprzednich dni dająca modelowi wgląd w kształtowanie się ruchu cen na przestrzeni czasu. Taki zabieg daje modelom większą ilość informacji. Dobranie większej ilości informacji może zarówno pogorszyć jak i polepszyć wyniki modelu. Jest to więc jeden z parametrów, który należy rozważyć.
 
 \subsubsection{Dobór danych pobranych z giełdy}
 
-Według niektórych badań wolumen obrotów akcji nie jest skorelowany w żaden sposób z jej ceną. Modele mogą więc wykazywać lepsze wyniki przy mniejszej lub większej ilości danych wejściowych. Niektóre parametry mogą okazać się zbędne lub wręcz mogą osłabiać przewidywanie wartości.
+Według niektórych badań wolumen obrotów akcji nie jest skorelowany w żaden sposób z jej ceną. Modele mogą więc wykazywać lepsze wyniki przy mniejszej lub większej liczbie wejściowych parametrów. Niektóre parametry mogą okazać się zbędne lub wręcz mogą osłabiać przewidywanie wartości.
 
 \subsubsection{Dobór spółek uczących i testujących}
 
