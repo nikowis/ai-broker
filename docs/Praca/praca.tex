@@ -320,7 +320,7 @@ Jednym z najprostszych sposobów do oceny dokładności klasyfikatorów jest okr
 
 \subsubsection{Krzywa ROC \cite{roc}}
 
-Krzywa ROC (en. receiver operating characteristic) jest narzędziem, która opisuje dokładność klasyfikatora za pomocą oceny jego czułości i specyficzności.
+Krzywa ROC (ang. receiver operating characteristic) jest narzędziem, która opisuje dokładność klasyfikatora za pomocą oceny jego czułości i precyzji.
 
  W przypadku klasyfikacji dwuklasowej na klasy A i B każdą predykcję można przypisać do jednej z 4 grup:
 \begin{itemize}
@@ -329,6 +329,10 @@ Krzywa ROC (en. receiver operating characteristic) jest narzędziem, która opis
 \item False Positive (FP) - gdy przewidziano klasę A dla etykiety B
 \item True Negative (TN) - gdy przewidziano klasę B dla etykiety B
 \end{itemize}
+
+Precyzją modelu nazywa się stosunek $\frac{TP}{TP+FP}$, zaś czułość jest oznaczona przez $\frac{TP}{TP+FN}$.
+
+\bigskip
 
 Zdefiniujmy wartości \textit{True Positive Rate (TPR)} oraz \textit{False\ Positive\ Rate (FPR)}:
 \begin{align*}
@@ -368,6 +372,7 @@ Częściowy indeks Gini jest innym sposobem na analizę jakości modelu predykcy
 
 \subsubsection{F1}
 
+Metryka F1 jest średnią harmoniczną metryk czułości i precyzji (wyrażona wzorem $F1=2*\frac{precyzja*czulosc}{precyzja+czulosc}$). Metryka ta jest dobrym narzędziem pozwalającym określić za pomocą jednej wartości jakość modelu, biorąc pod uwagę precyzję jak i czułość modelu. Osiąga ona w najlepszym przypadku wartość 1, zaś w najgorszym wartość 0. 
 
 \subsubsection{Statystyka H}
 
