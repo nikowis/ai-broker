@@ -48,6 +48,8 @@
 \usepackage{emptypage} % removes headers on empty pages
 \usepackage{fancyhdr} % header and footer settings
 \usepackage{subfigure}
+\usepackage{cleveref}
+
 
 \pagestyle{fancy}
 \fancyhf{}
@@ -314,9 +316,58 @@ Podczas oceny modelu wzięto pod uwagę różne kryteria mierzenia dokładności
 
 \subsubsection{Procent prawidłowych klasyfikacji}
 
-\subsubsection{Pole pod krzywą ROC}
+Jednym z najprostszych sposobów do oceny dokładności klasyfikatorów jest określenie procentu prawidłowych przypisań przykładu do klasy. Metoda ta potrafi dawać złudzenie zadowalających wyników, w których występują duże różnice w licznościach poszczególnych klas. Rozważmy dla takiego zadania naiwny model przypisujący do każdego postawionego przykładu klasę, której liczność jest największa. Wówczas wyniki procentowe prawidłowej klasyfikacji będą wprost proporcjonalne do różnicy w liczności klasy największej w stosunku do innych klas. W większości przypadków pomimo dobrego wyniku taki model będzie uznany za bezużyteczny. Wobec tego tę miarę jakości należy stosować wraz z innymi miarami, które nie są podatne na tego typu zaburzenia.
+
+\subsubsection{Krzywa ROC \cite{roc}}
+
+Krzywa ROC (en. receiver operating characteristic) jest narzędziem, która opisuje dokładność klasyfikatora za pomocą oceny jego czułości i specyficzności.
+
+ W przypadku klasyfikacji dwuklasowej na klasy A i B każdą predykcję można przypisać do jednej z 4 grup:
+\begin{itemize}
+\item True Positive (TP) - gdy przewidziano klasę A dla etykiety A
+\item False Negative (FN) - gdy przewidziano klasę B dla etykiety A
+\item False Positive (FP) - gdy przewidziano klasę A dla etykiety B
+\item True Negative (TN) - gdy przewidziano klasę B dla etykiety B
+\end{itemize}
+
+Zdefiniujmy wartości \textit{True Positive Rate (TPR)} oraz \textit{False\ Positive\ Rate (FPR)}:
+\begin{align*}
+ TPR = \frac{TP}{TP+FN}\ \ \ \ \ \ \ \ FPR = \frac{FP}{FP+TN} 
+\end{align*}
+
+Klasyfikatory w większości przypadków nie zwracają dokładnego wyniku przypisania przykładu do klasy. Zazwyczaj wynikiem klasyfikacji jest liczba rzeczywista z przedziału $[0, 1]$, którą można identyfikować jako prawdopodobieństwo. Można przyjąć że jeżeli klasyfikator zwróci $0$ oznacza to przypisanie do klasy A, zaś $1$ oznacza przypisanie do klasy B. Dla wartości z zakresu $(0, 1)$ przypisuje się pewną wartość progową rozgraniczającą obie klasy. Dla tego progu mniejsze od niego wartości przypisujemy do klasy A, zaś resztę do klasy B. Intuicyjnie jest to zazwyczaj połowa przedziału czyli $0.5$.
+
+Krzywa ROC jest graficzną reprezentacją skuteczności modelu klasyfikacyjnego. Jest ona skonstruowana poprzez wykreślenie stosunku $TPR$ do $FPR$ dla różnych progów rozgraniczających klasy.
+
+%source: https://towardsdatascience.com/understanding-auc-roc-curve-68b2303cc9c5
+\begin{figure}[H]%
+\centering
+\subfigure[Krzywa ROC dla modelu, który nie jest w stanie rozdzielić klas]{%
+\includegraphics[scale=0.55]{img/roc_1.png}}%
+\qquad
+\subfigure[Krzywa ROC przykładowego klasyfikatora]{%
+\includegraphics[scale=0.55]{img/roc_2.png}}%
+\qquad
+\subfigure[Krzywa ROC dla modelu idealnego]{%
+\includegraphics[scale=0.55]{img/roc_3.png}}%
+\caption{Przykładowe krzywe ROC}% (źródło: https://towardsdatascience.com/understanding-auc-roc-curve-68b2303cc9c5).}
+\label{roc}
+\end{figure}
+Na rysunku \ref{roc} widzimy przykładowe krzywe ROC dla klasyfikatorów różnej jakości.
+
+Porównanie różnych klasyfikatorów za pomocą krzywej ROC odbywa się poprzez porównanie pola pod krzywymi. Im większe pole pod krzywą ROC dla danego klasyfikatora tym lepsza jest jego jakość. Pole pod krzywą dla modelu idealnego wynosi $1$, zaś dla modelu losowego $0.5$. Warto zauważyć że dla wartości pola poniżej 0.5  korzystnym zabiegiem jest zamiana przedziałów dla klas.
+
+\bigskip
+
+Zastosowanie krzywej ROC dla problemów z większą liczbą klas wymaga dodatkowych kroków. Ponieważ metoda ta działa dla klasyfikacji binarnych, w celu policzenia wartości TPR i FPR wyróżniona jest konkretna klasa, a pozostałe klasy są sumowane w sztuczną klasę przeciwną. W ten sposób należy wykreślić tyle krzywych ROC ile jest klas. Ostatecznym krokiem w celu uzyskania jednolitej oceny modelu jest stworzenie krzywej ROC wyliczonej ze średniej krzywych dla poszczególnych klas.
+
 
 \subsubsection{Częściowy indeks Gini}
+
+Częściowy indeks Gini jest innym sposobem na analizę jakości modelu predykcyjnego za pomocą krzywej ROC. Otrzymuje się go poprzez wyliczenie pola powierzchni pomiędzy krzywą ROC dla modelu predykcyjnego, a krzywą ROC dla modelu losowego, w stosunku do pola powierzchni między krzywą ROC modelu idealnego, a krzywą ROC modelu losowego. Dla modelu losowego wynosi 0, zaś dla modelu idealnego wartość indeksu wynosi 1. W ten sposób otrzymana wartość indeksu Gini może być interpretowana jako procent idealności modelu.
+
+\subsubsection{F1}
+
 
 \subsubsection{Statystyka H}
 
@@ -374,6 +425,8 @@ Wobec powyższych obserwacji należy sprawdzić jakość tego modelu w metodą d
 \subsection{Regresja logistyczna}
 
 \subsection{SVM}
+
+Maszyny wektorów podpierających (en. support-vector machines) są zbiorem klasyfikatorów mających na celu wyznaczenie hiperpłaszczyzn rozdzielających z zachowaniem maksymalnego marginesu elementów na klasy.
 
 \subsection{Sieci neuronowe}
 
@@ -467,6 +520,13 @@ Strona główna MongoDB
   \textit{Advanced Machine Learning with Python}.
   Packt Publishing,
   2016.
+
+\bibitem{roc}
+	Tom Fawcett, 
+  \textit{An introduction to ROC analysis.}
+  Pattern Recognition Letters 27,
+  2005.
+
 
 
 \end{thebibliography}
