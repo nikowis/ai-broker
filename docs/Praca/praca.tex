@@ -314,15 +314,9 @@ Podczas oceny modelu wzięto pod uwagę różne kryteria mierzenia dokładności
 \item statystyka Kołomogrowa-Smirnova
 \end{itemize}
 
-\subsubsection{Procent prawidłowych klasyfikacji}
+\subsubsection{Macierz błędu}
 
-Jednym z najprostszych sposobów do oceny dokładności klasyfikatorów jest określenie procentu prawidłowych przypisań przykładu do klasy. Metoda ta potrafi dawać złudzenie zadowalających wyników, w których występują duże różnice w licznościach poszczególnych klas. Rozważmy dla takiego zadania naiwny model przypisujący do każdego postawionego przykładu klasę, której liczność jest największa. Wówczas wyniki procentowe prawidłowej klasyfikacji będą wprost proporcjonalne do różnicy w liczności klasy największej w stosunku do innych klas. W większości przypadków pomimo dobrego wyniku taki model będzie uznany za bezużyteczny. Wobec tego tę miarę jakości należy stosować wraz z innymi miarami, które nie są podatne na tego typu zaburzenia.
-
-\subsubsection{Krzywa ROC \cite{roc}}
-
-Krzywa ROC (ang. receiver operating characteristic) jest narzędziem, która opisuje dokładność klasyfikatora za pomocą oceny jego czułości i precyzji.
-
- W przypadku klasyfikacji dwuklasowej na klasy A i B każdą predykcję można przypisać do jednej z 4 grup:
+W przypadku klasyfikacji dwuklasowej na klasy A i B każdą predykcję można przypisać do jednej z 4 grup:
 \begin{itemize}
 \item True Positive (TP) - gdy przewidziano klasę A dla etykiety A
 \item False Negative (FN) - gdy przewidziano klasę B dla etykiety A
@@ -330,7 +324,18 @@ Krzywa ROC (ang. receiver operating characteristic) jest narzędziem, która opi
 \item True Negative (TN) - gdy przewidziano klasę B dla etykiety B
 \end{itemize}
 
-Precyzją modelu nazywa się stosunek $\frac{TP}{TP+FP}$, zaś czułość jest oznaczona przez $\frac{TP}{TP+FN}$.
+%TODO dodać schemat macierzy błedu
+
+Graficzną reprezentację podziału klasyfikacji na powyższe kategorie nazywamy \textit{macierzą błędu}. Zastosowanie miar opartych o tablicę błędów dla problemów z większą liczbą klas wymaga dodatkowych kroków. W celu policzenia wartości TP, FN, FP i TN należy wyróżnić konkretną klasę, a pozostałe klasy należy zagregować w sztuczną klasę przeciwną. W ten sposób należy wyliczyć konkretną miarę tyle razy ile jest klas. Ostatecznym krokiem w celu uzyskania jednolitej oceny modelu jest na przykład wyliczenie średniej ważonej z wyników dla każdej z klas.
+
+
+\subsubsection{Procent prawidłowych klasyfikacji}
+
+Jednym z najprostszych sposobów do oceny dokładności klasyfikatorów jest określenie procentu prawidłowych przypisań przykładu do klasy. Metoda ta potrafi dawać złudzenie zadowalających wyników, w których występują duże różnice w licznościach poszczególnych klas. Rozważmy dla takiego zadania naiwny model przypisujący do każdego postawionego przykładu klasę, której liczność jest największa. Wówczas wyniki procentowe prawidłowej klasyfikacji będą wprost proporcjonalne do różnicy w liczności klasy największej w stosunku do innych klas. W większości przypadków pomimo dobrego wyniku taki model będzie uznany za bezużyteczny. Wobec tego tę miarę jakości należy stosować wraz z innymi miarami, które nie są podatne na tego typu zaburzenia.
+
+\subsubsection{Krzywa ROC \cite{roc}}
+
+Krzywa ROC (ang. receiver operating characteristic) jest narzędziem, która opisuje dokładność klasyfikatora za pomocą oceny jego czułości i precyzji. Precyzją modelu nazywa się stosunek $\frac{TP}{TP+FP}$, zaś czułość jest oznaczona przez $\frac{TP}{TP+FN}$.
 
 \bigskip
 
@@ -359,22 +364,62 @@ Krzywa ROC jest graficzną reprezentacją skuteczności modelu klasyfikacyjnego.
 \end{figure}
 Na rysunku \ref{roc} widzimy przykładowe krzywe ROC dla klasyfikatorów różnej jakości.
 
+
+
 Porównanie różnych klasyfikatorów za pomocą krzywej ROC odbywa się poprzez porównanie pola pod krzywymi. Im większe pole pod krzywą ROC dla danego klasyfikatora tym lepsza jest jego jakość. Pole pod krzywą dla modelu idealnego wynosi $1$, zaś dla modelu losowego $0.5$. Warto zauważyć że dla wartości pola poniżej 0.5  korzystnym zabiegiem jest zamiana przedziałów dla klas.
 
-\bigskip
 
-Zastosowanie krzywej ROC dla problemów z większą liczbą klas wymaga dodatkowych kroków. Ponieważ metoda ta działa dla klasyfikacji binarnych, w celu policzenia wartości TPR i FPR wyróżniona jest konkretna klasa, a pozostałe klasy są sumowane w sztuczną klasę przeciwną. W ten sposób należy wykreślić tyle krzywych ROC ile jest klas. Ostatecznym krokiem w celu uzyskania jednolitej oceny modelu jest stworzenie krzywej ROC wyliczonej ze średniej krzywych dla poszczególnych klas.
+\subsubsection{Częściowy indeks Gini} %TODO bibliografia
 
-
-\subsubsection{Częściowy indeks Gini}
+%TODO dodać wykres z indeksem GINI
 
 Częściowy indeks Gini jest innym sposobem na analizę jakości modelu predykcyjnego za pomocą krzywej ROC. Otrzymuje się go poprzez wyliczenie pola powierzchni pomiędzy krzywą ROC dla modelu predykcyjnego, a krzywą ROC dla modelu losowego, w stosunku do pola powierzchni między krzywą ROC modelu idealnego, a krzywą ROC modelu losowego. Dla modelu losowego wynosi 0, zaś dla modelu idealnego wartość indeksu wynosi 1. W ten sposób otrzymana wartość indeksu Gini może być interpretowana jako procent idealności modelu.
 
-\subsubsection{F1}
+\subsubsection{F1} %TODO bibliografia
 
 Metryka F1 jest średnią harmoniczną metryk czułości i precyzji (wyrażona wzorem $F1=2*\frac{precyzja*czulosc}{precyzja+czulosc}$). Metryka ta jest dobrym narzędziem pozwalającym określić za pomocą jednej wartości jakość modelu, biorąc pod uwagę precyzję jak i czułość modelu. Osiąga ona w najlepszym przypadku wartość 1, zaś w najgorszym wartość 0. 
 
-\subsubsection{Statystyka H}
+\subsubsection{Miara H \cite{hmeasure}}
+
+%TODO dodać wykres z krzyżującymi się krzywymi ROC dla różnych modeli
+
+Miary oparte o krzywą ROC mimo wielu zalet mają również wady \cite{roccritique}. Gdy pole pod krzywą pierwszego klasyfikatora jest mniejsze od pola pod krzywą drugiego klasyfikatora, można wywnioskować iż drugi klasyfikator jest lepszy. Bywa jednak że krzywe ROC dla tych dwóch modeli się krzyżują, a pierwszy model pomimo mniejszego pola powierzchni pod krzywą, ma lepsze właściwości dla znacznej większości progów używanych do rozdzielenia klas. Należy również wziąć pod uwagę iż analizy porównawczej modeli klasyfikujących często dokonuje się dla małych, stopniowych optymalizacji parametrów. Powoduje to zazwyczaj małe różnice w nakreślonych krzywych ROC, które mogą się krzyżować. W związku z powyższym miary oparte o tą krzywą nie dają dobrego porównania modeli w takim scenariuszu.
+ 
+\bigskip
+
+Przy ocenie modeli warto również wziąć pod uwagę czy błąd predykcji z grupy \textit{FP} jest równoważna wynikowi z \textit{FN}. Niech dany będzie problem klasyfikacji binarnej kursu giełdy z klasami \textit{wzrost (positive)} oraz \textit{spadek (negative)}. W przypadku gdy wynik zaklasyfikowany zostanie do grupy \textit{FP}, wówczas makler giełdowy korzystający z tego klasyfikatora zainwestuje pieniądze pomimo spadającego kursu. Oznacza to najgorszą możliwą decyzję narażającą użytkownika modelu na straty. W drugim przypadku gdy wynik zostanie przypisany do grupy \textit{FN}, makler zostanie fałszywie ostrzeżony przed spadkiem kursu. Wówczas sprzedaż akcji może jedynie ograniczyć jego zyski, zakładając że wcześniej zainwestował poprawnie (przed wzrostem cen akcji). Z powyższego można wywnioskować, iż ocena powinna być surowsza dla klasyfikacji przykładów w grupie \textit{FP}.
+ 
+\bigskip
+%https://cran.r-project.org/web/packages/hmeasure/vignettes/hmeasure.pdf rozdział 2.6 
+
+\textit{Miara H} jest miarą oceny modeli klasyfikujących zaproponowaną przez D.J.Hand, która została opracowana jako alternatywa dla miar opartych o krzywą ROC. Metodyka ta daje możliwość wzięcia pod uwagę wiedzy eksperckiej na temat kosztu przypisania wyniku do złej klasy (\textit{FP} lub \textit{FN}). Niech $c \in [0,1]$ będzie kosztem przypisania elementu do grupy FP, zaś $1-c$ kosztem przypisania elementu do grupy FN. Niech $t$ będzie progiem rozdzielającym klasy. Całkowity koszt klasyfikacji to:
+
+\begin{align*}
+ \pi_{0}=\frac{TP+FN}{n} \ \ \ \ \ \ \ \ \ 
+ \pi_{1}=\frac{TN+FP}{n}
+\end{align*}
+
+\begin{align*}
+ L(c,t) = 2(c\pi_{0}FPR(t)+(1-c)\pi_{1}(1-TPR(t))
+\end{align*}
+
+
+
+Warto zauważyć że $L(\frac{1}{2}, t)$ odpowiada mierzeniu procentu prawidłowych klasyfikacji.
+
+Wartość funkcji $L(c,t)$ należy minimalizować w celu uzyskania jak najlepszej klasyfikacji. Wobec czego można zdefiniować $MLW(c)=L(c,T_c)$ gdzie $T_c$ jest  takim progiem klasyfikacji dla danego $c$, który minimalizuje $L(c,t)$ ($T_c = argmin_tL(c,t)$). Funkcja $MLW(c)$ oceniająca konkretny model klasyfikujący jest zależna od tylko jednej zmiennej. W praktyce jednak ciężko jest oczekiwać od użytkownika tej miary, doboru optymalnej wartości zmiennej $c$. Wobec tego zaproponowane zostało używanie rozkładu $w(c)$ zamiast konretnej zmiennej $c$. 
+
+\begin{align*}
+ L_w=\int_{c}L(c, T_c)w(c)dc
+\end{align*}
+
+Miarę H zdefiniowana jest wzorem:
+\begin{align*}
+ H = 1-\frac{L_w}{L_w^{max}}
+\end{align*}
+
+gdzie $L_w^{max}$ jest maksymalną wartością funkcji $L_w$, służącą do znormalizowania wyniku. Im większa wartość $H$ tym lepsza ocena klasyfikatora.
+%https://link.springer.com/content/pdf/10.1007%2Fs10994-009-5119-5.pdf L_w^{max} zdefiniowane na stronie 116
 
 \subsubsection{Współczynnik Briera}
 
@@ -431,7 +476,7 @@ Wobec powyższych obserwacji należy sprawdzić jakość tego modelu w metodą d
 
 \subsection{SVM}
 
-Maszyny wektorów podpierających (en. support-vector machines) są zbiorem klasyfikatorów mających na celu wyznaczenie hiperpłaszczyzn rozdzielających z zachowaniem maksymalnego marginesu elementów na klasy.
+Maszyny wektorów podpierających (ang. support-vector machines) są zbiorem klasyfikatorów mających na celu wyznaczenie hiperpłaszczyzn rozdzielających z zachowaniem maksymalnego marginesu elementów na klasy.
 
 \subsection{Sieci neuronowe}
 
@@ -532,8 +577,16 @@ Strona główna MongoDB
   Pattern Recognition Letters 27,
   2005.
 
+\bibitem{hmeasure}
+	David J. Hand, 
+  \textit{Measuring classifier performance: a coherent alternative to the area under the ROC curve}
+  Machine Learning, 77:103–123, 2009.
 
-
+\bibitem{roccritique}
+	David J. Hand, 
+  \textit{Evaluating diagnostic tests: the area under the ROC curve and the balance of errors.}
+ Statistics in Medicine, 29:1502–1510, 2010
+ 
 \end{thebibliography}
 
 \newpage
