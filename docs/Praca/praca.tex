@@ -340,9 +340,8 @@ Krzywa ROC (ang. receiver operating characteristic) jest narzędziem, która opi
 \bigskip
 
 Zdefiniujmy wartości \textit{True Positive Rate (TPR)} oraz \textit{False\ Positive\ Rate (FPR)}:
-\begin{align*}
- TPR = \frac{TP}{TP+FN}\ \ \ \ \ \ \ \ FPR = \frac{FP}{FP+TN} 
-\end{align*}
+
+$$ TPR = \frac{TP}{TP+FN}\ \ \ \ \ \ \ \ FPR = \frac{FP}{FP+TN} $$
 
 Klasyfikatory w większości przypadków nie zwracają dokładnego wyniku przypisania przykładu do klasy. Zazwyczaj wynikiem klasyfikacji jest liczba rzeczywista z przedziału $[0, 1]$, którą można identyfikować jako prawdopodobieństwo. Można przyjąć że jeżeli klasyfikator zwróci $0$ oznacza to przypisanie do klasy A, zaś $1$ oznacza przypisanie do klasy B. Dla wartości z zakresu $(0, 1)$ przypisuje się pewną wartość progową rozgraniczającą obie klasy. Dla tego progu mniejsze od niego wartości przypisujemy do klasy A, zaś resztę do klasy B. Intuicyjnie jest to zazwyczaj połowa przedziału czyli $0.5$.
 
@@ -394,14 +393,8 @@ Przy ocenie modeli warto również wziąć pod uwagę czy błąd predykcji z gru
 
 \textit{Miara H} jest miarą oceny modeli klasyfikujących zaproponowaną przez D.J.Hand, która została opracowana jako alternatywa dla miar opartych o krzywą ROC. Metodyka ta daje możliwość wzięcia pod uwagę wiedzy eksperckiej na temat kosztu przypisania wyniku do złej klasy (\textit{FP} lub \textit{FN}). Niech $c \in [0,1]$ będzie kosztem przypisania elementu do grupy FP, zaś $1-c$ kosztem przypisania elementu do grupy FN. Niech $t$ będzie progiem rozdzielającym klasy. Całkowity koszt klasyfikacji to:
 
-\begin{align*}
- \pi_{0}=\frac{TP+FN}{n} \ \ \ \ \ \ \ \ \ 
- \pi_{1}=\frac{TN+FP}{n}
-\end{align*}
-
-\begin{align*}
- L(c,t) = 2(c\pi_{0}FPR(t)+(1-c)\pi_{1}(1-TPR(t))
-\end{align*}
+$$ \pi_{0}=\frac{TP+FN}{n} \ \ \ \ \ \ \ \ \  \pi_{1}=\frac{TN+FP}{n} $$
+$$ L(c,t) = 2(c\pi_{0}FPR(t)+(1-c)\pi_{1}(1-TPR(t))$$
 
 
 
@@ -409,23 +402,47 @@ Warto zauważyć że $L(\frac{1}{2}, t)$ odpowiada mierzeniu procentu prawidłow
 
 Wartość funkcji $L(c,t)$ należy minimalizować w celu uzyskania jak najlepszej klasyfikacji. Wobec czego można zdefiniować $MLW(c)=L(c,T_c)$ gdzie $T_c$ jest  takim progiem klasyfikacji dla danego $c$, który minimalizuje $L(c,t)$ ($T_c = argmin_tL(c,t)$). Funkcja $MLW(c)$ oceniająca konkretny model klasyfikujący jest zależna od tylko jednej zmiennej. W praktyce jednak ciężko jest oczekiwać od użytkownika tej miary, doboru optymalnej wartości zmiennej $c$. Wobec tego zaproponowane zostało używanie rozkładu $w(c)$ zamiast konretnej zmiennej $c$. 
 
-\begin{align*}
- L_w=\int_{c}L(c, T_c)w(c)dc
-\end{align*}
+$$ L_w=\int_{c}L(c, T_c)w(c)dc $$
 
 Miarę H zdefiniowana jest wzorem:
-\begin{align*}
- H = 1-\frac{L_w}{L_w^{max}}
-\end{align*}
+
+$$ H = 1-\frac{L_w}{L_w^{max}} $$
 
 gdzie $L_w^{max}$ jest maksymalną wartością funkcji $L_w$, służącą do znormalizowania wyniku. Im większa wartość $H$ tym lepsza ocena klasyfikatora.
 %https://link.springer.com/content/pdf/10.1007%2Fs10994-009-5119-5.pdf L_w^{max} zdefiniowane na stronie 116
 
-\subsubsection{Współczynnik Briera}
+\subsubsection{Współczynnik Briera \cite{brier}}
 
-\subsubsection{Statystyka Kołomogrowa-Smirnova}
+Współczynnik Briera (ang. Brier score) jest metodą oceny modeli klasyfikujących opisana wzorem:
+
+$$	BS=\frac{1}{N} \sum_{t=1}^{N} \sum_{i=1}^{R}(f_{ti}-o_{ti})^2 $$
+
+\begin{itemize}
+\item $N$ to liczba predykcji,
+\item $R$  to liczba możliwych klas
+\item $f_{ti}$ to prawdopodobieństwo, które wyznaczył klasyfikator, przypisania przykładu $t$ do klasy $i$,
+\item $o_{ti}$ to rzeczywiste przypisanie przykładu do danej klasy (0 gdy przykład nie jest tej klasy, oraz 1 gdy przykład należy do tej klasy).
+\end{itemize}
+
+W związku z powyższą definicją, miara ta może zostać wykorzystana w przypadku modeli, które na swoim wyjściu zwracają prawdopodobieństwo przypisania przykładu do każdej z klas. Wobec tego nie każdy model można ocenić tą metryką. Istotnym spostrzeżeniem jest fakt iż w przeciwieństwie do innych metryk, współczynnik Briera modelu idealnego wynosi $0$, zaś im gorszy model tym większy współczynnik.
+
+
+%TODO źródło do poniższego
+\subsubsection{Statystyka Kołmogorowa-Smirnova}
+
+Statystyka Kołmogorowa-Smirnova (ang. Kolmogrow-Smirnov Test) pozwala ocenić jakość klasyfikatora binarnego na podstawie stopnia separacji rozkładu dwóch klas. Ocena dokonywana jest przez zmierzenie maksymalnej odległości między wkyresami dystrybuant rozkładu jednej i drugiej klasy. Niech $F(x)$ to dystrybuanta rozkład klasy 1, zaś $G(x)$ to dystrybuanta rozkładu klasy 2. Wówczas statystyka Kołmogorowa-Smirnova opisana jest wzorem:
+
+$$D_{n,m}=\sup_x|F(x)-G(x)|$$
+
+Metryka ta daje wartość 100 dla modelu idealnego, zaś 0 dla modelu losowego.
 
 \subsection{Wnioski i uwagi}
+
+Porównanie modeli klasyfikujących jest zadaniem trywialnym tylko dla specyficznych problemów. W tych przypadkach można się oprzeć o procent prawidłowych klasyfikacji jako jedyną miarę jakości modeli. W bardziej złożonych przypadkach dochodzi do dysproporcji w rozmiarze klas, wówczas ta podstawowa miara zostaje w pewien sposób zafałszowana. Innym aspektem, który może być brany pod uwagę przy ocenie klasyfikatorów jest różnica w wadze błędu z grupy \textit{FP}, względem błędu z grupy \textit{FN}. Te problemy należy rozwiązywać poprzez używanie wielu miar do porównywania modeli. Używanie wielu metryk może być przydatne w szczególności gdy dwa modele mają podobne wartości w jednej z miar.
+
+\bigskip
+
+W zagadnieniu predykcji giełdowych sprowadzonym do klasyfikacji, można posłużyć się procentem prawidłowych klasyfikacji jako podstawową miarą porównawczą. Wynika to z faktu, iż dla większości spółek liczność klas się równoważy. Przy bardziej zaawansowanych badaniach należy uwzględnić przede wszystkim \textit{miarę H}, która bierze pod uwagę większy błąd fałszywego przypisywania predykcji do grupy wzrostów cen.
 
 \newpage
 
@@ -586,7 +603,13 @@ Strona główna MongoDB
 	David J. Hand, 
   \textit{Evaluating diagnostic tests: the area under the ROC curve and the balance of errors.}
  Statistics in Medicine, 29:1502–1510, 2010
- 
+
+\bibitem{brier}
+	Glenn W. Brier, 
+  \textit{Verification of Forecasts Expressed in Terms of Probability}
+  Monthly Weather Review, 78:1–3, 1950
+  
+  
 \end{thebibliography}
 
 \newpage
