@@ -239,7 +239,7 @@ Na rysunku \ref{alphabet_history} widoczne są zmiany cen akcji spółki \textit
 
 \begin{figure}[H]
 \centering \includegraphics[scale=0.9]{img/linear_regression/l_r_stock_data}
-\caption{Wykres cen akcji spółki \textit{Alphabet Inc}}
+\caption{Wykres cen akcji spółki \textit{Alphabet Inc} (opracowanie własne)}
 \label{alphabet_history}
 \end{figure}
 
@@ -281,7 +281,7 @@ Na rysunku \ref{l_r_pct_change_last_30} można zaobserwować, iż zmiany w kursi
 %TODO dodać paski -0.4%   +0.4% do wykresu
 \begin{figure}[H]
 \centering \includegraphics[scale=0.9]{img/linear_regression/l_r_pct_change_last_30}
-\caption{Dzeinna zmiana ceny akcji spółki \textit{GOOGL} z 30 dni}
+\caption{Dzeinna zmiana ceny akcji spółki \textit{GOOGL} z 30 dni (opracowanie własne)}
 \label{l_r_pct_change_last_30}
 \end{figure}
 
@@ -345,7 +345,8 @@ $$ TPR = \frac{TP}{TP+FN}\ \ \ \ \ \ \ \ FPR = \frac{FP}{FP+TN} $$
 
 Klasyfikatory w większości przypadków nie zwracają dokładnego wyniku przypisania przykładu do klasy. Zazwyczaj wynikiem klasyfikacji jest liczba rzeczywista z przedziału $[0, 1]$, którą można identyfikować jako prawdopodobieństwo. Można przyjąć że jeżeli klasyfikator zwróci $0$ oznacza to przypisanie do klasy A, zaś $1$ oznacza przypisanie do klasy B. Dla wartości z zakresu $(0, 1)$ przypisuje się pewną wartość progową rozgraniczającą obie klasy. Dla tego progu mniejsze od niego wartości przypisujemy do klasy A, zaś resztę do klasy B. Intuicyjnie jest to zazwyczaj połowa przedziału czyli $0.5$.
 
-Krzywa ROC jest graficzną reprezentacją skuteczności modelu klasyfikacyjnego. Jest ona skonstruowana poprzez wykreślenie stosunku $TPR$ do $FPR$ dla różnych progów rozgraniczających klasy.
+Krzywa ROC jest graficzną reprezentacją skuteczności modelu klasyfikacyjnego. Jest ona skonstruowana poprzez wykreślenie stosunku $TPR$ do $FPR$ dla różnych progów rozgraniczających klasy. Na rysunku \ref{roc} widać przykładowe krzywe ROC dla klasyfikatorów różnej jakości.
+
 
 %source: https://towardsdatascience.com/understanding-auc-roc-curve-68b2303cc9c5
 \begin{figure}[H]%
@@ -358,11 +359,9 @@ Krzywa ROC jest graficzną reprezentacją skuteczności modelu klasyfikacyjnego.
 \qquad
 \subfigure[Krzywa ROC dla modelu idealnego]{%
 \includegraphics[scale=0.55]{img/roc_3.png}}%
-\caption{Przykładowe krzywe ROC}% (źródło: https://towardsdatascience.com/understanding-auc-roc-curve-68b2303cc9c5).}
+\caption{Przykładowe krzywe ROC \cite{roccurves} }% (źródło: https://towardsdatascience.com/understanding-auc-roc-curve-68b2303cc9c5).}
 \label{roc}
 \end{figure}
-Na rysunku \ref{roc} widzimy przykładowe krzywe ROC dla klasyfikatorów różnej jakości.
-
 
 
 Porównanie różnych klasyfikatorów za pomocą krzywej ROC odbywa się poprzez porównanie pola pod krzywymi. Im większe pole pod krzywą ROC dla danego klasyfikatora tym lepsza jest jego jakość. Pole pod krzywą dla modelu idealnego wynosi $1$, zaś dla modelu losowego $0.5$. Warto zauważyć że dla wartości pola poniżej 0.5  korzystnym zabiegiem jest zamiana przedziałów dla klas.
@@ -448,7 +447,7 @@ W zagadnieniu predykcji giełdowych sprowadzonym do klasyfikacji, można posłu�
 
 \section{Wybrane algorytmy do prognozowania}
 
-\subsection{Regresja liniowa}
+\subsection{Regresja za pomocą regresji liniowej}
 
 Jedną z naiwnych metod przewidywania wartości funkcji jest regresja liniowa. Pierwszą próbą dla tego modelu było przewidzenie ceny zamknięcia z kolejnego dnia przy posiadaniu danych z dnia poprzedniego.
 
@@ -464,7 +463,7 @@ Z rysunku \ref{linear_regression_1} wynika iż prognozowane wartości pokrywają
 \subfigure[Wkyres rzeczywistych oraz przewidywanych wartości]{%
 \label{l_r_1_day_full}
 \includegraphics[scale=0.46]{img/linear_regression/l_r_1_day_full}}%
-\caption{Wykres dla spółki \textit{GOOGL}}
+\caption{Wykres dla spółki \textit{GOOGL} (opracowanie własne)}
 \label{linear_regression_1}
 \end{figure}
 
@@ -473,7 +472,7 @@ Na rysunku \ref{l_r_1_day_last_30} widać że prognozowane wartości są w rzecz
 
 \begin{figure}[H]
 \centering \includegraphics[scale=0.9]{img/linear_regression/l_r_1_day_last_30}
-\caption{Wykres dla spólki \textit{GOOGL} z 30 dni}
+\caption{Wykres dla spólki \textit{GOOGL} z 30 dni (opracowanie własne)}
 \label{l_r_1_day_last_30}
 \end{figure}
 
@@ -485,15 +484,30 @@ Wobec powyższych obserwacji należy sprawdzić jakość tego modelu w metodą d
 
 \begin{figure}[H]
 \centering \includegraphics[scale=0.9]{img/linear_regression/l_r_discrete_score}
-\caption{Histogram zmian cen akcji spółki \textit{GOOGL}}
+\caption{Histogram zmian cen akcji spółki \textit{GOOGL} (opracowanie własne)}
 \label{l_r_discrete_score}
 \end{figure}
 
-\subsection{Regresja logistyczna}
+\subsection{SVM \cite{svm}}
 
-\subsection{SVM}
+Maszyny wektorów podpierających (ang. support-vector machines) są zbiorem klasyfikatorów mających na celu wyznaczenie hiperpłaszczyzn rozdzielających klasy z zachowaniem maksymalnego marginesu rozdzielającego (rysunek \ref{wiki_svm}). W podstawowej wersji klasyfikatory SVM potrafią sktuecznie klasyfikować problemy separowalne liniowo.
 
-Maszyny wektorów podpierających (ang. support-vector machines) są zbiorem klasyfikatorów mających na celu wyznaczenie hiperpłaszczyzn rozdzielających z zachowaniem maksymalnego marginesu elementów na klasy.
+
+\begin{figure}[H]
+\centering \includegraphics[scale=0.9]{img/svm.png}
+\caption{Hiperpłaszczyzna rozdzielająca zbiór z maksymalnym marginesem \cite{wikisvm}}
+\label{wiki_svm}
+\end{figure}
+
+W celu używania maszyn wektorów nośnych do klasyfikacji problemów nieliniowych stosuje się przekształcanie przestrzeni zadania za pomocą funkcji jądrowych. Wprowadzają one dodatkowe wymiary do zadania, w których znalezienie hiperpłaszczyzny rozdzielającej klasy może okazać się prostsze (rysunek \ref{wiki_svm2}. Do najpopularniejszych funkcji jądrowych zalicza się funkcje: liniową (zachowującą wymiar zadania w niezmienionym stanie), wielomianową, radialną czy też sigmoidalną.
+
+
+\begin{figure}[H]
+\centering \includegraphics[scale=0.2]{img/svm2.png}
+\caption{Ten sam problem zaprezentowany w dwóch oraz trzech wymiarach \cite{wikisvm}}
+\label{wiki_svm2}
+\end{figure}
+
 
 \subsection{Sieci neuronowe}
 
@@ -594,6 +608,10 @@ Strona główna MongoDB
   Pattern Recognition Letters 27,
   2005.
 
+\bibitem{roccurves}
+	ROC, \url{https://towardsdatascience.com/understanding-auc-roc-curve-68b2303cc9c5} 
+	Data dostępu: 15.02.2019
+
 \bibitem{hmeasure}
 	David J. Hand, 
   \textit{Measuring classifier performance: a coherent alternative to the area under the ROC curve}
@@ -609,6 +627,13 @@ Strona główna MongoDB
   \textit{Verification of Forecasts Expressed in Terms of Probability}
   Monthly Weather Review, 78:1–3, 1950
   
+\bibitem{svm}
+	Bell, Jason, \textit{Machine Learning}  Indianapolis, IN, USA: John Wiley \& Sons, 2015. 139-60. Web.
+	
+\bibitem{wikisvm}
+	SVM, \url{https://en.wikipedia.org/wiki/Support-vector_machine} 
+	Data dostępu: 03.03.2019
+
   
 \end{thebibliography}
 

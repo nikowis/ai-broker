@@ -1,0 +1,51 @@
+Stock prediction using deep learning
+Ritika Singh
+Shashi Srivastava
+https://link-1springer-1com-1000096bl15a5.eczyt.bg.pw.edu.pl/content/pdf/10.1007%2Fs11042-016-4159-7.pdf
+
+Udało im się mieć predykcję trendu binarnego na poziomie 65%.
+Ciekawe spostrzeżenie że mniejszy rozmiar okna z danymi predykcji jest lepsza.
+Używane deep neural net.
+Używane wiele informacji z analizy technicznej. 
+Dodatkowo jakaś specjalna forma PCA (zmiejszanie wymiarowości zadania).
+Predykcja trendu!
+
+==============================================================================================================================
+Forecasting stock indices using radial basis function neural networks optimized by artificial fish swarm algorithm
+Wei Shen a, Xiaopen Guo a, Chao Wu b, Desheng Wu c,d,
+https://ac.els-cdn.com/S095070511000167X/1-s2.0-S095070511000167X-main.pdf?_tid=e9662918-0781-4c57-9728-fb89fa736414&acdnat=1551540143_d6f51a39c49c72b9067c803a639eac3b
+
+Powyższa praca jest o regresji liniowej za pomocą RBFNN + algorytm swarmowy.
+Ciężko rozkminić wyniki.
+Używane informacje z analizy technicznej.
+
+==============================================================================================================================
+A method for automatic stock trading combining technical analysis and nearest neighbor classification
+Lamartine Almeida Teixeira a, Adriano Lorena Inácio de Oliveira b,*
+
+Klasyfikacja dzienna za pomocą KNN. 3 klasy + jest uwzględniona cena transakcji (marża).
+Wyniki były mierzone na podstawie rezultatów finansowych w porównaniu do techniki buy&hold.
+Wykorzystane zostały wskaźniki techniczne oraz podstawowe dane giełdowe.
+Są tu wzory na wskaźniki z analizy technicznej - są też opisane konkretne użycia np SMA10 SMA21.
+Ciekawe połączenie klasyfikacji z metodami brokerów na ograniczanie ryzyka (stop gain/stop loss/RSI filter) i porównanie zysków z buy&hold dla różnych spółek.
+Porównanie że niska jakość klasyfikatora (40%) daje jednak zadowalające zyski!
+
+==============================================================================================================================
+Neural network revisited: perception on modified Poincare map of financial time-series data
+Hokky Situngkira,, Yohanes Surya
+
+nic ciekawego.
+
+==============================================================================================================================
+A Stock Market Forecasting Model Combining Two-Directional Two-Dimensional Principal Component Analysis and Radial Basis Function Neural Network
+Zhiqiang Guo1*, Huaiqing Wang2, Jie Yang1, David J. Miller
+
+######################################################################################################################################################
+Inne uwagi i przemyślenia
+
+W mojej pracy należy uwzględnić 
+	- zyski przy użyciu klasyfikatorów przy połączeniu z metodami brokerów (A method for automatic stock trading combining technical analysis and nearest neighbor classification)
+	- należy porównać powyższe zyski z tezą iż predykcja wzrostu jest bardziej ryzykowna niż predykcja spadku. (czy to rzeczywiście ogranicza ryzyko?)
+	- porównanie zysków z precyzją klasyfikatora 
+	- musze ogarnąć testowanie modeli w przypadku z prawdziwego życia czyli [t1|t2|t3] - uczymy na t1 potem testujemy t2 potem uczymy t2 potem testujemy t3.
+	- użyć metod zmniejszających wymiarowość zadania
