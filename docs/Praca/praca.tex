@@ -496,7 +496,7 @@ Maszyny wektorów podpierających (ang. support-vector machines) są zbiorem kla
 \begin{figure}[H]
 \centering \includegraphics[scale=0.9]{img/svm.png}
 \caption{Hiperpłaszczyzna rozdzielająca zbiór z maksymalnym marginesem \cite{wikisvm}}
-\label{wiki_svm}
+\label{mlpnn}
 \end{figure}
 
 W celu używania maszyn wektorów nośnych do klasyfikacji problemów nieliniowych stosuje się przekształcanie przestrzeni zadania za pomocą funkcji jądrowych. Wprowadzają one dodatkowe wymiary do zadania, w których znalezienie hiperpłaszczyzny rozdzielającej klasy może okazać się prostsze (rysunek \ref{wiki_svm2}. Do najpopularniejszych funkcji jądrowych zalicza się funkcje: liniową (zachowującą wymiar zadania w niezmienionym stanie), wielomianową, radialną czy też sigmoidalną.
@@ -509,15 +509,56 @@ W celu używania maszyn wektorów nośnych do klasyfikacji problemów nieliniowy
 \end{figure}
 
 
-\subsection{Sieci neuronowe}
+\subsection{Sieci neuronowe \cite{neural-nets}}
 
-Sieci neuronowe są zbiorem modeli matematycznych służących do realizacji obliczeń, bądź przetwarzania sygnałów. Inspirowane działaniem mózgu, swoją nazwę czerpią z upodobnienia struktury do naturalnych neuronów oraz łączących je synaps. Głównymi zastosowaniami sieci neuronowych są zadania regresji, klasyfikacji oraz generowania danych.
+Sieci neuronowe są zbiorem modeli matematycznych służących do realizacji obliczeń, bądź przetwarzania sygnałów. Inspirowane działaniem mózgu, swoją nazwę czerpią z upodobnienia struktury do naturalnych neuronów oraz łączących je synaps. Głównymi zastosowaniami sieci neuronowych są zadania regresji, klasyfikacji oraz generowania danych. 
 
-\subsubsection{Sieci typu MLP}
+\bigskip
 
-Jednym z najprostszych przykładów sieci neuronowych jest perceptron wielowarstwowy (MPL). Taka sieć składa się z warstwy wejściowej, z dowolnej ilości warstw ukrytych oraz z warstwy wyjściowej. Na wejściu przyjmuje ona dane wejściowe, przetwarza dane i zwracają dane wyjściowe. Najprostszą implementacja sieci do predykcji danych giełdowych jest sieć przyjmująca na wejściu wektor informacji o akcjach spółki z jednego dnia, zwracająca na wyjściu przewidywaną wartość ceny akcji następnego dnia. Perceptron wielowarstwowy można również zaprojektować tak, aby na wyjściu zwracał wynik klasyfikacji, czyli procentowy wynik przypisania danych wejściowych do każdej z możliwych klas. W tej pracy badane były sieci neuronowe klasyfikujące dane wejściowe według trzech klas: spadek wartości poniżej pewnego progu, utrzymanie wartości w ramach tego progu oraz wzrost wartości powyżej tego progu. 
+Podstawowym elementem sieci neuronowej jest neuron, który na wejściu przyjmuje dane wejściowe, przetwarza i zwraca pojedynczy sygnał wyjściowy. Przetwarzanie sygnału przez neuron z polega zazwyczaj na zsumowaniu sygnałów dochodzących do niego, a następnie obliczenie wartości funkcji aktywacji. Uzyskana wartość z funkcji aktywacji jest przekazywana jako wyjście z neuronu (rysunek \ref{neural-net}). Funkcje aktywacji mogą wprowadzić element nieliniowy do modelu dzięki czemu sieci neuronowe mogą posłużyć do klasyfikacji zbiorów, które nie są separowalne liniowo. Dodatkowo połączenia między neuronami posiadają przypisaną wagę mającą bezpośredni wpływ na wartość sygnału przechodzącego między nimi.
+
+\bigskip
+
+Wiodącym schematem uczenia sieci neuronowych jest korzystanie z przykładów, z których każdy ma etykietę czyli oczekiwaną wartość wyjściową. Każdy z przykładów jest przetwarzany przez sieć neuronową, następnie przez zestawienie wartości wyjściowej sieci z etykietą (odpowiednią funkcją straty) można wyliczyć błąd sieci dla danego przykładu. Ostatnim krokiem jest poprawa wag w sieci neuronowej według wybranej metody propagacji wstecznej. Problem optymalizacji sieci neuronowej sprowadzany jest do problemu optymalizacji funkcji poprzez modyfikację wag na połączeniach między neuronami. Metoda ta zaliczana jest do nauczania z nauczycielem (ang. supervised learning). Najczęściej stosowanymi metodami optymalizacji są algorytmy spadku gradientowego. 
+
+\bigskip
+
+Przy wykorzystywaniu sieci neuronowych głównym problemem, z którym zmagają się naukowcy jest odpowiedni dobór parametrów i algorytmów. Spośród elementów wymagających odpowiedniego dobrania wymienić można następujące:
+\begin{itemize}
+\item liczba warstw sieci,
+\item liczba neuronów w każdej z warstw ukrytych,
+\item wykorzystane funkcje aktywacji,
+\item algorytm optymalizacyjny,
+\item funkcja straty.
+\end{itemize}
+
+
+\subsubsection{Sieci typu MLP \cite{mlp}}
+
+Jednym z najprostszych przykładów sieci neuronowych jest perceptron wielowarstwowy (ang. multilayer perceptron). Taka sieć składa się z warstwy wejściowej, z dowolnej ilości warstw ukrytych oraz z warstwy wyjściowej. W tym rodzaju sieci neuronowych, sygnał wyjściowy dowolnego neuronu jest traktowany jako sygnał wejściowy każdego z neuronów z kolejnej warstwy (rysunek \ref{neural-net}). 
+
+\bigskip
+
+\begin{figure}[H]
+\centering \includegraphics[scale=0.7]{img/nn.png}
+\caption{Schemat sieci neuronowej typu MLP \cite{mlpnn}}
+\label{neural-net}
+\end{figure}
+
+Najprostszą implementacja sieci do predykcji danych giełdowych jest sieć przyjmująca na wejściu wektor informacji o akcjach spółki z jednego dnia, zwracająca na wyjściu przewidywaną wartość ceny akcji następnego dnia. Perceptron wielowarstwowy można również zaprojektować tak, aby na wyjściu zwracał wynik klasyfikacji, czyli procentowy wynik przypisania danych wejściowych do każdej z możliwych klas. W tej pracy badane były sieci neuronowe klasyfikujące dane wejściowe według trzech klas: spadek wartości poniżej pewnego progu, utrzymanie wartości w ramach tego progu oraz wzrost wartości powyżej tego progu. 
+
 
 \subsubsection{Sieci rekurencyjne}
+
+W przeciwieństwie do sieci MLP, sieci rekurencyjne posiadają sprzężenia zwrotne sygnału wychodzącego z neuronów. Dzięki wtórnemu sygnałowi sieci te posiadają pewną pamięć przepływających sygnałów. Wpływem sygnału wtórnego na końcowy wynik można sterować za pomocą wag na połączeniach między neuronami.
+
+\subsubsection{Sieć typu LSTM \cite{lstm}}
+
+\begin{figure}[H]
+\centering \includegraphics[scale=0.22]{img/lstm.png}
+\caption{Schemat sieci neuronowej typu LSTM \cite{lstm-scheme}}
+\label{neural-net}
+\end{figure}
 
 \subsection{GASEN}
 
@@ -628,13 +669,35 @@ Strona główna MongoDB
   Monthly Weather Review, 78:1–3, 1950
   
 \bibitem{svm}
-	Bell, Jason, \textit{Machine Learning}  Indianapolis, IN, USA: John Wiley \& Sons, 2015. 139-60. Web.
+	Bell, Jason, \textit{Machine Learning : Hands-On for Developers and Technical Professionals}  Indianapolis, IN, USA: John Wiley \& Sons, 2015. 139-160. Web.
 	
 \bibitem{wikisvm}
 	SVM, \url{https://en.wikipedia.org/wiki/Support-vector_machine} 
 	Data dostępu: 03.03.2019
 
-  
+\bibitem{neural-nets}
+	Bell, Jason, \textit{Machine Learning : Hands-On for Developers and Technical Professionals}  Indianapolis, IN, USA: John Wiley \& Sons, 2015. 91-116. Web.
+
+
+\bibitem{mlp}
+	Angel Kuri-Morales, 
+  \textit{Closed determination of the number of neurons in the hidden layer of a multi-layered perceptron network}
+  Soft Computing, 21:597–609, 2017
+
+\bibitem{mlpnn}
+	Artificial neural network, \url{http://www.saedsayad.com/artificial_neural_network_bkp.htm} 
+	Data dostępu: 04.03.2019
+
+\bibitem{lstm}
+	Fischer, and Krauss, 
+  \textit{Deep Learning with Long Short-term Memory Networks for Financial Market Predictions.}
+  European Journal of Operational Research 270.2 (2018): 654-69. Web.
+
+\bibitem{lstm-scheme}
+	Recurrent neural network, \url{https://en.wikipedia.org/wiki/Recurrent_neural_network} 
+	Data dostępu: 04.03.2019
+
+
 \end{thebibliography}
 
 \newpage
