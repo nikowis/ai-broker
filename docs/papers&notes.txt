@@ -37,6 +37,14 @@ Hokky Situngkira,, Yohanes Surya
 nic ciekawego.
 
 ==============================================================================================================================
+Lagged correlation-based deep learning for directional trend change prediction in financial time series
+Ben Moewsa,∗, J. Michael Herrmannb, Gbenga Ibikunlec November 2018
+
+Praca która za pomocą głębokiem sieci neuronowej (10 wartw po 400 neuronów) przewiduje trend (wzrost/spadek) na poziomie >58%, a w przypadku użycia specyficznej metody nauczania modelu 60% (uczenie dzień po dniu jakby to mogło mieć miejsce w prawdziwym zastosowaniu).
+Do tego wykorzystane są trendy z poprzednich dni jako dane wejściowe.
+
+
+==============================================================================================================================
 A Stock Market Forecasting Model Combining Two-Directional Two-Dimensional Principal Component Analysis and Radial Basis Function Neural Network
 Zhiqiang Guo1*, Huaiqing Wang2, Jie Yang1, David J. Miller
 
@@ -49,3 +57,5 @@ W mojej pracy należy uwzględnić
 	- porównanie zysków z precyzją klasyfikatora 
 	- musze ogarnąć testowanie modeli w przypadku z prawdziwego życia czyli [t1|t2|t3] - uczymy na t1 potem testujemy t2 potem uczymy t2 potem testujemy t3.
 	- użyć metod zmniejszających wymiarowość zadania
+	
+

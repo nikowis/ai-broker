@@ -550,15 +550,23 @@ Najprostszą implementacja sieci do predykcji danych giełdowych jest sieć przy
 
 \subsubsection{Sieci rekurencyjne}
 
-W przeciwieństwie do sieci MLP, sieci rekurencyjne posiadają sprzężenia zwrotne sygnału wychodzącego z neuronów. Dzięki wtórnemu sygnałowi sieci te posiadają pewną pamięć przepływających sygnałów. Wpływem sygnału wtórnego na końcowy wynik można sterować za pomocą wag na połączeniach między neuronami.
+W przeciwieństwie do sieci MLP, sieci rekurencyjne posiadają sprzężenia zwrotne sygnału wychodzącego z neuronów. Dzięki wtórnemu sygnałowi sieci te posiadają pewną pamięć przepływających sygnałów. Wpływem sygnału wtórnego na końcowy wynik można sterować za pomocą wag na połączeniach między odpowiednimi neuronami.
 
 \subsubsection{Sieć typu LSTM \cite{lstm}}
+
+Sieci LSTM (ang. Long Short Term Memory) są specjalnym rodzajem sieci rekurencyjnych, będących w stanie zapamiętywać długoterminowe zależności. Jak widać na rysunku \ref{lstm-net} sieć typu LSTM jest postaci łańcucha komórek. Każda komórka jest odpowiedzialna za zestawienie i przetworzenie sygnału wejściowego $x_t$ z sygnałem wychodzącym z poprzedniego modułu.
 
 \begin{figure}[H]
 \centering \includegraphics[scale=0.22]{img/lstm.png}
 \caption{Schemat sieci neuronowej typu LSTM \cite{lstm-scheme}}
-\label{neural-net}
+\label{lstm-net}
 \end{figure}
+
+Głównym elementem każdej komórki jest sygnał $c_{t-1}$ zmieniający się w $c_{t}$, który jest jej stanem. Pierwszym krokiem przy zmianie stanu komórki jest $F_t$ z funkcją sigmoidalną,tak zwana forget gate layer.  Odpowiada ona za zdecydowanie, jaka część sygnału zostanie odrzucona. Kolejnym elementem jest $i_t$, \textit{input gate layer}, która decyduje o tym jakie dane wejściowe zostaną użyte do zmiany stanu komórki. Ostatecznie warstwa $O_t$, \textit{output layer}, decyduje o tym jaka część sygnału powinna przejść do następnej komórki.
+
+\bigskip
+
+W ostatnich latach sieci tego rodzaju znajdują szerokie zastosowanie w takich dziedzinach jak rozpoznawanie mowy, tłumaczenia czy też opisywanie obrazów. Sieci LSTM mogą również być użyteczne w pracy z szeregami czasowymi, gdzie możliwe są zależności danych w czasie, tak jak na przykład na giełdzie. 
 
 \subsection{GASEN}
 
