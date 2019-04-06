@@ -377,37 +377,37 @@ Częściowy indeks Gini jest innym sposobem na analizę jakości modelu predykcy
 
 Metryka F1 jest średnią harmoniczną metryk czułości i precyzji (wyrażona wzorem $F1=2*\frac{precyzja*czulosc}{precyzja+czulosc}$). Metryka ta jest dobrym narzędziem pozwalającym określić za pomocą jednej wartości jakość modelu, biorąc pod uwagę precyzję jak i czułość modelu. Osiąga ona w najlepszym przypadku wartość 1, zaś w najgorszym wartość 0. 
 
-\subsubsection{Miara H \cite{hmeasure}}
+%\subsubsection{Miara H \cite{hmeasure}}
 
 %TODO dodać wykres z krzyżującymi się krzywymi ROC dla różnych modeli
 
-Miary oparte o krzywą ROC mimo wielu zalet mają również wady \cite{roccritique}. Gdy pole pod krzywą pierwszego klasyfikatora jest mniejsze od pola pod krzywą drugiego klasyfikatora, można wywnioskować iż drugi klasyfikator jest lepszy. Bywa jednak że krzywe ROC dla tych dwóch modeli się krzyżują, a pierwszy model pomimo mniejszego pola powierzchni pod krzywą, ma lepsze właściwości dla znacznej większości progów używanych do rozdzielenia klas. Należy również wziąć pod uwagę iż analizy porównawczej modeli klasyfikujących często dokonuje się dla małych, stopniowych optymalizacji parametrów. Powoduje to zazwyczaj małe różnice w nakreślonych krzywych ROC, które mogą się krzyżować. W związku z powyższym miary oparte o tą krzywą nie dają dobrego porównania modeli w takim scenariuszu.
+%Miary oparte o krzywą ROC mimo wielu zalet mają również wady \cite{roccritique}. Gdy pole pod krzywą pierwszego klasyfikatora jest mniejsze od pola pod krzywą drugiego klasyfikatora, można wywnioskować iż drugi klasyfikator jest lepszy. Bywa jednak że krzywe ROC dla tych dwóch modeli się krzyżują, a pierwszy model pomimo mniejszego pola powierzchni pod krzywą, ma lepsze właściwości dla znacznej większości progów używanych do rozdzielenia klas. Należy również wziąć pod uwagę iż analizy porównawczej modeli klasyfikujących często dokonuje się dla małych, stopniowych optymalizacji parametrów. Powoduje to zazwyczaj małe różnice w nakreślonych krzywych ROC, które mogą się krzyżować. W związku z powyższym miary oparte o tą krzywą nie dają dobrego porównania modeli w takim scenariuszu.
  
-\bigskip
+%\bigskip
 
-Przy ocenie modeli warto również wziąć pod uwagę czy błąd predykcji z grupy \textit{FP} jest równoważna wynikowi z \textit{FN}. Niech dany będzie problem klasyfikacji binarnej kursu giełdy z klasami \textit{wzrost (positive)} oraz \textit{spadek (negative)}. W przypadku gdy wynik zaklasyfikowany zostanie do grupy \textit{FP}, wówczas makler giełdowy korzystający z tego klasyfikatora zainwestuje pieniądze pomimo spadającego kursu. Oznacza to najgorszą możliwą decyzję narażającą użytkownika modelu na straty. W drugim przypadku gdy wynik zostanie przypisany do grupy \textit{FN}, makler zostanie fałszywie ostrzeżony przed spadkiem kursu. Wówczas sprzedaż akcji może jedynie ograniczyć jego zyski, zakładając że wcześniej zainwestował poprawnie (przed wzrostem cen akcji). Z powyższego można wywnioskować, iż ocena powinna być surowsza dla klasyfikacji przykładów w grupie \textit{FP}.
+%Przy ocenie modeli warto również wziąć pod uwagę czy błąd predykcji z grupy \textit{FP} jest równoważna wynikowi z \textit{FN}. Niech dany będzie problem klasyfikacji binarnej kursu giełdy z klasami \textit{wzrost (positive)} oraz \textit{spadek (negative)}. W przypadku gdy wynik zaklasyfikowany zostanie do grupy \textit{FP}, wówczas makler giełdowy korzystający z tego klasyfikatora zainwestuje pieniądze pomimo spadającego kursu. Oznacza to najgorszą możliwą decyzję narażającą użytkownika modelu na straty. W drugim przypadku gdy wynik zostanie przypisany do grupy \textit{FN}, makler zostanie fałszywie ostrzeżony przed spadkiem kursu. Wówczas sprzedaż akcji może jedynie ograniczyć jego zyski, zakładając że wcześniej zainwestował poprawnie (przed wzrostem cen akcji). Z powyższego można wywnioskować, iż ocena powinna być surowsza dla klasyfikacji przykładów w grupie \textit{FP}.
  
-\bigskip
+%\bigskip
 %https://cran.r-project.org/web/packages/hmeasure/vignettes/hmeasure.pdf rozdział 2.6 
 
-\textit{Miara H} jest miarą oceny modeli klasyfikujących zaproponowaną przez D.J.Hand, która została opracowana jako alternatywa dla miar opartych o krzywą ROC. Metodyka ta daje możliwość wzięcia pod uwagę wiedzy eksperckiej na temat kosztu przypisania wyniku do złej klasy (\textit{FP} lub \textit{FN}). Niech $c \in [0,1]$ będzie kosztem przypisania elementu do grupy FP, zaś $1-c$ kosztem przypisania elementu do grupy FN. Niech $t$ będzie progiem rozdzielającym klasy. Całkowity koszt klasyfikacji to:
+%\textit{Miara H} jest miarą oceny modeli klasyfikujących zaproponowaną przez D.J.Hand, która została opracowana jako alternatywa dla miar opartych o krzywą ROC. Metodyka ta daje możliwość wzięcia pod uwagę wiedzy eksperckiej na temat kosztu przypisania wyniku do złej klasy (\textit{FP} lub \textit{FN}). Niech $c \in [0,1]$ będzie kosztem przypisania elementu do grupy FP, zaś $1-c$ kosztem przypisania elementu do grupy FN. Niech $t$ będzie progiem rozdzielającym klasy. Całkowity koszt klasyfikacji to:
 
-$$ \pi_{0}=\frac{TP+FN}{n} \ \ \ \ \ \ \ \ \  \pi_{1}=\frac{TN+FP}{n} $$
-$$ L(c,t) = 2(c\pi_{0}FPR(t)+(1-c)\pi_{1}(1-TPR(t))$$
+%$$ \pi_{0}=\frac{TP+FN}{n} \ \ \ \ \ \ \ \ \  \pi_{1}=\frac{TN+FP}{n} $$
+%$$ L(c,t) = 2(c\pi_{0}FPR(t)+(1-c)\pi_{1}(1-TPR(t))$$
 
 
 
-Warto zauważyć że $L(\frac{1}{2}, t)$ odpowiada mierzeniu procentu prawidłowych klasyfikacji.
+%Warto zauważyć że $L(\frac{1}{2}, t)$ odpowiada mierzeniu procentu prawidłowych klasyfikacji.
 
-Wartość funkcji $L(c,t)$ należy minimalizować w celu uzyskania jak najlepszej klasyfikacji. Wobec czego można zdefiniować $MLW(c)=L(c,T_c)$ gdzie $T_c$ jest  takim progiem klasyfikacji dla danego $c$, który minimalizuje $L(c,t)$ ($T_c = argmin_tL(c,t)$). Funkcja $MLW(c)$ oceniająca konkretny model klasyfikujący jest zależna od tylko jednej zmiennej. W praktyce jednak ciężko jest oczekiwać od użytkownika tej miary, doboru optymalnej wartości zmiennej $c$. Wobec tego zaproponowane zostało używanie rozkładu $w(c)$ zamiast konretnej zmiennej $c$. 
+%Wartość funkcji $L(c,t)$ należy minimalizować w celu uzyskania jak najlepszej klasyfikacji. Wobec czego można zdefiniować $MLW(c)=L(c,T_c)$ gdzie $T_c$ jest  takim progiem klasyfikacji dla danego $c$, który minimalizuje $L(c,t)$ ($T_c = argmin_tL(c,t)$). Funkcja $MLW(c)$ oceniająca konkretny model klasyfikujący jest zależna od tylko jednej zmiennej. W praktyce jednak ciężko jest oczekiwać od użytkownika tej miary, doboru optymalnej wartości zmiennej $c$. Wobec tego zaproponowane zostało używanie rozkładu $w(c)$ zamiast konretnej zmiennej $c$. 
 
-$$ L_w=\int_{c}L(c, T_c)w(c)dc $$
+%$$ L_w=\int_{c}L(c, T_c)w(c)dc $$
 
-Miarę H zdefiniowana jest wzorem:
+%Miarę H zdefiniowana jest wzorem:
 
-$$ H = 1-\frac{L_w}{L_w^{max}} $$
+%$$ H = 1-\frac{L_w}{L_w^{max}} $$
 
-gdzie $L_w^{max}$ jest maksymalną wartością funkcji $L_w$, służącą do znormalizowania wyniku. Im większa wartość $H$ tym lepsza ocena klasyfikatora.
+%gdzie $L_w^{max}$ jest maksymalną wartością funkcji $L_w$, służącą do znormalizowania wyniku. Im większa wartość $H$ tym lepsza ocena klasyfikatora.
 %https://link.springer.com/content/pdf/10.1007%2Fs10994-009-5119-5.pdf L_w^{max} zdefiniowane na stronie 116
 
 \subsubsection{Współczynnik Briera \cite{brier}}
@@ -441,7 +441,8 @@ Porównanie modeli klasyfikujących jest zadaniem trywialnym tylko dla specyficz
 
 \bigskip
 
-W zagadnieniu predykcji giełdowych sprowadzonym do klasyfikacji, można posłużyć się procentem prawidłowych klasyfikacji jako podstawową miarą porównawczą. Wynika to z faktu, iż dla większości spółek liczność klas się równoważy. Przy bardziej zaawansowanych badaniach należy uwzględnić przede wszystkim \textit{miarę H}, która bierze pod uwagę większy błąd fałszywego przypisywania predykcji do grupy wzrostów cen.
+W zagadnieniu predykcji giełdowych sprowadzonym do klasyfikacji, można posłużyć się procentem prawidłowych klasyfikacji jako podstawową miarą porównawczą. Wynika to z faktu, iż dla większości spółek liczność klas się równoważy. Dla dokładniejszego porównania modeli warto jednak zastosować również inne metryki, które dadzą więcej wglądu w otrzymywane wyniki.
+% Przy bardziej zaawansowanych badaniach należy uwzględnić przede wszystkim \textit{miarę H}, która bierze pod uwagę większy błąd fałszywego przypisywania predykcji do grupy wzrostów cen.
 
 \newpage
 
@@ -566,17 +567,53 @@ Głównym elementem każdej komórki jest sygnał $c_{t-1}$ zmieniający się w 
 
 \bigskip
 
-W ostatnich latach sieci tego rodzaju znajdują szerokie zastosowanie w takich dziedzinach jak rozpoznawanie mowy, tłumaczenia czy też opisywanie obrazów. Sieci LSTM mogą również być użyteczne w pracy z szeregami czasowymi, gdzie możliwe są zależności danych w czasie, tak jak na przykład na giełdzie. 
+W ostatnich latach sieci tego rodzaju znajdują szerokie zastosowanie w takich dziedzinach jak rozpoznawanie mowy, tłumaczenia czy też opisywanie obrazów. Sieci LSTM mogą również być użyteczne w pracy z szeregami czasowymi, gdzie możliwe są zależności danych w czasie, tak jak na przykład na 
+giełdzie. 
 
-\subsection{GASEN}
+\subsection{Metody zespołowe}
 
-\subsection{Sieć Bayesa}
+Metody zespołowe (ang. ensemble methods) polegają na tworzeniu wielu klasyfikatorów o małej złożoności, które w odosobnieniu nie dają zadowalających wyników (często są niewiele lepsze od klasyfikatora losowego), a następnie łączenie ich w komitety. Wyniki komitetów mogą być interpretowane na wiele sposobów np. poprzez głosowanie gdzie każdy członek komitetu oddaje swój głos na konkretny wynik klasyfikacji. Okazuje się że w praktyce stosowanie tej metody często daje bardzo konkurencyjne wyniki w stosunku do stosowania pojedynczych złożonych modeli klasyfikacyjnych bądź regresyjnych.
 
-\subsection{Średnia ważona zespołu klasyfikatorów}
+\subsection{Random forest \cite{randforest}}
 
-\subsection{Wykorzystanie wykrywania sentymentu do poprawienia predykcji}
+Las losowy (ang. \textit{random forest}) jest modelem opartym o drzewa decyzyjne służącym do klasyfikacji lub regresji. Drzewa decyzyjne są graficzną metodą wspomagania procesu decyzyjnego. W przypadku zagadnień uczenia maszynowego drzewa decyzyje najprościej zobrazować na przykładzie problemu klasyfikacji binarnej. Na rysnku \ref{wiki_dec_tree} przedstawione jest drzewo decyzyjne dla problemu predykcji losu pasażerów statku Titanic. Drzewo to oparte jest o trzy cechy: płeć, wiek oraz liczbę rodzeństwa oraz współmałżonków (\textit{sibsp}). 
+
+\begin{figure}[H]
+\centering \includegraphics[scale=0.6]{img/decision_tree.png}
+\caption{Drzewo decyzyjne dla problemu klasyfikacji losu pasażerów statku Titanic \cite{wikidecisiontree}}
+\label{wiki_dec_tree}
+\end{figure}
+
+Dla złożonych zagadnień predykcji takich jak przewidywanie trendu giełdy, drzewa decyzyjne okazują się zbyt prostym modelem. Las losowy jest rozwinięciem koncepcji drzew decyzyjnych w zakresie metod zespołowych. Głównym założeniem jest stworzenie wielu drzew decyzyjnych i opieranie końcowego wyniku na podstawie poszczególnych wyników każdego z drzew. W celu wprowadzenia różnorodności podczas konstrukcji węzłów drzew, losowane są cechy spośród których będą dobrane cechy decyzyjne w danym węźle. Metoda ta zazwyczaj daje dużo lepsze efekty niż pojedyncze drzewa decyzyjne, oraz często pomaga w ograniczaniu zjawiska przeuczania (ang. overfitting).  
+
+\subsubsection{Light GBM \cite{lgbm}}
+
+\textit{Light GBM} jest algorytmem z rodziny \textit{gradient boosting decision trees}. Algorytmy te oparte są o zespół drzew decyzyjnych. W przeciwieństwie do metody \textit{lasu losowego} konstrukcja kolejnych drzew jest wykonywana w sposób sekwencyjny, oraz zależny od wyników poprzednich drzew. Dzięki takiemu zabiegowi, zespół drzew dąży do ulepszenia swoich wyników jako całości. Algorytm \textit{light GBM} przewyższa inne algorytmy ze swojej klasy takie jak \textit{XGBoost} dzięki innemu podejściu do tworzenia drzew. Podczas gdy większość algorytmów powiększa drzewa decyzyjne wgłąb (\textit{level-wise}  rysunek \ref{level-wise}), \textit{light GBM} powiększa drzewa decyzyjne ze względu na liście (\textit{leaf-wise} rysunek \ref{leaf-wise}). Ten zabieg wraz z innymi optymalizacjami sprawia, że algorytm ten osiąga porównywalne wyniki do innych algorytmów ze swojej klasy, przy dużym skrócenia czasu uczenia się. 
+
+
+\begin{figure}[H]%
+\centering
+\subfigure[Konstrukcja drzewa algorytmu \textit{light GBM}]{%
+\label{level-wise}
+\includegraphics[scale=0.46]{img/lgbm-level-wise.png}}%
+\qquad
+\subfigure[Konstrukcja drzewa algorytmu \textit{light GBM}]{%
+\label{leaf-wise}
+\includegraphics[scale=0.46]{img/lgbm-leaf-wise.png}}%
+\caption{Porównanie konstrukcji drzew algorytmów z rodziny \textit{gradient boosting decision trees}}
+\label{level-leaf-wise}
+\end{figure}
+
+
+
+
+
+
+%TODO \subsection{Wykorzystanie wykrywania sentymentu do poprawienia predykcji}
 
 \subsection{Wnioski i uwagi}
+
+Predykcja kursu cen na giełdzie jest zagadnieniem zaawansowanym pod względem trudności i złożoności danych. Z tego powodu w tej pracy zastosowane zostały różnorodne modele klasyfikacyjne zgodne z najnowszymi trendami w dziedzinie uczenia maszynowego. Użycie zarówno tradycyjnych modeli sieci neuronowych jak i nowoczesnych technik takich jak algorytm \textit{Light GBM} pozwoliło na obszerne badanie w zakresie poszukiwania najlepszego klasyfikatora.
 
 \newpage
 
@@ -704,6 +741,23 @@ Strona główna MongoDB
 \bibitem{lstm-scheme}
 	Recurrent neural network, \url{https://en.wikipedia.org/wiki/Recurrent_neural_network} 
 	Data dostępu: 04.03.2019
+
+\bibitem{randforest}
+	Breiman, L, 
+  \textit{Random forests}
+	MACHINE LEARNING  Volume: 45   Issue: 1   Pages: 5-32   Published: OCT 2001
+
+
+\bibitem{wikidecisiontree}
+	Decision tree learning, \url{https://www.wikiwand.com/en/Decision_tree_learning} 
+	Data dostępu: 06.04.2019
+
+
+\bibitem{lgbm}
+Guolin Ke, Qi Meng, Thomas Finley, Taifeng Wang,Wei Chen, Weidong Ma, Qiwei Ye, Tie-Yan Liu
+  \textit{LightGBM: A Highly Efficient Gradient Boosting Decision Tree}
+	MACHINE LEARNING  Volume: 45   Issue: 1   Pages: 5-32   Published: OCT 2001
+
 
 
 \end{thebibliography}
