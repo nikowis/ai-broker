@@ -31,22 +31,68 @@ Ciekawe połączenie klasyfikacji z metodami brokerów na ograniczanie ryzyka (s
 Porównanie że niska jakość klasyfikatora (40%) daje jednak zadowalające zyski!
 
 ==============================================================================================================================
-Neural network revisited: perception on modified Poincare map of financial time-series data
-Hokky Situngkira,, Yohanes Surya
-
-nic ciekawego.
-
-==============================================================================================================================
 Lagged correlation-based deep learning for directional trend change prediction in financial time series
 Ben Moewsa,∗, J. Michael Herrmannb, Gbenga Ibikunlec November 2018
 
 Praca która za pomocą głębokiem sieci neuronowej (10 wartw po 400 neuronów) przewiduje trend (wzrost/spadek) na poziomie >58%, a w przypadku użycia specyficznej metody nauczania modelu 60% (uczenie dzień po dniu jakby to mogło mieć miejsce w prawdziwym zastosowaniu).
 Do tego wykorzystane są trendy z poprzednich dni jako dane wejściowe.
 
+==============================================================================================================================
+Forecasting stock market movement direction with support vector machine
+
+Wei Huanga, Yoshiteru Nakamoria, Shou-Yang Wangb;∗;
+
+Zastosowali SVM.
+Predykcja trendu japońskiego (na tydzień do przodu?) NIKKEI 225 na podstawie indeksu S&P500+ceny dolara we yenach.
+Ważne - zastosowali `detrending` danych (tzn np. wyeliminowali niestacjonarności).
+Wynik 73% prawidłowych predykcji.
+
+==============================================================================================================================
+
+Financial time series forecasting using support vector machines
+Kyoung-jae Kim
+
+Predykcja trendu koreańskiego indeksu KOSPI za pomocą wskaźników technicznych + SVM. Predykcja dzienna.
+Dane wejściowe to 12 wskaźników, klasyfikacja binarna, 3k danych, normalizacja [-1,1].
+Dane statystyczne dotyczące wskaźników technicznych -(df.describe()).
+Wynik to maksymalnie 57.8313%. Dla klasycznej sieci neuronowej max 54%
+
+==============================================================================================================================
+Predicting the Direction of Stock Market Index Movement Using an Optimized Artificial Neural Network Model
+Mingyue Qiu, Yu Song
+
+Trend indeksu japońskiej giełdy NIKKEI 225.
+Powoływanie się na to że NN zbiegają do minimów lokalnych a dane giełdowe są dla nich zbyt skomplikowane.
+Używanie algorytmu genetycznego do doboru parametrów NN.
+Używane są dwie grupy wskaźników technicznych. Obie grupy są osobnymi inputami do modeli.
+Wynik 81% prawidłowych predykcji za pomocą drugiej grupy wskaźników.
+
+==============================================================================================================================
+Predicting stock and stock price index movement using Trend Deterministic Data Preparation and machine learning techniques
+Jigar Patel, Sahil Shah, Priyank Thakkar, K Kotecha
+
+**** PRZYDATNE *****
+Predykcja trendu zarówno dla konkretnych spółek jak i indeksów (Indyjskie).
+Dobry opis wskaźników technicznych.
+Użycie z opisem NN / SVM / Random forest / Naive-Bayes classifier.
+Opis najlepszych parametrów dla każdego z modeli!
+Dodatkowo eksperymenty z przekształceniem danych ciagłych w preprocessingu w dane dyskretne.
+Osiągane są wyniki rzędu 80/90% - czyżby ze względu na małą ilość danych?
 
 ==============================================================================================================================
 A Stock Market Forecasting Model Combining Two-Directional Two-Dimensional Principal Component Analysis and Radial Basis Function Neural Network
 Zhiqiang Guo1*, Huaiqing Wang2, Jie Yang1, David J. Miller
+
+**** PRZYDATNE *****
+Shanghai stock market index
+
+Predykcja trendu na kolejny dzień za pomocą RBF-NN oraz zmniejszanie rozmiaru danych wejściowych
+za pomocą (2D)^2 PCA. Użyte 36 danych weścjiowych oraz okno rozmiaru do 20. 
+Predykcja 3klasowa - jest klasa gdy cena z t jest równa cenie z (t+1).
+Tzn wejście to macierz 36x20.  Dobrze opisane dane analizy technicznej.
+RBFNN nie ma problemu minimów lokalnych, szybko się uczy, jest stabilna oraz lepiej aproksymuje.
+Wyniki aż > 70% accuraccy ale koniecznie użycie 2DPCA + RBFNN dla wektora wejściowego rozmiaru 121.
+
 
 ######################################################################################################################################################
 Inne uwagi i przemyślenia
