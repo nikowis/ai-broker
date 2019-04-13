@@ -94,6 +94,18 @@ SYMBOLS = ['AAME', 'AAON', 'AAPL', 'AAWW', 'AAXJ', 'ABCB', 'ABIO', 'ABMD', 'ACAD
            'VIRC', 'VOD', 'VOXX', 'VRML', 'VVUS', 'WASH', 'WDC', 'WDFC', 'WEN', 'WERN', 'WETF', 'WEYS', 'WIRE', 'WLDN',
            'WLFC', 'WRLD', 'WSBC', 'WSBF', 'WSCI', 'WSFS', 'YRCW', 'ZAGG', 'ZION', 'ZIOP', 'ZN', 'ZUMZ']
 
+BINARY_BALANCED_SYMS = ['ABIO', 'ACET', 'ACFN', 'ACOR', 'ACUR', 'ADES', 'AEZS', 'AGYS', 'ALCO', 'ALKS', 'AMAG', 'AMCN',
+                        'AMOV', 'AMRN', 'AMSC', 'AREX', 'ARNA', 'ASCMA', 'ASNA', 'ASTC', 'ASTE', 'ASYS', 'ATHN', 'AVAV',
+                        'BBBY', 'BBOX', 'BCRX', 'BIDU', 'BIOL', 'BLDP', 'BSPM', 'CALI', 'CASI', 'CECE', 'CGEN', 'CHNR',
+                        'CLDX', 'CONN', 'CPRX', 'CRAI', 'CRZO', 'CVGI', 'CYTR', 'DGICA', 'DGLY', 'DXPE', 'EMMS', 'ENDP',
+                        'ENG', 'ESEA', 'FCNCA', 'FONR', 'FOSL', 'FRED', 'FTEK', 'GRBK', 'HEES', 'HUBG', 'HWKN', 'HYGS',
+                        'ICAD', 'IDRA', 'IDSA', 'IIIN', 'IMGN', 'IMMR', 'INFI', 'INFN', 'INO', 'INSM', 'INTX', 'INWK',
+                        'ISHG', 'JCS', 'KERX', 'KIRK', 'KOOL', 'LWAY', 'LYTS', 'MAG', 'MARK', 'MDCO', 'MDRX', 'MEIP',
+                        'MNKD', 'MNTX', 'MOSY', 'MPAA', 'MVIS', 'MXWL', 'NFEC', 'NUAN', 'NYMX', 'OFIX', 'OLED', 'OMEX',
+                        'PEGA', 'PEIX', 'PGNX', 'PHIIK', 'PICO', 'PLPC', 'POWL', 'PRTS', 'PTNR', 'RAIL', 'RBCN', 'REFR',
+                        'REGN', 'RIGL', 'RMTI', 'ROYL', 'SCON', 'SCOR', 'SINA', 'SMRT', 'SMSI', 'SNSS', 'SOHU', 'SORL',
+                        'SYNA', 'USAK', 'USAP', 'USEG', 'USLM', 'VRML', 'VVUS', 'ZIOP']
+
 API_KEYS = ['ULDORYWPDU2S2E6X', 'yM2zzAs6_DxdeT86rtZY', 'TX1OLY36K73S9MS9', 'I7RUE3LA4PSXDJU6', '41KVI2PCCMZ09Y69']
 
 

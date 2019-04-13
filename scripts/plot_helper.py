@@ -173,8 +173,8 @@ def plot_company_summary(df, symbol):
     plt.xlabel('data')
 
     plt.subplot(2, 2, 4)
-    df[const.LABEL_BINARY_COL].plot(kind='hist', xticks=[0, 1, 2], label=RATE_CHANGE_LABEL)
-    plt.xticks([0, 1], [FALL_LABEL, RISE_LABEL])
+    df[const.LABEL_DISCRETE_COL].plot(kind='hist', xticks=[0, 1, 2], label=RATE_CHANGE_LABEL)
+    plt.xticks([0, 1, 2], [FALL_LABEL, IDLE_LABEL ,RISE_LABEL])
     plt.xlabel(VALUE_CHANGE_LABEL)
     plt.ylabel(FORECAST_COUNT_LABEL)
     plt.title(HISTOGRAM_TITLE)
