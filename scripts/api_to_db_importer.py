@@ -14,6 +14,11 @@ TI_STOCH = 'STOCH'
 TI_MACD = 'MACD'
 TI_EMA = 'EMA'
 TI_SMA = 'SMA'
+TI_ROC = 'ROC'
+TI_TR = 'TRANGE'
+TI_MOM = 'MOM'
+TI_WILLR = 'WILLR' # Williams' %R
+TI_APO = 'APO' #absolute price oscillator
 
 SYMBOL_KEY = "symbol"
 
@@ -106,6 +111,8 @@ BINARY_BALANCED_SYMS = ['ABIO', 'ACET', 'ACFN', 'ACOR', 'ACUR', 'ADES', 'AEZS', 
                         'REGN', 'RIGL', 'RMTI', 'ROYL', 'SCON', 'SCOR', 'SINA', 'SMRT', 'SMSI', 'SNSS', 'SOHU', 'SORL',
                         'SYNA', 'USAK', 'USAP', 'USEG', 'USLM', 'VRML', 'VVUS', 'ZIOP']
 
+SELECTED_SYM = 'USLM'
+
 API_KEYS = ['ULDORYWPDU2S2E6X', 'yM2zzAs6_DxdeT86rtZY', 'TX1OLY36K73S9MS9', 'I7RUE3LA4PSXDJU6', '41KVI2PCCMZ09Y69']
 
 
@@ -178,16 +185,25 @@ class Importer:
         for ticker in tickers:
             json = stock_collection(self.db, False).find_one({const.SYMBOL: ticker})
             df = self.json_to_df(json)
+            # https://journals.plos.org/plosone/article/figure?id=10.1371/journal.pone.0122385.t001
+            self.import_technical_indicator(ticker, df, TI_SMA, const.SMA_5_COL, time_period=5)
             self.import_technical_indicator(ticker, df, TI_SMA, const.SMA_10_COL, time_period=10)
             self.import_technical_indicator(ticker, df, TI_SMA, const.SMA_20_COL, time_period=20)
-            self.import_technical_indicator(ticker, df, TI_EMA, const.EMA_10_COL, time_period=10)
-            self.import_technical_indicator(ticker, df, TI_EMA, const.EMA_20_COL, time_period=20)
-            self.import_technical_indicator(ticker, df, TI_MACD, const.MACD_COL)
+            self.import_technical_indicator(ticker, df, TI_EMA, const.EMA_12_COL, time_period=12)
+            self.import_technical_indicator(ticker, df, TI_EMA, const.EMA_26_COL, time_period=26)
             self.import_technical_indicator(ticker, df, TI_STOCH, const.STOCH_K_COL)
-            self.import_technical_indicator(ticker, df, TI_RSI, const.RSI_10_COL, time_period=10)
-            self.import_technical_indicator(ticker, df, TI_RSI, const.RSI_20_COL, time_period=20)
-            self.import_technical_indicator(ticker, df, TI_BBANDS, const.BBANDS_10_RLB_COL, time_period=10)
-            self.import_technical_indicator(ticker, df, TI_BBANDS, const.BBANDS_20_RLB_COL, time_period=20)
+            self.import_technical_indicator(ticker, df, TI_ROC, const.ROC_10_COL, time_period=10)
+            self.import_technical_indicator(ticker, df, TI_TR, const.TR_COL)
+            self.import_technical_indicator(ticker, df, TI_MOM, const.MOM_6_COL, time_period=6)
+            self.import_technical_indicator(ticker, df, TI_MOM, const.MOM_12_COL, time_period=12)
+            self.import_technical_indicator(ticker, df, TI_WILLR, const.WILLR_5_COL, time_period=5)
+            self.import_technical_indicator(ticker, df, TI_WILLR, const.WILLR_10_COL, time_period=10)
+            self.import_technical_indicator(ticker, df, TI_APO, const.APO_6_COL, time_period=6) #OSCILIATOR
+            self.import_technical_indicator(ticker, df, TI_APO, const.APO_12_COL, time_period=12) #OSCILIATOR
+            self.import_technical_indicator(ticker, df, TI_RSI, const.RSI_6_COL, time_period=6)
+            self.import_technical_indicator(ticker, df, TI_RSI, const.RSI_12_COL, time_period=12)
+            self.import_technical_indicator(ticker, df, TI_MACD, const.MACD_COL)
+
 
     def import_technical_indicator(self, ticker, df, indicator, col_name, time_period=None):
         if col_name not in df.columns:
@@ -230,21 +246,20 @@ class Importer:
         for stock in stock_collection_raw.find():
             symbol = stock[const.SYMBOL]
             df = self.json_to_df(stock)
-            if const.SMA_10_COL in df.columns and const.BBANDS_20_RUB_COL in df.columns:
-                df[const.LABEL_COL] = df[const.ADJUSTED_CLOSE_COL].shift(-const.FORECAST_DAYS)
-                df[const.DAILY_PCT_CHANGE_COL] = (df[const.LABEL_COL] - df[const.ADJUSTED_CLOSE_COL]) / df[
-                    const.ADJUSTED_CLOSE_COL] * 100.0
-                df[const.HL_PCT_CHANGE_COL] = (df[const.HIGH_COL] - df[const.LOW_COL]) / df[
-                    const.HIGH_COL] * 100
-                df[const.LABEL_DISCRETE_COL] = df[const.DAILY_PCT_CHANGE_COL].apply(
-                    lambda pct: np.NaN if pd.isna(pct)
-                    else const.FALL_VALUE if pct < -const.TRESHOLD else const.RISE_VALUE if pct > const.TRESHOLD else const.IDLE_VALUE)
-                df[const.LABEL_BINARY_COL] = df[const.DAILY_PCT_CHANGE_COL].apply(
-                    lambda pct: np.NaN if pd.isna(pct)
-                    else const.FALL_VALUE if pct < 0 else const.IDLE_VALUE if pct >= 0 else const.RISE_VALUE)
-                processed_dict = self.df_to_json(df, symbol)
-                stock_processed_collection.insert(processed_dict)
-                print('Processed ', symbol)
+            df[const.LABEL_COL] = df[const.ADJUSTED_CLOSE_COL].shift(-const.FORECAST_DAYS)
+            df[const.DAILY_PCT_CHANGE_COL] = (df[const.LABEL_COL] - df[const.ADJUSTED_CLOSE_COL]) / df[
+                const.ADJUSTED_CLOSE_COL] * 100.0
+            df[const.HL_PCT_CHANGE_COL] = (df[const.HIGH_COL] - df[const.LOW_COL]) / df[
+                const.HIGH_COL] * 100
+            df[const.LABEL_DISCRETE_COL] = df[const.DAILY_PCT_CHANGE_COL].apply(
+                lambda pct: np.NaN if pd.isna(pct)
+                else const.FALL_VALUE if pct < -const.TRESHOLD else const.RISE_VALUE if pct > const.TRESHOLD else const.IDLE_VALUE)
+            df[const.LABEL_BINARY_COL] = df[const.DAILY_PCT_CHANGE_COL].apply(
+                lambda pct: np.NaN if pd.isna(pct)
+                else const.FALL_VALUE if pct < 0 else const.IDLE_VALUE if pct >= 0 else const.RISE_VALUE)
+            processed_dict = self.df_to_json(df, symbol)
+            stock_processed_collection.insert(processed_dict)
+            print('Processed ', symbol)
 
     def export_to_csv_files(self, path):
         if not os.path.exists(path):
@@ -252,7 +267,7 @@ class Importer:
         stock_collection_raw = stock_collection(self.db, False)
         stock_processed_collection = stock_collection(self.db, True)
 
-        for stock in stock_collection_raw.find():
+        for stock in stock_processed_collection.find():
             symbol = stock[const.SYMBOL]
             df = self.json_to_df(stock)
             df[const.LABEL_COL] = df[const.ADJUSTED_CLOSE_COL].shift(-const.FORECAST_DAYS)
@@ -276,7 +291,7 @@ class Importer:
             file = path + '/' + symbol + '.csv'
             df.to_csv(file, encoding='utf-8')
 
-            print('Processed ', symbol)
+            print('Exported to csv ', symbol)
 
     def import_data_from_files(self, tickers, path):
         df_list = []
@@ -289,10 +304,11 @@ class Importer:
 
 
 if __name__ == "__main__":
-    print(len(SYMBOLS))
     imp = Importer()
-    # imp.import_all(SYMBOLS)
-    # imp.process_data()
-    # imp.import_all_technical_indicators(SYMBOLS)
-    # imp.export_to_csv_files('./../target/data')
-    dflist = imp.import_data_from_files(SYMBOLS, './../target/data')
+    imp.import_all([SELECTED_SYM])
+    imp.import_all_technical_indicators([SELECTED_SYM])
+    imp.process_data()
+    imp.export_to_csv_files('./../target/data')
+    dflist = imp.import_data_from_files([SELECTED_SYM], './../target/data')
+
+    print("Importing finished")
