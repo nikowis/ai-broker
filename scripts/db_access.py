@@ -10,6 +10,7 @@ LOCAL_URL = "mongodb://localhost:27017/"
 REMOTE_URL = "mongodb://admin:<pswd>@ds125574.mlab.com:25574/ai-broker"
 
 MIN_DATE = '2009-01-01'
+MAX_DATE = '2018-10-29'
 
 
 def create_db_connection(remote=False, db_name=DB):
@@ -29,7 +30,7 @@ def stock_collection(db_conn, processed=True):
         return db_conn[STOCK_COLLECTION]
 
 
-def find_by_tickers_to_dateframe_parse_to_df_list(db_conn, symbol_list, processed=True, min_date=MIN_DATE):
+def find_by_tickers_to_dateframe_parse_to_df_list(db_conn, symbol_list, processed=True, min_date=MIN_DATE, max_date=MAX_DATE):
     data = stock_collection(db_conn, processed).find({const.SYMBOL: {"$in": symbol_list}})
     df_list = []
     symbol_output_list = []
@@ -40,6 +41,7 @@ def find_by_tickers_to_dateframe_parse_to_df_list(db_conn, symbol_list, processe
         df = pd.DataFrame.from_dict(document, orient=const.INDEX)
         df = df.astype(float)
         df = df[(df.index > min_date)]
+        df = df[(df.index < max_date)]
         df_list.append(df)
     if len(df_list) == 0:
         raise Exception('No data with any ticker of ' + str(symbol_list) + ' was found.')

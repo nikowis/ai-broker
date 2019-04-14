@@ -305,10 +305,10 @@ class Importer:
 
 if __name__ == "__main__":
     imp = Importer()
-    imp.import_all([SELECTED_SYM])
-    imp.import_all_technical_indicators([SELECTED_SYM])
-    imp.process_data()
+    # imp.import_all(BINARY_BALANCED_SYMS)
+    # imp.import_all_technical_indicators([SELECTED_SYM])
+    # imp.process_data()
     imp.export_to_csv_files('./../target/data')
-    dflist = imp.import_data_from_files([SELECTED_SYM], './../target/data')
+    dflist = imp.import_data_from_files(BINARY_BALANCED_SYMS, './../target/data')
 
     print("Importing finished")
