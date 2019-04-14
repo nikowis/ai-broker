@@ -7,6 +7,7 @@ import plot_helper
 import stock_constants as const
 
 MIN_DATE = '2009-01-01'
+MAX_DATE = '2018-10-29'
 
 SELECTED_SYM = 'USLM'
 
@@ -14,9 +15,9 @@ SELECTED_SYM = 'USLM'
 def main():
     db_conn = db_access.create_db_connection(remote=False)
     df_list, sym_list = db_access.find_by_tickers_to_dateframe_parse_to_df_list(db_conn, [SELECTED_SYM],
-                                                                                min_date=MIN_DATE)
+                                                                                min_date=MIN_DATE, max_date=MAX_DATE)
     df = df_list[0]
-    epochs = 100
+    epochs = 200
     batch_size = 10
 
     skip_iterations = 0
@@ -43,8 +44,10 @@ def main():
     sixth = int(cols_count / 6)
     eight = int(cols_count / 8)
 
-    layers = [[ eight],[ sixth], [ quarter],[ third], [ half],
-              [ cols_count]]
+    # layers = [[ eight],[ sixth], [ quarter],[ third], [ half],[ cols_count],
+    #           [ eight, eight],[ sixth,sixth], [ quarter, quarter],[ third, third], [ half, half],[ cols_count, cols_count]
+    #           ,[ eight, eight, eight],[ sixth,sixth, sixth], [ quarter, quarter, quarter],[ third, third, third], [ half, half, half],[ cols_count, cols_count, cols_count]]
+    layers = [[3],[4],[5],[6],[7],[8],[9],[10],[11],[12]]
     total_time = time.time()
     iteration = 0
     for hist_dayz in range(0, 3, 1):
