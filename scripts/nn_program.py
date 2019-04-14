@@ -16,7 +16,7 @@ def main():
     df_list, sym_list = db_access.find_by_tickers_to_dateframe_parse_to_df_list(db_conn, [SELECTED_SYM],
                                                                                 min_date=MIN_DATE)
     df = df_list[0]
-    epochs = 200
+    epochs = 100
     batch_size = 10
 
     skip_iterations = 0
@@ -43,11 +43,11 @@ def main():
     sixth = int(cols_count / 6)
     eight = int(cols_count / 8)
 
-    layers = [[eight, eight, eight],[sixth, sixth, sixth], [quarter, quarter, quarter],[third, third, third], [half, half, half],
-              [cols_count, cols_count, cols_count]]
+    layers = [[ eight],[ sixth], [ quarter],[ third], [ half],
+              [ cols_count]]
     total_time = time.time()
     iteration = 0
-    for hist_dayz in range(0, 1, 1):
+    for hist_dayz in range(0, 3, 1):
 
         df_modified, x_standardized, x_train, x_test, y_train_one_hot, y_test_one_hot = data_helper.extract_data(df,
                                                                                                                  hist_dayz,
