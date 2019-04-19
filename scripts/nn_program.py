@@ -1,3 +1,4 @@
+import numpy as np
 import time
 
 import data_helper
@@ -17,7 +18,7 @@ def main():
     df_list, sym_list = db_access.find_by_tickers_to_dateframe_parse_to_df_list(db_conn, [SELECTED_SYM],
                                                                                 min_date=MIN_DATE, max_date=MAX_DATE)
     df = df_list[0]
-    epochs = 200
+    epochs = 100
     batch_size = 10
 
     skip_iterations = 0
