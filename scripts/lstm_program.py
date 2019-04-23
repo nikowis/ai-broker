@@ -6,6 +6,7 @@ import data_helper
 import db_access
 import plot_helper
 import stock_constants as const
+from keras.regularizers import l2
 
 
 def main(days_in_window, units):
@@ -13,9 +14,7 @@ def main(days_in_window, units):
     db_conn = db_access.create_db_connection(remote=False)
     df_list, sym_list = db_access.find_by_tickers_to_dateframe_parse_to_df_list(db_conn, [ticker])
     df = df_list[0]
-    epochs = 200
-    batch_size = 1
-    skip_iterations = 0
+    epochs = 100
 
     COLUMNS = [const.VOLUME_COL, const.OPEN_COL, const.ADJUSTED_CLOSE_COL, const.HIGH_COL, const.LOW_COL,
                const.HL_PCT_CHANGE_COL, const.SMA_5_COL, const.SMA_10_COL, const.SMA_20_COL, const.EMA_12_COL,
@@ -34,8 +33,8 @@ def main(days_in_window, units):
     _, class_count = y_test_one_hot.shape
 
     model = Sequential()
-    model.add(keras.layers.LSTM(units, input_shape=(days_in_window, x_train_lstm.shape[2])))
-    model.add(keras.layers.Dropout(0.2))
+    model.add(keras.layers.LSTM(units, input_shape=(days_in_window, x_train_lstm.shape[2]), kernel_regularizer=l2(0.01), bias_regularizer=l2(0.01), recurrent_regularizer=l2(0.01)))
+    # model.add(keras.layers.Dropout(0.2))
 
     model.add(keras.layers.Dense(class_count, activation='softmax'))
     model.compile(optimizer='Adam',
@@ -70,8 +69,8 @@ def prepare_lstm_data(days_in_window, data):
 
 
 if __name__ == '__main__':
-    unitz= [2, 3,4,5,6]
-    for i in range(1, 5):
+    unitz= [2,3,4,5,6,7,8,9,10]
+    for i in range(1, 2):
         for u in unitz:
             main(i, u)
 
