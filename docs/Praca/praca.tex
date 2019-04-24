@@ -78,7 +78,7 @@
 
 % FONT settings
 \usepackage[T1]{fontenc}
-\usepackage{uarial} % you can change to 'helvet' for Helvetica clone, 'uarial' for Arial clone, 'lmodern' for Latin Modern
+
 %\renewcommand{\familydefault}{\sfdefault} % change font to sans serif
 \usepackage{amsfonts} % mathematical fonts
 \usepackage{inconsolata} % monospaced font in urls and \texttt
@@ -187,7 +187,7 @@ Podstawowymi (dziennymi) danymi wynikającymi bezpośrednio z funkcjonowania gie
 \item{Data}
 \item{Cena zamknięcia} - cena akcji pod koniec dnia
 \item{Cena otwarcia} - cena akcji na początku dnia
-\item{Ilość akcji w obrocie danego dnia}
+\item{Liczba akcji w obrocie danego dnia}
 \item{Najniższa cena akcji danego dnia}
 \item{Najwyższa cena akcji danego dnia}
 \end{itemize}
@@ -200,7 +200,7 @@ Te dane są jednak mało szczegółowe, i w związku z dużą losowością ruch�
 
 \subsubsection{Analiza fundamentalna \cite{fundamentalanalysis}}
 
-Analiza fundamentalna spółek jest analizą kondycji ekonomicznej spółek w zestawieniu z wartością ich akcji. Ten rodzaj analizy ma odpowiedzieć na pytanie czy cena akcji tej spółki odpowiada jej sytuacji na rynku. Przy takim badaniu spółki brane jest pod uwagę wiele różnych czynników takich jak:
+Analiza fundamentalna spółek jest analizą kondycji ekonomicznej spółek w zestawieniu z wartością ich akcji. Ten rodzaj analizy ma odpowiedzieć na pytanie czy cena akcji tej spółki odpowiada jej sytuacji na rynku. Przy takim badaniu spółki brane jest pod uwagę wiele różnych czynników, takich jak:
 \begin{itemize}
 \item{analiza finansowa spółki}
 \item{analiza sektorowa}
@@ -230,7 +230,7 @@ Najpopularniejsze wskaźniki techniczne obejmują:
 
 \subsection{Źródło danych}
 
-Ze względu na małą dostępność gotowych danych do trenowania modeli predykcyjnych w pracy zostało wykorzystane darmowe źródło danych giełdowych \textit{Alpha Vantage} \cite{alphavantage}. Jest to API pozwalające na pobranie danych historycznych dla konkretnej spółki poprzez podanie symbolu giełdowego. Do pobrania danych została wykorzystana lista symboli z giełdy NASDAQ \cite{nasdaq}. Spośród wszystkich spółek zostały odrzucone te, których historia giełdowa była niepełna, zaburzona lub miała mniej niż 3000 dni giełdowych. Pozwoliło to na wyselekcjonowanie zbioru ponad 900 spółek na podstawie których trenowane i testowane były wybrane modele. Wszystkie dane po pobraniu zostały zapisane w lokalnej bazie \textit{MongoDB} \cite{mongodb} w celu trwałego przechowania danych i optymalizacji w ich pobieraniu do pamięci.
+Ze względu na małą dostępność gotowych danych do trenowania modeli predykcyjnych w pracy zostało wykorzystane darmowe źródło danych giełdowych \textit{Alpha Vantage} \cite{alphavantage}. Jest to API pozwalające na pobranie danych historycznych dla konkretnej spółki poprzez podanie symbolu giełdowego. Do pobrania danych została wykorzystana lista symboli z giełdy NASDAQ \cite{nasdaq}. Spośród wszystkich spółek zostały odrzucone te, których historia giełdowa była niepełna, zaburzona lub miała mniej niż 3000 dni giełdowych. Pozwoliło to na wyselekcjonowanie zbioru ponad 900 spółek, na podstawie których trenowane i testowane były wybrane modele. Wszystkie dane po pobraniu zostały zapisane w lokalnej bazie \textit{MongoDB} \cite{mongodb} w celu trwałego przechowania danych i optymalizacji w ich pobieraniu do pamięci.
 
 \subsection{Predykcja}
 
@@ -243,9 +243,11 @@ Na rysunku \ref{alphabet_history} widoczne są zmiany cen akcji spółki \textit
 \label{alphabet_history}
 \end{figure}
 
-\subsubsection{Przewidywany parametr}
+Rysunek \ref{alphabet_history} ilustruje fakt, że ceny zamknięcia akcji tworzą szereg czasowy. Dotyczy to także pozostałych charakterystyk akcji, takich jak cena otwarcia, liczba akcji w obrocie danego dnia, najniższa cena akcji czy najwyższa cena akcji danego dnia.
 
-Najbardziej pożytecznym parametrem akcji, którego przewidywanie daje inwestorowi największe szanse na zysk jest \textit{cena zamknięcia}. Znajomość ceny zamknięcia z kolejnego dnia daje możliwość podjęcia skutecznych decyzji inwestycyjnych. Przykładem parametru, który byłby bez wartości jest ilość akcji w obrocie w przyszłości, ta liczba sama w sobie nie niesie informacji o spadku lub wzroście cen. Do tematu prognozowania można podejść na dwa sposoby:
+\subsubsection{Zakres prognozy}
+
+Najbardziej pożytecznym parametrem akcji, którego wykorzystanie daje inwestorowi największe szanse na zysk jest \textit{cena zamknięcia}. Znajomość ceny zamknięcia z kolejnego umożliwia podjęcie skutecznych decyzji inwestycyjnych. Przykładem parametru, który nie jest istotny jest liczba akcji w obrocie w przyszłości, ta liczba sama w sobie nie niesie informacji o spadku lub wzroście cen. Do tematu prognozowania można podejść na dwa sposoby:
 \begin{itemize}
 \item{\textbf{dokładny}, przewidywanie konkretnych wartości akcji}
 \item{\textbf{dyskretny}, predykcja wzrostu, spadku lub utrzymania ceny}
@@ -253,7 +255,7 @@ Najbardziej pożytecznym parametrem akcji, którego przewidywanie daje inwestoro
 
 \subsubsection{Hipoteza błądzenia losowego}
 
-Zgodnie z hipotezą błądzenia losowego \cite{randwalk}, krótkoterminowo, ceny akcji zmieniają się według nieprzewidywalnych schematów. Zmiany minutowe cen akcji są więc dużo cięższe do przewidzenia niż zmiany dobowe. Z tego względu przewidywanie wartości w okresie krótszym niż jedna doba, nie zostało uwzględnione w obszarze badań tej pracy.
+Zgodnie z hipotezą błądzenia losowego \cite{randwalk}, krótkoterminowo, ceny akcji zmieniają się według nieprzewidywalnych schematów. Zmiany minutowe cen akcji są więc dużo trudniejsze do przewidzenia niż zmiany dobowe. Z tego względu przewidywanie wartości w okresie krótszym niż jedna doba, nie zostało uwzględnione w obszarze badań tej pracy.
 
 \subsection{Metodyka konstruowania modeli}
 
@@ -286,7 +288,7 @@ Na rysunku \ref{l_r_pct_change_last_30} można zaobserwować, iż zmiany w kursi
 \end{figure}
 
 
-\subsubsection{Przewidywana liczba dni}
+\subsubsection{Perspektywa prognozy}
 
 Model przewidujący może na wyjściu zwrócić predykcje z więcej niż jednego dnia sesji giełdowej. Należy uważać jednak na nakładanie się błędów predykcji i uważnie dobierać parametr przewidywanej liczby dni. Na przykład, jeżeli prognozowana jest wartość na dwa dni do przodu, to wówczas trzeci prognozowany dzień będzie oparty na prognozie z poprzedniego dnia. W związku z czym dojdzie złączenia się błędu i zwiększenia zaburzenia wyników.
 
@@ -294,22 +296,22 @@ Model przewidujący może na wyjściu zwrócić predykcje z więcej niż jednego
 
 Wektor wejściowy do modelu może składać się z wielu parametrów giełdowych z jednego wybranego dnia z przeszłości. Możliwa jest również konkatenacja takich wektorów z kilku poprzednich dni dająca modelowi wgląd w kształtowanie się ruchu cen na przestrzeni czasu. Taki zabieg daje modelom większą ilość informacji. Dobranie większej ilości informacji może zarówno pogorszyć jak i polepszyć wyniki modelu. Jest to więc jeden z parametrów, który należy rozważyć.
 
-\subsubsection{Dobór danych pobranych z giełdy}
+\subsubsection{Selekcja cech}
 
 Według niektórych badań wolumen obrotów akcji nie jest skorelowany w żaden sposób z jej ceną. Modele mogą więc wykazywać lepsze wyniki przy mniejszej lub większej liczbie wejściowych parametrów. Niektóre parametry mogą okazać się zbędne lub wręcz mogą osłabiać przewidywanie wartości.
 
-\subsubsection{Dobór spółek uczących i testujących}
+\subsubsection{Dobór spółek}
 
 Modele oceniane na podstawie danych poszczególnych spółek mogą dawać w skrajnych przypadkach zafałszowane wyniki. Wiele spółek wykazuje wysoką korelację cen akcji między sobą. W celu uniknięcia pułapki przetrenowania, do uczenia i testowania użyte zostały dane spółek o niskiej korelacji i różnych trendach wzrostu/spadku.
 
-\subsection{Ocena modeli}
+\subsection{Kryteria oceny modeli predykcji}
 
 Podczas oceny modelu wzięto pod uwagę różne kryteria mierzenia dokładności nauczonych klasyfikatorów.
 \begin{itemize}
 \item procent prawidłowych klasyfikacji
 \item pole pod krzywą ROC
 \item częściowy indeks Gini
-\item statystyka H
+%\item statystyka H
 \item współczynnik Briera
 \item statystyka Kołomogrowa-Smirnova
 \end{itemize}
@@ -333,7 +335,7 @@ Graficzną reprezentację podziału klasyfikacji na powyższe kategorie nazywamy
 
 Jednym z najprostszych sposobów do oceny dokładności klasyfikatorów jest określenie procentu prawidłowych przypisań przykładu do klasy. Metoda ta potrafi dawać złudzenie zadowalających wyników, w których występują duże różnice w licznościach poszczególnych klas. Rozważmy dla takiego zadania naiwny model przypisujący do każdego postawionego przykładu klasę, której liczność jest największa. Wówczas wyniki procentowe prawidłowej klasyfikacji będą wprost proporcjonalne do różnicy w liczności klasy największej w stosunku do innych klas. W większości przypadków pomimo dobrego wyniku taki model będzie uznany za bezużyteczny. Wobec tego tę miarę jakości należy stosować wraz z innymi miarami, które nie są podatne na tego typu zaburzenia.
 
-\subsubsection{Krzywa ROC \cite{roc}}
+\subsubsection{Pole AUC pod krzywą ROC \cite{roc}}
 
 Krzywa ROC (ang. receiver operating characteristic) jest narzędziem, która opisuje dokładność klasyfikatora za pomocą oceny jego czułości i precyzji. Precyzją modelu nazywa się stosunek $\frac{TP}{TP+FP}$, zaś czułość jest oznaczona przez $\frac{TP}{TP+FN}$.
 
