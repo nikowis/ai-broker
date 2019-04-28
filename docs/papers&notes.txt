@@ -93,6 +93,33 @@ Tzn wejście to macierz 36x20.  Dobrze opisane dane analizy technicznej.
 RBFNN nie ma problemu minimów lokalnych, szybko się uczy, jest stabilna oraz lepiej aproksymuje.
 Wyniki aż > 70% accuraccy ale koniecznie użycie 2DPCA + RBFNN dla wektora wejściowego rozmiaru 121.
 
+==============================================================================================================================
+
+Evaluating multiple classifiers for stock price direction prediction
+Michel Ballings, Dirk Van den Poel, Nathalie Hespeels, Ruben Gryp
+
+**** PRZYDATNE *****
+Predykcja trendu roczna - 5k europejskich spółek
+Dużo różnorodnych danych wykorzystanych - informacje ekonomiczne sektorów, analiza fundamentalna, analiza techniczna.
+***OVERSAMPLING**** w celu wyrównania datasetu.
+W sieci neuronowej użycie `weight decay` w celu uniknięcia overfittingu i szeroki opis skalowania.
+Do poszukiwania parametrów optymalnych grid search.
+Większość danych to nie są dane analizy technicznej.
+
+==============================================================================================================================
+
+Predicting short-term stock prices using ensemble methods and online data sources
+Bin Weng, Lin Lu, Xing Wang, Fadel M. Megahed, Waldyn Martinez
+
+****BARDZO PRZYDATNE - 2018 *****
+Przewidywanie regresyjne ceny zamknięcia na jeden dzień do przodu dla pojedynczych spółek z S&P500. Są również porównawcze wyniki przewidywania na pare dni do przodu.
+Do predykcji wykorzystane dane z giełdy/analiza techniczna/newsy i ich sentyment/google trends/wikipedia hits API.
+Dodatkowo zastosowanie PCA do ograniczenia ilości danych wejściowych. Analiza korelacji zmiennych.
+Wykorzystane głównie metody zespołowe.
+Badane są lata jedynie 2013-2016 ze względu na ograniczenia API.
+
+Kod dostępny na github.com/martinwg/stockprediction
+
 
 ######################################################################################################################################################
 Inne uwagi i przemyślenia
