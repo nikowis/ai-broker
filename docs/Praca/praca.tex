@@ -164,7 +164,7 @@ podpis promotora & \hspace*{100pt} & podpis autora
 
 \section{Modele prognozy na giełdzie oraz kryteria ich oceny}
 
-Celem tej pracy jest opracowanie, ocena i porównanie różnych modeli predykcji cen akcji na giełdzie papierów wartościowych lub innych alternatywnych giełdach np. giełda kryptowalut.
+Celem tej pracy jest opracowanie, ocena i porównanie różnych modeli predykcji cen akcji na giełdzie papierów wartościowych.
 
 \subsection{Charakterystyka giełdy}
 
@@ -172,12 +172,12 @@ Giełda z definicji jest miejscem wymiany towarów przez sprzedawców i kupców.
 
 \bigskip
 
- Jednym z wymienianych na giełdzie towarów są akcje różnorodnych spółek. Każda spółka, która jest obecna na giełdzie ma przypisany do siebie symbol giełdowy (\textit{ticker}). Symbol giełdowy jest skrótowym kodem do identyfikowania spółek na określonej giełdzie (przykładowe symbole: \textit{GOOGL}, \textit{MSFT}, \textit{AMZN}). Podczas każdej sesji dokonywane są transakcje milionów akcji, których cena regulowana jest jedynie przez wolny rynek. Wynikiem tego jest duża zmienność cen akcji, spowodowana różnymi spekulacjami lub upublicznianiem informacji o konkretnej spółce.
+ Jednym z wymienianych na giełdzie towarów są akcje różnorodnych spółek. Każda spółka, która jest obecna na giełdzie ma przypisany do siebie symbol giełdowy (\textit{ticker}). Symbol giełdowy jest skrótowym kodem do identyfikowania spółek na określonej giełdzie (przykładowe symbole: \textit{GOOGL}, \textit{MSFT}, \textit{AMZN}). Podczas każdej sesji dokonywane są transakcje milionów akcji, których cena regulowana jest przez wolny rynek. Wynikiem tego jest duża zmienność cen i nieprzewidywalność akcji. Jest ona spowodowana między innymi: spekulacjami inwestorów, upublicznianiem informacji o konkretnej spółce (np. raportów finansowych) lub wydarzeniami na arenie politycznej (np. ustawy wpływające na działalność spólek z konkretnego sektora).
 
 
 \subsection{Dane giełdowe}
 
-Przed przystąpieniem do wyboru metod należy zastanowić się nad danymi wejściowymi do algorytmów przewidujących. 
+Przed przystąpieniem do wyboru modeli należy zastanowić się nad danymi jakie będą służyć do ich uczenia. Wybór odpowiednich cech, analiza zebranych informacji oraz przetworzenie ich, wykracza poza zakres uczenia maszynowego tworząc własną dziedzinę zwaną inżynierią i analizą danych. Odpowiedni dobór i obróbka danych wejściowych często daje większe korzyści niż dopracowywanie modeli przewidujących i optymalizacja ich parametrów. 
 
 \subsubsection{Dane podstawowe}
 
@@ -192,15 +192,15 @@ Podstawowymi (dziennymi) danymi wynikającymi bezpośrednio z funkcjonowania gie
 \item{Najwyższa cena akcji danego dnia}
 \end{itemize}
 
- Przy korzystaniu z wartości cen akcji należy również uwzględnić podział akcji(tak zwany \textit{split}). Gdy jakaś spółka decyduje się na podział swoich akcji oznacza to, że każda z akcji dzieli się na dwie akcje o cenie wynoszącej połowę pierwotnej ceny. Taki zabieg pozwala na zmniejszenie ceny pojedynczej akcji dzięki czemu może stać się ona dostępna dla większej ilości inwestorów. 
+ Przy korzystaniu z wartości cen akcji należy również uwzględnić podział akcji(tak zwany \textit{split}). Gdy jakaś spółka decyduje się na podział swoich akcji oznacza to, że każda z akcji dzieli się na dwie akcje o cenie wynoszącej połowę pierwotnej ceny. Taki zabieg pozwala na zmniejszenie ceny pojedynczej akcji dzięki czemu może stać się ona dostępna dla większej liczby inwestorów. 
  
 \bigskip
 
-Te dane są jednak mało szczegółowe, i w związku z dużą losowością ruchów giełdowych, są niewystarczające aby skutecznie przewidzieć zmiany cen akcji. Zawodowi maklerzy do podejmowania swoich decyzji korzystają z dwóch podstawowych technik: \textbf{analizy fundamentalnej} oraz \textbf{analizy technicznej}.
+Powyższe dane nie wnoszą jednak zbyt wiele informacji ponieważ są odzwierciedleniem powstałego obrotu akcji na giełdzie, a nie jego przyczyną. W związku z dużą losowością ruchów giełdowych, są niewystarczające aby skutecznie przewidzieć zmiany cen akcji. Zawodowi maklerzy do podejmowania swoich decyzji wspomagają się dodatkowo dwoma technikami: \textbf{analizą fundamentalną} oraz \textbf{analizą techniczną}.
 
 \subsubsection{Analiza fundamentalna \cite{fundamentalanalysis}}
 
-Analiza fundamentalna spółek jest analizą kondycji ekonomicznej spółek w zestawieniu z wartością ich akcji. Ten rodzaj analizy ma odpowiedzieć na pytanie czy cena akcji tej spółki odpowiada jej sytuacji na rynku. Przy takim badaniu spółki brane jest pod uwagę wiele różnych czynników, takich jak:
+Analiza fundamentalna spółek jest analizą kondycji ekonomicznej spółek w zestawieniu z wartością ich akcji. Ten rodzaj analizy ma odpowiedzieć na pytanie czy cena akcji konkretnej spółki odpowiada jej sytuacji na rynku. Przy takim badaniu spółki brane jest pod uwagę wiele różnych czynników, takich jak:
 \begin{itemize}
 \item{analiza finansowa spółki}
 \item{analiza sektorowa}
@@ -208,24 +208,24 @@ Analiza fundamentalna spółek jest analizą kondycji ekonomicznej spółek w ze
 \item{analiza ogólnej sytuacji spółki}
 \end{itemize}
 
-Ten rodzaj badania spółki jest niezwykle czasochłonny i często wymaga eksperckiej wiedzy w dziedzinie finansów. Dodatkowo analiza fundamentalna wymaga posiadania danych publicznych, aczkolwiek czasami ciężko dostępnych, o spółkach i sektorach, w których się znajdują. Analizę fundamentalną stosuje się w szczególności przy inwestycjach długoterminowych, czyli co najmniej kilkumiesięcznych. 
+Ten rodzaj badania spółek jest niezwykle czasochłonny i często wymaga eksperckiej wiedzy w dziedzinie finansów. Dodatkowo analiza fundamentalna wymaga posiadania danych, publicznych aczkolwiek czasami ciężko dostępnych, o spółkach i sektorach, w których się znajdują. Analizę fundamentalną stosuje się w szczególności przy inwestycjach długoterminowych (np. kilka miesięcy).
 
 Najsłynniejszym analitykiem technicznym świata jest \textit{Warren Buffet} prezes amerykańskiego holdingu \textit{Berkshire Hathaway \cite{berkeshire}}. 
 
 \bigskip
 
-Analiza fundamentalna ze względu na swoją długoterminową naturę (raporty finansowe spółek publikowane kwartalnie) jest mało przydatna przy dziennych predykcjach giełdowych. Z tego względu zostanie ona pominięta w tej pracy.
+Analiza fundamentalna ze względu na swoją długoterminową naturę (raporty finansowe spółek publikowane kwartalnie) jest mało istotna przy dziennych predykcjach giełdowych. Z tego względu zostanie ona pominięta w tej pracy.
 
 \subsubsection{Analiza techniczna \cite{technicalanalysis}}
 
-Analiza techniczna jest zbiorem technik mających na celu wspomaganie inwestora w podejmowaniu decyzji na podstawie historycznych danych giełdowych. Analiza ta bada zachowania rynku oraz poszukuje trendów i ich kształtów. Szczególnie istotne są liczne wskaźniki techniczne oraz narzędzia analizy statystycznej.
+Analiza techniczna jest zbiorem technik mających na celu wspomaganie inwestora w podejmowaniu decyzji na podstawie historycznych danych giełdowych. Analiza ta bada zachowania rynku oraz poszukuje trendów np. poprzez analizę kształtów wykresów giełdowych. Szczególnie istotne są liczne wskaźniki techniczne oraz narzędzia analizy statystycznej.
 Najpopularniejsze wskaźniki techniczne obejmują:
 \begin{itemize}
 \item{\textbf{SMA}} - średnia krocząca. Jest to średnia cen z kilku ostatnich dni (np. 3, 7, 14, 30),
 \item{\textbf{EMA}} - wykładnicza średnia krocząca. Jest to wykładnicza średnia cen z kilku ostatnich dni (np. 3, 7, 14, 30),
 \item{\textbf{MACD}} -  miara zbieżności i rozbieżności średnich ruchomych,
-\item{\textbf{RSI}} -  indeks równowagi ceny do liczby akcji,
-\item{\textbf{Oscylator stochastyczny}} -  indeks równowagi ceny do liczby akcji.
+\item{\textbf{RSI}} -  wskaźnik siły względnej określający siłę trendu,
+\item{\textbf{oscylator stochastyczny}} -  wskaźnik momentum i siły trendu.
 \end{itemize}
 
 \subsection{Źródło danych}
