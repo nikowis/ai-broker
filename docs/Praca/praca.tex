@@ -228,14 +228,13 @@ Najpopularniejsze wskaźniki techniczne obejmują:
 \item{\textbf{oscylator stochastyczny}} -  wskaźnik momentum i siły trendu.
 \end{itemize}
 
-\subsection{Źródło danych}
+\subsubsection{Źródło danych}
 
-Ze względu na małą dostępność gotowych danych do trenowania modeli predykcyjnych w pracy zostało wykorzystane darmowe źródło danych giełdowych \textit{Alpha Vantage} \cite{alphavantage}. Jest to API pozwalające na pobranie danych historycznych dla konkretnej spółki poprzez podanie symbolu giełdowego. Do pobrania danych została wykorzystana lista symboli z giełdy NASDAQ \cite{nasdaq}. Spośród wszystkich spółek zostały odrzucone te, których historia giełdowa była niepełna, zaburzona lub miała mniej niż 3000 dni giełdowych. Pozwoliło to na wyselekcjonowanie zbioru ponad 900 spółek, na podstawie których trenowane i testowane były wybrane modele. Wszystkie dane po pobraniu zostały zapisane w lokalnej bazie \textit{MongoDB} \cite{mongodb} w celu trwałego przechowania danych i optymalizacji w ich pobieraniu do pamięci.
+W pracy zostało wykorzystane darmowe źródło danych giełdowych \textit{Alpha Vantage} \cite{alphavantage}. Jest to API pozwalające na pobranie historycznych danych giełdowych dla konkretnej spółki poprzez podanie odpowiedniego symbolu giełdowego. Dostępne są zarówno podstawowe dane giełdowe jak i wskaźniki analizy technicznej. 
 
 \subsection{Predykcja}
 
-Na rysunku \ref{alphabet_history} widoczne są zmiany cen akcji spółki \textit{Alphabet Inc.} w latach 2004-2018. Analizując ten wykres z łatwością można wskazać daty, w których opłacalnym było zainwestowanie w akcje, aby następnie je sprzedać w póżniejszym terminie by osiągnąć zysk. Niestety stwierdzenie czy wartość akcji w przyszłości spadnie, czy wzrośnie, nie jest tak trywialne jak odczytywanie danych historycznych. Przewidywanie przyszłych cen akcji jest głównym zajęciem zarówno inwestorów indywidualnych jak i instytucjonalnych. Skuteczne odgadywanie przyszłych wzrostów lub spadków cen pozwoliłoby na osiąganie ponadprzeciętnych zysków i unikanie strat.
-
+Na rysunku \ref{alphabet_history} widoczne są zmiany cen akcji spółki \textit{Alphabet Inc.} w latach 2004-2018. Analizując ten wykres z łatwością można wskazać daty, w których opłacalnym było zainwestowanie w akcje, aby następnie je sprzedać w póżniejszym terminie by osiągnąć zysk. Niestety stwierdzenie czy wartość akcji w przyszłości spadnie, czy wzrośnie, nie jest tak trywialne jak odczytywanie danych historycznych. Przewidywanie przyszłych cen akcji jest głównym zajęciem zarówno inwestorów indywidualnych jak i instytucjonalnych. Skuteczne odgadywanie przyszłych wzrostów lub spadków cen pozwoliłoby na osiąganie ponadprzeciętnych zysków i unikanie strat. O trudności tego zadania mogą świadczyć takie teorie jak \textit{hipoteza błądzenia losowego} czy też \textit{hipoteza rynku efektywnego}. Zgodnie z \textit{hipotezą błądzenia losowego} \cite{randwalk}, krótkoterminowo, ceny akcji zmieniają się według nieprzewidywalnych schematów. Zmiany minutowe cen akcji są więc dużo trudniejsze do przewidzenia niż zmiany dobowe. \textit{Hipoteza rynku efektywnego} \cite{efficientmarket} opiera się na założeniu iż ceny obecne na giełdzie całkowicie odwzorowują wszystkie dostępne informacje na rynku. Oznacza to, że próby wyprzedzenia innych inwestorów na podstawie szybkiej reakcji na pojawiające się informacje nie będą skuteczne. Obie te hipotezy mają zarówno swoich zwolenników jak i krytyków.
 
 \begin{figure}[H]
 \centering \includegraphics[scale=0.9]{img/linear_regression/l_r_stock_data}
@@ -243,7 +242,7 @@ Na rysunku \ref{alphabet_history} widoczne są zmiany cen akcji spółki \textit
 \label{alphabet_history}
 \end{figure}
 
-Rysunek \ref{alphabet_history} ilustruje fakt, że ceny zamknięcia akcji tworzą szereg czasowy. Dotyczy to także pozostałych charakterystyk akcji, takich jak cena otwarcia, liczba akcji w obrocie danego dnia, najniższa cena akcji czy najwyższa cena akcji danego dnia.
+Rysunek \ref{alphabet_history} ilustruje fakt, że ceny zamknięcia akcji tworzą szereg czasowy. Dotyczy to także pozostałych charakterystyk akcji, takich jak cena otwarcia, liczba akcji w obrocie danego dnia, najniższa cena akcji czy najwyższa cena akcji danego dnia. Fakt ten ma istotny wpływ na sposób używania i przetwarzania danych giełdowych.
 
 \subsubsection{Zakres prognozy}
 
@@ -252,10 +251,6 @@ Najbardziej pożytecznym parametrem akcji, którego wykorzystanie daje inwestoro
 \item{\textbf{dokładny}, przewidywanie konkretnych wartości akcji}
 \item{\textbf{dyskretny}, predykcja wzrostu, spadku lub utrzymania ceny}
 \end{itemize}
-
-\subsubsection{Hipoteza błądzenia losowego}
-
-Zgodnie z hipotezą błądzenia losowego \cite{randwalk}, krótkoterminowo, ceny akcji zmieniają się według nieprzewidywalnych schematów. Zmiany minutowe cen akcji są więc dużo trudniejsze do przewidzenia niż zmiany dobowe. Z tego względu przewidywanie wartości w okresie krótszym niż jedna doba, nie zostało uwzględnione w obszarze badań tej pracy.
 
 \subsection{Metodyka konstruowania modeli}
 
@@ -671,18 +666,16 @@ Strona główna Berkeshire Hathaway
 Strona główna Alpha Vantage
 \\\url{https://www.alphavantage.co/}
 
- \bibitem{mongodb}
-Strona główna MongoDB
-\\\url{https://www.mongodb.com/}
-
-
-
 \bibitem{randwalk}
   Burton G. Malkiel,
   \textit{Random Walk Down Wall Street: The Time-Tested Strategy for Successful Investing}.
   W. W. Norton Company,
   2007.
 
+\bibitem{efficientmarket}
+  Eugene Fama,
+  \textit{"Efficient Capital Markets: A Review of Theory and Empirical Work}
+  Journal of Finance. 25:2, pp. 383-417, 1970.
 
 \bibitem{pythonmachinelearning}
   John Hearty
