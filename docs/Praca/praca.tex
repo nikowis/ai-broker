@@ -212,9 +212,8 @@ Ten rodzaj badania spółek jest niezwykle czasochłonny i często wymaga eksper
 
 Najsłynniejszym analitykiem technicznym świata jest \textit{Warren Buffet} prezes amerykańskiego holdingu \textit{Berkshire Hathaway \cite{berkeshire}}. 
 
-\bigskip
 
-Analiza fundamentalna ze względu na swoją długoterminową naturę (raporty finansowe spółek publikowane kwartalnie) jest mało istotna przy dziennych predykcjach giełdowych. Z tego względu zostanie ona pominięta w tej pracy.
+%Analiza fundamentalna ze względu na swoją długoterminową naturę (raporty finansowe spółek publikowane kwartalnie) jest mało istotna przy dziennych predykcjach giełdowych. Z tego względu zostanie ona pominięta w tej pracy.
 
 \subsubsection{Analiza techniczna \cite{technicalanalysis}}
 
@@ -246,11 +245,40 @@ Rysunek \ref{alphabet_history} ilustruje fakt, że ceny zamknięcia akcji tworz�
 
 \subsubsection{Zakres prognozy}
 
-Najbardziej pożytecznym parametrem akcji, którego wykorzystanie daje inwestorowi największe szanse na zysk jest \textit{cena zamknięcia}. Znajomość ceny zamknięcia z kolejnego umożliwia podjęcie skutecznych decyzji inwestycyjnych. Przykładem parametru, który nie jest istotny jest liczba akcji w obrocie w przyszłości, ta liczba sama w sobie nie niesie informacji o spadku lub wzroście cen. Do tematu prognozowania można podejść na dwa sposoby:
+Przed przystąpieniem do konstruowania modeli predykcyjnych należy zdefiniować co tak naprawdę warto przewidywać, każda akcja ma bowiem kilka atrybutów. Najbardziej pożytecznym parametrem akcji, którego wykorzystanie daje inwestorowi największe szanse na zysk jest \textbf{cena zamknięcia}. Znajomość ceny zamknięcia z kolejnego dnia daje inwestorowi cały czas trwania sesji giełdowej na podjęcie skutecznych decyzji inwestycyjnych. Jest to najczęściej wybierany parametr akcji przy przewidywaniu ceny. Przykładem parametru, który nie jest istotny jest liczba akcji w obrocie z kolejnych dni, ta liczba sama w sobie nie niesie informacji o spadku lub wzroście cen.
+
+\bigskip
+
+Po wybraniu celu prognozy należy również określić jej przedział czasowy. Ceny na giełdzie można przewidywać dla dowolnego przedziału czasu. Może to być zarówno okres jednej minuty jak i kilku miesięcy. Przy gwarancji doskonałych prognoz, im większa częstotliwość dokładnego przewidywania ceny tym lepiej. Wynika to z tego iż inwestor może szybciej reagować na zachodzące zmiany i w większym stopniu wykorzystywać pozyskaną wiedzę zwiększając zyski. Z drugiej strony opierając się na \textit{hipotezie błądzenia losowego} można zauważyć, że zmiany w małych przedziałach czasowych są dużo bardziej zaburzone przez losowe wahania ceny. To z kolei sprawia iż krótkoterminowe ruchy cen mogą okazać się nie do przewidzenia. W celu utrzymania kompromisu pomiędzy użytecznością modelu, a jego odpornością na losowość giełdy, za okres predykcji został wybrany \textbf{jeden dzień}.
+ 
+\subsubsection{Prognozowanie - regresja czy klasyfikacja?}
+
+Do tematu prognozowania cen akcji można podejść na dwa sposoby:
 \begin{itemize}
-\item{\textbf{dokładny}, przewidywanie konkretnych wartości akcji}
-\item{\textbf{dyskretny}, predykcja wzrostu, spadku lub utrzymania ceny}
+\item{\textbf{dokładny}, przewidywanie konkretnych wartości cen akcji,}
+\item{\textbf{binarny}, predykcja wzrostu lub spadku ceny - tak zwana predykcja trendu.}
 \end{itemize}
+
+Potencjalnie korzystniejszym podejściem jest przewidywanie dokładnych cen akcji, gdyż jest to dokładniejsze aproksymowanie ceny. Jednakże z perspektywy inwestora istotniejszym od dokładnych wartości ceny są trendy. To właśnie różnice w cenach akcji pozwalają zarobić na ich obrocie. Wobec tego zamiast przewidywania dokładnej ceny zamknięcia warto przewidywać wzrosty oraz spadki cen. W przeciwieństwie do danych ciągłych, wyjściowe dane dyskretne  dają jasny sygnał o działaniach jakie należy podjąć aby zarobić. Z tego powodu jako podstawowe wyjście z modeli predykcyjnych wybrany został \textbf{trend binarny}.
+
+\bigskip
+
+Ze względu na to jak przebiega obrót akcjami, binarne przewidywanie z dnia na dzień może jednak okazać się niedostosowane do rzeczywistości. Akcje kupuje i sprzedaje się za pomocą domu maklerskiego, który pobiera prowizje za każdą transakcję. Obecnie najniższe prowizje na polskim rynku są na poziomie $0,19\%$ za transakcję. Pojedyncza operacja dająca zarobić na przewidzianej cenie wymaga kupienia, a następnie sprzedania akcji, wobec czego łączna prowizja wyniesie przy zaokrągleniu $0,4\%$. Wszystkie wahania cen poniżej tej wartości są teoretycznie bez znaczenia dla inwestora, ponieważ nie da się na nich zarobić. W związku z powyższym wnioskowaniem należy zastosować model dyskretny, będący rozwinięciem modelu binarnego o dodatkową klasę - klasę utrzymania ceny w pewnych ramach. Wyszczególnione są wówczas trzy klasy:
+\begin{itemize}
+\item spadek ceny poniżej $0,4\%$
+\item wzrost ceny powyżej $0,4\%$
+\item utrzymanie zmiany ceny w przedziale $(-0,4; 0,4)\%$
+\end{itemize}
+
+Dla potwierdzenia zasadności takiego modelu, należy upewnić się że dzienne wahania cen na giełdzie są wystarczające. Na rysunku \ref{l_r_pct_change_last_30} można zaobserwować, iż zmiany w kursie często przekraczają $0,4\%$ w związku z czym transakcje przynoszące zysk można wykonywać regularnie. Ten wniosek potwierdza zasadność takiej konstrukcji modeli. W związku z większym stopniem złożoności takiej klasyfikacji, może okazać się iż dane wejściowe nie pozwalają na odseparowanie tych trzech klas. 
+
+%TODO dodać paski -0.4%   +0.4% do wykresu
+\begin{figure}[H]
+\centering \includegraphics[scale=0.9]{img/linear_regression/l_r_pct_change_last_30}
+\caption{Dzeinna zmiana ceny akcji spółki \textit{GOOGL} z 30 dni (opracowanie własne)}
+\label{l_r_pct_change_last_30}
+\end{figure}
+
 
 \subsection{Metodyka konstruowania modeli}
 
@@ -262,25 +290,6 @@ Ponieważ zagadnienie przewidywania giełdy jest nietrywialne ze względu na los
 \item{\textbf{Dobór danych wejściowych}, selekcja wartości wejściowych}
 \item{\textbf{Dobór spółek uczących i testujących}}
 \end{itemize}
-
-\subsubsection{Prognozowanie - regresja czy klasyfikacja?}
-
-Potencjalnie korzystniejszym podejściem jest przewidywanie dokładnych cen akcji, gdyż pozwoli na dokładniejsze aproksymowanie ceny. Jednakże z perspektywy inwestora istotniejszym od dokładnych wartości ceny są trendy. Wobec czego zamiast przewidywania dokładnej ceny zamknięcia należy przewidywać wzrosty oraz spadki cen. Binarne przewidywanie z dnia na dzień może jednak okazać się nieprzydatne ze względu na to jak przebiega obrót akcjami. Akcje kupuje i sprzedaje się za pomocą domu maklerskiego, który pobiera prowizje za każdą transakcję. Obecnie najniższe prowizje na polskim rynku są na poziomie $0,19\%$ za transakcję. Pojedyncza operacja dająca zarobić na przewidzianej cenie wymaga kupienia, a następnie sprzedania akcji, wobec czego łączna prowizja wyniesie przy zaokrągleniu $0,4\%$. Wszystkie wahania cen poniżej tej wartości są teoretycznie bez znaczenia dla inwestora. W związku z powyższym wnioskowaniem należy zastosować model, który przewiduje trzy wartości:
-\begin{itemize}
-\item spadek ceny poniżej $0,4\%$
-\item wzrost ceny powyżej $0,4\%$
-\item utrzymanie zmiany ceny w przedziale $(-0,4; 0,4)\%$
-\end{itemize}
-
-
-Na rysunku \ref{l_r_pct_change_last_30} można zaobserwować, iż zmiany w kursie często przekraczają $0,4\%$ w związku z czym transakcje przynoszące zysk można wykonywać regularnie. Ten wniosek potwierdza zasadność tej metody do oceny modeli.
-
-%TODO dodać paski -0.4%   +0.4% do wykresu
-\begin{figure}[H]
-\centering \includegraphics[scale=0.9]{img/linear_regression/l_r_pct_change_last_30}
-\caption{Dzeinna zmiana ceny akcji spółki \textit{GOOGL} z 30 dni (opracowanie własne)}
-\label{l_r_pct_change_last_30}
-\end{figure}
 
 
 \subsubsection{Perspektywa prognozy}
