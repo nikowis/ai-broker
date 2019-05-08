@@ -280,42 +280,22 @@ Dla potwierdzenia zasadności takiego modelu, należy upewnić się że dzienne 
 \end{figure}
 
 
-\subsection{Metodyka konstruowania modeli}
+%\subsubsection{Selekcja cech}
 
-Ponieważ zagadnienie przewidywania giełdy jest nietrywialne ze względu na losowe wahania wpływające na ceny akcji, do stworzenia każdego z modeli do predykcji, należy rozważyć wykorzystanie zróżnicowanych założeń:
-	
-\begin{itemize}
-\item{\textbf{Prognozowanie dokładne/dyskretne} }
-\item{\textbf{Liczba dni}, z których prognozowana jest wartość.}
-\item{\textbf{Dobór danych wejściowych}, selekcja wartości wejściowych}
-\item{\textbf{Dobór spółek uczących i testujących}}
-\end{itemize}
+%Według niektórych badań wolumen obrotów akcji nie jest skorelowany w żaden sposób z jej ceną. Modele mogą więc wykazywać lepsze wyniki przy mniejszej lub większej liczbie wejściowych parametrów. Niektóre parametry mogą okazać się zbędne lub wręcz mogą osłabiać przewidywanie wartości.
 
+%\subsubsection{Dobór spółek}
 
-\subsubsection{Perspektywa prognozy}
-
-Model przewidujący może na wyjściu zwrócić predykcje z więcej niż jednego dnia sesji giełdowej. Należy uważać jednak na nakładanie się błędów predykcji i uważnie dobierać parametr przewidywanej liczby dni. Na przykład, jeżeli prognozowana jest wartość na dwa dni do przodu, to wówczas trzeci prognozowany dzień będzie oparty na prognozie z poprzedniego dnia. W związku z czym dojdzie złączenia się błędu i zwiększenia zaburzenia wyników.
-
-\subsubsection{Liczba dni historycznych}
-
-Wektor wejściowy do modelu może składać się z wielu parametrów giełdowych z jednego wybranego dnia z przeszłości. Możliwa jest również konkatenacja takich wektorów z kilku poprzednich dni dająca modelowi wgląd w kształtowanie się ruchu cen na przestrzeni czasu. Taki zabieg daje modelom większą ilość informacji. Dobranie większej ilości informacji może zarówno pogorszyć jak i polepszyć wyniki modelu. Jest to więc jeden z parametrów, który należy rozważyć.
-
-\subsubsection{Selekcja cech}
-
-Według niektórych badań wolumen obrotów akcji nie jest skorelowany w żaden sposób z jej ceną. Modele mogą więc wykazywać lepsze wyniki przy mniejszej lub większej liczbie wejściowych parametrów. Niektóre parametry mogą okazać się zbędne lub wręcz mogą osłabiać przewidywanie wartości.
-
-\subsubsection{Dobór spółek}
-
-Modele oceniane na podstawie danych poszczególnych spółek mogą dawać w skrajnych przypadkach zafałszowane wyniki. Wiele spółek wykazuje wysoką korelację cen akcji między sobą. W celu uniknięcia pułapki przetrenowania, do uczenia i testowania użyte zostały dane spółek o niskiej korelacji i różnych trendach wzrostu/spadku.
+%Modele oceniane na podstawie danych poszczególnych spółek mogą dawać w skrajnych przypadkach zafałszowane wyniki. Wiele spółek wykazuje wysoką korelację cen akcji między sobą. W celu uniknięcia pułapki przetrenowania, do uczenia i testowania użyte zostały dane spółek o niskiej korelacji i różnych trendach wzrostu/spadku.
 
 \subsection{Kryteria oceny modeli predykcji}
 
-Podczas oceny modelu wzięto pod uwagę różne kryteria mierzenia dokładności nauczonych klasyfikatorów.
+Porównywanie jakości i wydajności jest nierozłącznym elementem tworzenia i testowania metod uczenia maszynowego. Istnieje wiele sposobów na realizację tego nietrywialnego zadania, które jak się okazuje, często wymaga porównywania modeli na kilku płaszczyznach. Najpopularniejszymi miarami porównawczymi są:
 \begin{itemize}
 \item procent prawidłowych klasyfikacji
-\item pole pod krzywą ROC
+\item pole AUC pod krzywą ROC
 \item częściowy indeks Gini
-%\item statystyka H
+\item metryka F1
 \item współczynnik Briera
 \item statystyka Kołomogrowa-Smirnova
 \end{itemize}
@@ -383,39 +363,6 @@ Częściowy indeks Gini jest innym sposobem na analizę jakości modelu predykcy
 
 Metryka F1 jest średnią harmoniczną metryk czułości i precyzji (wyrażona wzorem $F1=2*\frac{precyzja*czulosc}{precyzja+czulosc}$). Metryka ta jest dobrym narzędziem pozwalającym określić za pomocą jednej wartości jakość modelu, biorąc pod uwagę precyzję jak i czułość modelu. Osiąga ona w najlepszym przypadku wartość 1, zaś w najgorszym wartość 0. 
 
-%\subsubsection{Miara H \cite{hmeasure}}
-
-%TODO dodać wykres z krzyżującymi się krzywymi ROC dla różnych modeli
-
-%Miary oparte o krzywą ROC mimo wielu zalet mają również wady \cite{roccritique}. Gdy pole pod krzywą pierwszego klasyfikatora jest mniejsze od pola pod krzywą drugiego klasyfikatora, można wywnioskować iż drugi klasyfikator jest lepszy. Bywa jednak że krzywe ROC dla tych dwóch modeli się krzyżują, a pierwszy model pomimo mniejszego pola powierzchni pod krzywą, ma lepsze właściwości dla znacznej większości progów używanych do rozdzielenia klas. Należy również wziąć pod uwagę iż analizy porównawczej modeli klasyfikujących często dokonuje się dla małych, stopniowych optymalizacji parametrów. Powoduje to zazwyczaj małe różnice w nakreślonych krzywych ROC, które mogą się krzyżować. W związku z powyższym miary oparte o tą krzywą nie dają dobrego porównania modeli w takim scenariuszu.
- 
-%\bigskip
-
-%Przy ocenie modeli warto również wziąć pod uwagę czy błąd predykcji z grupy \textit{FP} jest równoważna wynikowi z \textit{FN}. Niech dany będzie problem klasyfikacji binarnej kursu giełdy z klasami \textit{wzrost (positive)} oraz \textit{spadek (negative)}. W przypadku gdy wynik zaklasyfikowany zostanie do grupy \textit{FP}, wówczas makler giełdowy korzystający z tego klasyfikatora zainwestuje pieniądze pomimo spadającego kursu. Oznacza to najgorszą możliwą decyzję narażającą użytkownika modelu na straty. W drugim przypadku gdy wynik zostanie przypisany do grupy \textit{FN}, makler zostanie fałszywie ostrzeżony przed spadkiem kursu. Wówczas sprzedaż akcji może jedynie ograniczyć jego zyski, zakładając że wcześniej zainwestował poprawnie (przed wzrostem cen akcji). Z powyższego można wywnioskować, iż ocena powinna być surowsza dla klasyfikacji przykładów w grupie \textit{FP}.
- 
-%\bigskip
-%https://cran.r-project.org/web/packages/hmeasure/vignettes/hmeasure.pdf rozdział 2.6 
-
-%\textit{Miara H} jest miarą oceny modeli klasyfikujących zaproponowaną przez D.J.Hand, która została opracowana jako alternatywa dla miar opartych o krzywą ROC. Metodyka ta daje możliwość wzięcia pod uwagę wiedzy eksperckiej na temat kosztu przypisania wyniku do złej klasy (\textit{FP} lub \textit{FN}). Niech $c \in [0,1]$ będzie kosztem przypisania elementu do grupy FP, zaś $1-c$ kosztem przypisania elementu do grupy FN. Niech $t$ będzie progiem rozdzielającym klasy. Całkowity koszt klasyfikacji to:
-
-%$$ \pi_{0}=\frac{TP+FN}{n} \ \ \ \ \ \ \ \ \  \pi_{1}=\frac{TN+FP}{n} $$
-%$$ L(c,t) = 2(c\pi_{0}FPR(t)+(1-c)\pi_{1}(1-TPR(t))$$
-
-
-
-%Warto zauważyć że $L(\frac{1}{2}, t)$ odpowiada mierzeniu procentu prawidłowych klasyfikacji.
-
-%Wartość funkcji $L(c,t)$ należy minimalizować w celu uzyskania jak najlepszej klasyfikacji. Wobec czego można zdefiniować $MLW(c)=L(c,T_c)$ gdzie $T_c$ jest  takim progiem klasyfikacji dla danego $c$, który minimalizuje $L(c,t)$ ($T_c = argmin_tL(c,t)$). Funkcja $MLW(c)$ oceniająca konkretny model klasyfikujący jest zależna od tylko jednej zmiennej. W praktyce jednak ciężko jest oczekiwać od użytkownika tej miary, doboru optymalnej wartości zmiennej $c$. Wobec tego zaproponowane zostało używanie rozkładu $w(c)$ zamiast konretnej zmiennej $c$. 
-
-%$$ L_w=\int_{c}L(c, T_c)w(c)dc $$
-
-%Miarę H zdefiniowana jest wzorem:
-
-%$$ H = 1-\frac{L_w}{L_w^{max}} $$
-
-%gdzie $L_w^{max}$ jest maksymalną wartością funkcji $L_w$, służącą do znormalizowania wyniku. Im większa wartość $H$ tym lepsza ocena klasyfikatora.
-%https://link.springer.com/content/pdf/10.1007%2Fs10994-009-5119-5.pdf L_w^{max} zdefiniowane na stronie 116
-
 \subsubsection{Współczynnik Briera \cite{brier}}
 
 Współczynnik Briera (ang. Brier score) jest metodą oceny modeli klasyfikujących opisana wzorem:
@@ -443,12 +390,11 @@ Metryka ta daje wartość 100 dla modelu idealnego, zaś 0 dla modelu losowego.
 
 \subsection{Wnioski i uwagi}
 
-Porównanie modeli klasyfikujących jest zadaniem trywialnym tylko dla specyficznych problemów. W tych przypadkach można się oprzeć o procent prawidłowych klasyfikacji jako jedyną miarę jakości modeli. W bardziej złożonych przypadkach dochodzi do dysproporcji w rozmiarze klas, wówczas ta podstawowa miara zostaje w pewien sposób zafałszowana. Innym aspektem, który może być brany pod uwagę przy ocenie klasyfikatorów jest różnica w wadze błędu z grupy \textit{FP}, względem błędu z grupy \textit{FN}. Te problemy należy rozwiązywać poprzez używanie wielu miar do porównywania modeli. Używanie wielu metryk może być przydatne w szczególności gdy dwa modele mają podobne wartości w jednej z miar.
+Porównanie modeli klasyfikujących jest zadaniem trywialnym tylko dla specyficznych problemów. W tych przypadkach można wykorzystać procent prawidłowych klasyfikacji jako jedyną miarę jakości modeli. W bardziej złożonych przypadkach, gdy dochodzi do dysproporcji w licznościach klas, ta podstawowa miara zostaje w pewien sposób zafałszowana. Innym aspektem, który może być brany pod uwagę przy ocenie klasyfikatorów jest różnica w wadze błędu z grupy \textit{FP}, względem błędu z grupy \textit{FN}. Te problemy należy rozwiązywać poprzez używanie różnorodnych miar do porównywania modeli. Używanie wielu metryk może być przydatne w szczególności gdy dwa modele mają podobne wartości dla jednej z miar.
 
 \bigskip
 
-W zagadnieniu predykcji giełdowych sprowadzonym do klasyfikacji, można posłużyć się procentem prawidłowych klasyfikacji jako podstawową miarą porównawczą. Wynika to z faktu, iż dla większości spółek liczność klas się równoważy. Dla dokładniejszego porównania modeli warto jednak zastosować również inne metryki, które dadzą więcej wglądu w otrzymywane wyniki.
-% Przy bardziej zaawansowanych badaniach należy uwzględnić przede wszystkim \textit{miarę H}, która bierze pod uwagę większy błąd fałszywego przypisywania predykcji do grupy wzrostów cen.
+W zagadnieniu predykcji giełdowych sprowadzonym do klasyfikacji, można posłużyć się \textit{procentem prawidłowych klasyfikacji} jako podstawową miarą porównawczą. Wynika to z faktu, iż dla większości spółek różnica w licznościach klas mieści się w granicach kilku do kilkunastu procent całego zbioru danych. Taka dysproporcja jest jednak na tyle znacząca, że dla porównywania modeli o bliskich wynikach trzeba stosować dodatkową miarę porównawczą. Ze względu na niewrażliwość na dysproporcje w licznościach klas oraz swoją popularność, jako drugą metrykę wykorzystano  \textit{pole AUC pod krzywą ROC}.
 
 \newpage
 
