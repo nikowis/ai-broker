@@ -3,11 +3,15 @@
 \usepackage{polski}
 \usepackage{float}
 \usepackage[T1]{fontenc}
-\usepackage{url}
 
+\usepackage{url}
+\usepackage{longtable}
+\usepackage{a4wide}
 \raggedbottom
+\usepackage{tabularx, booktabs}
 
 \usepackage[left=3.0cm, right=2.0cm, top=2.5cm, bottom=2.5cm]{geometry}
+
 
 % PERSONAL data about the thesis
 \newcommand{\myTitle}{Metodyka porównania algorytmów prognozy do wspomagania decyzji giełdowych}
@@ -174,10 +178,9 @@ Giełda z definicji jest miejscem wymiany towarów przez sprzedawców i kupców.
 
  Jednym z wymienianych na giełdzie towarów są akcje różnorodnych spółek. Każda spółka, która jest obecna na giełdzie ma przypisany do siebie symbol giełdowy (\textit{ticker}). Symbol giełdowy jest skrótowym kodem do identyfikowania spółek na określonej giełdzie (przykładowe symbole: \textit{GOOGL}, \textit{MSFT}, \textit{AMZN}). Podczas każdej sesji dokonywane są transakcje milionów akcji, których cena regulowana jest przez wolny rynek. Wynikiem tego jest duża zmienność cen i nieprzewidywalność akcji. Jest ona spowodowana między innymi: spekulacjami inwestorów, upublicznianiem informacji o konkretnej spółce (np. raportów finansowych) lub wydarzeniami na arenie politycznej (np. ustawy wpływające na działalność spólek z konkretnego sektora).
 
-
 \subsection{Dane giełdowe}
 
-Przed przystąpieniem do wyboru modeli należy zastanowić się nad danymi jakie będą służyć do ich uczenia. Wybór odpowiednich cech, analiza zebranych informacji oraz przetworzenie ich, wykracza poza zakres uczenia maszynowego tworząc własną dziedzinę zwaną inżynierią i analizą danych. Odpowiedni dobór i obróbka danych wejściowych często daje większe korzyści niż dopracowywanie modeli przewidujących i optymalizacja ich parametrów. 
+Istnieje wiele rodzajów danych, które są w większym lub mniejszym stopniu powiązane z giełdą papierów wartościowych. Zbiór informacji, które można wykorzystywać w przewidywaniu cen akcji jest bardzo szeroki, począwszy od cech bezpośrednio opisujących akcje na giełdzie, przez dane opisujące finansową sytuację spółek emitujących akcje, wskaźniki będące statystycznym odzwierciedleniem zmian cen na giełdzie, aż po dane alternatywne takie jak sentyment powiązany z wiadomościami na temat spółek oraz giełdy.
 
 \subsubsection{Dane podstawowe}
 
@@ -212,9 +215,6 @@ Ten rodzaj badania spółek jest niezwykle czasochłonny i często wymaga eksper
 
 Najsłynniejszym analitykiem technicznym świata jest \textit{Warren Buffet} prezes amerykańskiego holdingu \textit{Berkshire Hathaway \cite{berkeshire}}. 
 
-
-%Analiza fundamentalna ze względu na swoją długoterminową naturę (raporty finansowe spółek publikowane kwartalnie) jest mało istotna przy dziennych predykcjach giełdowych. Z tego względu zostanie ona pominięta w tej pracy.
-
 \subsubsection{Analiza techniczna \cite{technicalanalysis}}
 
 Analiza techniczna jest zbiorem technik mających na celu wspomaganie inwestora w podejmowaniu decyzji na podstawie historycznych danych giełdowych. Analiza ta bada zachowania rynku oraz poszukuje trendów np. poprzez analizę kształtów wykresów giełdowych. Szczególnie istotne są liczne wskaźniki techniczne oraz narzędzia analizy statystycznej.
@@ -227,9 +227,13 @@ Najpopularniejsze wskaźniki techniczne obejmują:
 \item{\textbf{oscylator stochastyczny}} -  wskaźnik momentum i siły trendu.
 \end{itemize}
 
-\subsubsection{Źródło danych}
+\subsubsection{Źródło danych i wybrane spółki}
 
 W pracy zostało wykorzystane darmowe źródło danych giełdowych \textit{Alpha Vantage} \cite{alphavantage}. Jest to API pozwalające na pobranie historycznych danych giełdowych dla konkretnej spółki poprzez podanie odpowiedniego symbolu giełdowego. Dostępne są zarówno podstawowe dane giełdowe jak i wskaźniki analizy technicznej. 
+
+\bigskip
+
+Na giełdach papierów wartościowych są obecne tysiące spółek. Ze względu na ograniczone zasoby obliczeniowe oraz dostępność danych badania zostały przeprowadzone na spółkach z giełdy \textit{NASDAQ} o największej kapitalizacji.
 
 \subsection{Predykcja}
 
@@ -408,51 +412,100 @@ Do zagadnienia predykcji cen na giełdzie można podchodzić na kilka sposobów.
 
 \section{Przetworzenie i analiza danych}
 
+Przed przystąpieniem do wyboru modeli należy zastanowić się nad danymi jakie będą służyć do ich uczenia. Wybór odpowiednich cech, analiza zebranych informacji oraz przetworzenie ich, wykracza poza zakres uczenia maszynowego tworząc własną dziedzinę zwaną inżynierią i analizą danych. Odpowiedni dobór i obróbka danych wejściowych często daje większe korzyści niż dopracowywanie modeli przewidujących i optymalizacja ich parametrów. 
+
+\subsection{Wybrane dane}
+
+Spośród dostępnych danych do uczenia modeli wybrane zostały: 
+\begin{itemize}
+\item podstawowe dane giełdowe oraz ich modyfikacje,
+\item wybrane wskaźniki analizy technicznej oraz ich modyfikacje.
+\end{itemize}
+
+Analiza fundamentalna ze względu na swoją długoterminową naturę (raporty finansowe spółek publikowane kwartalnie) jest mało istotna przy dziennych predykcjach giełdowych. Dodatkowo istnieje mało darmowych źródeł danych analizy fundamentalnej. Z tych względów zostanie ona pominięta w tej pracy.
+
+\bigskip
+
+Wszystkie dane wejściowe, wraz z opisami, zaprezentowane są w tabeli \ref{data_columns_table}. Dane są 
+
+
+
+\begin{longtable}[c]{| m{0.5cm} m{3cm} m{10cm}|} 
+\toprule
+  Lp. & Oznaczenie & Opis\\
+\midrule
+\endhead
+\midrule
+
+\midrule
+\caption{Wybrane cechy i ich opis}
+\label{data_columns_table}
+\endfoot
+
+\bottomrule
+\endlastfoot
+
+ 1 & $C_t$ & Cena zamknięcia w dniu $t$. \\ 
+ 2 & $O_t$ & Cena otwarcia w dniu $t$. \\
+ 3 & $H_t$ & Najwyższa cena w dniu $t$. \\
+ 4 & $L_t$ & Najniższa w dniu $t$. \\
+ 5 & $V_t$ & Liczba akcji w obrocie w dniu $t$. \\
+ 6 & $HL\_PCT$ & Różnica pomiędzy $H_t$ a $L_t$ wyrażona w procentach.\\
+ 7 & $SMA_5$ & Średnia krocząca z 5 dni. \\
+ 8 & $SMA_{10}$ & Średnia krocząca z 10 dni. \\
+ 9 & $SMA\_DIFF$ & $SMA_{10}-SMA_{5}$ \\
+ 10 & $EMA_{12}$ & Wykładnicza średnia krocząca z 12 dni. \\
+ 11 & $EMA_{26}$ & Wykładnicza średnia krocząca z 26 dni. \\
+ 12 & $EMA\_DIFF$ & $EMA_{26}-EMA_{12}$ \\
+ 13 & $ROC_{5}$ & Wykładnicza średnia krocząca z 5 dni. \\
+ 14 & $ROC_{10}$ & Wykładnicza średnia krocząca z 10 dni. \\
+ 15 & $ROC\_DIFF$ & $ROC_{10}-ROC_{5}$ \\
+  16 & $MOM_{5}$ & Wykładnicza średnia kMOMząca z 5 dni. \\
+ 17 & $MOM_{10}$ & Wykładnicza średnia kMOMząca z 10 dni. \\
+ 18 & $MOM\_DIFF$ & $MOM_{10}-MOM_{5}$ \\
+  19 & $WILLR_{5}$ & Wykładnicza średnia kWILLRząca z 5 dni. \\
+ 20 & $WILLR_{10}$ & Wykładnicza średnia kWILLRząca z 10 dni. \\
+ 21 & $WILLR\_DIFF$ & $WILLR_{10}-WILLR_{5}$ \\
+  22 & $APO_{5}$ & Wykładnicza średnia kAPOząca z 5 dni. \\
+ 23 & $APO_{10}$ & Wykładnicza średnia kAPOząca z 10 dni. \\
+ 24 & $APO\_DIFF$ & $APO_{10}-APO_{5}$ \\
+  25 & $RSI_{5}$ & Wykładnicza średnia kRSIząca z 5 dni. \\
+ 26 & $RSI_{10}$ & Wykładnicza średnia kRSIząca z 10 dni. \\
+ 27 & $RSI\_DIFF$ & $RSI_{10}-RSI_{5}$ \\
+  28 & $ADX_{5}$ & Wykładnicza średnia kADXząca z 5 dni. \\
+ 29 & $ADX_{10}$ & Wykładnicza średnia kADXząca z 10 dni. \\
+ 30 & $ADX\_DIFF$ & $ADX_{10}-ADX_{5}$ \\
+  31 & $CCI_{5}$ & Wykładnicza średnia kCCIząca z 5 dni. \\
+ 32 & $CCI_{10}$ & Wykładnicza średnia kCCIząca z 10 dni. \\
+ 33 & $CCI\_DIFF$ & $CCI_{10}-CCI_{5}$ \\
+ 
+\end{longtable}
+
+\subsection{Przetworzenie danych}
+
+\subsubsection{Stworzenie etykiet}
+
+\subsubsection{Usunięcie stacjonarności}
+
+\subsection{Analiza danych}
+
+\subsubsection{Uzupełnienie brakujących danych}
+
+\subsubsection{Outliers}
+
+\subsubsection{EDA}
+
+\subsection{Redukcja danych wejściowych}
+
+\subsubsection{PCA}
+
+
 
 \newpage
 
 \section{Wybrane algorytmy do prognozowania}
 
-\subsection{Regresja za pomocą regresji liniowej}
-
-Jedną z naiwnych metod przewidywania wartości funkcji jest regresja liniowa. Pierwszą próbą dla tego modelu było przewidzenie ceny zamknięcia z kolejnego dnia przy posiadaniu danych z dnia poprzedniego.
-
-Z rysunku \ref{linear_regression_1} wynika iż prognozowane wartości pokrywają się z rzeczywistymi. Po obliczeniu błędu model daje nam dokładność na poziomie około  $99,934\%$. Wydaje się to być doskonałym wynikiem. Aby upewnić się o wartości modelu należy przyjrzeć się wykresowi z bliska.
-
-
-\begin{figure}[H]%
-\centering
-\subfigure[Wykres rzeczywistych wartości]{%
-\label{l_r_stock_data}
-\includegraphics[scale=0.46]{img/linear_regression/l_r_stock_data}}%
-\qquad
-\subfigure[Wkyres rzeczywistych oraz przewidywanych wartości]{%
-\label{l_r_1_day_full}
-\includegraphics[scale=0.46]{img/linear_regression/l_r_1_day_full}}%
-\caption{Wykres dla spółki \textit{GOOGL} (opracowanie własne)}
-\label{linear_regression_1}
-\end{figure}
-
-
-Na rysunku \ref{l_r_1_day_last_30} widać że prognozowane wartości są w rzeczywistości delikatnie zniekształconym obrazem przeszłych notowań spółki. Dokładność na poziomie $~99\%$ została osiągnięta ze względu na małe wahania w cenie. Logicznie rzecz biorąc nie jest to dobra metoda przewidywania przyszłości. Gdy cena jest w lokalnym maksimum wówczas inwestor powinien sprzedać posiadane akcje, jednak model przewiduje dalsze wzrosty ceny i wprowadza inwestora w błąd. Analogiczna sytuacja dzieje się przy minimach lokalnych ceny akcji. 
-
-\begin{figure}[H]
-\centering \includegraphics[scale=0.9]{img/linear_regression/l_r_1_day_last_30}
-\caption{Wykres dla spólki \textit{GOOGL} z 30 dni (opracowanie własne)}
-\label{l_r_1_day_last_30}
-\end{figure}
-
-
-\bigskip
-
-Wobec powyższych obserwacji należy sprawdzić jakość tego modelu w metodą dyskretnej. Dla tych samych prognoz została przeprowadzona ocena dyskretna z progiem $\pm0,4\%$. Na rysunku \ref{l_r_discrete_score} widoczna są przewidywane oraz rzeczywiste wartości oceny dyskretnej. Ze względu na charakterystyke regresji liniowej, niemal wszystkie prognozy oscylują w granicach, które są nieznaczące dla inwestora. Ocena tą metodą dała wynik $0.257\%$ co udowadnia bezużyteczność tego modelu. Dla porównania model losowy z rozkładem jednostajnym dałby wynik na poziomie $0.(3)\%$.
-
-
-\begin{figure}[H]
-\centering \includegraphics[scale=0.9]{img/linear_regression/l_r_discrete_score}
-\caption{Histogram zmian cen akcji spółki \textit{GOOGL} (opracowanie własne)}
-\label{l_r_discrete_score}
-\end{figure}
+%Todo wstęp tutaj
 
 \subsection{SVM \cite{svm}}
 
@@ -462,10 +515,10 @@ Maszyny wektorów podpierających (ang. support-vector machines) są zbiorem kla
 \begin{figure}[H]
 \centering \includegraphics[scale=0.9]{img/svm.png}
 \caption{Hiperpłaszczyzna rozdzielająca zbiór z maksymalnym marginesem \cite{wikisvm}}
-\label{mlpnn}
+\label{wiki_svm}
 \end{figure}
 
-W celu używania maszyn wektorów nośnych do klasyfikacji problemów nieliniowych stosuje się przekształcanie przestrzeni zadania za pomocą funkcji jądrowych. Wprowadzają one dodatkowe wymiary do zadania, w których znalezienie hiperpłaszczyzny rozdzielającej klasy może okazać się prostsze (rysunek \ref{wiki_svm2}. Do najpopularniejszych funkcji jądrowych zalicza się funkcje: liniową (zachowującą wymiar zadania w niezmienionym stanie), wielomianową, radialną czy też sigmoidalną.
+W celu używania maszyn wektorów nośnych do klasyfikacji problemów nieliniowych stosuje się przekształcanie przestrzeni zadania za pomocą funkcji jądrowych. Wprowadzają one dodatkowe wymiary do zadania, w których znalezienie hiperpłaszczyzny rozdzielającej klasy może okazać się prostsze (rysunek \ref{wiki_svm2}). Do najpopularniejszych funkcji jądrowych zalicza się funkcje: liniową (zachowującą wymiar zadania w niezmienionym stanie), wielomianową, radialną czy też sigmoidalną.
 
 
 \begin{figure}[H]
