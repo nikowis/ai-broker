@@ -120,6 +120,14 @@ Badane są lata jedynie 2013-2016 ze względu na ograniczenia API.
 
 Kod dostępny na github.com/martinwg/stockprediction
 
+==============================================================================================================================
+
+Predicting direction of stock price index movement using artificial neural networks and support vector machines: The sample of the Istanbul Stock Exchange
+Yakup Kara, Melek Acar Boyacioglu, Ömer Kaan Baykan
+
+Predykcja trendu dla istambułskiego indeksu. Sieci neuronowe oraz SVM.
+Jako wejście użyte kilka wskaźników analizy technicznej.
+Praca nudna i wtórna.
 
 ######################################################################################################################################################
 Inne uwagi i przemyślenia

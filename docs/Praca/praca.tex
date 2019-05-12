@@ -388,13 +388,26 @@ $$D_{n,m}=\sup_x|F(x)-G(x)|$$
 
 Metryka ta daje wartość 100 dla modelu idealnego, zaś 0 dla modelu losowego.
 
-\subsection{Wnioski i uwagi}
+\subsubsection{Dobór metryki}
 
 Porównanie modeli klasyfikujących jest zadaniem trywialnym tylko dla specyficznych problemów. W tych przypadkach można wykorzystać procent prawidłowych klasyfikacji jako jedyną miarę jakości modeli. W bardziej złożonych przypadkach, gdy dochodzi do dysproporcji w licznościach klas, ta podstawowa miara zostaje w pewien sposób zafałszowana. Innym aspektem, który może być brany pod uwagę przy ocenie klasyfikatorów jest różnica w wadze błędu z grupy \textit{FP}, względem błędu z grupy \textit{FN}. Te problemy należy rozwiązywać poprzez używanie różnorodnych miar do porównywania modeli. Używanie wielu metryk może być przydatne w szczególności gdy dwa modele mają podobne wartości dla jednej z miar.
 
 \bigskip
 
-W zagadnieniu predykcji giełdowych sprowadzonym do klasyfikacji, można posłużyć się \textit{procentem prawidłowych klasyfikacji} jako podstawową miarą porównawczą. Wynika to z faktu, iż dla większości spółek różnica w licznościach klas mieści się w granicach kilku do kilkunastu procent całego zbioru danych. Taka dysproporcja jest jednak na tyle znacząca, że dla porównywania modeli o bliskich wynikach trzeba stosować dodatkową miarę porównawczą. Ze względu na niewrażliwość na dysproporcje w licznościach klas oraz swoją popularność, jako drugą metrykę wykorzystano  \textit{pole AUC pod krzywą ROC}.
+W zagadnieniu predykcji giełdowych sprowadzonym do klasyfikacji, można posłużyć się \textit{procentem prawidłowych klasyfikacji} jako podstawową miarą porównawczą. Wynika to z faktu, iż dla większości spółek różnica w licznościach klas mieści się w granicach kilku do kilkunastu procent całego zbioru danych. Taka dysproporcja jest jednak na tyle znacząca, że dla porównywania modeli o bliskich wynikach trzeba stosować dodatkową miarę porównawczą. Ze względu na niewrażliwość na dysproporcje w licznościach klas oraz swoją popularność, jako drugą metrykę wykorzystano \textit{pole AUC pod krzywą ROC}.
+
+\subsection{Wnioski i uwagi}
+
+Do zagadnienia predykcji cen na giełdzie można podchodzić na kilka sposobów. Najbardziej intuicyjnym rozwiązaniem z perspektywy początkującego inwestora, jest model, który na wyjściu wyznacza jaką akcję powinien wykonać inwestor w stosunku do akcji konkretnej spółki. Doświadczony makler do wyznaczania cen zapewne wybrałby model regresyjny, który poza określeniem trendu daje możliwość oceny jak duże są wahania ceny. Dzięki temu mógłby dobrać spółki, dla których wzrost cen będzie największy. Przy ocenie jakości regresji błąd jest zazwyczaj określany za pomocą odległości przewidywanej wartości ceny od rzeczywistej wartości ceny. Informacja że dany model aproksymuje wartość ceny z błędem $\pm 5 \$$ jest ciężka do zinterpretowania wprost. Na podstawie takiej oceny makler nie jest w stanie bezpośrednio stwierdzić czy taki model nadaje się do użycia na giełdzie. Dla zagadnienia klasyfikacji błąd jest określony jako $\%$ prawidłowych klasyfikacji, więc daje dużo lepsze wyobrażenie na temat jakości i możliwości wykorzystania modelu do obrotu akcjami.
+
+\bigskip
+
+
+
+\newpage
+
+\section{Przetworzenie i analiza danych}
+
 
 \newpage
 
