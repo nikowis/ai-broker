@@ -429,21 +429,23 @@ Analiza fundamentalna ze względu na swoją długoterminową naturę (raporty fi
 Wszystkie dane wejściowe, wraz z opisami, zaprezentowane są w tabeli \ref{data_columns_table}. Dane są 
 
 
+\begin{longtable}[c]{| m{0.5cm} m{4.5cm} m{10cm}|} 
 
-\begin{longtable}[c]{| m{0.5cm} m{3cm} m{10cm}|} 
 \toprule
   Lp. & Oznaczenie & Opis\\
 \midrule
 \endhead
 \midrule
 
-\midrule
 \caption{Wybrane cechy i ich opis}
 \label{data_columns_table}
 \endfoot
 
 \bottomrule
+\caption{Wybrane cechy i ich opis}
+\label{data_columns_table}
 \endlastfoot
+
 
  1 & $C_t$ & Cena zamknięcia w dniu $t$. \\ 
  2 & $O_t$ & Cena otwarcia w dniu $t$. \\
@@ -454,31 +456,42 @@ Wszystkie dane wejściowe, wraz z opisami, zaprezentowane są w tabeli \ref{data
  7 & $SMA_5$ & Średnia krocząca z 5 dni. \\
  8 & $SMA_{10}$ & Średnia krocząca z 10 dni. \\
  9 & $SMA\_DIFF$ & $SMA_{10}-SMA_{5}$ \\
- 10 & $EMA_{12}$ & Wykładnicza średnia krocząca z 12 dni. \\
- 11 & $EMA_{26}$ & Wykładnicza średnia krocząca z 26 dni. \\
- 12 & $EMA\_DIFF$ & $EMA_{26}-EMA_{12}$ \\
- 13 & $ROC_{5}$ & Wykładnicza średnia krocząca z 5 dni. \\
- 14 & $ROC_{10}$ & Wykładnicza średnia krocząca z 10 dni. \\
+ 10 & $TR$ & (ang. True Range) różnica pomiędzy najniższą ceną, a najwyższą ceną danego dnia. \\
+ 11 & $MACD$ & Wskaźnik wyliczany z różnicy dwóch wykładniczych średnich kroczących.\\
+ 12 & $MACD\_SIGNAL$ & Wykładnicza średnia krocząca ze wskaźnika MACD \\
+ 13 & $ROC_{5}$ & (ang. Rate of Change) Wskaźnik liczący procentową różnicę w cenie między dniem $t$ a $t-5$. \\
+ 14 & $ROC_{10}$ & (ang. Rate of Change) Wskaźnik liczący procentową różnicę w cenie między $t$ a $t-10$. \\
  15 & $ROC\_DIFF$ & $ROC_{10}-ROC_{5}$ \\
-  16 & $MOM_{5}$ & Wykładnicza średnia kMOMząca z 5 dni. \\
- 17 & $MOM_{10}$ & Wykładnicza średnia kMOMząca z 10 dni. \\
+  16 & $MOM_{5}$ & Momentum - różnica w cenie między $t$ a $t-5$.  \\
+ 17 & $MOM_{10}$ & Momentum - różnica w cenie między $t$ a $t-10$. \\
  18 & $MOM\_DIFF$ & $MOM_{10}-MOM_{5}$ \\
-  19 & $WILLR_{5}$ & Wykładnicza średnia kWILLRząca z 5 dni. \\
- 20 & $WILLR_{10}$ & Wykładnicza średnia kWILLRząca z 10 dni. \\
+  19 & $WILLR_{5}$ & \textit{Williams` \%R} - wskaźnik niedosycenia/przesycenia ceny z ostatnich 5 dni. \\
+ 20 & $WILLR_{10}$ & \textit{Williams` \%R} - wskaźnik niedosycenia/przesycenia ceny z ostatnich 10 dni.  \\
  21 & $WILLR\_DIFF$ & $WILLR_{10}-WILLR_{5}$ \\
-  22 & $APO_{5}$ & Wykładnicza średnia kAPOząca z 5 dni. \\
- 23 & $APO_{10}$ & Wykładnicza średnia kAPOząca z 10 dni. \\
+  22 & $APO_{5}$ & Oscylator ceny z 5 dni. \\
+ 23 & $APO_{10}$ & Oscylator ceny z 10 dni.  \\
  24 & $APO\_DIFF$ & $APO_{10}-APO_{5}$ \\
-  25 & $RSI_{5}$ & Wykładnicza średnia kRSIząca z 5 dni. \\
- 26 & $RSI_{10}$ & Wykładnicza średnia kRSIząca z 10 dni. \\
+  25 & $RSI_{5}$ & Wskaźnik siły względnej - oscylator siły trendu z 5 dni. \\
+ 26 & $RSI_{10}$ & Wskaźnik siły względnej - oscylator siły trendu z 10 dni.\\
  27 & $RSI\_DIFF$ & $RSI_{10}-RSI_{5}$ \\
-  28 & $ADX_{5}$ & Wykładnicza średnia kADXząca z 5 dni. \\
- 29 & $ADX_{10}$ & Wykładnicza średnia kADXząca z 10 dni. \\
+  28 & $ADX_{5}$ & Wskaźnik siły trendu z 5 dni. \\
+ 29 & $ADX_{10}$ & Wskaźnik siły trendu z 10 dni. \\
  30 & $ADX\_DIFF$ & $ADX_{10}-ADX_{5}$ \\
-  31 & $CCI_{5}$ & Wykładnicza średnia kCCIząca z 5 dni. \\
- 32 & $CCI_{10}$ & Wykładnicza średnia kCCIząca z 10 dni. \\
+  31 & $CCI_{5}$ & (ang. Commodity Channel Index) Oscylator z 5 dni. \\
+ 32 & $CCI_{10}$ & (ang. Commodity Channel Index) Oscylator z 10 dni. \\
  33 & $CCI\_DIFF$ & $CCI_{10}-CCI_{5}$ \\
- 
+ 34 & $AD$ & linia \textit{Chaikin A/D}.  \\
+ 35 & $STOCH\_K$ & Oscylator stochastyczny \textit{Slow \%K}. \\
+ 36 & $STOCH\_D$ & Oscylator stochastyczny \textit{Slow \%D}.\\
+ 37 & $STOCH\_K\_DIFF$ & $STOCH\_K_{t}-STOCH\_K_{t-1}$ \\
+ 38 & $STOCH\_D\_DIFF$ & $STOCH\_D_{t}-STOCH\_D_{t-1}$  \\
+ 39 & $DISPARITY_{5}$ &  $\frac{C_t}{SMA_5}\times 100$ \\
+ 40 & $DISPARITY_{10}$ & $\frac{C_t}{SMA_10}\times 100$ \\
+ 41 & $PRICE\_BOLL\_UP_{10}$ & $(C_t-BOLL\_UP_{10})\div BOLL\_UP_{10}$ - wskaźnik oparty o wstęgi Bollingera.  \\
+ 42 & $PRICE\_BOLL\_LOW_{10}$ & $(C_t-BOLL\_LO_{10})\div BOLL\_LOW_{10}$ - wskaźnik oparty o wstęgi Bollingera.\\
+ 43 & $PRICE\_BOLL\_UP_{20}$ & $(C_t-BOLL\_UP_{20})\div BOLL\_UP_{20}$ - wskaźnik oparty o wstęgi Bollingera.\\
+ 44 & $PRICE\_BOLL\_LOW_{20}$ & $(C_t-BOLL\_LOW_{20})\div BOLL\_LOW_{20}$ - wskaźnik oparty o wstęgi Bollingera.\\
+     
 \end{longtable}
 
 \subsection{Przetworzenie danych}
