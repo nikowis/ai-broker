@@ -3,11 +3,10 @@ import time
 
 import keras
 import numpy as np
-from keras.callbacks import EarlyStopping, ModelCheckpoint
 from keras.models import Sequential
 
 import api_to_db_importer
-import data_helper
+from old import data_helper
 import plot_helper
 import stock_constants as const
 

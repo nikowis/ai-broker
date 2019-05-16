@@ -1,10 +1,7 @@
 import time
 
-from keras.callbacks import EarlyStopping, ModelCheckpoint
-
 import api_to_db_importer
-import data_helper
-import nn_model
+from old import nn_model, data_helper
 import plot_helper
 import stock_constants as const
 

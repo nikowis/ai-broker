@@ -1,14 +1,12 @@
-import numpy as np
 import time
 
-import data_helper
 import db_access
-import nn_model
+from old import nn_model, data_helper
 import plot_helper
 import stock_constants as const
 
-MIN_DATE = '2009-01-01'
-MAX_DATE = '2018-10-29'
+MIN_DATE = '1900-01-01'
+MAX_DATE = '2020-10-29'
 
 SELECTED_SYM = 'USLM'
 

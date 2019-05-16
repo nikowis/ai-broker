@@ -2,7 +2,7 @@ import numpy as np
 from keras.models import Sequential
 import keras
 
-import data_helper
+from old import data_helper
 import db_access
 import plot_helper
 import stock_constants as const

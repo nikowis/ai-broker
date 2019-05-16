@@ -9,8 +9,8 @@ PROCESSED_STOCK_COLLECTION = "processed_stock"
 LOCAL_URL = "mongodb://localhost:27017/"
 REMOTE_URL = "mongodb://admin:<pswd>@ds125574.mlab.com:25574/ai-broker"
 
-MIN_DATE = '2009-01-01'
-MAX_DATE = '2018-10-29'
+MIN_DATE = '1900-01-01'
+MAX_DATE = '2020-10-29'
 
 
 def create_db_connection(remote=False, db_name=DB):
