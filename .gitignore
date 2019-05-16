@@ -111,7 +111,8 @@ venv.bak/
 *.pdf
 *.bcf
 docs/Praca/praca.run.xml
-
+!/docs/Praca/img/*/*.pdf
+!/docs/Praca/img/*.pdf
 
 target/*
 *-eps-converted-to.pdf

@@ -53,7 +53,7 @@ def legend_labels_save_files(title, file_name='img', base_img_path=BASE_IMG_PATH
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
     plt.title(title)
-    plt.savefig('{}/{}.eps'.format(base_img_path, file_name), format='eps', dpi=1000)
+    plt.savefig('{}/{}.pdf'.format(base_img_path, file_name), format='pdf', dpi=1000)
     plt.savefig('{}/{}.png'.format(base_img_path, file_name))
     plt.show()
     plt.close()
@@ -142,7 +142,7 @@ def plot_result(y_test_one_hot, y_test_score_one_hot, classes_count, history, ma
     # plt.subplots_adjust(hspace=0.5, wspace=0.5)
     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
 
-    # plt.savefig('{}/{}.eps'.format(target_dir, file_name), format='eps', dpi=1000)
+    # plt.savefig('{}/{}.pdf'.format(target_dir, file_name), format='pdf', dpi=1000)
     plt.savefig('{}/{}.png'.format(target_dir, file_name))
     # plt.show()
     plt.close()

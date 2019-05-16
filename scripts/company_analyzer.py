@@ -1,10 +1,8 @@
+import matplotlib.pyplot as plt
+from matplotlib import style
+
 import api_to_db_importer
 import stock_constants as const
-
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
-from matplotlib import style
 
 TARGET_DIR = './../target'
 CSV_FILES_DIR = TARGET_DIR + '/data'
@@ -43,8 +41,8 @@ def main():
         plt.show()
         plt.close()
 
-        df[const.LABEL_BINARY_COL].plot(kind='hist', xticks=[0, 1])
-        plt.xticks([0, 1], ['Fall', 'Rise'])
+        df[const.LABEL_BINARY_COL].plot(kind='hist', xticks=[-1, 1])
+        plt.xticks([-1, 1], ['Fall', 'Rise'])
         plt.xlabel('Class')
         plt.ylabel('Freq')
         plt.show()
