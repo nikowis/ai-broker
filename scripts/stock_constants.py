@@ -15,7 +15,7 @@ LABEL_BINARY_COL = 'Label binary'
 DAILY_PCT_CHANGE_COL = 'Daily pct change'
 
 
-HL_PCT_CHANGE_COL = 'H/L pct change'
+HL_PCT_CHANGE_COL = 'HL pct change'
 SMA_5_COL = '5-SMA'
 SMA_10_COL = '10-SMA'
 SMA_20_COL = '20-SMA'

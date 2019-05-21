@@ -4,7 +4,7 @@ import os
 import db_access
 import stock_constants as const
 
-MIN_DATE = '1900-01-01'
+MIN_DATE = '2015-01-01'
 MAX_DATE = '2020-10-29'
 SELECTED_SYM = 'GOOGL'
 IMG_PATH = './../target/data_analyzis/'
@@ -21,9 +21,47 @@ def main():
 
     line_plot_column(df, const.ADJUSTED_CLOSE_COL, 'GOOGL', 'Cena zamknięcia (USD)', 'Data')
     df[const.ADJUSTED_CLOSE_COL+' stationary'] = df[const.ADJUSTED_CLOSE_COL].diff().fillna(0)
-    line_plot_column(df, const.ADJUSTED_CLOSE_COL+' stationary', 'GOOGL', 'Cena zamknięcia (USD)', 'Data')
+    line_plot_column(df, const.ADJUSTED_CLOSE_COL+' stationary', SELECTED_SYM, 'Cena zamknięcia (USD)', 'Data')
+    line_plot_column(df, const.VOLUME_COL, SELECTED_SYM, 'Liczba akcji w obrocie', 'Data')
+    line_plot_column(df, const.HL_PCT_CHANGE_COL, SELECTED_SYM, 'Stosunek high/low (%)', 'Data')
+    line_plot_column(df, const.SMA_5_COL, SELECTED_SYM, 'SMA-5', 'Data')
+    line_plot_column(df, const.SMA_DIFF_COL, SELECTED_SYM, 'SMA-DIFF', 'Data')
+    line_plot_column(df, const.TR_COL, SELECTED_SYM, 'TR', 'Data')
+    line_plot_column(df, const.MACD_COL, SELECTED_SYM, 'MACD', 'Data')
+    line_plot_column(df, const.MACD_SIGNAL_COL, SELECTED_SYM, 'MACD Signal', 'Data')
 
-    hist_plot_column(df, const.LABEL_BINARY_COL, 'GOOGL', 'Liczba przypadków', 'Trend', [-1, 1], ['Maleje', 'Rośnie'])
+    line_plot_column(df, const.ROC_5_COL, SELECTED_SYM, 'ROC-5', 'Data')
+    line_plot_column(df, const.ROC_DIFF_COL, SELECTED_SYM, 'ROC-DIFF', 'Data')
+
+    line_plot_column(df, const.MOM_5_COL, SELECTED_SYM, 'MOM-5', 'Data')
+    line_plot_column(df, const.MOM_DIFF_COL, SELECTED_SYM, 'MOM-DIFF', 'Data')
+
+    line_plot_column(df, const.WILLR_5_COL, SELECTED_SYM, 'WILLR-5', 'Data')
+    line_plot_column(df, const.WILLR_DIFF_COL, SELECTED_SYM, 'WILLR-DIFF', 'Data')
+
+    line_plot_column(df, const.RSI_5_COL, SELECTED_SYM, 'RSI-5', 'Data')
+    line_plot_column(df, const.RSI_DIFF_COL, SELECTED_SYM, 'RSI-DIFF', 'Data')
+
+    line_plot_column(df, const.ADX_5_COL, SELECTED_SYM, 'ADX-5', 'Data')
+    line_plot_column(df, const.ADX_DIFF_COL, SELECTED_SYM, 'ADX-DIFF', 'Data')
+
+    line_plot_column(df, const.CCI_5_COL, SELECTED_SYM, 'CCI-5', 'Data')
+    line_plot_column(df, const.CCI_DIFF_COL, SELECTED_SYM, 'CCI-DIFF', 'Data')
+
+    line_plot_column(df, const.AD_COL, SELECTED_SYM, 'AD', 'Data')
+    line_plot_column(df, const.STOCH_K_COL, SELECTED_SYM, 'STOCH %K', 'Data')
+    line_plot_column(df, const.STOCH_D_COL, SELECTED_SYM, 'STOCH %D', 'Data')
+    line_plot_column(df, const.STOCH_K_DIFF_COL, SELECTED_SYM, 'STOCH %K DIFF', 'Data')
+    line_plot_column(df, const.STOCH_D_DIFF_COL, SELECTED_SYM, 'STOCH %D DIFF', 'Data')
+    line_plot_column(df, const.DISPARITY_5_COL, SELECTED_SYM, 'DISPARITY 5', 'Data')
+    line_plot_column(df, const.BBANDS_10_DIFF_COL, SELECTED_SYM, 'BBANDS 10 DIFF', 'Data')
+    line_plot_column(df, const.PRICE_BBANDS_UP_10_COL, SELECTED_SYM, 'PRICE TO BBADS UP 10', 'Data')
+    line_plot_column(df, const.PRICE_BBANDS_LOW_10_COL, SELECTED_SYM, 'PRICE TO BBADS LOW 10', 'Data')
+
+
+
+    hist_plot_column(df, const.LABEL_BINARY_COL, SELECTED_SYM, 'Liczba przypadków', 'Trend', [-1, 1], ['Maleje', 'Rośnie'])
+    hist_plot_column(df, const.LABEL_DISCRETE_COL, SELECTED_SYM, 'Liczba przypadków', 'Trend', [-1,0, 1], ['Maleje', 'Utrzymuje się' ,'Rośnie'])
 
 
 
