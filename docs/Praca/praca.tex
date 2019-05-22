@@ -410,7 +410,7 @@ Do zagadnienia predykcji cen na giełdzie można podchodzić na kilka sposobów.
 
 \newpage
 
-\section{Przetworzenie i analiza danych}
+\section{Analiza i przetworzenie danych}
 
 Przed przystąpieniem do wyboru modeli należy zastanowić się nad danymi jakie będą służyć do ich uczenia. Wybór odpowiednich cech, analiza zebranych informacji oraz przetworzenie ich, wykracza poza zakres uczenia maszynowego tworząc własną dziedzinę zwaną inżynierią i analizą danych. Odpowiedni dobór i obróbka danych wejściowych często daje większe korzyści niż dopracowywanie modeli przewidujących i optymalizacja ich parametrów. 
 
@@ -498,25 +498,76 @@ Wszystkie dane wejściowe, wraz z opisami, zaprezentowane są w tabeli \ref{data
      
 \end{longtable}
 
-\subsection{Przetworzenie danych}
+\subsection{Przetworzenie wstępne}
+
+Po wybraniu odpowiednich danych należy przystąpić do ich pobrania. Pobrane dane nie są jednak gotowe do wykorzystania w procesie uczenia maszynowego. Zbiory informacji, w szczególności te pobrane z internetu, należy traktować zgodnie z zasadą ograniczonego zaufania. Wobec braku gwarancji jakości, dane powinny zostać zbadane pod względem integralności oraz poprawności. Spośród najczęstszych problemów wymienić można: 
+\begin{itemize}
+    \item brakujące informacje,
+    \item duplikacja danych,
+    \item dane nominalne (np. łańcuchy znaków),
+    \item błędy pomiarowe.
+\end{itemize}
+%TODO podpiąć tutaj bibliografię o przetwarzaniu danych w machine learningu
+W celu eliminacji błędnych danych należy je usunąć lub zastąpić wybraną wartością np. średnią wartością z danej cechy. Jeśli chodzi o dane nominalne stosowana jest \textbf{binaryzacja}. Polega ona na odpowiednim przekształceniu cechy na wektor cyfr. Po wyeliminowaniu powyższych problemów dane warto przetworzyć takimi metodami jak \textbf{normalizacja} czy \textbf{standaryzacja}. Służą one do przeskalowania zakresu możliwych wartości do przedziału $[0,1]$ lub $[-1,1]$. Taki zabieg polepsza wydajność modeli uczenia maszynowego.
+
+\bigskip
+
+\subsubsection{Niestacjonarność szeregów czasowych}
+
+%TODO bibliografia niestacjonarność szeregów czasowych
+Na rysunku \ref{non_stationary_adjusted_close} zauważyć można zjawisko niestacjonarności. Jest to cecha związana z autokorelacją zmiennych szeregów czasowych. Oznacza to iż kolejne wyrazy szeregu zależą w jakimś stopniu od poprzednich. Dla cen akcji ta zależność jest ewidentna, cena każdego dnia jest oparta o cenę z dnia poprzedniego. 
+
+\begin{figure}[H]
+\centering 
+\includegraphics[scale=0.9]{img/adjusted_close.pdf}
+\caption{Wykres cen akcji spółki \textit{Alphabet Inc} (opracowanie własne)}
+\label{non_stationary_adjusted_close}
+\end{figure}
+
+Zjawisko niestacjonarności szeregów czasowych negatywnie wpływa na wykorzystywanie ich do uczenia maszynowego. Wszystkie zmienne, których dotyczy ten problem trzeba odpowiednio dostosować przed użyciem do uczenia modeli. Najbardziej powszechną metodą radzenia sobie z niestacjonarnością jest różnicowanie (ang. \textbf{differencing}). Jest to prosta metoda polegająca na wyliczeniu różnicy pomiędzy kolejnymi elementami w szeregu. W ten sposób zmienna $x_t$ jest zastąpiona przez $x'_t=x_t-x_{t-1}$. Wynik takiego przetworzenia dla ceny zamknięcia spółki \textit{Alphabet Inc} widoczny jest na rysunku \ref{stationary_adjusted_close}.
+
+\begin{figure}[H]
+\centering 
+\includegraphics[scale=0.9]{img/adjusted_close_stationary.pdf}
+\caption{Wykres cen akcji spółki \textit{Alphabet Inc} po przetworzeniu (opracowanie własne)}
+\label{stationary_adjusted_close}
+\end{figure}
 
 \subsubsection{Stworzenie etykiet}
 
-\subsubsection{Usunięcie stacjonarności}
+W procesie nadzorowanego uczenia maszynowego poza danymi wejściowymi potrzeba również etykiet, tj. zbioru pożądanych odpowiedzi. W przypadku regresyjnej predykcji cen zamknięcia w dniu $t$ etykietą jest cena zamknięcia z dnia $t+1$. Etykietę dla każdego wiersza danych wejściowych można więc uzyskać poprzez dodanie kolumny ceny zamknięcia przesuniętej o jeden dzień wstecz (zilustrowane na rysunku \ref{regression_label_creation}). 
 
-\subsection{Analiza danych}
+\begin{figure}[H]
+\centering 
+\includegraphics[scale=0.9]{img/adjusted_close_stationary.pdf}
+\caption{Przykładowe dane dla spółki \textit{Alphabet Inc}}
+\label{regression_label_creation}
+\end{figure}
 
-\subsubsection{Uzupełnienie brakujących danych}
+W celu osiągnięcia etykiet do klasyfikacji potrzeba wykonać dodatkowe kroki. Korzystając z nowej kolumny można obliczyć różnicę pomiędzy $C_t$, a $C_{t+1}$ .
 
-\subsubsection{Outliers}
+\begin{figure}[H]
+\centering 
+\includegraphics[scale=0.9]{img/adjusted_close_stationary.pdf}
+\caption{Przykładowe dane dla spółki \textit{Alphabet Inc}}
+\label{regression_label_creation}
+\end{figure}
 
-\subsubsection{EDA}
+ Wyznaczenie etykiety trendu do klasyfikacji binarnej sprowadza się do wyliczenia funkcji $sgn(C_{t+1}-C_{t})$. W przypadku klasyfikacji podzielonej na 3 klasy wyznaczenie etykiety sprowadza się do obliczenia procentowej różnicy pomiędzy cenami zamknięcia - $100*(C_{t+1}-C_t)/C_t$. Tak wyliczoną różnicę procentową można wykorzystać do przypisania etykiecie wartości $-1, 0, 1$ w zależności od wybranego progu opłacalności. Przykładowe obliczenia zostały zilustrowane na rysunku \ref{classification_label_creation}.
 
-\subsection{Redukcja danych wejściowych}
+\begin{figure}[H]
+\centering 
+\includegraphics[scale=0.9]{img/adjusted_close_stationary.pdf}
+\caption{Przykładowe dane dla spółki \textit{Alphabet Inc}}
+\label{classification_label_creation}
+\end{figure}
 
-\subsubsection{PCA}
+% TODO \subsubsection{EDA}
 
-\subsection{Nauka modeli przy szeregach czasowych ***}
+\subsubsection{Redukcja danych wejściowych}
+\textbf{PCA}
+
+\subsection{Proces uczenia modeli w przypadku szeregów czasowych}
 
 \newpage
 

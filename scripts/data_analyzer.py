@@ -3,20 +3,17 @@ from matplotlib import style
 import os
 import db_access
 import stock_constants as const
+import pandas as pd
 
-MIN_DATE = '2015-01-01'
+MIN_DATE = '1900-01-01'
 MAX_DATE = '2020-10-29'
 SELECTED_SYM = 'GOOGL'
 IMG_PATH = './../target/data_analyzis/'
 if not os.path.exists(IMG_PATH):
     os.makedirs(IMG_PATH)
 
-def main():
-    db_conn = db_access.create_db_connection(remote=False)
-    df_list, sym_list = db_access.find_by_tickers_to_dateframe_parse_to_df_list(db_conn, [SELECTED_SYM],
-                                                                                min_date=MIN_DATE, max_date=MAX_DATE)
+def plot_columns(df):
 
-    df = df_list[0]
     style.use('ggplot')
 
     line_plot_column(df, const.ADJUSTED_CLOSE_COL, 'GOOGL', 'Cena zamknięcia (USD)', 'Data')
@@ -85,5 +82,20 @@ def describe_plot_and_save(colname, title, ylabel, xlabel):
     plt.close()
 
 
+def describe_df():
+    feature_names = list(df.columns.values)
+    describe = df.describe(percentiles=[.01, 0.05, .5, .95, .99]).T
+    describe = describe.drop(columns=['count'])
+    describe.insert(loc=0, column='feature', value=feature_names)
+    pd.options.display.float_format = '{:5,.2f}'.format
+    print(describe.to_latex(index=False, longtable=True, ))
+
+
 if __name__ == '__main__':
-    main()
+    db_conn = db_access.create_db_connection(remote=False)
+    df_list, sym_list = db_access.find_by_tickers_to_dateframe_parse_to_df_list(db_conn, [SELECTED_SYM],
+                                                                                min_date=MIN_DATE, max_date=MAX_DATE)
+
+    df = df_list[0]
+    describe_df()
+    # plot_columns(df)
