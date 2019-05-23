@@ -539,25 +539,25 @@ W procesie nadzorowanego uczenia maszynowego poza danymi wejściowymi potrzeba r
 
 \begin{figure}[H]
 \centering 
-\includegraphics[scale=0.9]{img/adjusted_close_stationary.pdf}
+\includegraphics[scale=0.9]{img/label_creation.png}
 \caption{Przykładowe dane dla spółki \textit{Alphabet Inc}}
 \label{regression_label_creation}
 \end{figure}
 
-W celu osiągnięcia etykiet do klasyfikacji potrzeba wykonać dodatkowe kroki. Korzystając z nowej kolumny można obliczyć różnicę pomiędzy $C_t$, a $C_{t+1}$ .
+W celu osiągnięcia etykiet do klasyfikacji potrzeba wykonać dodatkowe kroki. Korzystając z nowej kolumny można obliczyć różnicę pomiędzy $C_t$, a $C_{t+1}$ . Wyznaczenie etykiety trendu do klasyfikacji binarnej sprowadza się do wyliczenia funkcji $sgn(C_{t+1}-C_{t})$ (rysunek \ref{binary_label_creation}). 
 
 \begin{figure}[H]
 \centering 
-\includegraphics[scale=0.9]{img/adjusted_close_stationary.pdf}
+\includegraphics[scale=0.9]{img/label_creation2.png}
 \caption{Przykładowe dane dla spółki \textit{Alphabet Inc}}
-\label{regression_label_creation}
+\label{binary_label_creation}
 \end{figure}
 
- Wyznaczenie etykiety trendu do klasyfikacji binarnej sprowadza się do wyliczenia funkcji $sgn(C_{t+1}-C_{t})$. W przypadku klasyfikacji podzielonej na 3 klasy wyznaczenie etykiety sprowadza się do obliczenia procentowej różnicy pomiędzy cenami zamknięcia - $100*(C_{t+1}-C_t)/C_t$. Tak wyliczoną różnicę procentową można wykorzystać do przypisania etykiecie wartości $-1, 0, 1$ w zależności od wybranego progu opłacalności. Przykładowe obliczenia zostały zilustrowane na rysunku \ref{classification_label_creation}.
+ W przypadku klasyfikacji podzielonej na 3 klasy wyznaczenie etykiety sprowadza się do obliczenia procentowej różnicy pomiędzy cenami zamknięcia - $100*(C_{t+1}-C_t)/C_t$. Tak wyliczoną różnicę procentową można wykorzystać do przypisania etykiecie wartości $-1, 0, 1$ w zależności od wybranego progu opłacalności. Przykładowe obliczenia zostały zilustrowane na rysunku \ref{classification_label_creation}.
 
 \begin{figure}[H]
 \centering 
-\includegraphics[scale=0.9]{img/adjusted_close_stationary.pdf}
+\includegraphics[scale=0.9]{img/label_creation3.png}
 \caption{Przykładowe dane dla spółki \textit{Alphabet Inc}}
 \label{classification_label_creation}
 \end{figure}
@@ -565,6 +565,15 @@ W celu osiągnięcia etykiet do klasyfikacji potrzeba wykonać dodatkowe kroki. 
 % TODO \subsubsection{EDA}
 
 \subsubsection{Redukcja danych wejściowych}
+
+Redukcja rozmiaru danych wejściowych jest zagadnieniem pozwalającym na poradzenie sobie ze zbyt dużą liczbą danych wejściowych. Jeżeli dwie zmienne są ze sobą mocno skorelowane, wówczas jedną z nich można odrzucić bez utraty informacji zawartych w niej. 
+
+Jedną z metod redukcji jest \textbf{analiza głównych składowych}. 
+Jest to statystyczna metoda analizy czynnikowej.
+
+
+
+
 \textbf{PCA}
 
 \subsection{Proces uczenia modeli w przypadku szeregów czasowych}

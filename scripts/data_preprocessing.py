@@ -5,15 +5,14 @@ import db_access
 import stock_constants as const
 import pandas as pd
 
-MIN_DATE = '1900-01-01'
+
+MIN_DATE = '2019-01-01'
 MAX_DATE = '2020-10-29'
 SELECTED_SYM = 'GOOGL'
-IMG_PATH = './../target/data_analyzis/'
-if not os.path.exists(IMG_PATH):
-    os.makedirs(IMG_PATH)
 
 
-def preprocess(df):
+
+def preprocess(df, standarize=True, difference_non_stationary=True):
     pass
 
 
