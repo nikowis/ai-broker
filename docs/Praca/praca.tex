@@ -566,15 +566,48 @@ W celu osiągnięcia etykiet do klasyfikacji potrzeba wykonać dodatkowe kroki. 
 
 \subsubsection{Redukcja danych wejściowych}
 
-Redukcja rozmiaru danych wejściowych jest zagadnieniem pozwalającym na poradzenie sobie ze zbyt dużą liczbą danych wejściowych. Jeżeli dwie zmienne są ze sobą mocno skorelowane, wówczas jedną z nich można odrzucić bez utraty informacji zawartych w niej. 
+Redukcja rozmiaru danych wejściowych jest zagadnieniem pozwalającym na poradzenie sobie ze zbyt dużą liczbą danych wejściowych. Jeżeli dwie zmienne są ze sobą mocno skorelowane, wówczas jedną z nich można odrzucić bez utraty informacji zawartych w niej. Macierz korelacji par zmiennych wejściowych przedstawiona jest na rysunku \ref{correlation}. Analizując macierz korelacji zauważyć można że duża część zmiennych jest ze sobą mocno skorelowana (wartości bliskie $1$ oznaczają wysoką korelację, 0 brak korelacji, zaś $-1$ negatywną korelację).
 
-Jedną z metod redukcji jest \textbf{analiza głównych składowych}. 
-Jest to statystyczna metoda analizy czynnikowej.
+\begin{figure}[H]
+\centering 
+\includegraphics[scale=0.6]{img/corr_matrix.pdf}
+\caption{Macierz korelacji par zmiennych}
+\label{correlation}
+\end{figure}
 
+%TODO: opis tabelki i caption
+\begin{center}
+\begin{tabular}{ |c|c|c| } 
+ \hline
+Zmienna 1 & Zmienna 2 &  Stopień korelacji \\
+ \hline
+APO-5 & APO-10 &  1.000000 \\
+ \hline
+10-SMA & MOM-10 &  1.000000 \\
+ \hline
+5-SMA & MOM-5 &  1.000000 \\
+ \hline
+5-SMA & ROC-5 &  0.997665 \\
+ \hline
+10-SMA & ROC-10 &  0.996666 \\
+ \hline
+RSI-5 & RSI-10 &  0.964811 \\  
 
+ \hline
 
+\end{tabular}
 
-\textbf{PCA}
+\end{center}
+
+Po odrzuceniu najmocniej skorelowanych danych można skorzystać z jednej z metod redukcji wymiaru zadania wejściowego jaką jest \textbf{analiza głównych składowych} (ang. principal component analysis). Jest to statystyczna metoda analizy czynnikowej, która modyfikuje układ współrzędnych w taki sposób aby maksymalizować wariancję kolejncyh zmiennych. Dzięki temu tworzona jest nowa przestrzeń obserwacji, w której najwięcej zmienności przedstawiają początkowe czynniki. Metode ta opiera się o macierz korelacji lub macierz kowariancji stworzonej z danych wejściowych. Rozmiar wejścia redukowany jest poprzez wybranie zmiennych, które reprezentują największą część wariancji w zbiorze danych.
+
+\begin{figure}[H]
+\centering 
+\includegraphics[scale=0.9]{img/pca_variance.pdf}
+\caption{Liczba składowych, a całkowita wariancja}
+\label{pca_variance}
+\end{figure}
+
 
 \subsection{Proces uczenia modeli w przypadku szeregów czasowych}
 
