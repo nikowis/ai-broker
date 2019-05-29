@@ -6,6 +6,8 @@ import numpy as np
 import pandas as pd
 from matplotlib import style
 from sklearn.metrics import roc_curve, auc
+from keras.utils import to_categorical
+
 
 import stock_constants as const
 
@@ -44,6 +46,7 @@ ROC_TITLE = 'Krzywe ROC'
 MICRO_ROC_KEY = "micro"
 CLASS_ROC_LABEL = "Klasa '{0}' (obszar {1:0.2f})"
 MICRO_AVG_ROC_LABEL = 'Mikro-średnia klas (obszar {0:0.2f})'
+BINARY_ROC_LABEL = 'Krzywa ROC (obszar {0:0.2f})'
 
 
 def legend_labels_save_files(title, file_name='img', base_img_path=BASE_IMG_PATH, xlabel=DATE_LABEL,
@@ -60,30 +63,47 @@ def legend_labels_save_files(title, file_name='img', base_img_path=BASE_IMG_PATH
 
 
 def calculate_roc_auc(y_test, y_test_score, classes_count):
-    fpr = dict()
-    tpr = dict()
-    roc_auc = dict()
-    for i in range(classes_count):
-        fpr[i], tpr[i], _ = roc_curve(y_test[:, i], y_test_score[:, i])
-        roc_auc[i] = auc(fpr[i], tpr[i])
+    if classes_count>2:
+        fpr = dict()
+        tpr = dict()
+        roc_auc = dict()
 
-    fpr[MICRO_ROC_KEY], tpr[MICRO_ROC_KEY], _ = roc_curve(y_test.ravel(), y_test_score.ravel())
-    roc_auc[MICRO_ROC_KEY] = auc(fpr[MICRO_ROC_KEY], tpr[MICRO_ROC_KEY])
+        for i in range(classes_count):
+            fpr[i], tpr[i], _ = roc_curve(y_test[:, i], y_test_score[:, i])
+            roc_auc[i] = auc(fpr[i], tpr[i])
 
-    return fpr, tpr, roc_auc
+        fpr[MICRO_ROC_KEY], tpr[MICRO_ROC_KEY], _ = roc_curve(y_test.ravel(), y_test_score.ravel())
+        roc_auc[MICRO_ROC_KEY] = auc(fpr[MICRO_ROC_KEY], tpr[MICRO_ROC_KEY])
+
+        return fpr, tpr, roc_auc
+    else:
+        y = [np.argmax(pred, axis=None, out=None) for pred in y_test]
+        y_score = [np.argmax(pred, axis=None, out=None) for pred in y_test_score]
+        fpr, tpr, _ = roc_curve(y, y_score)
+        roc_auc = auc(fpr, tpr)
+        return fpr, tpr, roc_auc
 
 
-def plot_result(y_test_one_hot, y_test_score_one_hot, classes_count, history, main_title, file_name, target_dir=BASE_IMG_PATH):
+def plot_result(y_test, y_test_prediction, classes_count, history, main_title, file_name, target_dir=BASE_IMG_PATH):
     if not os.path.exists(target_dir):
         os.makedirs(target_dir)
     if classes_count == 2:
         class_labels = [FALL_LABEL, RISE_LABEL]
         xticks = [0, 1]
+        y_test_prediction = y_test_prediction.flatten()
+        y_test_prediction[y_test_prediction >= 0.5] = 1
+        y_test_prediction[y_test_prediction < 0.5] = 0
+        y_test_prediction = to_categorical(y_test_prediction)
+        y_test = to_categorical(y_test)
     else:
         class_labels = [FALL_LABEL, IDLE_LABEL, RISE_LABEL]
         xticks = [0, 1, 2]
 
-    fpr, tpr, roc_auc = calculate_roc_auc(y_test_one_hot, y_test_score_one_hot, classes_count)
+
+    fpr, tpr, roc_auc = calculate_roc_auc(y_test, y_test_prediction, classes_count)
+
+    y_test = [np.argmax(pred, axis=None, out=None) for pred in y_test]
+    y_test_prediction = [np.argmax(pred, axis=None, out=None) for pred in y_test_prediction]
 
     plt.figure(figsize=(12, 12))
     style.use('ggplot')
@@ -91,12 +111,13 @@ def plot_result(y_test_one_hot, y_test_score_one_hot, classes_count, history, ma
 
     plt.subplot(2, 2, 1)
 
-    y_test = [np.argmax(pred, axis=None, out=None) for pred in y_test_one_hot]
+
     dftmp = pd.DataFrame({'tmpcol': y_test})
 
     dftmp['tmpcol'].plot(kind='hist', xticks=xticks, alpha=0.7, label=RATE_CHANGE_LABEL)
-    y_test_score = [np.argmax(pred, axis=None, out=None) for pred in y_test_score_one_hot]
-    dftmp = pd.DataFrame({'tmpcol': y_test_score})
+
+    dftmp = pd.DataFrame.from_records({'tmpcol': y_test_prediction})
+
     dftmp['tmpcol'].plot(kind='hist', xticks=xticks, alpha=0.7, label=RATE_CHANGE_LABEL)
 
     plt.legend([REAL_LEGEND, PREDICTED_LEGEND], loc='upper left')
@@ -106,14 +127,17 @@ def plot_result(y_test_one_hot, y_test_score_one_hot, classes_count, history, ma
     plt.title(HISTOGRAM_TITLE)
 
     plt.subplot(2, 2, 2)
-    plt.plot(fpr[(MICRO_ROC_KEY)], tpr[MICRO_ROC_KEY],
-             label=MICRO_AVG_ROC_LABEL.format(roc_auc[MICRO_ROC_KEY]),
-             color='red', linewidth=3)
+    if classes_count>2:
+        plt.plot(fpr[(MICRO_ROC_KEY)], tpr[MICRO_ROC_KEY],
+                 label=MICRO_AVG_ROC_LABEL.format(roc_auc[MICRO_ROC_KEY]),
+                 color='red', linewidth=3)
 
-    colors = cycle(['aqua', 'darkorange', 'cornflowerblue'])
-    for i, color in zip(range(classes_count), colors):
-        plt.plot(fpr[i], tpr[i], color=color, lw=2,
-                 label=CLASS_ROC_LABEL.format(class_labels[i], roc_auc[i]))
+        colors = cycle(['aqua', 'darkorange', 'cornflowerblue'])
+        for i, color in zip(range(classes_count), colors):
+            plt.plot(fpr[i], tpr[i], color=color, lw=2,
+                     label=CLASS_ROC_LABEL.format(class_labels[i], roc_auc[i]))
+    else:
+        plt.plot(fpr, tpr, label=BINARY_ROC_LABEL.format(roc_auc),color='red', linewidth=2)
     plt.plot([0, 1], [0, 1], 'k--', lw=2)
     plt.xlim([0.0, 1.0])
     plt.ylim([0.0, 1.05])
@@ -132,8 +156,13 @@ def plot_result(y_test_one_hot, y_test_score_one_hot, classes_count, history, ma
         plt.legend([TRAIN_DATA, TEST_DATA], loc='upper left')
 
         plt.subplot(2, 2, 4)
-        plt.plot(history.history['categorical_accuracy'])
-        plt.plot(history.history['val_categorical_accuracy'])
+        if classes_count > 2:
+            plt.plot(history.history['categorical_accuracy'])
+            plt.plot(history.history['val_categorical_accuracy'])
+        else:
+            plt.plot(history.history['binary_accuracy'])
+            plt.plot(history.history['val_binary_accuracy'])
+
         plt.title(ACCURACY_TITLE)
         plt.ylabel(ACCURACY_LABEL)
         plt.xlabel(EPOCH_LABEL)
