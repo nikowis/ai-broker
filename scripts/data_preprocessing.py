@@ -43,9 +43,8 @@ def get_top_abs_correlations(df, n=5):
     return au_corr[0:n]
 
 
-def preprocess(df, standarize=True, robust_scaler=False, difference_non_stationary=True, pca_variance_ratio=0.95,
-               binary_classification=True):
-    if difference_non_stationary:
+def preprocess(df, preprocessingParams):
+    if preprocessingParams.difference_non_stationary:
         df[const.ADJUSTED_CLOSE_COL] = df[const.ADJUSTED_CLOSE_COL].diff()
         df[const.OPEN_COL] = df[const.OPEN_COL].diff()
         df[const.CLOSE_COL] = df[const.CLOSE_COL].diff()
@@ -60,21 +59,21 @@ def preprocess(df, standarize=True, robust_scaler=False, difference_non_stationa
 
     df_without_corelated_features = df_without_helper_cols.drop(CORRELATED_COLS, axis=1)
 
-    if binary_classification:
+    if preprocessingParams.binary_classification:
         y = np.array(df[const.LABEL_BINARY_COL])
     else:
         y = np.array(df[const.LABEL_DISCRETE_COL])
     x = np.array(df_without_corelated_features)
 
-    if standarize:
-        if robust_scaler:
+    if preprocessingParams.standarize:
+        if preprocessingParams.robust_scaler:
             scale = RobustScaler().fit(x)
         else:
             scale = StandardScaler().fit(x)
         x = scale.transform(x)
 
-    if pca_variance_ratio is not None:
-        pca = PCA(pca_variance_ratio).fit(x)
+    if preprocessingParams.pca is not None:
+        pca = PCA(preprocessingParams.pca).fit(x)
         x = pca.transform(x)
 
     return df, x, y

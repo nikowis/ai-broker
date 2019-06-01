@@ -7,22 +7,21 @@ from sklearn.preprocessing import LabelEncoder
 
 import csv_importer
 import data_preprocessing
-import db_access
 import nn_model
 import plot_helper
+import benchmark_params
 
 SELECTED_SYM = 'GOOGL'
 
 
-def prepare_data(pca=0.999):
+def prepare_data(preprocessingParams):
     iter_time = time.time()
     global df, x_train, x_test, y_train, y_test
-    df, x, y = data_preprocessing.preprocess(df, pca_variance_ratio=pca)
-    x_train, x_test, y_train, y_test = model_selection.train_test_split(x, y, test_size=0.2, shuffle=False)
+    df, x, y = data_preprocessing.preprocess(df, preprocessingParams)
     encoder = LabelEncoder()
     encoder.fit(y)
     encoded_Y = encoder.transform(y)
-    x_train, x_test, y_train, y_test = model_selection.train_test_split(x, encoded_Y, test_size=0.2, shuffle=False)
+    x_train, x_test, y_train, y_test = model_selection.train_test_split(x, encoded_Y, test_size=preprocessingParams.test_size, shuffle=False)
     print('Data processing time ', str(int(time.time() - iter_time)), 's.')
     return x_train, x_test, y_train, y_test
 
@@ -48,14 +47,16 @@ def run(model, x_train, x_test, y_train, y_test, epochs=5, batch_size=5, file_na
 if __name__ == '__main__':
     df_list = csv_importer.import_data_from_files([SELECTED_SYM])
     df = df_list[0]
-    x_train, x_test, y_train, y_test = prepare_data(pca=.999)
 
+    params = benchmark_params.default_params()
     iter = 0
     param_grid = {
         'layers': [[1], [2], [3], [4], [5], [6], [1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [2, 2, 2], [3, 3, 3],
                    [4, 4, 4], [5, 5, 5], [6, 6, 6]]}
     grid = ParameterGrid(param_grid)
+
     for param in grid:
+        x_train, x_test, y_train, y_test = prepare_data(params.processingParams)
         layers = param['layers']
         title_info = 'Layers: [' + ''.join(str(e) + " " for e in layers) + ']'
         model = nn_model.create_seq_model(layers, input_size=x_train.shape[1], activation='relu',
