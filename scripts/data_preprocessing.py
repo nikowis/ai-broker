@@ -43,7 +43,7 @@ def get_top_abs_correlations(df, n=5):
     return au_corr[0:n]
 
 
-def preprocess(df, standarize=True, robust_scaler=False, difference_non_stationary=True, pca=True, pca_variance_ration=0.95,
+def preprocess(df, standarize=True, robust_scaler=False, difference_non_stationary=True, pca_variance_ratio=0.95,
                binary_classification=True):
     if difference_non_stationary:
         df[const.ADJUSTED_CLOSE_COL] = df[const.ADJUSTED_CLOSE_COL].diff()
@@ -73,8 +73,8 @@ def preprocess(df, standarize=True, robust_scaler=False, difference_non_stationa
             scale = StandardScaler().fit(x)
         x = scale.transform(x)
 
-    if pca:
-        pca = PCA(pca_variance_ration).fit(x)
+    if pca_variance_ratio is not None:
+        pca = PCA(pca_variance_ratio).fit(x)
         x = pca.transform(x)
 
     return df, x, y

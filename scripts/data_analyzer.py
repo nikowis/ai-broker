@@ -12,13 +12,13 @@ IMG_PATH = './../target/data_analyzis/'
 if not os.path.exists(IMG_PATH):
     os.makedirs(IMG_PATH)
 
-def plot_columns(df):
 
+def plot_columns(df):
     style.use('ggplot')
 
     line_plot_column(df, const.ADJUSTED_CLOSE_COL, 'GOOGL', 'Cena zamknięcia (USD)', 'Data')
-    df[const.ADJUSTED_CLOSE_COL+' stationary'] = df[const.ADJUSTED_CLOSE_COL].diff().fillna(0)
-    line_plot_column(df, const.ADJUSTED_CLOSE_COL+' stationary', SELECTED_SYM, 'Cena zamknięcia (USD)', 'Data')
+    df[const.ADJUSTED_CLOSE_COL + ' stationary'] = df[const.ADJUSTED_CLOSE_COL].diff().fillna(0)
+    line_plot_column(df, const.ADJUSTED_CLOSE_COL + ' stationary', SELECTED_SYM, 'Cena zamknięcia (USD)', 'Data')
     line_plot_column(df, const.VOLUME_COL, SELECTED_SYM, 'Liczba akcji w obrocie', 'Data')
     line_plot_column(df, const.HL_PCT_CHANGE_COL, SELECTED_SYM, 'Stosunek high/low (%)', 'Data')
     line_plot_column(df, const.SMA_5_COL, SELECTED_SYM, 'SMA-5', 'Data')
@@ -55,11 +55,10 @@ def plot_columns(df):
     line_plot_column(df, const.PRICE_BBANDS_UP_10_COL, SELECTED_SYM, 'PRICE TO BBADS UP 10', 'Data')
     line_plot_column(df, const.PRICE_BBANDS_LOW_10_COL, SELECTED_SYM, 'PRICE TO BBADS LOW 10', 'Data')
 
-
-
-    hist_plot_column(df, const.LABEL_BINARY_COL, SELECTED_SYM, 'Liczba przypadków', 'Trend', [-1, 1], ['Maleje', 'Rośnie'])
-    hist_plot_column(df, const.LABEL_DISCRETE_COL, SELECTED_SYM, 'Liczba przypadków', 'Trend', [-1,0, 1], ['Maleje', 'Utrzymuje się' ,'Rośnie'])
-
+    hist_plot_column(df, const.LABEL_BINARY_COL, SELECTED_SYM, 'Liczba przypadków', 'Trend', [-1, 1],
+                     ['Maleje', 'Rośnie'])
+    hist_plot_column(df, const.LABEL_DISCRETE_COL, SELECTED_SYM, 'Liczba przypadków', 'Trend', [-1, 0, 1],
+                     ['Maleje', 'Utrzymuje się', 'Rośnie'])
 
 
 def line_plot_column(df, colname, title, ylabel, xlabel):

@@ -77,9 +77,7 @@ def calculate_roc_auc(y_test, y_test_score, classes_count):
 
         return fpr, tpr, roc_auc
     else:
-        y = [np.argmax(pred, axis=None, out=None) for pred in y_test]
-        y_score = [np.argmax(pred, axis=None, out=None) for pred in y_test_score]
-        fpr, tpr, _ = roc_curve(y, y_score)
+        fpr, tpr, _ = roc_curve(y_test, y_test_score)
         roc_auc = auc(fpr, tpr)
         return fpr, tpr, roc_auc
 
@@ -91,6 +89,7 @@ def plot_result(y_test, y_test_prediction, classes_count, history, main_title, f
         class_labels = [FALL_LABEL, RISE_LABEL]
         xticks = [0, 1]
         y_test_prediction = y_test_prediction.flatten()
+        fpr, tpr, roc_auc = calculate_roc_auc(y_test, y_test_prediction, classes_count)
         y_test_prediction[y_test_prediction >= 0.5] = 1
         y_test_prediction[y_test_prediction < 0.5] = 0
         y_test_prediction = to_categorical(y_test_prediction)
@@ -98,9 +97,7 @@ def plot_result(y_test, y_test_prediction, classes_count, history, main_title, f
     else:
         class_labels = [FALL_LABEL, IDLE_LABEL, RISE_LABEL]
         xticks = [0, 1, 2]
-
-
-    fpr, tpr, roc_auc = calculate_roc_auc(y_test, y_test_prediction, classes_count)
+        fpr, tpr, roc_auc = calculate_roc_auc(y_test, y_test_prediction, classes_count)
 
     y_test = [np.argmax(pred, axis=None, out=None) for pred in y_test]
     y_test_prediction = [np.argmax(pred, axis=None, out=None) for pred in y_test_prediction]
