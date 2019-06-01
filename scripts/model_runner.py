@@ -5,40 +5,37 @@ from sklearn import model_selection
 from sklearn.model_selection import ParameterGrid
 from sklearn.preprocessing import LabelEncoder
 
+import benchmark_params
 import csv_importer
 import data_preprocessing
 import nn_model
 import plot_helper
-import benchmark_params
 
 SELECTED_SYM = 'GOOGL'
 
 
-def prepare_data(preprocessingParams):
-    iter_time = time.time()
-    global df, x_train, x_test, y_train, y_test
-    df, x, y = data_preprocessing.preprocess(df, preprocessingParams)
+def prepare_data(df, preprocessing_params):
+    df, x, y = data_preprocessing.preprocess(df, preprocessing_params)
     encoder = LabelEncoder()
     encoder.fit(y)
     encoded_Y = encoder.transform(y)
-    x_train, x_test, y_train, y_test = model_selection.train_test_split(x, encoded_Y, test_size=preprocessingParams.test_size, shuffle=False)
-    print('Data processing time ', str(int(time.time() - iter_time)), 's.')
+    x_train, x_test, y_train, y_test = model_selection.train_test_split(x, encoded_Y,
+                                                                        test_size=preprocessing_params.test_size,
+                                                                        shuffle=False)
     return x_train, x_test, y_train, y_test
 
 
-def run(model, x_train, x_test, y_train, y_test, epochs=5, batch_size=5, file_name="test_model_" + uuid.uuid4().hex,
-        additional_title_info=None):
+def run(model, x_train, x_test, y_train, y_test, benchmark_params, file_name="test_model_" + uuid.uuid4().hex):
+    learning_params = benchmark_params.learning_params
     iter_time = time.time()
-
     history = model.fit(x_train, y_train, validation_data=(x_test, y_test),
-                        epochs=epochs, batch_size=batch_size, verbose=0)
+                        epochs=learning_params.epochs, batch_size=learning_params.batch_size, verbose=0)
     loss, accuracy = model.evaluate(x_test, y_test, verbose=0)
-    print("Loss: ", loss, " Accuracy: ", accuracy, " epochs: ", epochs)
+    print("Loss: ", loss, " Accuracy: ", accuracy, " epochs: ", learning_params.epochs)
     print('Time ', str(int(time.time() - iter_time)), 's.')
     main_title = 'Test model. ' + "Loss: " + str(round(loss, 4)) + ", accuracy: " + str(
-        round(accuracy, 4)) + ", epochs: " + str(epochs)
-    if additional_title_info is not None:
-        main_title = main_title + '\n' + additional_title_info
+        round(accuracy, 4)) + ", epochs: " + str(learning_params.epochs)
+    main_title = main_title + '\n' + 'Layers: [' + ''.join(str(e) + " " for e in benchmark_params.model_params.layers) + ']'
 
     y_test_prediction = model.predict(x_test)
     plot_helper.plot_result(y_test, y_test_prediction, 2, history, main_title, file_name)
@@ -48,7 +45,7 @@ if __name__ == '__main__':
     df_list = csv_importer.import_data_from_files([SELECTED_SYM])
     df = df_list[0]
 
-    params = benchmark_params.default_params()
+    benchmark_params = benchmark_params.default_params(True)
     iter = 0
     param_grid = {
         'layers': [[1], [2], [3], [4], [5], [6], [1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [2, 2, 2], [3, 3, 3],
@@ -56,12 +53,12 @@ if __name__ == '__main__':
     grid = ParameterGrid(param_grid)
 
     for param in grid:
-        x_train, x_test, y_train, y_test = prepare_data(params.processingParams)
-        layers = param['layers']
-        title_info = 'Layers: [' + ''.join(str(e) + " " for e in layers) + ']'
-        model = nn_model.create_seq_model(layers, input_size=x_train.shape[1], activation='relu',
-                                          optimizer='adam', loss='binary_crossentropy', metric='binary_accuracy',
-                                          output_neurons=1, overfitting_regularizer=0.005)
-        run(model, x_train, x_test, y_train, y_test, epochs=30, batch_size=10, file_name="nn_model_" + str(iter),
-            additional_title_info=title_info)
+        benchmark_params.update_from_dictionary(param)
+
+        x_train, x_test, y_train, y_test = prepare_data(df, benchmark_params.preprocessing_params)
+
+        model = nn_model.create_seq_model(x_train.shape[1], benchmark_params.model_params)
+
+        run(model, x_train, x_test, y_train, y_test, benchmark_params, file_name="nn_model_" + str(iter))
+
         iter = iter + 1
