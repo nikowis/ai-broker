@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 from matplotlib import style
 
 import api_to_db_importer
+import csv_importer
 import stock_constants as const
 
 TARGET_DIR = './../target'
@@ -10,7 +11,7 @@ CSV_FILES_DIR = TARGET_DIR + '/data'
 
 def main():
     symbols = ['USLM']
-    df_list = api_to_db_importer.Importer().import_data_from_files(symbols, CSV_FILES_DIR)
+    df_list = csv_importer.import_data_from_files(symbols, CSV_FILES_DIR)
 
     balanced_syms = []
 

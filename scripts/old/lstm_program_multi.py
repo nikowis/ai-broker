@@ -6,6 +6,7 @@ import numpy as np
 from keras.models import Sequential
 
 import api_to_db_importer
+import csv_importer
 from old import data_helper
 import plot_helper
 import stock_constants as const
@@ -45,7 +46,7 @@ def main():
 
     symbols = api_to_db_importer.SYMBOLS[0:STOCK_COMPANIES]
 
-    df_list = api_to_db_importer.Importer().import_data_from_files(symbols, CSV_FILES_DIR)
+    df_list = csv_importer.import_data_from_files(symbols, CSV_FILES_DIR)
 
     x_train, x_test, y_train_one_hot, y_test_one_hot = data_helper.extract_data_from_list(df_list, 0,
                                                                                           binary_classification=BINARY_CLASSIFICATION)

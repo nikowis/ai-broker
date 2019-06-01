@@ -5,13 +5,12 @@ from sklearn import model_selection
 from sklearn.model_selection import ParameterGrid
 from sklearn.preprocessing import LabelEncoder
 
+import csv_importer
 import data_preprocessing
 import db_access
 import nn_model
 import plot_helper
 
-MIN_DATE = '2011-01-01'
-MAX_DATE = '2020-10-29'
 SELECTED_SYM = 'GOOGL'
 
 
@@ -47,9 +46,7 @@ def run(model, x_train, x_test, y_train, y_test, epochs=5, batch_size=5, file_na
 
 
 if __name__ == '__main__':
-    db_conn = db_access.create_db_connection(remote=False)
-    df_list, sym_list = db_access.find_by_tickers_to_dateframe_parse_to_df_list(db_conn, [SELECTED_SYM],
-                                                                                min_date=MIN_DATE, max_date=MAX_DATE)
+    df_list = csv_importer.import_data_from_files([SELECTED_SYM])
     df = df_list[0]
     x_train, x_test, y_train, y_test = prepare_data(pca=.999)
 

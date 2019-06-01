@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 
 import alpha
+import csv_importer
 import stock_constants as const
 from db_access import create_db_connection, stock_collection
 
@@ -307,15 +308,6 @@ class Importer:
 
             print('Exported to csv ', symbol)
 
-    def import_data_from_files(self, tickers, path):
-        df_list = []
-        for ticker in tickers:
-            file = path + '/' + ticker + '.csv'
-            df = pd.read_csv(file, index_col=0)
-            df_list.append(df)
-        print('Retreived all data from files')
-        return df_list
-
 
 if __name__ == "__main__":
     imp = Importer()
@@ -323,6 +315,6 @@ if __name__ == "__main__":
     imp.import_all_technical_indicators([SELECTED_SYM])
     imp.process_data()
     imp.export_to_csv_files('./../target/data')
-    dflist = imp.import_data_from_files([SELECTED_SYM], './../target/data')
+    dflist = csv_importer.import_data_from_files([SELECTED_SYM], './../target/data')
 
     print("Importing finished")
