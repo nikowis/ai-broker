@@ -45,13 +45,13 @@ class PreprocessingParams:
         if 'pca' in params_dict:
             self.pca = params_dict['pca']
         if 'test_size' in params_dict:
-            self.pca = params_dict['test_size']
+            self.test_size = params_dict['test_size']
         if 'standarize' in params_dict:
-            self.pca = params_dict['standarize']
+            self.standarize = params_dict['standarize']
         if 'robust_scaler' in params_dict:
-            self.pca = params_dict['robust_scaler']
+            self.robust_scaler = params_dict['robust_scaler']
         if 'difference_non_stationary' in params_dict:
-            self.pca = params_dict['difference_non_stationary']
+            self.difference_non_stationary = params_dict['difference_non_stationary']
 
     def jsonable(self):
         return self.__dict__
