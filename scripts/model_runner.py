@@ -1,9 +1,11 @@
 import json
 import os
 import time
+from shutil import copyfile
 
 import numpy as np
 from keras.callbacks import EarlyStopping, ModelCheckpoint
+from keras.models import load_model
 from sklearn.model_selection import ParameterGrid
 
 import benchmark_params
@@ -33,6 +35,7 @@ def run(x_train, x_test, y_train, y_test, bench_params):
     total_time = time.time()
     losses = []
     accuracies = []
+    best_model_paths = []
 
     with open(SAVE_MODEL_PATH + 'config-' + learning_params.id + '.json', 'w') as outfile:
         json.dump(bench_params, outfile, default=json_handler, indent=True)
@@ -42,7 +45,7 @@ def run(x_train, x_test, y_train, y_test, bench_params):
                                   patience=learning_params.early_stopping_patience, verbose=0, mode='max',
                                   restore_best_weights=True)
     curr_iter_num = 0
-
+    minima_encountered = 0
     while curr_iter_num < learning_params.iterations:
 
         curr_iter_num = curr_iter_num + 1
@@ -50,8 +53,10 @@ def run(x_train, x_test, y_train, y_test, bench_params):
 
         model = nn_model.create_seq_model(x_train.shape[1], bench_params.model_params)
 
+        model_path = SAVE_MODEL_PATH + 'nn_weights-' + learning_params.id + '-' + str(curr_iter_num) + '.hdf5'
+        best_model_paths.append(model_path)
         mcp_save = ModelCheckpoint(
-            SAVE_MODEL_PATH + 'nn_weights-' + learning_params.id + '-' + str(curr_iter_num) + '.hdf5',
+            model_path,
             save_best_only=True,
             monitor='val_' + model_params.metric,
             mode='max')
@@ -59,15 +64,21 @@ def run(x_train, x_test, y_train, y_test, bench_params):
         history = model.fit(x_train, y_train, validation_data=(x_test, y_test),
                             epochs=learning_params.epochs, batch_size=learning_params.batch_size,
                             callbacks=[earlyStopping, mcp_save], verbose=0)
+
+        # restores best epoch of this iteration
+        model = load_model(model_path)
+
         loss, accuracy = model.evaluate(x_test, y_test, verbose=0)
         if (binary_classification and accuracy < 0.6) or ((not binary_classification) and accuracy < 0.45):
             print("ID ", learning_params.id, " iteration ", str(curr_iter_num), 'encountered local minimum (accuracy',
-                  str(round(accuracy, 4)), ' ) retrying iteration...', )
+                  str(round(accuracy, 4)), ' ) retrying iteration...')
+            minima_encountered = minima_encountered + 1
             curr_iter_num = curr_iter_num - 1
-            if curr_iter_num > 2*learning_params.iterations:
+            if minima_encountered > learning_params.iterations:
                 print("ID ", learning_params.id, "encountering too many local minima - breaking infinite loop ")
-                break
-            pass
+                return
+            else:
+                continue
         losses.append(loss)
         accuracies.append(accuracy)
         number_of_epochs_it_ran = len(history.history['loss'])
@@ -85,6 +96,9 @@ def run(x_train, x_test, y_train, y_test, bench_params):
                                 'nn-' + learning_params.id + '-' + str(curr_iter_num))
     print("ID ", learning_params.id, "avg loss:", str(round(np.mean(losses), 4)), "avg accuracy:",
           str(round(np.mean(accuracies), 4)), "total time ", str(int(time.time() - total_time)), 's.')
+    max_index = np.argmax(accuracies)
+    best_model_of_all_path = best_model_paths[max_index]
+    copyfile(best_model_of_all_path, SAVE_MODEL_PATH + 'nn_weights-' + learning_params.id + '.hdf5')
 
 
 if __name__ == '__main__':
@@ -92,9 +106,9 @@ if __name__ == '__main__':
     df = df_list[0]
 
     bench_params = benchmark_params.default_params(binary_classification=True)
-    bench_params.learning_params.epochs = 50
+    bench_params.learning_params.epochs = 5
     # bench_params.model_params.regularizer = .01
-    bench_params.learning_params.iterations = 5
+    bench_params.learning_params.iterations = 2
     param_grid = {
         'layers': [[], [1], [2]]
     }
