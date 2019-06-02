@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib import style
 
-import db_access
+from data_import import db_access
 import stock_constants as const
 
 MIN_DATE = '1900-01-01'

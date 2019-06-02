@@ -1,6 +1,6 @@
 import numpy as np
 
-import db_access
+from data_import import db_access
 
 PRED = 'Prediction'
 LABEL = 'Label binary'

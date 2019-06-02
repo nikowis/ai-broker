@@ -4,10 +4,10 @@ import time
 import numpy as np
 import pandas as pd
 
-import alpha
+from data_import import alpha
 import csv_importer
 import stock_constants as const
-from db_access import create_db_connection, stock_collection
+from data_import.db_access import create_db_connection, stock_collection
 
 TI_BBANDS = 'BBANDS'
 TI_RSI = 'RSI'
@@ -17,11 +17,11 @@ TI_SMA = 'SMA'
 TI_ROC = 'ROC'
 TI_TR = 'TRANGE'
 TI_MOM = 'MOM'
-TI_WILLR = 'WILLR' # Williams' %R
-TI_APO = 'APO' #absolute price oscillator
-TI_ADX = 'ADX' #absolute price oscillator
-TI_CCI = 'CCI' #absolute price oscillator
-TI_AD = 'AD' #absolute price oscillator
+TI_WILLR = 'WILLR'  # Williams' %R
+TI_APO = 'APO'  # absolute price oscillator
+TI_ADX = 'ADX'  # absolute price oscillator
+TI_CCI = 'CCI'  # absolute price oscillator
+TI_AD = 'AD'  # absolute price oscillator
 
 SYMBOL_KEY = "symbol"
 
@@ -201,8 +201,8 @@ class Importer:
             self.import_technical_indicator(ticker, df, TI_STOCH, const.STOCH_K_COL)
             self.import_technical_indicator(ticker, df, TI_WILLR, const.WILLR_5_COL, time_period=5)
             self.import_technical_indicator(ticker, df, TI_WILLR, const.WILLR_10_COL, time_period=10)
-            self.import_technical_indicator(ticker, df, TI_APO, const.APO_5_COL, time_period=5) #OSCILIATOR
-            self.import_technical_indicator(ticker, df, TI_APO, const.APO_10_COL, time_period=10) #OSCILIATOR
+            self.import_technical_indicator(ticker, df, TI_APO, const.APO_5_COL, time_period=5)  # OSCILIATOR
+            self.import_technical_indicator(ticker, df, TI_APO, const.APO_10_COL, time_period=10)  # OSCILIATOR
             self.import_technical_indicator(ticker, df, TI_RSI, const.RSI_5_COL, time_period=5)
             self.import_technical_indicator(ticker, df, TI_RSI, const.RSI_10_COL, time_period=10)
             self.import_technical_indicator(ticker, df, TI_ADX, const.ADX_5_COL, time_period=5)
@@ -281,15 +281,19 @@ class Importer:
                 df[const.CCI_DIFF_COL] = df[const.CCI_10_COL] - df[const.CCI_5_COL]
                 df[const.STOCH_D_DIFF_COL] = df[const.STOCH_D_COL] - df[const.STOCH_D_COL].shift(-1)
                 df[const.STOCH_K_DIFF_COL] = df[const.STOCH_K_COL] - df[const.STOCH_K_COL].shift(-1)
-                df[const.DISPARITY_5_COL] = 100*df[const.ADJUSTED_CLOSE_COL]/df[const.SMA_5_COL]
-                df[const.DISPARITY_10_COL] = 100*df[const.ADJUSTED_CLOSE_COL]/df[const.SMA_10_COL]
-                df[const.DISPARITY_20_COL] = 100*df[const.ADJUSTED_CLOSE_COL]/df[const.SMA_20_COL]
-                df[const.BBANDS_10_DIFF_COL] = df[const.BBANDS_10_RUB_COL]-df[const.BBANDS_10_RLB_COL]
-                df[const.BBANDS_20_DIFF_COL] = df[const.BBANDS_20_RUB_COL]-df[const.BBANDS_20_RLB_COL]
-                df[const.PRICE_BBANDS_LOW_10_COL] = (df[const.ADJUSTED_CLOSE_COL]-df[const.BBANDS_10_RLB_COL])/df[const.BBANDS_10_RLB_COL]
-                df[const.PRICE_BBANDS_LOW_20_COL] = (df[const.ADJUSTED_CLOSE_COL]-df[const.BBANDS_20_RLB_COL])/df[const.BBANDS_20_RLB_COL]
-                df[const.PRICE_BBANDS_UP_10_COL] = (df[const.ADJUSTED_CLOSE_COL]-df[const.BBANDS_10_RUB_COL])/df[const.BBANDS_10_RUB_COL]
-                df[const.PRICE_BBANDS_UP_20_COL] = (df[const.ADJUSTED_CLOSE_COL]-df[const.BBANDS_20_RUB_COL])/df[const.BBANDS_20_RUB_COL]
+                df[const.DISPARITY_5_COL] = 100 * df[const.ADJUSTED_CLOSE_COL] / df[const.SMA_5_COL]
+                df[const.DISPARITY_10_COL] = 100 * df[const.ADJUSTED_CLOSE_COL] / df[const.SMA_10_COL]
+                df[const.DISPARITY_20_COL] = 100 * df[const.ADJUSTED_CLOSE_COL] / df[const.SMA_20_COL]
+                df[const.BBANDS_10_DIFF_COL] = df[const.BBANDS_10_RUB_COL] - df[const.BBANDS_10_RLB_COL]
+                df[const.BBANDS_20_DIFF_COL] = df[const.BBANDS_20_RUB_COL] - df[const.BBANDS_20_RLB_COL]
+                df[const.PRICE_BBANDS_LOW_10_COL] = (df[const.ADJUSTED_CLOSE_COL] - df[const.BBANDS_10_RLB_COL]) / df[
+                    const.BBANDS_10_RLB_COL]
+                df[const.PRICE_BBANDS_LOW_20_COL] = (df[const.ADJUSTED_CLOSE_COL] - df[const.BBANDS_20_RLB_COL]) / df[
+                    const.BBANDS_20_RLB_COL]
+                df[const.PRICE_BBANDS_UP_10_COL] = (df[const.ADJUSTED_CLOSE_COL] - df[const.BBANDS_10_RUB_COL]) / df[
+                    const.BBANDS_10_RUB_COL]
+                df[const.PRICE_BBANDS_UP_20_COL] = (df[const.ADJUSTED_CLOSE_COL] - df[const.BBANDS_20_RUB_COL]) / df[
+                    const.BBANDS_20_RUB_COL]
 
                 processed_dict = self.df_to_json(df, symbol)
                 stock_processed_collection.insert(processed_dict)
@@ -311,7 +315,7 @@ class Importer:
 
 if __name__ == "__main__":
     imp = Importer()
-    imp.import_all([SELECTED_SYM])
+    imp.import_all(['GOOGL', 'MSFT', 'AAPL', 'CSCO', 'ORCL', 'INTC', 'VOD', 'QCOM', 'AMZN', 'AMGN'])
     imp.import_all_technical_indicators([SELECTED_SYM])
     imp.process_data()
     imp.export_to_csv_files('./../target/data')

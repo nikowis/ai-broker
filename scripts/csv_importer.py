@@ -3,6 +3,7 @@ import pandas as pd
 TARGET_DIR = './../target'
 CSV_FILES_DIR = TARGET_DIR + '/data'
 
+
 def import_data_from_files(tickers, path=CSV_FILES_DIR):
     df_list = []
     for ticker in tickers:

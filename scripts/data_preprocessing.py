@@ -9,7 +9,8 @@ from sklearn import model_selection
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler, RobustScaler, LabelEncoder
 
-import db_access
+import csv_importer
+from data_import import db_access
 import stock_constants as const
 
 CORRELATED_COLS = [const.APO_10_COL, const.APO_DIFF_COL, const.MOM_5_COL, const.MOM_10_COL, const.MOM_DIFF_COL,
@@ -159,9 +160,7 @@ def count_outliers(df):
 
 
 if __name__ == '__main__':
-    db_conn = db_access.create_db_connection(remote=False)
-    df_list, sym_list = db_access.find_by_tickers_to_dateframe_parse_to_df_list(db_conn, [SELECTED_SYM],
-                                                                                min_date=MIN_DATE, max_date=MAX_DATE)
+    df_list = csv_importer.import_data_from_files([SELECTED_SYM])
     df = df_list[0]
     # df, x, y = preprocess(df)
     # principal_component_analysis(x)

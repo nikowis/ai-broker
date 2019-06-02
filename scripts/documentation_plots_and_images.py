@@ -1,6 +1,6 @@
 import os
 
-import db_access
+import csv_importer
 import stock_constants as const
 
 MIN_DATE = '2019-05-01'
@@ -19,8 +19,7 @@ def label_creation_steps_to_csv(df, filename):
 
 
 if __name__ == '__main__':
-    db_conn = db_access.create_db_connection(remote=False)
-    df_list, sym_list = db_access.find_by_tickers_to_dateframe_parse_to_df_list(db_conn, [SELECTED_SYM],
-                                                                                min_date=MIN_DATE, max_date=MAX_DATE)
+    df_list = csv_importer.import_data_from_files([SELECTED_SYM])
+    df = df_list[0]
     df = df_list[0]
     label_creation_steps_to_csv(df, 'label_creation')

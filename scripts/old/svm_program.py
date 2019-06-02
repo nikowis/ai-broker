@@ -3,7 +3,7 @@ import time
 import keras
 
 from old import data_helper
-import db_access
+from data_import import db_access
 import plot_helper
 import stock_constants as const
 from sklearn.svm import SVC

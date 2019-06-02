@@ -1,6 +1,6 @@
 import time
 
-import db_access
+from data_import import db_access
 from old import nn_model, data_helper
 import plot_helper
 import stock_constants as const

@@ -1,6 +1,6 @@
 import time
 
-import api_to_db_importer
+from data_import import api_to_db_importer
 import csv_importer
 from old import nn_model, data_helper
 import plot_helper

@@ -1,4 +1,3 @@
-import random
 import time
 
 
@@ -9,7 +8,6 @@ class BenchmarkParams:
         self.preprocessing_params: PreprocessingParams = preprocessing_params
         self.model_params: ModelParams = model_params
         self.learning_params: LearningParams = learning_params
-
         self.preprocessing_params.binary_classification = binary_classification
         if binary_classification:
             self.classes_count = 2
@@ -102,6 +100,7 @@ class LearningParams:
         self.batch_size = 10
         self.early_stopping_patience = 40
         self.early_stopping_min_delta = 0.005
+        self.iterations = 1
 
     def update_from_dictionary(self, params_dict):
         self.id = str(time.time())
@@ -114,7 +113,7 @@ class LearningParams:
         return self.__dict__
 
 
-def default_params(binary_classification):
+def default_params(binary_classification) -> BenchmarkParams:
     preprocparams = PreprocessingParams()
     modelparams = ModelParams()
     learningparams = LearningParams()
