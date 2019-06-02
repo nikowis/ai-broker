@@ -6,10 +6,9 @@ class BenchmarkParams:
 
     def __init__(self, preprocessing_params, model_params, learning_params, binary_classification) -> None:
         super().__init__()
-        self.preprocessing_params = preprocessing_params
-        self.model_params = model_params
-        self.learning_params = learning_params
-        self.binary_classification = binary_classification
+        self.preprocessing_params: PreprocessingParams = preprocessing_params
+        self.model_params: ModelParams = model_params
+        self.learning_params: LearningParams = learning_params
 
         self.preprocessing_params.binary_classification = binary_classification
         if binary_classification:
@@ -98,14 +97,14 @@ class ModelParams:
 class LearningParams:
     def __init__(self) -> None:
         super().__init__()
-        self.id = str(time.time()) + '-' + str(random.randint(0, 10))
+        self.id = str(time.time())
         self.epochs = 10
         self.batch_size = 10
         self.early_stopping_patience = 40
         self.early_stopping_min_delta = 0.005
 
     def update_from_dictionary(self, params_dict):
-        self.id = str(time.time()) + '-' + str(random.randint(0, 10))
+        self.id = str(time.time())
         if 'epochs' in params_dict:
             self.epochs = params_dict['epochs']
         if 'batch_size' in params_dict:

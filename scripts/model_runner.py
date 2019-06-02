@@ -2,13 +2,10 @@ import json
 import os
 import time
 
-import benchmark_params
 from keras.callbacks import EarlyStopping, ModelCheckpoint
-from keras.utils import to_categorical
-from sklearn import model_selection
 from sklearn.model_selection import ParameterGrid
-from sklearn.preprocessing import LabelEncoder
 
+import benchmark_params
 import csv_importer
 import data_preprocessing
 import nn_model
@@ -20,27 +17,11 @@ if not os.path.exists(SAVE_MODEL_PATH):
     os.makedirs(SAVE_MODEL_PATH)
 
 
-def prepare_data(df, preprocessing_params):
-    df, x, y = data_preprocessing.preprocess(df, preprocessing_params)
-
-    if preprocessing_params.binary_classification:
-        encoder = LabelEncoder()
-        encoded_y = encoder.fit_transform(y)
-    else:
-        encoded_y = to_categorical(y)
-
-    x_train, x_test, y_train, y_test = model_selection.train_test_split(x, encoded_y,
-                                                                        test_size=preprocessing_params.test_size,
-                                                                        shuffle=False)
-    return x_train, x_test, y_train, y_test
-
-
 def json_handler(Obj):
     if hasattr(Obj, 'jsonable'):
         return Obj.jsonable()
     else:
         return str(Obj)
-        # raise TypeError('Object of type %s with value of %s is not JSON serializable' % (type(Obj), repr(Obj)))
 
 
 def run(model, x_train, x_test, y_train, y_test, bench_params):
@@ -51,7 +32,8 @@ def run(model, x_train, x_test, y_train, y_test, bench_params):
     with open(SAVE_MODEL_PATH + 'config-' + learning_params.id + '.json', 'w') as outfile:
         json.dump(bench_params, outfile, default=json_handler, indent=True)
 
-    earlyStopping = EarlyStopping(monitor='val_' + model_params.metric, min_delta=learning_params.early_stopping_min_delta,
+    earlyStopping = EarlyStopping(monitor='val_' + model_params.metric,
+                                  min_delta=learning_params.early_stopping_min_delta,
                                   patience=learning_params.early_stopping_patience, verbose=0, mode='max',
                                   restore_best_weights=True)
     mcp_save = ModelCheckpoint(SAVE_MODEL_PATH + 'nn_weights-' + learning_params.id + '.hdf5', save_best_only=True,
@@ -80,15 +62,17 @@ if __name__ == '__main__':
     df = df_list[0]
 
     bench_params = benchmark_params.default_params(binary_classification=True)
-    bench_params.learning_params.epochs = 40
+    bench_params.learning_params.epochs = 60
+    bench_params.model_params.regularizer = .01
 
     param_grid = {
-        'layers': [[2], [3]]
+        'layers': [[2], [3], [5], [7], [10], [15], [20], [25]]
     }
     grid = ParameterGrid(param_grid)
 
     for param in grid:
         bench_params.update_from_dictionary(param)
-        x_train, x_test, y_train, y_test = prepare_data(df, bench_params.preprocessing_params)
+        df, x, y, x_train, x_test, y_train, y_test = data_preprocessing.preprocess(df,
+                                                                                   bench_params.preprocessing_params)
         model = nn_model.create_seq_model(x_train.shape[1], bench_params.model_params)
         run(model, x_train, x_test, y_train, y_test, bench_params)

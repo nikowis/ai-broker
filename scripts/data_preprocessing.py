@@ -4,8 +4,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
+from keras.utils import to_categorical
+from sklearn import model_selection
 from sklearn.decomposition import PCA
-from sklearn.preprocessing import StandardScaler, RobustScaler
+from sklearn.preprocessing import StandardScaler, RobustScaler, LabelEncoder
 
 import db_access
 import stock_constants as const
@@ -43,8 +45,8 @@ def get_top_abs_correlations(df, n=5):
     return au_corr[0:n]
 
 
-def preprocess(df, preprocessingParams):
-    if preprocessingParams.difference_non_stationary:
+def preprocess(df, preprocessing_params):
+    if preprocessing_params.difference_non_stationary:
         df[const.ADJUSTED_CLOSE_COL] = df[const.ADJUSTED_CLOSE_COL].diff()
         df[const.OPEN_COL] = df[const.OPEN_COL].diff()
         df[const.CLOSE_COL] = df[const.CLOSE_COL].diff()
@@ -59,24 +61,33 @@ def preprocess(df, preprocessingParams):
 
     df_without_corelated_features = df_without_helper_cols.drop(CORRELATED_COLS, axis=1)
 
-    if preprocessingParams.binary_classification:
+    if preprocessing_params.binary_classification:
         y = np.array(df[const.LABEL_BINARY_COL])
     else:
         y = np.array(df[const.LABEL_DISCRETE_COL])
     x = np.array(df_without_corelated_features)
 
-    if preprocessingParams.standarize:
-        if preprocessingParams.robust_scaler:
+    if preprocessing_params.standarize:
+        if preprocessing_params.robust_scaler:
             scale = RobustScaler().fit(x)
         else:
             scale = StandardScaler().fit(x)
         x = scale.transform(x)
 
-    if preprocessingParams.pca is not None:
-        pca = PCA(preprocessingParams.pca).fit(x)
+    if preprocessing_params.pca is not None:
+        pca = PCA(preprocessing_params.pca).fit(x)
         x = pca.transform(x)
 
-    return df, x, y
+    if preprocessing_params.binary_classification:
+        encoder = LabelEncoder()
+        encoded_y = encoder.fit_transform(y)
+    else:
+        encoded_y = to_categorical(y)
+
+    x_train, x_test, y_train, y_test = model_selection.train_test_split(x, encoded_y,
+                                                                        test_size=preprocessing_params.test_size,
+                                                                        shuffle=False)
+    return df, x, y, x_train, x_test, y_train, y_test
 
 
 def plot_correlations(df_without_corelated_features):
