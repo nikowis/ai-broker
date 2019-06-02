@@ -2,7 +2,7 @@ import os
 import random
 import time
 
-from keras.callbacks import ModelCheckpoint, EarlyStopping
+from keras.callbacks import ModelCheckpoint, EarlyStopping, ReduceLROnPlateau
 
 SAVE_MODEL_PATH = './../target/models/'
 if not os.path.exists(SAVE_MODEL_PATH):
@@ -91,14 +91,9 @@ class LearningParams:
         self.id = str(time.time()) + '-' + str(random.randint(0, 10))
         self.epochs = 10
         self.batch_size = 10
-        earlyStopping = EarlyStopping(monitor='val_binary_accuracy', min_delta=0.005, patience=20, verbose=0,
-                                      baseline=0.6, mode='max', restore_best_weights=True)
-        mcp_save = ModelCheckpoint(SAVE_MODEL_PATH + 'nn_weights-' + self.id + '.hdf5', save_best_only=True,
-                                   monitor='val_binary_accuracy',
-                                   mode='max')
-        # reduce_lr_loss = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=7, verbose=1, epsilon=1e-4,
-        #                                    mode='min')
-        self.callbacks = [earlyStopping, mcp_save]
+        self.early_stopping_patience = 40
+        self.early_stopping_min_delta = 0.005
+        self.callbacks = self.setup_callbacks()
 
     def update_from_dictionary(self, params_dict):
         self.id = str(time.time()) + '-' + str(random.randint(0, 10))
@@ -107,14 +102,15 @@ class LearningParams:
         if 'batch_size' in params_dict:
             self.batch_size = params_dict['batch_size']
 
-        earlyStopping = EarlyStopping(monitor='val_binary_accuracy', min_delta=0.005, patience=20, verbose=0,
-                                      baseline=0.6, mode='max', restore_best_weights=True)
+        self.callbacks = self.setup_callbacks()
+
+    def setup_callbacks(self):
+        earlyStopping = EarlyStopping(monitor='val_binary_accuracy', min_delta=self.early_stopping_min_delta,
+                                      patience=self.early_stopping_patience, verbose=0, mode='max', restore_best_weights=True)
         mcp_save = ModelCheckpoint(SAVE_MODEL_PATH + 'nn_weights-' + self.id + '.hdf5', save_best_only=True,
                                    monitor='val_binary_accuracy',
                                    mode='max')
-        # reduce_lr_loss = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=7, verbose=1, epsilon=1e-4,
-        #                                    mode='min')
-        self.callbacks = [earlyStopping, mcp_save]
+        return [earlyStopping, mcp_save]
 
 
 def default_params(binary_classification):
