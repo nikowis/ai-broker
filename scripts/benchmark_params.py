@@ -1,12 +1,5 @@
-import os
 import random
 import time
-
-from keras.callbacks import ModelCheckpoint, EarlyStopping, ReduceLROnPlateau
-
-SAVE_MODEL_PATH = './../target/models/'
-if not os.path.exists(SAVE_MODEL_PATH):
-    os.makedirs(SAVE_MODEL_PATH)
 
 
 class BenchmarkParams:
@@ -28,6 +21,9 @@ class BenchmarkParams:
         self.preprocessing_params.update_from_dictionary(params_dict)
         self.model_params.update_from_dictionary(params_dict)
         self.learning_params.update_from_dictionary(params_dict)
+
+    def jsonable(self):
+        return self.__dict__
 
 
 class PreprocessingParams:
@@ -51,6 +47,9 @@ class PreprocessingParams:
             self.pca = params_dict['robust_scaler']
         if 'difference_non_stationary' in params_dict:
             self.pca = params_dict['difference_non_stationary']
+
+    def jsonable(self):
+        return self.__dict__
 
 
 class ModelParams:
@@ -84,6 +83,9 @@ class ModelParams:
         if 'use_bias' in params_dict:
             self.use_bias = params_dict['use_bias']
 
+    def jsonable(self):
+        return self.__dict__
+
 
 class LearningParams:
     def __init__(self) -> None:
@@ -93,7 +95,6 @@ class LearningParams:
         self.batch_size = 10
         self.early_stopping_patience = 40
         self.early_stopping_min_delta = 0.005
-        self.callbacks = self.setup_callbacks()
 
     def update_from_dictionary(self, params_dict):
         self.id = str(time.time()) + '-' + str(random.randint(0, 10))
@@ -102,15 +103,8 @@ class LearningParams:
         if 'batch_size' in params_dict:
             self.batch_size = params_dict['batch_size']
 
-        self.callbacks = self.setup_callbacks()
-
-    def setup_callbacks(self):
-        earlyStopping = EarlyStopping(monitor='val_binary_accuracy', min_delta=self.early_stopping_min_delta,
-                                      patience=self.early_stopping_patience, verbose=0, mode='max', restore_best_weights=True)
-        mcp_save = ModelCheckpoint(SAVE_MODEL_PATH + 'nn_weights-' + self.id + '.hdf5', save_best_only=True,
-                                   monitor='val_binary_accuracy',
-                                   mode='max')
-        return [earlyStopping, mcp_save]
+    def jsonable(self):
+        return self.__dict__
 
 
 def default_params(binary_classification):
@@ -119,3 +113,5 @@ def default_params(binary_classification):
     learningparams = LearningParams()
     params = BenchmarkParams(preprocparams, modelparams, learningparams, binary_classification)
     return params
+
+
