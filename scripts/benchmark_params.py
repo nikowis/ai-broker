@@ -13,9 +13,17 @@ class BenchmarkParams:
 
         self.preprocessing_params.binary_classification = binary_classification
         if binary_classification:
+            self.classes_count = 2
             self.model_params.output_neurons = 1
+            self.model_params.output_activation = 'sigmoid'
+            self.model_params.loss = 'binary_crossentropy'
+            self.model_params.metric = 'binary_accuracy'
         else:
+            self.classes_count = 3
             self.model_params.output_neurons = 3
+            self.model_params.output_activation = 'softmax'
+            self.model_params.loss = 'categorical_crossentropy'
+            self.model_params.metric = 'categorical_accuracy'
 
     def update_from_dictionary(self, params_dict):
         self.preprocessing_params.update_from_dictionary(params_dict)
@@ -113,5 +121,3 @@ def default_params(binary_classification):
     learningparams = LearningParams()
     params = BenchmarkParams(preprocparams, modelparams, learningparams, binary_classification)
     return params
-
-

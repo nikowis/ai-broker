@@ -4,16 +4,13 @@ from itertools import cycle
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from keras.utils import to_categorical
 from matplotlib import style
 from sklearn.metrics import roc_curve, auc
-from keras.utils import to_categorical
-
 
 import stock_constants as const
 
 BASE_IMG_PATH = './../target'
-
-
 
 CLOSE_PRICE_USD_LABEL = 'Cena zamknięcia (USD)'
 DATE_LABEL = 'Data'
@@ -63,7 +60,7 @@ def legend_labels_save_files(title, file_name='img', base_img_path=BASE_IMG_PATH
 
 
 def calculate_roc_auc(y_test, y_test_score, classes_count):
-    if classes_count>2:
+    if classes_count > 2:
         fpr = dict()
         tpr = dict()
         roc_auc = dict()
@@ -82,14 +79,14 @@ def calculate_roc_auc(y_test, y_test_score, classes_count):
         return fpr, tpr, roc_auc
 
 
-def plot_result(y_test, y_test_prediction, classes_count, history, main_title, file_name, target_dir=BASE_IMG_PATH):
+def plot_result(y_test, y_test_prediction, bench_params, history, main_title, file_name, target_dir=BASE_IMG_PATH):
     if not os.path.exists(target_dir):
         os.makedirs(target_dir)
-    if classes_count == 2:
+    if bench_params.classes_count == 2:
         class_labels = [FALL_LABEL, RISE_LABEL]
         xticks = [0, 1]
         y_test_prediction = y_test_prediction.flatten()
-        fpr, tpr, roc_auc = calculate_roc_auc(y_test, y_test_prediction, classes_count)
+        fpr, tpr, roc_auc = calculate_roc_auc(y_test, y_test_prediction, bench_params.classes_count)
         y_test_prediction[y_test_prediction >= 0.5] = 1
         y_test_prediction[y_test_prediction < 0.5] = 0
         y_test_prediction = to_categorical(y_test_prediction)
@@ -97,7 +94,7 @@ def plot_result(y_test, y_test_prediction, classes_count, history, main_title, f
     else:
         class_labels = [FALL_LABEL, IDLE_LABEL, RISE_LABEL]
         xticks = [0, 1, 2]
-        fpr, tpr, roc_auc = calculate_roc_auc(y_test, y_test_prediction, classes_count)
+        fpr, tpr, roc_auc = calculate_roc_auc(y_test, y_test_prediction, bench_params.classes_count)
 
     y_test = [np.argmax(pred, axis=None, out=None) for pred in y_test]
     y_test_prediction = [np.argmax(pred, axis=None, out=None) for pred in y_test_prediction]
@@ -107,7 +104,6 @@ def plot_result(y_test, y_test_prediction, classes_count, history, main_title, f
     plt.suptitle(main_title)
 
     plt.subplot(2, 2, 1)
-
 
     dftmp = pd.DataFrame({'tmpcol': y_test})
 
@@ -124,17 +120,17 @@ def plot_result(y_test, y_test_prediction, classes_count, history, main_title, f
     plt.title(HISTOGRAM_TITLE)
 
     plt.subplot(2, 2, 2)
-    if classes_count>2:
+    if bench_params.classes_count > 2:
         plt.plot(fpr[(MICRO_ROC_KEY)], tpr[MICRO_ROC_KEY],
                  label=MICRO_AVG_ROC_LABEL.format(roc_auc[MICRO_ROC_KEY]),
                  color='red', linewidth=3)
 
         colors = cycle(['aqua', 'darkorange', 'cornflowerblue'])
-        for i, color in zip(range(classes_count), colors):
+        for i, color in zip(range(bench_params.classes_count), colors):
             plt.plot(fpr[i], tpr[i], color=color, lw=2,
                      label=CLASS_ROC_LABEL.format(class_labels[i], roc_auc[i]))
     else:
-        plt.plot(fpr, tpr, label=BINARY_ROC_LABEL.format(roc_auc),color='red', linewidth=2)
+        plt.plot(fpr, tpr, label=BINARY_ROC_LABEL.format(roc_auc), color='red', linewidth=2)
     plt.plot([0, 1], [0, 1], 'k--', lw=2)
     plt.xlim([0.0, 1.0])
     plt.ylim([0.0, 1.05])
@@ -153,12 +149,9 @@ def plot_result(y_test, y_test_prediction, classes_count, history, main_title, f
         plt.legend([TRAIN_DATA, TEST_DATA], loc='upper left')
 
         plt.subplot(2, 2, 4)
-        if classes_count > 2:
-            plt.plot(history.history['categorical_accuracy'])
-            plt.plot(history.history['val_categorical_accuracy'])
-        else:
-            plt.plot(history.history['binary_accuracy'])
-            plt.plot(history.history['val_binary_accuracy'])
+
+        plt.plot(history.history[bench_params.model_params.metric])
+        plt.plot(history.history['val_' + bench_params.model_params.metric])
 
         plt.title(ACCURACY_TITLE)
         plt.ylabel(ACCURACY_LABEL)
@@ -201,7 +194,7 @@ def plot_company_summary(df, symbol):
 
     plt.subplot(2, 2, 4)
     df[const.LABEL_DISCRETE_COL].plot(kind='hist', xticks=[0, 1, 2], label=RATE_CHANGE_LABEL)
-    plt.xticks([0, 1, 2], [FALL_LABEL, IDLE_LABEL ,RISE_LABEL])
+    plt.xticks([0, 1, 2], [FALL_LABEL, IDLE_LABEL, RISE_LABEL])
     plt.xlabel(VALUE_CHANGE_LABEL)
     plt.ylabel(FORECAST_COUNT_LABEL)
     plt.title(HISTOGRAM_TITLE)

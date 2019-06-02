@@ -1,9 +1,11 @@
-import matplotlib.pyplot as plt
-from matplotlib import style
 import os
+
+import matplotlib.pyplot as plt
+import pandas as pd
+from matplotlib import style
+
 import db_access
 import stock_constants as const
-import pandas as pd
 
 MIN_DATE = '1900-01-01'
 MAX_DATE = '2020-10-29'

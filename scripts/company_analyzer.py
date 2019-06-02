@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 from matplotlib import style
 
-import api_to_db_importer
 import csv_importer
 import stock_constants as const
 
