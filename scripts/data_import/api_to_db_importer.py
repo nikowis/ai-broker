@@ -316,7 +316,7 @@ class Importer:
 if __name__ == "__main__":
     imp = Importer()
     imp.import_all(['GOOGL', 'MSFT', 'AAPL', 'CSCO', 'ORCL', 'INTC', 'VOD', 'QCOM', 'AMZN', 'AMGN'])
-    imp.import_all_technical_indicators([SELECTED_SYM])
+    imp.import_all_technical_indicators(['GOOGL', 'MSFT', 'AAPL', 'CSCO', 'ORCL', 'INTC', 'VOD', 'QCOM', 'AMZN', 'AMGN'])
     imp.process_data()
     imp.export_to_csv_files('./../target/data')
     dflist = csv_importer.import_data_from_files([SELECTED_SYM], './../target/data')
