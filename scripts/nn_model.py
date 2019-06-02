@@ -10,7 +10,7 @@ def create_seq_model(input_size, model_params):
     regularizer = l2(model_params.regularizer)
     if len(layers) == 0:
         model.add(Dense(model_params.output_neurons, use_bias=model_params.use_bias, input_shape=(input_size,),
-                        activation=model_params.output_activation, kernel_regularizer=regularizer, bias_regularizer=regularizer))
+                        activation=model_params.output_activation))
     else:
         model.add(
             Dense(layers[0], input_shape=(input_size,), activation=model_params.activation,
