@@ -68,17 +68,6 @@ def preprocess(df, preprocessing_params):
         y = np.array(df[const.LABEL_DISCRETE_COL])
     x = np.array(df_without_corelated_features)
 
-    if preprocessing_params.standarize:
-        if preprocessing_params.robust_scaler:
-            scale = RobustScaler().fit(x)
-        else:
-            scale = StandardScaler().fit(x)
-        x = scale.transform(x)
-
-    if preprocessing_params.pca is not None:
-        pca = PCA(preprocessing_params.pca).fit(x)
-        x = pca.transform(x)
-
     if preprocessing_params.binary_classification:
         encoder = LabelEncoder()
         encoded_y = encoder.fit_transform(y)
@@ -88,6 +77,20 @@ def preprocess(df, preprocessing_params):
     x_train, x_test, y_train, y_test = model_selection.train_test_split(x, encoded_y,
                                                                         test_size=preprocessing_params.test_size,
                                                                         shuffle=False)
+
+    if preprocessing_params.standarize:
+        if preprocessing_params.robust_scaler:
+            scale = RobustScaler().fit(x_train)
+        else:
+            scale = StandardScaler().fit(x_train)
+        x_train = scale.transform(x_train)
+        x_test = scale.transform(x_test)
+
+    if preprocessing_params.pca is not None:
+        pca = PCA(preprocessing_params.pca).fit(x_train)
+        x_train = pca.transform(x_train)
+        x_test = pca.transform(x_test)
+
     return df, x, y, x_train, x_test, y_train, y_test
 
 

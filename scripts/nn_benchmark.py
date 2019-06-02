@@ -106,11 +106,11 @@ if __name__ == '__main__':
     df = df_list[0]
 
     bench_params = benchmark_params.default_params(binary_classification=True)
-    bench_params.learning_params.epochs = 5
+    bench_params.learning_params.epochs = 50
     # bench_params.model_params.regularizer = .01
     bench_params.learning_params.iterations = 2
     param_grid = {
-        'layers': [[], [1], [2]]
+        'layers': [[]]
     }
     grid = ParameterGrid(param_grid)
 
