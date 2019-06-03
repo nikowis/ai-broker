@@ -9,6 +9,7 @@ from matplotlib import style
 from sklearn.metrics import roc_curve, auc
 
 import stock_constants as const
+from benchmark_params import BenchmarkParams
 
 BASE_IMG_PATH = './../target'
 
@@ -79,7 +80,7 @@ def calculate_roc_auc(y_test, y_test_score, classes_count):
         return fpr, tpr, roc_auc
 
 
-def plot_result(y_test, y_test_prediction, bench_params, history, main_title, file_name, target_dir=BASE_IMG_PATH):
+def plot_result(y_test, y_test_prediction, bench_params: BenchmarkParams, history, main_title, file_name, target_dir=BASE_IMG_PATH):
     if not os.path.exists(target_dir):
         os.makedirs(target_dir)
     if bench_params.classes_count == 2:
@@ -165,6 +166,11 @@ def plot_result(y_test, y_test_prediction, bench_params, history, main_title, fi
     plt.savefig('{}/{}.png'.format(target_dir, file_name))
     # plt.show()
     plt.close()
+
+    if not bench_params.preprocessing_params.binary_classification:
+        roc_auc = roc_auc[MICRO_ROC_KEY]
+
+    return fpr, tpr, roc_auc
 
 
 def plot_company_summary(df, symbol):
