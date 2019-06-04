@@ -7,11 +7,11 @@ import seaborn as sns
 from keras.utils import to_categorical
 from sklearn import model_selection
 from sklearn.decomposition import PCA
-from sklearn.preprocessing import StandardScaler, RobustScaler, LabelEncoder
+from sklearn.preprocessing import StandardScaler, LabelEncoder
 
 import csv_importer
-from data_import import db_access
 import stock_constants as const
+from benchmark_params import PreprocessingParams
 
 CORRELATED_COLS = [const.APO_10_COL, const.APO_DIFF_COL, const.MOM_5_COL, const.MOM_10_COL, const.MOM_DIFF_COL,
                    const.ROC_5_COL,
@@ -46,7 +46,7 @@ def get_top_abs_correlations(df, n=5):
     return au_corr[0:n]
 
 
-def preprocess(df, preprocessing_params):
+def preprocess(df, preprocessing_params: PreprocessingParams):
     if preprocessing_params.difference_non_stationary:
         df[const.ADJUSTED_CLOSE_COL] = df[const.ADJUSTED_CLOSE_COL].diff()
         df[const.OPEN_COL] = df[const.OPEN_COL].diff()
@@ -74,24 +74,58 @@ def preprocess(df, preprocessing_params):
     else:
         encoded_y = to_categorical(y)
 
-    x_train, x_test, y_train, y_test = model_selection.train_test_split(x, encoded_y,
-                                                                        test_size=preprocessing_params.test_size,
-                                                                        shuffle=False)
+    if preprocessing_params.walk_forward_testing:
+        x_trains_list = []
+        y_trains_list = []
+        x_tests_list = []
+        y_tests_list = []
+        test_size = preprocessing_params.test_size
+        test_window_size = preprocessing_params.walk_forward_test_window_size
+        train_window_size = preprocessing_params.walk_forward_max_train_window_size
 
+        for i in range(0, int((test_size * len(x) / test_window_size))):
+            train_end_idx = int((1 - test_size) * len(x) + i * test_window_size)
+            if train_window_size is None:
+                train_start_idx = 0
+            else:
+                train_start_idx = int(max(0, train_end_idx - train_window_size))
+            test_start_idx = int(train_end_idx + 1)
+            test_end_idx = int(train_end_idx + test_window_size)
+
+            x_train = x[train_start_idx:train_end_idx + 1]
+            y_train = encoded_y[train_start_idx:train_end_idx + 1]
+            x_test = x[test_start_idx:test_end_idx + 1]
+            y_test = encoded_y[test_start_idx:test_end_idx + 1]
+
+            x_train, x_test = standarize_and_pca(preprocessing_params, x_train, x_test)
+
+            x_trains_list.append(x_train)
+            y_trains_list.append(y_train)
+            x_tests_list.append(x_test)
+            y_tests_list.append(y_test)
+        x_train = x_trains_list
+        y_train = y_trains_list
+        x_test = x_tests_list
+        y_test = y_tests_list
+    else:
+        x_train, x_test, y_train, y_test = model_selection.train_test_split(x, encoded_y,
+                                                                            test_size=preprocessing_params.test_size,
+                                                                            shuffle=False)
+        x_test, x_train = standarize_and_pca(preprocessing_params, x_test, x_train)
+
+    return df, x, y, x_train, x_test, y_train, y_test
+
+
+def standarize_and_pca(preprocessing_params, x_train, x_test):
     if preprocessing_params.standarize:
-        if preprocessing_params.robust_scaler:
-            scale = RobustScaler().fit(x_train)
-        else:
-            scale = StandardScaler().fit(x_train)
+        scale = StandardScaler().fit(x_train)
         x_train = scale.transform(x_train)
         x_test = scale.transform(x_test)
-
     if preprocessing_params.pca is not None:
         pca = PCA(preprocessing_params.pca).fit(x_train)
         x_train = pca.transform(x_train)
         x_test = pca.transform(x_test)
-
-    return df, x, y, x_train, x_test, y_train, y_test
+    return x_train, x_test
 
 
 def plot_correlations(df_without_corelated_features):
