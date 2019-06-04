@@ -44,7 +44,7 @@ def run(x_train, x_test, y_train, y_test, bench_params, results_df: pd.DataFrame
     accuracies = []
     best_model_paths = []
 
-    with open(SAVE_MODEL_PATH + 'config-' + learning_params.id + '.json', 'w') as outfile:
+    with open('{0}config-{1}.json'.format(SAVE_MODEL_PATH, learning_params.id), 'w') as outfile:
         json.dump(bench_params, outfile, default=json_handler, indent=True)
 
     earlyStopping = EarlyStopping(monitor='val_' + model_params.metric,
@@ -60,7 +60,7 @@ def run(x_train, x_test, y_train, y_test, bench_params, results_df: pd.DataFrame
 
         model = nn_model.create_seq_model(x_train.shape[1], bench_params.model_params)
 
-        model_path = SAVE_MODEL_PATH + 'nn_weights-' + learning_params.id + '-' + str(curr_iter_num) + '.hdf5'
+        model_path = '{0}nn_weights-{1}-{2}.hdf5'.format(SAVE_MODEL_PATH, learning_params.id, curr_iter_num)
         best_model_paths.append(model_path)
         mcp_save = ModelCheckpoint(
             model_path,
@@ -77,12 +77,13 @@ def run(x_train, x_test, y_train, y_test, bench_params, results_df: pd.DataFrame
 
         loss, accuracy = model.evaluate(x_test, y_test, verbose=0)
         if (binary_classification and accuracy < 0.6) or ((not binary_classification) and accuracy < 0.45):
-            print("ID ", learning_params.id, " iteration ", str(curr_iter_num), 'encountered local minimum (accuracy',
-                  str(round(accuracy, 4)), ' ) retrying iteration...')
+            print('ID {0} iteration {1} encountered local minimum (accuracy {2}) retrying iteration...'.format(
+                learning_params.id, curr_iter_num, round(accuracy, 4)))
+
             minima_encountered = minima_encountered + 1
             curr_iter_num = curr_iter_num - 1
             if minima_encountered > learning_params.iterations:
-                print("ID ", learning_params.id, "encountering too many local minima - breaking infinite loop ")
+                print('ID {0}: encountering too many local minima - breaking infinite loop'.format(learning_params.id))
                 return
             else:
                 continue
@@ -90,28 +91,34 @@ def run(x_train, x_test, y_train, y_test, bench_params, results_df: pd.DataFrame
         accuracies.append(accuracy)
         number_of_epochs_it_ran = len(history.history['loss'])
         iter_time = time.time() - iter_start_time
-        print("ID ", learning_params.id, " iteration ", str(curr_iter_num), "of", str(learning_params.iterations), "id",
-              learning_params.id, "loss:", str(round(loss, 4)), "accuracy:",
-              str(round(accuracy, 4)), "epochs:", number_of_epochs_it_ran, "time ",
-              str(round(iter_time, 2)), 's.')
-        main_title = 'Test model. ' + "Loss: " + str(round(loss, 4)) + ", accuracy: " + str(
-            round(accuracy, 4)) + ", epochs: " + str(number_of_epochs_it_ran)
-        main_title = main_title + '\n' + 'Layers: [' + ''.join(
-            str(e) + " " for e in bench_params.model_params.layers) + ']'
+
+        print('ID {0} iteration {1} of {2} loss {3} accuracy {4} epochs {5} time {6}'
+              .format(learning_params.id, curr_iter_num, learning_params.iterations, round(loss, 4), round(accuracy, 4),
+                      number_of_epochs_it_ran, round(iter_time, 2)))
+
+        main_title = 'Neural network model loss: {0}, accuracy {1}, epochs {2}\n hidden layers [{3}]'.format(
+            round(loss, 4), round(accuracy, 4), number_of_epochs_it_ran, ''.join(
+                str(e) + " " for e in bench_params.model_params.layers))
 
         y_test_prediction = model.predict(x_test)
         fpr, tpr, roc_auc = plot_helper.plot_result(y_test, y_test_prediction, bench_params, history, main_title,
-                                                    'nn-' + learning_params.id + '-' + str(curr_iter_num))
+                                                    'nn-{0}-{1}'.format(learning_params.id, curr_iter_num))
 
         results_df = results_df.append(
-            {ID_COL: learning_params.id, EPOCHS_COL: int(number_of_epochs_it_ran), TRAIN_TIME_COL: iter_time, ACC_COL: accuracy,
+            {ID_COL: learning_params.id, EPOCHS_COL: int(number_of_epochs_it_ran), TRAIN_TIME_COL: iter_time,
+             ACC_COL: accuracy,
              ROC_AUC_COL: roc_auc}, ignore_index=True)
 
-    print("ID ", learning_params.id, "avg loss:", str(round(np.mean(losses), 4)), "avg accuracy:",
-          str(round(np.mean(accuracies), 4)), "total time ", str(round(time.time() - total_time, 2)), 's.')
+    print('ID {0} avg loss {1} avg accuracy {2} total time {3} s.'.format(learning_params.id, round(np.mean(losses), 4),
+                                                                          round(np.mean(accuracies), 4),
+                                                                          round(time.time() - total_time, 2)))
+
     max_index = np.argmax(accuracies)
     best_model_of_all_path = best_model_paths[max_index]
-    copyfile(best_model_of_all_path, SAVE_MODEL_PATH + 'nn_weights-' + learning_params.id + '.hdf5')
+    copyfile(best_model_of_all_path,
+             '{0}nn_weights-{1}-best-accuracy-{2}.hdf5'.format(SAVE_MODEL_PATH, learning_params.id,
+                                                               round(max(accuracies), 4)))
+
     return results_df
 
 
@@ -119,12 +126,12 @@ if __name__ == '__main__':
     df_list = csv_importer.import_data_from_files([SELECTED_SYM])
     df = df_list[0]
 
-    bench_params = benchmark_params.default_params(binary_classification=False)
+    bench_params = benchmark_params.default_params(binary_classification=True)
     bench_params.learning_params.epochs = 10
     # bench_params.model_params.regularizer = .01
-    bench_params.learning_params.iterations = 2
+    bench_params.learning_params.iterations = 1
     param_grid = {
-        'layers': [[], [1], [2], [3]],
+        'layers': [[2]],
     }
     grid = ParameterGrid(param_grid)
 
@@ -139,5 +146,5 @@ if __name__ == '__main__':
 
         results_df = run(x_train, x_test, y_train, y_test, bench_params, results_df)
 
-    results_df.to_csv(SAVE_MODEL_PATH + 'results.csv', index=False)
-
+    if results_df is not None and len(results_df) > 0:
+        results_df.to_csv('{0}results.csv'.format(SAVE_MODEL_PATH), index=False)

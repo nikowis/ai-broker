@@ -100,7 +100,11 @@ def plot_result(y_test, y_test_prediction, bench_params: BenchmarkParams, histor
     y_test = [np.argmax(pred, axis=None, out=None) for pred in y_test]
     y_test_prediction = [np.argmax(pred, axis=None, out=None) for pred in y_test_prediction]
 
-    plt.figure(figsize=(12, 12))
+    if history is not None:
+        plt.figure(figsize=(12, 12))
+    else:
+        plt.figure(figsize=(12, 6))
+
     style.use('ggplot')
     plt.suptitle(main_title)
 
