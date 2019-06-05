@@ -111,7 +111,7 @@ def preprocess(df, preprocessing_params: PreprocessingParams):
         x_train, x_test, y_train, y_test = model_selection.train_test_split(x, encoded_y,
                                                                             test_size=preprocessing_params.test_size,
                                                                             shuffle=False)
-        x_test, x_train = standarize_and_pca(preprocessing_params, x_test, x_train)
+        x_train, x_test = standarize_and_pca(preprocessing_params, x_train, x_test)
 
     return df, x, y, x_train, x_test, y_train, y_test
 
