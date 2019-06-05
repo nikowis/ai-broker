@@ -53,12 +53,16 @@ def run(x_train, x_test, y_train, y_test, bench_params, results_df: pd.DataFrame
                                   restore_best_weights=True)
     curr_iter_num = 0
     minima_encountered = 0
+    if learning_params.walk_forward_testing:
+        input_size = x_train[0].shape[1]
+    else:
+        input_size = x_train.shape[1]
     while curr_iter_num < learning_params.iterations:
 
         curr_iter_num = curr_iter_num + 1
         iter_start_time = time.time()
 
-        model = nn_model.create_seq_model(x_train.shape[1], bench_params.model_params)
+        model = nn_model.create_seq_model(input_size, bench_params.model_params)
 
         model_path = '{0}nn_weights-{1}-{2}.hdf5'.format(SAVE_MODEL_PATH, learning_params.id, curr_iter_num)
         best_model_paths.append(model_path)
@@ -68,14 +72,10 @@ def run(x_train, x_test, y_train, y_test, bench_params, results_df: pd.DataFrame
             monitor='val_' + model_params.metric,
             mode='max')
 
-        history = model.fit(x_train, y_train, validation_data=(x_test, y_test),
-                            epochs=learning_params.epochs, batch_size=learning_params.batch_size,
-                            callbacks=[earlyStopping, mcp_save], verbose=0)
+        callbacks = [earlyStopping, mcp_save]
+        model, history, accuracy, loss = learn(model, learning_params, callbacks, model_path, x_train, x_test,
+                                               y_train, y_test)
 
-        # restores best epoch of this iteration
-        model = load_model(model_path)
-
-        loss, accuracy = model.evaluate(x_test, y_test, verbose=0)
         if (binary_classification and accuracy < 0.6) or ((not binary_classification) and accuracy < 0.45):
             print('ID {0} iteration {1} encountered local minimum (accuracy {2}) retrying iteration...'.format(
                 learning_params.id, curr_iter_num, round(accuracy, 4)))
@@ -100,9 +100,12 @@ def run(x_train, x_test, y_train, y_test, bench_params, results_df: pd.DataFrame
             round(loss, 4), round(accuracy, 4), number_of_epochs_it_ran, ''.join(
                 str(e) + " " for e in bench_params.model_params.layers))
 
-        y_test_prediction = model.predict(x_test)
-        fpr, tpr, roc_auc = plot_helper.plot_result(y_test, y_test_prediction, bench_params, history, main_title,
-                                                    'nn-{0}-{1}'.format(learning_params.id, curr_iter_num))
+        if not learning_params.walk_forward_testing :
+            y_test_prediction = model.predict(x_test)
+            fpr, tpr, roc_auc = plot_helper.plot_result(y_test, y_test_prediction, bench_params, history, main_title,
+                                                        'nn-{0}-{1}'.format(learning_params.id, curr_iter_num))
+        else:
+            roc_auc=0
 
         results_df = results_df.append(
             {ID_COL: learning_params.id, EPOCHS_COL: int(number_of_epochs_it_ran), TRAIN_TIME_COL: iter_time,
@@ -122,17 +125,53 @@ def run(x_train, x_test, y_train, y_test, bench_params, results_df: pd.DataFrame
     return results_df
 
 
+def learn(model, learning_params, callbacks, model_path, x_train, x_test, y_train, y_test):
+    if learning_params.walk_forward_testing:
+        walk_iterations = len(x_train)
+        walk_losses = []
+        walk_accuracies = []
+
+        for walk_it in range(0, walk_iterations):
+            walk_x_train = x_train[walk_it]
+            walk_x_test = x_test[walk_it]
+            walk_y_train = y_train[walk_it]
+            walk_y_test = y_test[walk_it]
+            if walk_it == 0:
+                epochs = learning_params.epochs
+            else:
+                epochs = learning_params.walk_forward_retrain_epochs
+
+            history = model.fit(walk_x_train, walk_y_train, validation_data=(walk_x_test, walk_y_test),
+                                epochs=epochs, batch_size=learning_params.batch_size,
+                                callbacks=callbacks, verbose=0)
+            ls, acc = model.evaluate(walk_x_test, walk_y_test, verbose=0)
+            walk_losses.append(ls)
+            walk_accuracies.append(acc)
+
+        print('Walk accuracies: [{0}]'.format(walk_accuracies))
+        return model, history, np.mean(walk_accuracies), np.mean(walk_losses)
+    else:
+        history = model.fit(x_train, y_train, validation_data=(x_test, y_test),
+                            epochs=learning_params.epochs, batch_size=learning_params.batch_size,
+                            callbacks=callbacks, verbose=0)
+        # restores best epoch of this iteration
+        model = load_model(model_path)
+        loss, accuracy = model.evaluate(x_test, y_test, verbose=0)
+        return model, history, accuracy, loss
+
+
 if __name__ == '__main__':
     df_list = csv_importer.import_data_from_files([SELECTED_SYM])
     df = df_list[0]
 
     bench_params = benchmark_params.default_params(binary_classification=True)
-    bench_params.learning_params.epochs = 130
-    # bench_params.model_params.regularizer = .01
-    bench_params.learning_params.iterations = 1
+
     param_grid = {
-        'layers': [[],[2]],
-        'walk_forward_testing':[False]
+        'epochs': [30],
+        'iterations': [1],
+        'layers': [[]],
+        'walk_forward_testing': [True],
+        'walk_forward_retrain_epochs':[20]
     }
     grid = ParameterGrid(param_grid)
 

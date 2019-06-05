@@ -41,7 +41,7 @@ class PreprocessingParams:
         self.binary_classification = True
         self.walk_forward_testing = True
         self.walk_forward_max_train_window_size = None
-        self.walk_forward_test_window_size = 10
+        self.walk_forward_test_window_size = 100
 
     def update_from_dictionary(self, params_dict):
         if 'pca' in params_dict:
