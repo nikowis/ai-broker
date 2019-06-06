@@ -121,7 +121,7 @@ def standarize_and_pca(preprocessing_params, x_train, x_test):
         scale = StandardScaler().fit(x_train)
         x_train = scale.transform(x_train)
         x_test = scale.transform(x_test)
-    if preprocessing_params.pca is not None:
+    if preprocessing_params.pca is not None and not preprocessing_params.walk_forward_testing:
         pca = PCA(preprocessing_params.pca).fit(x_train)
         x_train = pca.transform(x_train)
         x_test = pca.transform(x_test)
