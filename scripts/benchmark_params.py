@@ -37,9 +37,11 @@ class PreprocessingParams:
         self.pca = 0.999
         self.test_size = 0.2
         self.standarize = True
-        self.robust_scaler = False
         self.difference_non_stationary = True
         self.binary_classification = True
+        self.walk_forward_testing = True
+        self.walk_forward_max_train_window_size = None
+        self.walk_forward_test_window_size = 100
 
     def update_from_dictionary(self, params_dict):
         if 'pca' in params_dict:
@@ -48,10 +50,14 @@ class PreprocessingParams:
             self.test_size = params_dict['test_size']
         if 'standarize' in params_dict:
             self.standarize = params_dict['standarize']
-        if 'robust_scaler' in params_dict:
-            self.robust_scaler = params_dict['robust_scaler']
         if 'difference_non_stationary' in params_dict:
             self.difference_non_stationary = params_dict['difference_non_stationary']
+        if 'walk_forward_testing' in params_dict:
+            self.walk_forward_testing = params_dict['walk_forward_testing']
+        if 'walk_forward_max_train_window_size' in params_dict:
+            self.walk_forward_max_train_window_size = params_dict['walk_forward_max_train_window_size']
+        if 'walk_forward_test_window_size' in params_dict:
+            self.walk_forward_test_window_size = params_dict['walk_forward_test_window_size']
 
     def jsonable(self):
         return self.__dict__
@@ -101,6 +107,8 @@ class LearningParams:
         self.early_stopping_patience = 40
         self.early_stopping_min_delta = 0.005
         self.iterations = 1
+        self.walk_forward_testing = True
+        self.walk_forward_retrain_epochs = 10
 
     def update_from_dictionary(self, params_dict):
         self.id = str(time.time())
@@ -108,6 +116,10 @@ class LearningParams:
             self.epochs = params_dict['epochs']
         if 'batch_size' in params_dict:
             self.batch_size = params_dict['batch_size']
+        if 'walk_forward_testing' in params_dict:
+            self.walk_forward_testing = params_dict['walk_forward_testing']
+        if 'walk_forward_retrain_epochs' in params_dict:
+            self.walk_forward_retrain_epochs = params_dict['walk_forward_retrain_epochs']
 
     def jsonable(self):
         return self.__dict__
