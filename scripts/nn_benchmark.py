@@ -75,7 +75,7 @@ def run(x_train, x_test, y_train, y_test, bench_params, results_df: pd.DataFrame
             mode='max')
 
         callbacks = [earlyStopping, mcp_save]
-        model, history, accuracy, loss, y_test_prediction = learn(model, learning_params, callbacks, model_path, x_train, x_test,
+        model, history, accuracy, loss, y_test_prediction = learn(model, bench_params, callbacks, model_path, x_train, x_test,
                                                y_train, y_test, verbose)
 
         if (binary_classification and accuracy < 0.6) or ((not binary_classification) and accuracy < 0.45):
@@ -130,13 +130,17 @@ def run(x_train, x_test, y_train, y_test, bench_params, results_df: pd.DataFrame
     return results_df
 
 
-def learn(model, learning_params, callbacks, model_path, x_train, x_test, y_train, y_test, verbose=True):
+def learn(model, bench_params, callbacks, model_path, x_train, x_test, y_train, y_test, verbose=True):
+    learning_params = bench_params.learning_params
     if learning_params.walk_forward_testing:
         walk_iterations = len(x_train)
         walk_losses = []
         walk_accuracies = []
         walk_y_test_prediction = []
         walk_history = keras.callbacks.History()
+        walk_history.history = { 'loss':[], 'val_loss': [], bench_params.model_params.metric: [],
+                                 'val_' + bench_params.model_params.metric:[]  }
+
         for walk_it in range(0, walk_iterations):
             walk_x_train = x_train[walk_it]
             walk_x_test = x_test[walk_it]
@@ -150,6 +154,11 @@ def learn(model, learning_params, callbacks, model_path, x_train, x_test, y_trai
             history = model.fit(walk_x_train, walk_y_train, validation_data=(walk_x_test, walk_y_test),
                                 epochs=epochs, batch_size=learning_params.batch_size,
                                 callbacks=callbacks, verbose=0)
+            walk_history.history['loss'] += history.history['loss']
+            walk_history.history['val_loss'] += history.history['val_loss']
+            walk_history.history[bench_params.model_params.metric] += history.history[bench_params.model_params.metric]
+            walk_history.history['val_' + bench_params.model_params.metric] += history.history['val_' + bench_params.model_params.metric]
+
             ls, acc = model.evaluate(walk_x_test, walk_y_test, verbose=0)
             y_test_prediction = model.predict(walk_x_test)
             walk_losses.append(ls)
@@ -157,7 +166,7 @@ def learn(model, learning_params, callbacks, model_path, x_train, x_test, y_trai
             walk_y_test_prediction += y_test_prediction.tolist()
         if verbose:
             print('Walk accuracies: [{0}]'.format(walk_accuracies))
-        return model, history, np.mean(walk_accuracies), np.mean(walk_losses), np.array(walk_y_test_prediction)
+        return model, walk_history, np.mean(walk_accuracies), np.mean(walk_losses), np.array(walk_y_test_prediction)
     else:
         history = model.fit(x_train, y_train, validation_data=(x_test, y_test),
                             epochs=learning_params.epochs, batch_size=learning_params.batch_size,
@@ -173,7 +182,7 @@ if __name__ == '__main__':
     df_list = csv_importer.import_data_from_files([SELECTED_SYM])
     df = df_list[0]
 
-    bench_params = benchmark_params.default_params(binary_classification=True)
+    bench_params = benchmark_params.default_params(binary_classification=False)
     bench_params.learning_params.iterations=1
     bench_params.learning_params.walk_forward_testing=True
     bench_params.preprocessing_params.walk_forward_testing=True
