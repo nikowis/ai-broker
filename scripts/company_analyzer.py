@@ -4,8 +4,8 @@ from matplotlib import style
 import csv_importer
 import stock_constants as const
 
-TARGET_DIR = './../target'
-CSV_FILES_DIR = TARGET_DIR + '/data'
+
+CSV_FILES_DIR = const.TARGET_DIR + '/data'
 
 
 def main():

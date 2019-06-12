@@ -1,8 +1,7 @@
 import pandas as pd
+import stock_constants as const
 
-TARGET_DIR = './../target'
-CSV_FILES_DIR = TARGET_DIR + '/data'
-
+CSV_FILES_DIR = const.TARGET_DIR + '/data'
 
 def import_data_from_files(tickers, path=CSV_FILES_DIR):
     df_list = []

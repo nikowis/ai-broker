@@ -25,7 +25,7 @@ HELPER_COLS = [const.LABEL_COL, const.LABEL_BINARY_COL, const.LABEL_DISCRETE_COL
 MIN_DATE = '2009-01-01'
 MAX_DATE = '2020-10-29'
 SELECTED_SYM = 'GOOGL'
-IMG_PATH = './../target/documentation_plots_and_images/'
+IMG_PATH = const.TARGET_DIR +'/documentation_plots_and_images/'
 if not os.path.exists(IMG_PATH):
     os.makedirs(IMG_PATH)
 

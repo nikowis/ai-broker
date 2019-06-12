@@ -1,3 +1,6 @@
+TARGET_DIR = './../target'
+# TARGET_DIR = './drive/ai-broker/scripts/target'
+
 SYMBOL = 'symbol'
 ID = '_id'
 OPEN_COL = '1  open'

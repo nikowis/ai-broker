@@ -11,7 +11,7 @@ from sklearn.metrics import roc_curve, auc
 import stock_constants as const
 from benchmark_params import BenchmarkParams
 
-BASE_IMG_PATH = './../target'
+BASE_IMG_PATH = const.TARGET_DIR
 
 CLOSE_PRICE_USD_LABEL = 'Cena zamknięcia (USD)'
 DATE_LABEL = 'Data'

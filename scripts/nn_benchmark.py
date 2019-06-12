@@ -15,6 +15,7 @@ import csv_importer
 import data_preprocessing
 import nn_model
 import plot_helper
+import stock_constants as const
 
 SATYSFYING_TRESHOLD = 0.85
 ROC_AUC_COL = 'roc_auc'
@@ -24,7 +25,7 @@ EPOCHS_COL = 'epochs'
 ID_COL = 'ID'
 
 SELECTED_SYM = 'GOOGL'
-SAVE_MODEL_PATH = './../target/models/'
+SAVE_MODEL_PATH = const.TARGET_DIR + '/models/'
 if not os.path.exists(SAVE_MODEL_PATH):
     os.makedirs(SAVE_MODEL_PATH)
 
@@ -188,8 +189,7 @@ if __name__ == '__main__':
     bench_params.preprocessing_params.walk_forward_testing=True
 
     param_grid = {
-        # 'epochs': [20, 30, 40, 50, 70],
-        'epochs': [3],
+        'epochs': [10, 20, 30, 40, 50, 70],
         'layers': [[], [2], [5]],
         'walk_forward_retrain_epochs':[1, 2, 3, 5, 10],
         'walk_forward_max_train_window_size':[None, 2000, 1000, 500, 300, 150],

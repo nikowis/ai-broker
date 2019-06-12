@@ -32,7 +32,6 @@ class AlphaVantage:
 
     FULL = 'full'
     COMPACT = 'compact'
-    API_CACHE_PATH = './../target/api_cache/'
 
     def data_raw(self, ticker, data_type=DataType.DAILY_ADJUSTED):
         data = {"apikey": self.key,

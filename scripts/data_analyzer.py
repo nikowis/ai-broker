@@ -10,7 +10,7 @@ import stock_constants as const
 MIN_DATE = '1900-01-01'
 MAX_DATE = '2020-10-29'
 SELECTED_SYM = 'GOOGL'
-IMG_PATH = './../target/data_analyzis/'
+IMG_PATH = const.TARGET_DIR + '/data_analyzis/'
 if not os.path.exists(IMG_PATH):
     os.makedirs(IMG_PATH)
 
