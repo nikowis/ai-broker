@@ -183,7 +183,7 @@ if __name__ == '__main__':
     df_list = csv_importer.import_data_from_files([SELECTED_SYM])
     df = df_list[0]
 
-    bench_params = benchmark_params.default_params(binary_classification=False)
+    bench_params = benchmark_params.default_params(binary_classification=True)
     bench_params.learning_params.iterations=1
     bench_params.learning_params.walk_forward_testing=True
     bench_params.preprocessing_params.walk_forward_testing=True
@@ -209,7 +209,8 @@ if __name__ == '__main__':
 
         results_df = run(x_train, x_test, y_train, y_test, bench_params, results_df, verbose=False)
 
-        break
 
     if results_df is not None and len(results_df) > 0:
         results_df.to_csv('{0}results.csv'.format(SAVE_MODEL_PATH), index=False)
+
+    print('Program finished.')
