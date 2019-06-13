@@ -106,9 +106,10 @@ def run(x_train, x_test, y_train, y_test, bench_params, results_df: pd.DataFrame
                 str(e) + " " for e in bench_params.model_params.layers))
 
         if learning_params.walk_forward_testing:
-            y_test = np.concatenate(y_test)
-
-        fpr, tpr, roc_auc = plot_helper.plot_result(y_test, y_test_prediction, bench_params, history, main_title,
+            concatenated_y_test = np.concatenate(y_test)
+        else:
+            concatenated_y_test = y_test
+        fpr, tpr, roc_auc = plot_helper.plot_result(concatenated_y_test, y_test_prediction, bench_params, history, main_title,
                                                         'nn-{0}-{1}'.format(learning_params.id, curr_iter_num))
 
         results_df = results_df.append(
@@ -184,16 +185,16 @@ if __name__ == '__main__':
     df = df_list[0]
 
     bench_params = benchmark_params.default_params(binary_classification=True)
-    bench_params.learning_params.iterations=1
+    bench_params.learning_params.iterations=3
     bench_params.learning_params.walk_forward_testing=True
     bench_params.preprocessing_params.walk_forward_testing=True
 
     param_grid = {
-        'epochs': [10, 20, 30, 40, 50, 70],
-        'layers': [[], [2], [5]],
-        'walk_forward_retrain_epochs':[1, 2, 3, 5, 10],
-        'walk_forward_max_train_window_size':[None, 2000, 1000, 500, 300, 150],
-        'walk_forward_test_window_size':[20, 15 ,10]
+        'epochs': [10, 20, 40],
+        'layers': [[]],
+        'walk_forward_retrain_epochs':[1, 3, 5, 10],
+        'walk_forward_max_train_window_size':[None, 2000],
+        'walk_forward_test_window_size':[10, 15, 25]
     }
     grid = ParameterGrid(param_grid)
 
