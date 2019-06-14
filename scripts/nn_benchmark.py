@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import time
 from shutil import copyfile
 
@@ -127,8 +128,14 @@ def run(x_train, x_test, y_train, y_test, bench_params, results_df: pd.DataFrame
     max_index = np.argmax(accuracies)
     best_model_of_all_path = best_model_paths[max_index]
     copyfile(best_model_of_all_path,
-             '{0}nn_weights-{1}-best-accuracy-{2}.hdf5'.format(SAVE_MODEL_PATH, learning_params.id,
+             '{0}nn_weights-{1}-accuracy-{2}.hdf5'.format(SAVE_MODEL_PATH, learning_params.id,
                                                                round(max(accuracies), 4)))
+
+
+    for f in os.listdir(SAVE_MODEL_PATH):
+        if re.search('nn_weights-{0}-\d+\.hdf5'.format(learning_params.id), f):
+            os.remove(os.path.join(SAVE_MODEL_PATH, f))
+
     return results_df
 
 
@@ -186,15 +193,15 @@ if __name__ == '__main__':
 
     bench_params = benchmark_params.default_params(binary_classification=True)
     bench_params.learning_params.iterations=3
-    bench_params.learning_params.walk_forward_testing=True
-    bench_params.preprocessing_params.walk_forward_testing=True
+    bench_params.learning_params.walk_forward_testing=False
+    bench_params.preprocessing_params.walk_forward_testing=False
 
     param_grid = {
         'epochs': [10, 20, 40],
         'layers': [[]],
-        'walk_forward_retrain_epochs':[1, 3, 5, 10],
-        'walk_forward_max_train_window_size':[None, 2000],
-        'walk_forward_test_window_size':[10, 15, 25]
+        # 'walk_forward_retrain_epochs':[1, 3, 5, 10],
+        # 'walk_forward_max_train_window_size':[None, 2000],
+        # 'walk_forward_test_window_size':[10, 15, 25]
     }
     grid = ParameterGrid(param_grid)
 
