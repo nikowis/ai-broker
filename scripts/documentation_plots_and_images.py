@@ -20,7 +20,7 @@ def label_creation_steps_to_csv(df, filename):
 
 
 if __name__ == '__main__':
-    df_list = csv_importer.import_data_from_files([SELECTED_SYM])
+    df_list, _ = csv_importer.import_data_from_files([SELECTED_SYM])
     df = df_list[0]
     df = df_list[0]
     label_creation_steps_to_csv(df, 'label_creation')

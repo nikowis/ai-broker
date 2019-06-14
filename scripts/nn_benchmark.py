@@ -20,7 +20,7 @@ import stock_constants as const
 
 SATYSFYING_TRESHOLD = 0.85
 CLEANUP_FILES = True
-SAVE_FILES = False
+SAVE_FILES = True
 
 CSV_ROC_AUC_COL = 'roc_auc'
 CSV_ACC_COL = 'accuracy'
@@ -42,7 +42,7 @@ def json_handler(Obj):
         return str(Obj)
 
 
-def run(x_train, x_test, y_train, y_test, bench_params, results_df: pd.DataFrame, verbose=True):
+def run(x_train, x_test, y_train, y_test, bench_params, results_df: pd.DataFrame, sym='', verbose=True):
     learning_params = bench_params.learning_params
     model_params = bench_params.model_params
     binary_classification = bench_params.preprocessing_params.binary_classification
@@ -74,7 +74,7 @@ def run(x_train, x_test, y_train, y_test, bench_params, results_df: pd.DataFrame
         model = nn_model.create_seq_model(input_size, bench_params.model_params)
 
         callbacks = [earlyStopping]
-        model_path = '{0}nn_weights-{1}-{2}.hdf5'.format(SAVE_MODEL_PATH, learning_params.id, curr_iter_num)
+        model_path = '{0}nn_weights-{1}-{2}-{3}.hdf5'.format(SAVE_MODEL_PATH, learning_params.id, sym, curr_iter_num)
 
         if SAVE_FILES:
             best_model_paths.append(model_path)
@@ -85,8 +85,9 @@ def run(x_train, x_test, y_train, y_test, bench_params, results_df: pd.DataFrame
                 mode='max')
             callbacks = [earlyStopping, mcp_save]
 
-        model, history, accuracy, loss, y_test_prediction = learn(model, bench_params, callbacks, model_path, x_train, x_test,
-                                               y_train, y_test, verbose)
+        model, history, accuracy, loss, y_test_prediction = learn(model, bench_params, callbacks, model_path, x_train,
+                                                                  x_test,
+                                                                  y_train, y_test, verbose)
 
         if (binary_classification and accuracy < 0.6) or ((not binary_classification) and accuracy < 0.45):
             if verbose:
@@ -97,7 +98,8 @@ def run(x_train, x_test, y_train, y_test, bench_params, results_df: pd.DataFrame
             curr_iter_num = curr_iter_num - 1
             if minima_encountered > learning_params.iterations:
                 if verbose:
-                    print('ID {0}: encountering too many local minima - breaking infinite loop'.format(learning_params.id))
+                    print('ID {0}: encountering too many local minima - breaking infinite loop'.format(
+                        learning_params.id))
                 return
             else:
                 continue
@@ -107,7 +109,8 @@ def run(x_train, x_test, y_train, y_test, bench_params, results_df: pd.DataFrame
         iter_time = time.time() - iter_start_time
         if verbose:
             print('ID {0} iteration {1} of {2} loss {3} accuracy {4} epochs {5} time {6}'
-                  .format(learning_params.id, curr_iter_num, learning_params.iterations, round(loss, 4), round(accuracy, 4),
+                  .format(learning_params.id, curr_iter_num, learning_params.iterations, round(loss, 4),
+                          round(accuracy, 4),
                           number_of_epochs_it_ran, round(iter_time, 2)))
 
         main_title = 'Neural network model loss: {0}, accuracy {1}, epochs {2}\n hidden layers [{3}]'.format(
@@ -118,11 +121,14 @@ def run(x_train, x_test, y_train, y_test, bench_params, results_df: pd.DataFrame
             concatenated_y_test = np.concatenate(y_test)
         else:
             concatenated_y_test = y_test
-        fpr, tpr, roc_auc = plot_helper.plot_result(concatenated_y_test, y_test_prediction, bench_params, history, main_title,
-                                                        'nn-{0}-{1}'.format(learning_params.id, curr_iter_num), SAVE_FILES)
+        fpr, tpr, roc_auc = plot_helper.plot_result(concatenated_y_test, y_test_prediction, bench_params, history,
+                                                    main_title,
+                                                    'nn-{0}-{1}-{2}'.format(learning_params.id, sym, curr_iter_num),
+                                                    SAVE_FILES)
 
         results_df = results_df.append(
-            {CSV_ID_COL: learning_params.id, CSV_EPOCHS_COL: int(number_of_epochs_it_ran), CSV_TRAIN_TIME_COL: iter_time,
+            {CSV_ID_COL: learning_params.id, CSV_EPOCHS_COL: int(number_of_epochs_it_ran),
+             CSV_TRAIN_TIME_COL: iter_time,
              CSV_ACC_COL: accuracy,
              CSV_ROC_AUC_COL: roc_auc}, ignore_index=True)
 
@@ -137,19 +143,19 @@ def run(x_train, x_test, y_train, y_test, bench_params, results_df: pd.DataFrame
     if SAVE_FILES:
         best_model_of_all_path = best_model_paths[max_index]
         copyfile(best_model_of_all_path,
-                 '{0}nn_weights-{1}-accuracy-{2}.hdf5'.format(SAVE_MODEL_PATH, learning_params.id,
-                                                                   round(max(accuracies), 4)))
-        copyfile('{0}/nn-{1}-{2}.png'.format(const.TARGET_DIR, learning_params.id, max_index+1),
-                 '{0}/nn-{1}-accuracy-{2}.png'.format(const.TARGET_DIR, learning_params.id,
-                                                                   round(max(accuracies), 4)))
+                 '{0}nn_weights-{1}-{2}-accuracy-{3}.hdf5'.format(SAVE_MODEL_PATH, learning_params.id, sym,
+                                                                  round(max(accuracies), 4)))
+        copyfile('{0}/nn-{1}-{2}-{3}.png'.format(const.TARGET_DIR, learning_params.id, sym, max_index + 1),
+                 '{0}/nn-{1}-{2}-accuracy-{3}.png'.format(const.TARGET_DIR, learning_params.id, sym,
+                                                          round(max(accuracies), 4)))
 
         if CLEANUP_FILES:
             for f in os.listdir(SAVE_MODEL_PATH):
-                if re.search('nn_weights-{0}-\d+\.hdf5'.format(learning_params.id), f):
+                if re.search('nn_weights-{0}-{1}-\d+\.hdf5'.format(learning_params.id, sym), f):
                     os.remove(os.path.join(SAVE_MODEL_PATH, f))
 
             for f in os.listdir(const.TARGET_DIR):
-                if re.search('nn-{0}-\d+\.png'.format(learning_params.id), f):
+                if re.search('nn-{0}-{1}-\d+\.png'.format(learning_params.id, sym), f):
                     os.remove(os.path.join(const.TARGET_DIR, f))
 
     return results_df
@@ -163,8 +169,8 @@ def learn(model, bench_params, callbacks, model_path, x_train, x_test, y_train, 
         walk_accuracies = []
         walk_y_test_prediction = []
         walk_history = keras.callbacks.History()
-        walk_history.history = { 'loss':[], 'val_loss': [], bench_params.model_params.metric: [],
-                                 'val_' + bench_params.model_params.metric:[]  }
+        walk_history.history = {'loss': [], 'val_loss': [], bench_params.model_params.metric: [],
+                                'val_' + bench_params.model_params.metric: []}
 
         for walk_it in range(0, walk_iterations):
             walk_x_train = x_train[walk_it]
@@ -182,7 +188,8 @@ def learn(model, bench_params, callbacks, model_path, x_train, x_test, y_train, 
             walk_history.history['loss'] += history.history['loss']
             walk_history.history['val_loss'] += history.history['val_loss']
             walk_history.history[bench_params.model_params.metric] += history.history[bench_params.model_params.metric]
-            walk_history.history['val_' + bench_params.model_params.metric] += history.history['val_' + bench_params.model_params.metric]
+            walk_history.history['val_' + bench_params.model_params.metric] += history.history[
+                'val_' + bench_params.model_params.metric]
 
             ls, acc = model.evaluate(walk_x_test, walk_y_test, verbose=0)
             y_test_prediction = model.predict(walk_x_test)
@@ -205,24 +212,26 @@ def learn(model, bench_params, callbacks, model_path, x_train, x_test, y_train, 
 
 
 if __name__ == '__main__':
-    df_list = csv_importer.import_data_from_files([SELECTED_SYM])
+    df_list, sym_list = csv_importer.import_data_from_files([SELECTED_SYM])
     df = df_list[0]
+    sym = sym_list[0]
 
     bench_params = benchmark_params.default_params(binary_classification=True)
-    bench_params.learning_params.iterations=3
-    bench_params.learning_params.walk_forward_testing=False
-    bench_params.preprocessing_params.walk_forward_testing=False
+    bench_params.learning_params.iterations = 2
+    bench_params.learning_params.walk_forward_testing = False
+    bench_params.preprocessing_params.walk_forward_testing = False
 
     param_grid = {
-        'epochs': [10, 20, 40],
+        'epochs': [10, 20],
         'layers': [[]],
-        # 'walk_forward_retrain_epochs':[1, 3, 5, 10],
-        # 'walk_forward_max_train_window_size':[None, 2000],
-        # 'walk_forward_test_window_size':[10, 15, 25]
+        # 'walk_forward_retrain_epochs': [1, 3, 5, 10],
+        # 'walk_forward_max_train_window_size': [None, 2000],
+        # 'walk_forward_test_window_size': [10, 15, 25]
     }
     grid = ParameterGrid(param_grid)
 
-    results_df = pd.DataFrame(data={CSV_ID_COL: [], CSV_EPOCHS_COL: [], CSV_TRAIN_TIME_COL: [], CSV_ACC_COL: [], CSV_ROC_AUC_COL: []})
+    results_df = pd.DataFrame(
+        data={CSV_ID_COL: [], CSV_EPOCHS_COL: [], CSV_TRAIN_TIME_COL: [], CSV_ACC_COL: [], CSV_ROC_AUC_COL: []})
 
     for param in grid:
         print('Parameters: {0}'.format(param))
@@ -232,7 +241,7 @@ if __name__ == '__main__':
         df, x, y, x_train, x_test, y_train, y_test = data_preprocessing.preprocess(df,
                                                                                    bench_params.preprocessing_params)
 
-        results_df = run(x_train, x_test, y_train, y_test, bench_params, results_df, verbose=False)
+        results_df = run(x_train, x_test, y_train, y_test, bench_params, results_df, sym, verbose=False)
 
     if SAVE_FILES and results_df is not None and len(results_df) > 0:
         results_df.to_csv('{0}results.csv'.format(SAVE_MODEL_PATH), index=False)

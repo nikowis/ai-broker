@@ -10,7 +10,7 @@ CSV_FILES_DIR = const.TARGET_DIR + '/data'
 
 def main():
     symbols = ['USLM']
-    df_list = csv_importer.import_data_from_files(symbols, CSV_FILES_DIR)
+    df_list, _ = csv_importer.import_data_from_files(symbols, CSV_FILES_DIR)
 
     balanced_syms = []
 

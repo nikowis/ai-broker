@@ -197,7 +197,7 @@ def count_outliers(df):
 
 
 if __name__ == '__main__':
-    df_list = csv_importer.import_data_from_files([SELECTED_SYM])
+    df_list, _ = csv_importer.import_data_from_files([SELECTED_SYM])
     df = df_list[0]
     # df, x, y = preprocess(df)
     # principal_component_analysis(x)

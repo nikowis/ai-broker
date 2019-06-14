@@ -319,6 +319,6 @@ if __name__ == "__main__":
     imp.import_all_technical_indicators(['GOOGL', 'MSFT', 'AAPL', 'CSCO', 'ORCL', 'INTC', 'VOD', 'QCOM', 'AMZN', 'AMGN'])
     imp.process_data()
     imp.export_to_csv_files('./../../target/data')
-    dflist = csv_importer.import_data_from_files([SELECTED_SYM], './../../target/data')
+    dflist, _ = csv_importer.import_data_from_files([SELECTED_SYM], './../../target/data')
 
     print("Importing finished")
