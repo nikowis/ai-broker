@@ -18,17 +18,18 @@ import nn_model
 import plot_helper
 import stock_constants as const
 
-SATYSFYING_TRESHOLD = 0.85
+SATYSFYING_TRESHOLD = 0.86
 CLEANUP_FILES = True
 SAVE_FILES = True
 
+CSV_TICKER = 'ticker'
 CSV_ROC_AUC_COL = 'roc_auc'
 CSV_ACC_COL = 'accuracy'
 CSV_TRAIN_TIME_COL = 'train_time'
 CSV_EPOCHS_COL = 'epochs'
 CSV_ID_COL = 'ID'
 
-SELECTED_SYM = 'GOOGL'
+SELECTED_SYM = ['AAPL', 'AMGN', 'AMZN', 'CSCO', 'GOOGL', 'INTC', 'MSFT', 'ORCL', 'QCOM', 'VOD']
 SAVE_MODEL_PATH = const.TARGET_DIR + '/models/'
 
 if SAVE_FILES and not os.path.exists(SAVE_MODEL_PATH):
@@ -51,10 +52,6 @@ def run(x_train, x_test, y_train, y_test, bench_params, results_df: pd.DataFrame
     losses = []
     accuracies = []
     best_model_paths = []
-
-    if SAVE_FILES:
-        with open('{0}config-{1}.json'.format(SAVE_MODEL_PATH, learning_params.id), 'w') as outfile:
-            json.dump(bench_params, outfile, default=json_handler, indent=True)
 
     earlyStopping = EarlyStopping(monitor='val_' + model_params.metric,
                                   min_delta=learning_params.early_stopping_min_delta,
@@ -130,13 +127,15 @@ def run(x_train, x_test, y_train, y_test, bench_params, results_df: pd.DataFrame
             {CSV_ID_COL: learning_params.id, CSV_EPOCHS_COL: int(number_of_epochs_it_ran),
              CSV_TRAIN_TIME_COL: iter_time,
              CSV_ACC_COL: accuracy,
-             CSV_ROC_AUC_COL: roc_auc}, ignore_index=True)
+             CSV_ROC_AUC_COL: roc_auc,
+             CSV_TICKER: sym}, ignore_index=True)
 
     rounded_accuracy_mean = round(np.mean(accuracies), 4)
     rounded_loss_mean = round(np.mean(losses), 4)
-    print('ID {0} avg loss {1} avg accuracy {2} total time {3} s.'.format(learning_params.id, rounded_loss_mean,
-                                                                          rounded_accuracy_mean,
-                                                                          round(time.time() - total_time, 2)))
+    print(
+        'ID {0} {1} avg loss {2} avg accuracy {3} total time {4} s.'.format(learning_params.id, sym, rounded_loss_mean,
+                                                                            rounded_accuracy_mean,
+                                                                            round(time.time() - total_time, 2)))
     if rounded_accuracy_mean > SATYSFYING_TRESHOLD:
         print('=============================================================================================')
     max_index = np.argmax(accuracies)
@@ -212,17 +211,15 @@ def learn(model, bench_params, callbacks, model_path, x_train, x_test, y_train, 
 
 
 if __name__ == '__main__':
-    df_list, sym_list = csv_importer.import_data_from_files([SELECTED_SYM])
-    df = df_list[0]
-    sym = sym_list[0]
+    df_list, sym_list = csv_importer.import_data_from_files(SELECTED_SYM)
 
     bench_params = benchmark_params.default_params(binary_classification=True)
-    bench_params.learning_params.iterations = 2
+    bench_params.learning_params.iterations = 3
     bench_params.learning_params.walk_forward_testing = False
     bench_params.preprocessing_params.walk_forward_testing = False
 
     param_grid = {
-        'epochs': [10, 20],
+        'epochs': [20],
         'layers': [[]],
         # 'walk_forward_retrain_epochs': [1, 3, 5, 10],
         # 'walk_forward_max_train_window_size': [None, 2000],
@@ -231,17 +228,23 @@ if __name__ == '__main__':
     grid = ParameterGrid(param_grid)
 
     results_df = pd.DataFrame(
-        data={CSV_ID_COL: [], CSV_EPOCHS_COL: [], CSV_TRAIN_TIME_COL: [], CSV_ACC_COL: [], CSV_ROC_AUC_COL: []})
+        data={CSV_ID_COL: [], CSV_EPOCHS_COL: [], CSV_TRAIN_TIME_COL: [], CSV_ACC_COL: [], CSV_ROC_AUC_COL: [], CSV_TICKER: []})
 
     for param in grid:
         print('Parameters: {0}'.format(param))
         bench_params.update_from_dictionary(param)
-        result_df_custom_param_val = '_'.join(str(v) for k, v in param.items())
 
-        df, x, y, x_train, x_test, y_train, y_test = data_preprocessing.preprocess(df,
-                                                                                   bench_params.preprocessing_params)
+        if SAVE_FILES:
+            with open('{0}config-{1}.json'.format(SAVE_MODEL_PATH, bench_params.learning_params.id), 'w') as outfile:
+                json.dump(bench_params, outfile, default=json_handler, indent=True)
 
-        results_df = run(x_train, x_test, y_train, y_test, bench_params, results_df, sym, verbose=False)
+        for symbol_it in range(0, len(sym_list)):
+            df = df_list[symbol_it]
+            sym = sym_list[symbol_it]
+            df, x, y, x_train, x_test, y_train, y_test = data_preprocessing.preprocess(df,
+                                                                                       bench_params.preprocessing_params)
+
+            results_df = run(x_train, x_test, y_train, y_test, bench_params, results_df, sym, verbose=False)
 
     if SAVE_FILES and results_df is not None and len(results_df) > 0:
         results_df.to_csv('{0}results.csv'.format(SAVE_MODEL_PATH), index=False)
