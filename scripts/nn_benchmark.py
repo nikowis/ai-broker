@@ -19,15 +19,19 @@ import plot_helper
 import stock_constants as const
 
 SATYSFYING_TRESHOLD = 0.85
-ROC_AUC_COL = 'roc_auc'
-ACC_COL = 'accuracy'
-TRAIN_TIME_COL = 'train_time'
-EPOCHS_COL = 'epochs'
-ID_COL = 'ID'
+CLEANUP_FILES = True
+SAVE_FILES = False
+
+CSV_ROC_AUC_COL = 'roc_auc'
+CSV_ACC_COL = 'accuracy'
+CSV_TRAIN_TIME_COL = 'train_time'
+CSV_EPOCHS_COL = 'epochs'
+CSV_ID_COL = 'ID'
 
 SELECTED_SYM = 'GOOGL'
 SAVE_MODEL_PATH = const.TARGET_DIR + '/models/'
-if not os.path.exists(SAVE_MODEL_PATH):
+
+if SAVE_FILES and not os.path.exists(SAVE_MODEL_PATH):
     os.makedirs(SAVE_MODEL_PATH)
 
 
@@ -48,8 +52,9 @@ def run(x_train, x_test, y_train, y_test, bench_params, results_df: pd.DataFrame
     accuracies = []
     best_model_paths = []
 
-    with open('{0}config-{1}.json'.format(SAVE_MODEL_PATH, learning_params.id), 'w') as outfile:
-        json.dump(bench_params, outfile, default=json_handler, indent=True)
+    if SAVE_FILES:
+        with open('{0}config-{1}.json'.format(SAVE_MODEL_PATH, learning_params.id), 'w') as outfile:
+            json.dump(bench_params, outfile, default=json_handler, indent=True)
 
     earlyStopping = EarlyStopping(monitor='val_' + model_params.metric,
                                   min_delta=learning_params.early_stopping_min_delta,
@@ -68,15 +73,18 @@ def run(x_train, x_test, y_train, y_test, bench_params, results_df: pd.DataFrame
 
         model = nn_model.create_seq_model(input_size, bench_params.model_params)
 
+        callbacks = [earlyStopping]
         model_path = '{0}nn_weights-{1}-{2}.hdf5'.format(SAVE_MODEL_PATH, learning_params.id, curr_iter_num)
-        best_model_paths.append(model_path)
-        mcp_save = ModelCheckpoint(
-            model_path,
-            save_best_only=True,
-            monitor='val_' + model_params.metric,
-            mode='max')
 
-        callbacks = [earlyStopping, mcp_save]
+        if SAVE_FILES:
+            best_model_paths.append(model_path)
+            mcp_save = ModelCheckpoint(
+                model_path,
+                save_best_only=True,
+                monitor='val_' + model_params.metric,
+                mode='max')
+            callbacks = [earlyStopping, mcp_save]
+
         model, history, accuracy, loss, y_test_prediction = learn(model, bench_params, callbacks, model_path, x_train, x_test,
                                                y_train, y_test, verbose)
 
@@ -111,12 +119,12 @@ def run(x_train, x_test, y_train, y_test, bench_params, results_df: pd.DataFrame
         else:
             concatenated_y_test = y_test
         fpr, tpr, roc_auc = plot_helper.plot_result(concatenated_y_test, y_test_prediction, bench_params, history, main_title,
-                                                        'nn-{0}-{1}'.format(learning_params.id, curr_iter_num))
+                                                        'nn-{0}-{1}'.format(learning_params.id, curr_iter_num), SAVE_FILES)
 
         results_df = results_df.append(
-            {ID_COL: learning_params.id, EPOCHS_COL: int(number_of_epochs_it_ran), TRAIN_TIME_COL: iter_time,
-             ACC_COL: accuracy,
-             ROC_AUC_COL: roc_auc}, ignore_index=True)
+            {CSV_ID_COL: learning_params.id, CSV_EPOCHS_COL: int(number_of_epochs_it_ran), CSV_TRAIN_TIME_COL: iter_time,
+             CSV_ACC_COL: accuracy,
+             CSV_ROC_AUC_COL: roc_auc}, ignore_index=True)
 
     rounded_accuracy_mean = round(np.mean(accuracies), 4)
     rounded_loss_mean = round(np.mean(losses), 4)
@@ -126,15 +134,23 @@ def run(x_train, x_test, y_train, y_test, bench_params, results_df: pd.DataFrame
     if rounded_accuracy_mean > SATYSFYING_TRESHOLD:
         print('=============================================================================================')
     max_index = np.argmax(accuracies)
-    best_model_of_all_path = best_model_paths[max_index]
-    copyfile(best_model_of_all_path,
-             '{0}nn_weights-{1}-accuracy-{2}.hdf5'.format(SAVE_MODEL_PATH, learning_params.id,
-                                                               round(max(accuracies), 4)))
+    if SAVE_FILES:
+        best_model_of_all_path = best_model_paths[max_index]
+        copyfile(best_model_of_all_path,
+                 '{0}nn_weights-{1}-accuracy-{2}.hdf5'.format(SAVE_MODEL_PATH, learning_params.id,
+                                                                   round(max(accuracies), 4)))
+        copyfile('{0}/nn-{1}-{2}.png'.format(const.TARGET_DIR, learning_params.id, max_index+1),
+                 '{0}/nn-{1}-accuracy-{2}.png'.format(const.TARGET_DIR, learning_params.id,
+                                                                   round(max(accuracies), 4)))
 
+        if CLEANUP_FILES:
+            for f in os.listdir(SAVE_MODEL_PATH):
+                if re.search('nn_weights-{0}-\d+\.hdf5'.format(learning_params.id), f):
+                    os.remove(os.path.join(SAVE_MODEL_PATH, f))
 
-    for f in os.listdir(SAVE_MODEL_PATH):
-        if re.search('nn_weights-{0}-\d+\.hdf5'.format(learning_params.id), f):
-            os.remove(os.path.join(SAVE_MODEL_PATH, f))
+            for f in os.listdir(const.TARGET_DIR):
+                if re.search('nn-{0}-\d+\.png'.format(learning_params.id), f):
+                    os.remove(os.path.join(const.TARGET_DIR, f))
 
     return results_df
 
@@ -180,8 +196,9 @@ def learn(model, bench_params, callbacks, model_path, x_train, x_test, y_train, 
         history = model.fit(x_train, y_train, validation_data=(x_test, y_test),
                             epochs=learning_params.epochs, batch_size=learning_params.batch_size,
                             callbacks=callbacks, verbose=0)
-        # restores best epoch of this iteration
-        model = load_model(model_path)
+        if SAVE_FILES:
+            # restores best epoch of this iteration
+            model = load_model(model_path)
         loss, accuracy = model.evaluate(x_test, y_test, verbose=0)
         y_test_prediction = model.predict(x_test)
         return model, history, accuracy, loss, y_test_prediction
@@ -205,7 +222,7 @@ if __name__ == '__main__':
     }
     grid = ParameterGrid(param_grid)
 
-    results_df = pd.DataFrame(data={ID_COL: [], EPOCHS_COL: [], TRAIN_TIME_COL: [], ACC_COL: [], ROC_AUC_COL: []})
+    results_df = pd.DataFrame(data={CSV_ID_COL: [], CSV_EPOCHS_COL: [], CSV_TRAIN_TIME_COL: [], CSV_ACC_COL: [], CSV_ROC_AUC_COL: []})
 
     for param in grid:
         print('Parameters: {0}'.format(param))
@@ -217,8 +234,7 @@ if __name__ == '__main__':
 
         results_df = run(x_train, x_test, y_train, y_test, bench_params, results_df, verbose=False)
 
-
-    if results_df is not None and len(results_df) > 0:
+    if SAVE_FILES and results_df is not None and len(results_df) > 0:
         results_df.to_csv('{0}results.csv'.format(SAVE_MODEL_PATH), index=False)
 
     print('Program finished.')

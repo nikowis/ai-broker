@@ -80,7 +80,7 @@ def calculate_roc_auc(y_test, y_test_score, classes_count):
         return fpr, tpr, roc_auc
 
 
-def plot_result(y_test, y_test_prediction, bench_params: BenchmarkParams, history, main_title, file_name, target_dir=BASE_IMG_PATH):
+def plot_result(y_test, y_test_prediction, bench_params: BenchmarkParams, history, main_title, file_name, save_files, target_dir=BASE_IMG_PATH):
     if not os.path.exists(target_dir):
         os.makedirs(target_dir)
     if bench_params.classes_count == 2:
@@ -100,76 +100,77 @@ def plot_result(y_test, y_test_prediction, bench_params: BenchmarkParams, histor
     y_test = [np.argmax(pred, axis=None, out=None) for pred in y_test]
     y_test_prediction = [np.argmax(pred, axis=None, out=None) for pred in y_test_prediction]
 
-    if history is not None:
-        plt.figure(figsize=(12, 12))
-    else:
-        plt.figure(figsize=(12, 6))
+    if save_files:
+        if history is not None:
+            plt.figure(figsize=(12, 12))
+        else:
+            plt.figure(figsize=(12, 6))
 
-    style.use('ggplot')
-    plt.suptitle(main_title)
+        style.use('ggplot')
+        plt.suptitle(main_title)
 
-    plt.subplot(2, 2, 1)
+        plt.subplot(2, 2, 1)
 
-    dftmp = pd.DataFrame({'tmpcol': y_test})
+        dftmp = pd.DataFrame({'tmpcol': y_test})
 
-    dftmp['tmpcol'].plot(kind='hist', xticks=xticks, alpha=0.7, label=RATE_CHANGE_LABEL)
+        dftmp['tmpcol'].plot(kind='hist', xticks=xticks, alpha=0.7, label=RATE_CHANGE_LABEL)
 
-    dftmp = pd.DataFrame.from_records({'tmpcol': y_test_prediction})
+        dftmp = pd.DataFrame.from_records({'tmpcol': y_test_prediction})
 
-    dftmp['tmpcol'].plot(kind='hist', xticks=xticks, alpha=0.7, label=RATE_CHANGE_LABEL)
+        dftmp['tmpcol'].plot(kind='hist', xticks=xticks, alpha=0.7, label=RATE_CHANGE_LABEL)
 
-    plt.legend([REAL_LEGEND, PREDICTED_LEGEND], loc='upper left')
-    plt.xticks(xticks, class_labels)
-    plt.xlabel(VALUE_CHANGE_LABEL)
-    plt.ylabel(FORECAST_COUNT_LABEL)
-    plt.title(HISTOGRAM_TITLE)
+        plt.legend([REAL_LEGEND, PREDICTED_LEGEND], loc='upper left')
+        plt.xticks(xticks, class_labels)
+        plt.xlabel(VALUE_CHANGE_LABEL)
+        plt.ylabel(FORECAST_COUNT_LABEL)
+        plt.title(HISTOGRAM_TITLE)
 
-    plt.subplot(2, 2, 2)
-    if bench_params.classes_count > 2:
-        plt.plot(fpr[(MICRO_ROC_KEY)], tpr[MICRO_ROC_KEY],
-                 label=MICRO_AVG_ROC_LABEL.format(roc_auc[MICRO_ROC_KEY]),
-                 color='red', linewidth=3)
+        plt.subplot(2, 2, 2)
+        if bench_params.classes_count > 2:
+            plt.plot(fpr[(MICRO_ROC_KEY)], tpr[MICRO_ROC_KEY],
+                     label=MICRO_AVG_ROC_LABEL.format(roc_auc[MICRO_ROC_KEY]),
+                     color='red', linewidth=3)
 
-        colors = cycle(['aqua', 'darkorange', 'cornflowerblue'])
-        for i, color in zip(range(bench_params.classes_count), colors):
-            plt.plot(fpr[i], tpr[i], color=color, lw=2,
-                     label=CLASS_ROC_LABEL.format(class_labels[i], roc_auc[i]))
-    else:
-        plt.plot(fpr, tpr, label=BINARY_ROC_LABEL.format(roc_auc), color='red', linewidth=2)
-    plt.plot([0, 1], [0, 1], 'k--', lw=2)
-    plt.xlim([0.0, 1.0])
-    plt.ylim([0.0, 1.05])
-    plt.xlabel(FPR_LABEL)
-    plt.ylabel(TPR_LABEL)
-    plt.title(ROC_TITLE)
-    plt.legend(loc="lower right")
+            colors = cycle(['aqua', 'darkorange', 'cornflowerblue'])
+            for i, color in zip(range(bench_params.classes_count), colors):
+                plt.plot(fpr[i], tpr[i], color=color, lw=2,
+                         label=CLASS_ROC_LABEL.format(class_labels[i], roc_auc[i]))
+        else:
+            plt.plot(fpr, tpr, label=BINARY_ROC_LABEL.format(roc_auc), color='red', linewidth=2)
+        plt.plot([0, 1], [0, 1], 'k--', lw=2)
+        plt.xlim([0.0, 1.0])
+        plt.ylim([0.0, 1.05])
+        plt.xlabel(FPR_LABEL)
+        plt.ylabel(TPR_LABEL)
+        plt.title(ROC_TITLE)
+        plt.legend(loc="lower right")
 
-    if history is not None:
-        plt.subplot(2, 2, 3)
-        plt.plot(history.history['loss'])
-        plt.plot(history.history['val_loss'])
-        plt.title(LOSS_TITLE)
-        plt.ylabel(LOSS_LABEL)
-        plt.xlabel(EPOCH_LABEL)
-        plt.legend([TRAIN_DATA, TEST_DATA], loc='upper left')
+        if history is not None:
+            plt.subplot(2, 2, 3)
+            plt.plot(history.history['loss'])
+            plt.plot(history.history['val_loss'])
+            plt.title(LOSS_TITLE)
+            plt.ylabel(LOSS_LABEL)
+            plt.xlabel(EPOCH_LABEL)
+            plt.legend([TRAIN_DATA, TEST_DATA], loc='upper left')
 
-        plt.subplot(2, 2, 4)
+            plt.subplot(2, 2, 4)
 
-        plt.plot(history.history[bench_params.model_params.metric])
-        plt.plot(history.history['val_' + bench_params.model_params.metric])
+            plt.plot(history.history[bench_params.model_params.metric])
+            plt.plot(history.history['val_' + bench_params.model_params.metric])
 
-        plt.title(ACCURACY_TITLE)
-        plt.ylabel(ACCURACY_LABEL)
-        plt.xlabel(EPOCH_LABEL)
-        plt.legend([TRAIN_DATA, TEST_DATA], loc='upper left')
+            plt.title(ACCURACY_TITLE)
+            plt.ylabel(ACCURACY_LABEL)
+            plt.xlabel(EPOCH_LABEL)
+            plt.legend([TRAIN_DATA, TEST_DATA], loc='upper left')
 
-    # plt.subplots_adjust(hspace=0.5, wspace=0.5)
-    plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+        # plt.subplots_adjust(hspace=0.5, wspace=0.5)
+        plt.tight_layout(rect=[0, 0.03, 1, 0.95])
 
-    # plt.savefig('{}/{}.pdf'.format(target_dir, file_name), format='pdf', dpi=1000)
-    plt.savefig('{}/{}.png'.format(target_dir, file_name))
-    # plt.show()
-    plt.close()
+        # plt.savefig('{}/{}.pdf'.format(target_dir, file_name), format='pdf', dpi=1000)
+        plt.savefig('{}/{}.png'.format(target_dir, file_name))
+        # plt.show()
+        plt.close()
 
     if not bench_params.preprocessing_params.binary_classification:
         roc_auc = roc_auc[MICRO_ROC_KEY]
