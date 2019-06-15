@@ -11,7 +11,7 @@ from sklearn.metrics import roc_curve, auc
 import stock_constants as const
 from benchmark_params import BenchmarkParams
 
-BASE_IMG_PATH = const.TARGET_DIR
+BASE_IMG_PATH = const.TARGET_DIR + '/models/img'
 
 CLOSE_PRICE_USD_LABEL = 'Cena zamknięcia (USD)'
 DATE_LABEL = 'Data'
@@ -45,20 +45,6 @@ MICRO_ROC_KEY = "micro"
 CLASS_ROC_LABEL = "Klasa '{0}' (obszar {1:0.2f})"
 MICRO_AVG_ROC_LABEL = 'Mikro-średnia klas (obszar {0:0.2f})'
 BINARY_ROC_LABEL = 'Krzywa ROC (obszar {0:0.2f})'
-
-
-def legend_labels_save_files(title, file_name='img', base_img_path=BASE_IMG_PATH, xlabel=DATE_LABEL,
-                             ylabel=CLOSE_PRICE_USD_LABEL, legend=4):
-    if not legend == -1:
-        plt.legend(loc=legend)
-    plt.xlabel(xlabel)
-    plt.ylabel(ylabel)
-    plt.title(title)
-    plt.savefig('{}/{}.pdf'.format(base_img_path, file_name), format='pdf', dpi=1000)
-    plt.savefig('{}/{}.png'.format(base_img_path, file_name))
-    plt.show()
-    plt.close()
-
 
 def calculate_roc_auc(y_test, y_test_score, classes_count):
     if classes_count > 2:

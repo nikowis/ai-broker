@@ -144,7 +144,7 @@ def run(x_train, x_test, y_train, y_test, bench_params, results_df: pd.DataFrame
         copyfile(best_model_of_all_path,
                  '{0}nn_weights-{1}-{2}-accuracy-{3}.hdf5'.format(SAVE_MODEL_PATH, learning_params.id, sym,
                                                                   round(max(accuracies), 4)))
-        copyfile('{0}/nn-{1}-{2}-{3}.png'.format(const.TARGET_DIR, learning_params.id, sym, max_index + 1),
+        copyfile('{0}/nn-{1}-{2}-{3}.png'.format(SAVE_MODEL_PATH + 'img', learning_params.id, sym, max_index + 1),
                  '{0}/nn-{1}-{2}-accuracy-{3}.png'.format(const.TARGET_DIR, learning_params.id, sym,
                                                           round(max(accuracies), 4)))
 
@@ -153,9 +153,9 @@ def run(x_train, x_test, y_train, y_test, bench_params, results_df: pd.DataFrame
                 if re.search('nn_weights-{0}-{1}-\d+\.hdf5'.format(learning_params.id, sym), f):
                     os.remove(os.path.join(SAVE_MODEL_PATH, f))
 
-            for f in os.listdir(const.TARGET_DIR):
+            for f in os.listdir(SAVE_MODEL_PATH + 'img'):
                 if re.search('nn-{0}-{1}-\d+\.png'.format(learning_params.id, sym), f):
-                    os.remove(os.path.join(const.TARGET_DIR, f))
+                    os.remove(os.path.join(SAVE_MODEL_PATH + 'img', f))
 
     return results_df
 
