@@ -77,3 +77,5 @@ IDLE_VALUE = 1
 RISE_VALUE = 2
 TRESHOLD = 0.4
 INDEX = 'index'
+
+MICRO_ROC_KEY = "micro"

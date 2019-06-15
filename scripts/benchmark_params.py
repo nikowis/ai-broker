@@ -14,14 +14,17 @@ SATYSFYING_TRESHOLD_DISCRETE = 0.7
 class BenchmarkParams:
 
     def __init__(self, binary_classification) -> None:
+        self.curr_iter_num = None
+        self.curr_sym = None
         self.target_dir = TARGET_DIR
         self.csv_files_dir = CSV_FILES_DIR
         self.save_model_path = SAVE_MODEL_PATH
         self.save_img_path = SAVE_IMG_PATH
-        self.save_files = True
-        self.cleanup_files = True
+        self.save_files = SAVE_FILES
+        self.cleanup_files = CLEANUP_FILES
         self.verbose = True
 
+        self.input_size = None
         self.binary_classification = binary_classification
         if binary_classification:
             self.classes_count = 2
@@ -39,9 +42,9 @@ class BenchmarkParams:
         self.test_size = 0.2
         self.standardize = True
         self.difference_non_stationary = True
-        self.walk_forward_testing = True
+        self.walk_forward_testing = False
         self.walk_forward_max_train_window_size = None
-        self.walk_forward_test_window_size = 100
+        self.walk_forward_test_window_size = 200
         self.iterations = 1
 
     def update_from_dictionary(self, params_dict):
@@ -71,9 +74,9 @@ class NnBenchmarkParams(BenchmarkParams):
         super().__init__(binary_classification)
 
         if binary_classification:
-            self.output_neurons=1
+            self.output_neurons = 1
         else:
-            self.output_neurons=3
+            self.output_neurons = 3
 
         self.layers = [10]
         self.regularizer = 0.005

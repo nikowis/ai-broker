@@ -1,4 +1,3 @@
-import os
 from itertools import cycle
 
 import matplotlib.pyplot as plt
@@ -8,9 +7,9 @@ from keras.utils import to_categorical
 from matplotlib import style
 from sklearn.metrics import roc_curve, auc
 
-import stock_constants as const
+import benchmark_file_helper
 from benchmark_params import BenchmarkParams
-
+from stock_constants import MICRO_ROC_KEY
 
 CLOSE_PRICE_USD_LABEL = 'Cena zamknięcia (USD)'
 DATE_LABEL = 'Data'
@@ -19,7 +18,7 @@ CLOSE_PRICE_LABEL = 'Cena zamknięcia'
 PRICE_CHANGE_PCT_LABEL = 'Zmiana ceny (%)'
 FORECAST_COUNT_LABEL = 'Liczba prognoz'
 VALUE_CHANGE_LABEL = 'Zmiana wartości'
-RATE_CHANGE_FORECAST_LABEL = 'Przewidywana zmiana kursu'
+
 RATE_CHANGE_LABEL = 'Zmiana kursu'
 RISE_LABEL = 'wzrost'
 IDLE_LABEL = 'utrzymanie'
@@ -40,40 +39,16 @@ TRAIN_DATA = 'Dane treningowe'
 FPR_LABEL = 'False Positive Rate'
 TPR_LABEL = 'True Positive Rate'
 ROC_TITLE = 'Krzywe ROC'
-MICRO_ROC_KEY = "micro"
+
 CLASS_ROC_LABEL = "Klasa '{0}' (obszar {1:0.2f})"
 MICRO_AVG_ROC_LABEL = 'Mikro-średnia klas (obszar {0:0.2f})'
 BINARY_ROC_LABEL = 'Krzywa ROC (obszar {0:0.2f})'
 
 
-def calculate_roc_auc(y_test, y_test_score, classes_count):
-    if classes_count > 2:
-        fpr = dict()
-        tpr = dict()
-        roc_auc = dict()
-
-        for i in range(classes_count):
-            fpr[i], tpr[i], _ = roc_curve(y_test[:, i], y_test_score[:, i])
-            roc_auc[i] = auc(fpr[i], tpr[i])
-
-        fpr[MICRO_ROC_KEY], tpr[MICRO_ROC_KEY], _ = roc_curve(y_test.ravel(), y_test_score.ravel())
-        roc_auc[MICRO_ROC_KEY] = auc(fpr[MICRO_ROC_KEY], tpr[MICRO_ROC_KEY])
-
-        return fpr, tpr, roc_auc
-    else:
-        fpr, tpr, _ = roc_curve(y_test, y_test_score)
-        roc_auc = auc(fpr, tpr)
-        return fpr, tpr, roc_auc
-
-
-def plot_result(y_test, y_test_prediction, bench_params: BenchmarkParams, history, main_title, file_name):
-    if not os.path.exists(bench_params.save_img_path):
-        os.makedirs(bench_params.save_img_path)
+def plot_result(y_test, y_test_prediction, bench_params: BenchmarkParams, history, fpr, tpr, roc_auc, main_title):
     if bench_params.classes_count == 2:
         class_labels = [FALL_LABEL, RISE_LABEL]
         xticks = [0, 1]
-        y_test_prediction = y_test_prediction.flatten()
-        fpr, tpr, roc_auc = calculate_roc_auc(y_test, y_test_prediction, bench_params.classes_count)
         y_test_prediction[y_test_prediction >= 0.5] = 1
         y_test_prediction[y_test_prediction < 0.5] = 0
         y_test_prediction = to_categorical(y_test_prediction)
@@ -81,7 +56,6 @@ def plot_result(y_test, y_test_prediction, bench_params: BenchmarkParams, histor
     else:
         class_labels = [FALL_LABEL, IDLE_LABEL, RISE_LABEL]
         xticks = [0, 1, 2]
-        fpr, tpr, roc_auc = calculate_roc_auc(y_test, y_test_prediction, bench_params.classes_count)
 
     y_test = [np.argmax(pred, axis=None, out=None) for pred in y_test]
     y_test_prediction = [np.argmax(pred, axis=None, out=None) for pred in y_test_prediction]
@@ -150,8 +124,9 @@ def plot_result(y_test, y_test_prediction, bench_params: BenchmarkParams, histor
         # plt.subplots_adjust(hspace=0.5, wspace=0.5)
         plt.tight_layout(rect=[0, 0.03, 1, 0.95])
 
-        # plt.savefig('{}/{}.pdf'.format(bench_params.save_img_path, file_name), format='pdf', dpi=1000)
-        plt.savefig('{}/{}.png'.format(bench_params.save_img_path, file_name))
+        plt.savefig('{}/{}.pdf'.format(bench_params.save_img_path, benchmark_file_helper.get_img_path(bench_params)),
+                    format='pdf', dpi=1000)
+        plt.savefig('{}/{}.png'.format(bench_params.save_img_path, benchmark_file_helper.get_img_path(bench_params)))
         # plt.show()
         plt.close()
 
@@ -159,45 +134,3 @@ def plot_result(y_test, y_test_prediction, bench_params: BenchmarkParams, histor
         roc_auc = roc_auc[MICRO_ROC_KEY]
 
     return fpr, tpr, roc_auc
-
-
-def plot_company_summary(df, symbol):
-    plt.figure(figsize=(12, 12))
-    style.use('ggplot')
-    plt.suptitle(symbol)
-
-    plt.subplot(2, 2, 1)
-    df[const.ADJUSTED_CLOSE_COL].plot(kind='line')
-    plt.title('Cena zamknięcia')
-    plt.ylabel('cena')
-    plt.xlabel('data')
-
-    plt.subplot(2, 2, 2)
-    df[const.DAILY_PCT_CHANGE_COL].plot(kind='line')
-    plt.title('Zmiana % względem dnia następnego')
-    plt.ylabel('%')
-    plt.xlabel('data')
-
-    plt.subplot(2, 2, 3)
-    df[const.HL_PCT_CHANGE_COL] = (df[const.HIGH_COL] - df[const.LOW_COL]) / df[
-        const.HIGH_COL] * 100
-    df[const.HL_PCT_CHANGE_COL].plot(kind='line')
-    plt.title('Procentowa zmiana H/L')
-    plt.ylabel('%')
-    plt.xlabel('data')
-
-    plt.subplot(2, 2, 4)
-    df[const.LABEL_DISCRETE_COL].plot(kind='hist', xticks=[0, 1, 2], label=RATE_CHANGE_LABEL)
-    plt.xticks([0, 1, 2], [FALL_LABEL, IDLE_LABEL, RISE_LABEL])
-    plt.xlabel(VALUE_CHANGE_LABEL)
-    plt.ylabel(FORECAST_COUNT_LABEL)
-    plt.title(HISTOGRAM_TITLE)
-
-    plt.tight_layout(rect=[0, 0.03, 1, 0.95])
-    company_info_path = './../../target/company_info'
-    if not os.path.exists(company_info_path):
-        os.makedirs(company_info_path)
-    plt.savefig('{}/{}.png'.format(company_info_path, symbol))
-
-    # plt.show()
-    plt.close()
