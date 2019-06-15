@@ -46,3 +46,9 @@ def copy_best_and_cleanup_files(bench_params: BenchmarkParams, max_index, rounde
 
 def get_img_path(bench_params: BenchmarkParams):
     return 'nn-{0}-{1}-{2}'.format(bench_params.id, bench_params.curr_sym, bench_params.curr_iter_num)
+
+
+def save_results(results_df, bench_params: BenchmarkParams):
+    if results_df is not None and len(results_df) > 0:
+        results_df.to_csv('{0}/results-{1}.csv'.format(bench_params.benchmark_path, bench_params.benchmark_name),
+                          index=False)

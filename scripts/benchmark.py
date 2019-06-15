@@ -35,7 +35,7 @@ def json_handler(Obj):
 
 class Benchmark:
     def __init__(self, symbols, bench_params: BenchmarkParams, changing_params_dict: dict) -> None:
-        self.df_list, self.sym_list = csv_importer.import_data_from_files(symbols, bench_params.csv_files_dir)
+        self.df_list, self.sym_list = csv_importer.import_data_from_files(symbols, bench_params.csv_files_path)
 
         results_df = pd.DataFrame(
             data={CSV_ID_COL: [], CSV_EPOCHS_COL: [], CSV_TRAIN_TIME_COL: [], CSV_ACC_COL: [], CSV_ROC_AUC_COL: [],
@@ -65,8 +65,7 @@ class Benchmark:
 
                 results_df = self.run(x_train, x_test, y_train, y_test, bench_params, results_df)
 
-        if results_df is not None and len(results_df) > 0:
-            results_df.to_csv('{0}/results.csv'.format(bench_params.save_model_path), index=False)
+        benchmark_file_helper.save_results(results_df, bench_params)
 
         print('Benchmark finished.')
 
@@ -295,7 +294,7 @@ class NnBenchmark(Benchmark):
 
 
 if __name__ == '__main__':
-    bench_params = benchmark_params.NnBenchmarkParams(binary_classification=False)
+    bench_params = benchmark_params.NnBenchmarkParams(binary_classification=False, benchmark_name='nn-epochs')
     bench_params.iterations = 2
     bench_params.walk_forward_testing = True
 

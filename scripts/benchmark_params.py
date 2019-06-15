@@ -1,10 +1,11 @@
 import time
 
-TARGET_DIR = './../target'
+TARGET_PATH = './../target'
 # TARGET_DIR = './drive/My Drive/ai-broker/target'
-CSV_FILES_DIR = TARGET_DIR + '/data'
-SAVE_MODEL_PATH = TARGET_DIR + '/models'
-SAVE_IMG_PATH = SAVE_MODEL_PATH + '/img'
+CSV_FILES_DIR = '/data'
+SAVE_MODEL_DIR = '/models'
+BENCHMARKS_DIR = '/benchmarks'
+SAVE_IMG_DIR = '/img'
 SAVE_FILES = True
 CLEANUP_FILES = True
 SATYSFYING_TRESHOLD_BINARY = 0.86
@@ -13,13 +14,18 @@ SATYSFYING_TRESHOLD_DISCRETE = 0.7
 
 class BenchmarkParams:
 
-    def __init__(self, binary_classification) -> None:
+    def __init__(self, binary_classification, benchmark_name) -> None:
+        self.benchmark_name = benchmark_name
+        if benchmark_name is not None:
+            self.benchmark_name_dir = '/' + benchmark_name
+        else:
+            self.benchmark_name_dir = ''
         self.curr_iter_num = None
         self.curr_sym = None
-        self.target_dir = TARGET_DIR
-        self.csv_files_dir = CSV_FILES_DIR
-        self.save_model_path = SAVE_MODEL_PATH
-        self.save_img_path = SAVE_IMG_PATH
+        self.csv_files_path = TARGET_PATH + '/data'
+        self.benchmark_path = TARGET_PATH + BENCHMARKS_DIR + self.benchmark_name_dir
+        self.save_model_path = self.benchmark_path + SAVE_MODEL_DIR
+        self.save_img_path = self.benchmark_path + SAVE_IMG_DIR
         self.save_files = SAVE_FILES
         self.cleanup_files = CLEANUP_FILES
         self.verbose = True
@@ -70,8 +76,8 @@ class BenchmarkParams:
 
 class NnBenchmarkParams(BenchmarkParams):
 
-    def __init__(self, binary_classification) -> None:
-        super().__init__(binary_classification)
+    def __init__(self, binary_classification, benchmark_name='') -> None:
+        super().__init__(binary_classification, benchmark_name)
 
         if binary_classification:
             self.output_neurons = 1
