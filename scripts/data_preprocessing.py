@@ -11,7 +11,7 @@ from sklearn.preprocessing import StandardScaler, LabelEncoder
 
 import csv_importer
 import stock_constants as const
-from benchmark_params import PreprocessingParams
+from benchmark_params import BenchmarkParams
 
 CORRELATED_COLS = [const.APO_10_COL, const.APO_DIFF_COL, const.MOM_5_COL, const.MOM_10_COL, const.MOM_DIFF_COL,
                    const.ROC_5_COL,
@@ -46,8 +46,8 @@ def get_top_abs_correlations(df, n=5):
     return au_corr[0:n]
 
 
-def preprocess(df, preprocessing_params: PreprocessingParams):
-    if preprocessing_params.difference_non_stationary:
+def preprocess(df, benchmark_params: BenchmarkParams):
+    if benchmark_params.difference_non_stationary:
         df[const.ADJUSTED_CLOSE_COL] = df[const.ADJUSTED_CLOSE_COL].diff()
         df[const.OPEN_COL] = df[const.OPEN_COL].diff()
         df[const.CLOSE_COL] = df[const.CLOSE_COL].diff()
@@ -62,26 +62,26 @@ def preprocess(df, preprocessing_params: PreprocessingParams):
 
     df_without_corelated_features = df_without_helper_cols.drop(CORRELATED_COLS, axis=1)
 
-    if preprocessing_params.binary_classification:
+    if benchmark_params.binary_classification:
         y = np.array(df[const.LABEL_BINARY_COL])
     else:
         y = np.array(df[const.LABEL_DISCRETE_COL])
     x = np.array(df_without_corelated_features)
 
-    if preprocessing_params.binary_classification:
+    if benchmark_params.binary_classification:
         encoder = LabelEncoder()
         encoded_y = encoder.fit_transform(y)
     else:
         encoded_y = to_categorical(y)
 
-    if preprocessing_params.walk_forward_testing:
+    if benchmark_params.walk_forward_testing:
         x_trains_list = []
         y_trains_list = []
         x_tests_list = []
         y_tests_list = []
-        test_size = preprocessing_params.test_size
-        test_window_size = preprocessing_params.walk_forward_test_window_size
-        train_window_size = preprocessing_params.walk_forward_max_train_window_size
+        test_size = benchmark_params.test_size
+        test_window_size = benchmark_params.walk_forward_test_window_size
+        train_window_size = benchmark_params.walk_forward_max_train_window_size
 
         for i in range(0, int((test_size * len(x) / test_window_size))):
             train_end_idx = int((1 - test_size) * len(x) + i * test_window_size)
@@ -97,7 +97,7 @@ def preprocess(df, preprocessing_params: PreprocessingParams):
             x_test = x[test_start_idx:test_end_idx + 1]
             y_test = encoded_y[test_start_idx:test_end_idx + 1]
 
-            x_train, x_test = standarize_and_pca(preprocessing_params, x_train, x_test)
+            x_train, x_test = standardize_and_pca(benchmark_params, x_train, x_test)
 
             x_trains_list.append(x_train)
             y_trains_list.append(y_train)
@@ -109,15 +109,15 @@ def preprocess(df, preprocessing_params: PreprocessingParams):
         y_test = y_tests_list
     else:
         x_train, x_test, y_train, y_test = model_selection.train_test_split(x, encoded_y,
-                                                                            test_size=preprocessing_params.test_size,
+                                                                            test_size=benchmark_params.test_size,
                                                                             shuffle=False)
-        x_train, x_test = standarize_and_pca(preprocessing_params, x_train, x_test)
+        x_train, x_test = standardize_and_pca(benchmark_params, x_train, x_test)
 
     return df, x, y, x_train, x_test, y_train, y_test
 
 
-def standarize_and_pca(preprocessing_params, x_train, x_test):
-    if preprocessing_params.standarize:
+def standardize_and_pca(preprocessing_params, x_train, x_test):
+    if preprocessing_params.standardize:
         scale = StandardScaler().fit(x_train)
         x_train = scale.transform(x_train)
         x_test = scale.transform(x_test)

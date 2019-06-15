@@ -142,8 +142,8 @@ def plot_result(y_test, y_test_prediction, bench_params: BenchmarkParams, histor
 
             plt.subplot(2, 2, 4)
 
-            plt.plot(history.history[bench_params.model_params.metric])
-            plt.plot(history.history['val_' + bench_params.model_params.metric])
+            plt.plot(history.history[bench_params.metric])
+            plt.plot(history.history['val_' + bench_params.metric])
 
             plt.title(ACCURACY_TITLE)
             plt.ylabel(ACCURACY_LABEL)
@@ -158,7 +158,7 @@ def plot_result(y_test, y_test_prediction, bench_params: BenchmarkParams, histor
         # plt.show()
         plt.close()
 
-    if not bench_params.preprocessing_params.binary_classification:
+    if not bench_params.binary_classification:
         roc_auc = roc_auc[MICRO_ROC_KEY]
 
     return fpr, tpr, roc_auc
