@@ -5,17 +5,17 @@ from keras.regularizers import l2
 from benchmark_params import NnBenchmarkParams
 
 
-def create_seq_model(input_size, bench_params:NnBenchmarkParams):
+def create_seq_model(bench_params:NnBenchmarkParams):
     model = Sequential()
     layers = bench_params.layers
 
     regularizer = l2(bench_params.regularizer)
     if len(layers) == 0:
-        model.add(Dense(bench_params.output_neurons, use_bias=bench_params.use_bias, input_shape=(input_size,),
+        model.add(Dense(bench_params.output_neurons, use_bias=bench_params.use_bias, input_shape=(bench_params.input_size,),
                         activation=bench_params.output_activation))
     else:
         model.add(
-            Dense(layers[0], input_shape=(input_size,), activation=bench_params.activation,
+            Dense(layers[0], input_shape=(bench_params.input_size,), activation=bench_params.activation,
                   use_bias=bench_params.use_bias,
                   kernel_regularizer=regularizer, bias_regularizer=regularizer))
         if len(layers) > 1:

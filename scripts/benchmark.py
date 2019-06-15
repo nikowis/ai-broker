@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 from keras.engine.saving import load_model
+from sklearn.metrics import roc_curve, auc
 from sklearn.model_selection import ParameterGrid
 
 import benchmark_data_preprocessing
@@ -15,6 +16,7 @@ import benchmark_params
 import benchmark_plot_helper
 import csv_importer
 from benchmark_params import BenchmarkParams
+from stock_constants import MICRO_ROC_KEY
 
 CSV_TICKER = 'ticker'
 CSV_ROC_AUC_COL = 'roc_auc'
@@ -56,6 +58,10 @@ class Benchmark:
                 bench_params.curr_sym = sym
                 df, x, y, x_train, x_test, y_train, y_test = benchmark_data_preprocessing.preprocess(df,
                                                                                                      bench_params)
+                if bench_params.walk_forward_testing:
+                    bench_params.input_size = x_train[0].shape[1]
+                else:
+                    bench_params.input_size = x_train.shape[1]
 
                 results_df = self.run(x_train, x_test, y_train, y_test, bench_params, results_df)
 
@@ -65,43 +71,33 @@ class Benchmark:
         print('Benchmark finished.')
 
     def run(self, x_train, x_test, y_train, y_test, bench_params, results_df):
-        binary_classification = bench_params.binary_classification
 
         total_time = time.time()
         losses = []
         accuracies = []
 
-        earlyStopping = EarlyStopping(monitor='val_' + bench_params.metric,
-                                      min_delta=bench_params.early_stopping_min_delta,
-                                      patience=bench_params.early_stopping_patience, verbose=0, mode='max',
-                                      restore_best_weights=True)
         bench_params.curr_iter_num = 0
         minima_encountered = 0
-        if bench_params.walk_forward_testing:
-            input_size = x_train[0].shape[1]
-        else:
-            input_size = x_train.shape[1]
+
         while bench_params.curr_iter_num < bench_params.iterations:
 
             bench_params.curr_iter_num = bench_params.curr_iter_num + 1
             iter_start_time = time.time()
 
-            model = benchmark_nn_model.create_seq_model(input_size, bench_params)
+            model = self.create_model(bench_params)
 
-            callbacks = [earlyStopping]
+            callbacks = self.create_callbacks(bench_params)
 
-            if bench_params.save_files:
-                mcp_save = ModelCheckpoint(
-                    benchmark_file_helper.get_model_path(bench_params), save_best_only=True,
-                    monitor='val_' + bench_params.metric, mode='max')
-                callbacks = [earlyStopping, mcp_save]
+            model, accuracy, loss, fpr, tpr, roc_auc, y_test_prediction, history = self.learn_and_evaluate(model,
+                                                                                                           bench_params,
+                                                                                                           callbacks,
+                                                                                                           x_train,
+                                                                                                           x_test,
+                                                                                                           y_train,
+                                                                                                           y_test)
 
-            model, history, accuracy, loss, y_test_prediction = self.learn(model, bench_params, callbacks,
-                                                                           x_train,
-                                                                           x_test,
-                                                                           y_train, y_test)
-
-            if (binary_classification and accuracy < 0.6) or ((not binary_classification) and accuracy < 0.45):
+            if (bench_params.binary_classification and accuracy < 0.6) or (
+                    (not bench_params.binary_classification) and accuracy < 0.45):
                 if bench_params.verbose:
                     print('ID {0} iteration {1} encountered local minimum (accuracy {2}) retrying iteration...'.format(
                         bench_params.id, bench_params.curr_iter_num, round(accuracy, 4)))
@@ -134,7 +130,7 @@ class Benchmark:
             else:
                 concatenated_y_test = y_test
             fpr, tpr, roc_auc = benchmark_plot_helper.plot_result(concatenated_y_test, y_test_prediction, bench_params,
-                                                                  history,
+                                                                  history, fpr, tpr, roc_auc,
                                                                   main_title)
 
             results_df = results_df.append(
@@ -147,7 +143,8 @@ class Benchmark:
         rounded_accuracy_mean = round(np.mean(accuracies), 4)
         rounded_loss_mean = round(np.mean(losses), 4)
         print(
-            'ID {0} {1} avg loss {2} avg accuracy {3} total time {4} s.'.format(bench_params.id, bench_params.curr_sym, rounded_loss_mean,
+            'ID {0} {1} avg loss {2} avg accuracy {3} total time {4} s.'.format(bench_params.id, bench_params.curr_sym,
+                                                                                rounded_loss_mean,
                                                                                 rounded_accuracy_mean,
                                                                                 round(time.time() - total_time, 2)))
         if rounded_accuracy_mean > bench_params.satysfying_treshold:
@@ -158,16 +155,30 @@ class Benchmark:
 
         return results_df
 
-    def learn(self, model, bench_params: benchmark_params.NnBenchmarkParams, callbacks, x_train, x_test,
-              y_train, y_test):
+    def create_callbacks(self, bench_params):
+        earlyStopping = EarlyStopping(monitor='val_' + bench_params.metric,
+                                      min_delta=bench_params.early_stopping_min_delta,
+                                      patience=bench_params.early_stopping_patience, verbose=0, mode='max',
+                                      restore_best_weights=True)
+        callbacks = [earlyStopping]
+        if bench_params.save_files:
+            mcp_save = ModelCheckpoint(
+                benchmark_file_helper.get_model_path(bench_params), save_best_only=True,
+                monitor='val_' + bench_params.metric, mode='max')
+            callbacks = [earlyStopping, mcp_save]
+        return callbacks
+
+    def create_model(self, bench_params):
+        return benchmark_nn_model.create_seq_model(bench_params)
+
+    def learn_and_evaluate(self, model, bench_params: benchmark_params.NnBenchmarkParams, callbacks, x_train, x_test,
+                           y_train, y_test):
         if bench_params.walk_forward_testing:
             walk_iterations = len(x_train)
             walk_losses = []
             walk_accuracies = []
             walk_y_test_prediction = []
-            walk_history = keras.callbacks.History()
-            walk_history.history = {'loss': [], 'val_loss': [], bench_params.metric: [],
-                                    'val_' + bench_params.metric: []}
+            walk_history = self.create_history_object(bench_params)
 
             for walk_it in range(0, walk_iterations):
                 walk_x_train = x_train[walk_it]
@@ -179,38 +190,86 @@ class Benchmark:
                 else:
                     epochs = bench_params.walk_forward_retrain_epochs
 
-                history = model.fit(walk_x_train, walk_y_train, validation_data=(walk_x_test, walk_y_test),
-                                    epochs=epochs, batch_size=bench_params.batch_size,
-                                    callbacks=callbacks, verbose=0)
-                walk_history.history['loss'] += history.history['loss']
-                walk_history.history['val_loss'] += history.history['val_loss']
-                walk_history.history[bench_params.metric] += history.history[bench_params.metric]
-                walk_history.history['val_' + bench_params.metric] += history.history[
-                    'val_' + bench_params.metric]
+                history = self.fit_model(bench_params, model, callbacks, walk_x_train, walk_y_train, walk_x_test,
+                                         walk_y_test, epochs)
+                self.update_walk_history(bench_params, history, walk_history)
 
-                ls, acc = model.evaluate(walk_x_test, walk_y_test, verbose=0)
-                y_test_prediction = model.predict(walk_x_test)
+                acc, ls, y_test_prediction = self.evaluate_predict(model, walk_x_test, walk_y_test)
                 walk_losses.append(ls)
                 walk_accuracies.append(acc)
                 walk_y_test_prediction += y_test_prediction.tolist()
+
             if bench_params.verbose:
                 print('Walk accuracies: [{0}]'.format(walk_accuracies))
-            return model, walk_history, np.mean(walk_accuracies), np.mean(walk_losses), np.array(walk_y_test_prediction)
+
+            roc_y_test = np.concatenate(y_test)
+            accuracy = np.mean(walk_accuracies)
+            loss = np.mean(walk_losses)
+            y_test_prediction = np.array(walk_y_test_prediction)
+            history = walk_history
+
         else:
-            history = model.fit(x_train, y_train, validation_data=(x_test, y_test),
-                                epochs=bench_params.epochs, batch_size=bench_params.batch_size,
-                                callbacks=callbacks, verbose=0)
+            history = self.fit_model(bench_params, model, callbacks, x_train, y_train, x_test, y_test)
             if bench_params.save_files:
                 # restores best epoch of this iteration
                 model = load_model(benchmark_file_helper.get_model_path(bench_params))
-            loss, accuracy = model.evaluate(x_test, y_test, verbose=0)
-            y_test_prediction = model.predict(x_test)
-            return model, history, accuracy, loss, y_test_prediction
+            accuracy, loss, y_test_prediction = self.evaluate_predict(model, x_test, y_test)
+            roc_y_test = y_test
+
+        fpr, tpr, roc_auc = self.calculate_roc_auc(roc_y_test, y_test_prediction, bench_params.classes_count)
+        return model, accuracy, loss, fpr, tpr, roc_auc, y_test_prediction, history
+
+    def calculate_roc_auc(self, y_test, y_test_score, classes_count):
+        if classes_count > 2:
+            fpr = dict()
+            tpr = dict()
+            roc_auc = dict()
+
+            for i in range(classes_count):
+                fpr[i], tpr[i], _ = roc_curve(y_test[:, i], y_test_score[:, i])
+                roc_auc[i] = auc(fpr[i], tpr[i])
+
+            fpr[MICRO_ROC_KEY], tpr[MICRO_ROC_KEY], _ = roc_curve(y_test.ravel(), y_test_score.ravel())
+            roc_auc[MICRO_ROC_KEY] = auc(fpr[MICRO_ROC_KEY], tpr[MICRO_ROC_KEY])
+
+            return fpr, tpr, roc_auc
+        else:
+            y_test_score = y_test_score.flatten()
+            fpr, tpr, _ = roc_curve(y_test, y_test_score)
+            roc_auc = auc(fpr, tpr)
+            return fpr, tpr, roc_auc
+
+    def evaluate_predict(self, model, x_test, y_test):
+        ls, acc = model.evaluate(x_test, y_test, verbose=0)
+        y_test_prediction = model.predict(x_test)
+        return acc, ls, y_test_prediction
+
+    def fit_model(self, bench_params, model, callbacks, x_train, y_train, x_test, y_test, epochs=None):
+        if epochs is None:
+            epochs = bench_params.epochs
+        return model.fit(x_train, y_train, validation_data=(x_test, y_test),
+                         epochs=epochs, batch_size=bench_params.batch_size,
+                         callbacks=callbacks, verbose=0)
+
+    def update_walk_history(self, bench_params, history, walk_history):
+        walk_history.history['loss'] += history.history['loss']
+        walk_history.history['val_loss'] += history.history['val_loss']
+        walk_history.history[bench_params.metric] += history.history[bench_params.metric]
+        walk_history.history['val_' + bench_params.metric] += history.history[
+            'val_' + bench_params.metric]
+
+    def create_history_object(self, bench_params):
+        walk_history = keras.callbacks.History()
+        walk_history.history = {'loss': [], 'val_loss': [], bench_params.metric: [],
+                                'val_' + bench_params.metric: []}
+        return walk_history
 
 
 if __name__ == '__main__':
-    bench_params = benchmark_params.NnBenchmarkParams(binary_classification=True)
+    bench_params = benchmark_params.NnBenchmarkParams(binary_classification=False)
     bench_params.iterations = 2
+    bench_params.walk_forward_testing = True
+
 
     bench = Benchmark(['GOOGL', 'AMZN'], bench_params, {'epochs': [5],
                                                         'layers': [[]]})

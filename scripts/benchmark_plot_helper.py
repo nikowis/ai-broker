@@ -9,6 +9,7 @@ from sklearn.metrics import roc_curve, auc
 
 import benchmark_file_helper
 from benchmark_params import BenchmarkParams
+from stock_constants import MICRO_ROC_KEY
 
 CLOSE_PRICE_USD_LABEL = 'Cena zamknięcia (USD)'
 DATE_LABEL = 'Data'
@@ -38,18 +39,16 @@ TRAIN_DATA = 'Dane treningowe'
 FPR_LABEL = 'False Positive Rate'
 TPR_LABEL = 'True Positive Rate'
 ROC_TITLE = 'Krzywe ROC'
-MICRO_ROC_KEY = "micro"
+
 CLASS_ROC_LABEL = "Klasa '{0}' (obszar {1:0.2f})"
 MICRO_AVG_ROC_LABEL = 'Mikro-średnia klas (obszar {0:0.2f})'
 BINARY_ROC_LABEL = 'Krzywa ROC (obszar {0:0.2f})'
 
 
-def plot_result(y_test, y_test_prediction, bench_params: BenchmarkParams, history, main_title):
+def plot_result(y_test, y_test_prediction, bench_params: BenchmarkParams, history, fpr, tpr, roc_auc, main_title):
     if bench_params.classes_count == 2:
         class_labels = [FALL_LABEL, RISE_LABEL]
         xticks = [0, 1]
-        y_test_prediction = y_test_prediction.flatten()
-        fpr, tpr, roc_auc = calculate_roc_auc(y_test, y_test_prediction, bench_params.classes_count)
         y_test_prediction[y_test_prediction >= 0.5] = 1
         y_test_prediction[y_test_prediction < 0.5] = 0
         y_test_prediction = to_categorical(y_test_prediction)
@@ -57,7 +56,6 @@ def plot_result(y_test, y_test_prediction, bench_params: BenchmarkParams, histor
     else:
         class_labels = [FALL_LABEL, IDLE_LABEL, RISE_LABEL]
         xticks = [0, 1, 2]
-        fpr, tpr, roc_auc = calculate_roc_auc(y_test, y_test_prediction, bench_params.classes_count)
 
     y_test = [np.argmax(pred, axis=None, out=None) for pred in y_test]
     y_test_prediction = [np.argmax(pred, axis=None, out=None) for pred in y_test_prediction]
@@ -136,23 +134,3 @@ def plot_result(y_test, y_test_prediction, bench_params: BenchmarkParams, histor
         roc_auc = roc_auc[MICRO_ROC_KEY]
 
     return fpr, tpr, roc_auc
-
-
-def calculate_roc_auc(y_test, y_test_score, classes_count):
-    if classes_count > 2:
-        fpr = dict()
-        tpr = dict()
-        roc_auc = dict()
-
-        for i in range(classes_count):
-            fpr[i], tpr[i], _ = roc_curve(y_test[:, i], y_test_score[:, i])
-            roc_auc[i] = auc(fpr[i], tpr[i])
-
-        fpr[MICRO_ROC_KEY], tpr[MICRO_ROC_KEY], _ = roc_curve(y_test.ravel(), y_test_score.ravel())
-        roc_auc[MICRO_ROC_KEY] = auc(fpr[MICRO_ROC_KEY], tpr[MICRO_ROC_KEY])
-
-        return fpr, tpr, roc_auc
-    else:
-        fpr, tpr, _ = roc_curve(y_test, y_test_score)
-        roc_auc = auc(fpr, tpr)
-        return fpr, tpr, roc_auc

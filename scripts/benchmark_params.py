@@ -24,6 +24,7 @@ class BenchmarkParams:
         self.cleanup_files = CLEANUP_FILES
         self.verbose = True
 
+        self.input_size = None
         self.binary_classification = binary_classification
         if binary_classification:
             self.classes_count = 2
@@ -43,7 +44,7 @@ class BenchmarkParams:
         self.difference_non_stationary = True
         self.walk_forward_testing = False
         self.walk_forward_max_train_window_size = None
-        self.walk_forward_test_window_size = 100
+        self.walk_forward_test_window_size = 200
         self.iterations = 1
 
     def update_from_dictionary(self, params_dict):
@@ -73,9 +74,9 @@ class NnBenchmarkParams(BenchmarkParams):
         super().__init__(binary_classification)
 
         if binary_classification:
-            self.output_neurons=1
+            self.output_neurons = 1
         else:
-            self.output_neurons=3
+            self.output_neurons = 3
 
         self.layers = [10]
         self.regularizer = 0.005
