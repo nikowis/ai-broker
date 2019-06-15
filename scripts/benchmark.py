@@ -15,7 +15,7 @@ import benchmark_nn_model
 import benchmark_params
 import benchmark_plot_helper
 import csv_importer
-from benchmark_params import BenchmarkParams
+from benchmark_params import BenchmarkParams, NnBenchmarkParams
 from stock_constants import MICRO_ROC_KEY
 
 CSV_TICKER = 'ticker'
@@ -155,22 +155,6 @@ class Benchmark:
 
         return results_df
 
-    def create_callbacks(self, bench_params):
-        earlyStopping = EarlyStopping(monitor='val_' + bench_params.metric,
-                                      min_delta=bench_params.early_stopping_min_delta,
-                                      patience=bench_params.early_stopping_patience, verbose=0, mode='max',
-                                      restore_best_weights=True)
-        callbacks = [earlyStopping]
-        if bench_params.save_files:
-            mcp_save = ModelCheckpoint(
-                benchmark_file_helper.get_model_path(bench_params), save_best_only=True,
-                monitor='val_' + bench_params.metric, mode='max')
-            callbacks = [earlyStopping, mcp_save]
-        return callbacks
-
-    def create_model(self, bench_params):
-        return benchmark_nn_model.create_seq_model(bench_params)
-
     def learn_and_evaluate(self, model, bench_params: benchmark_params.NnBenchmarkParams, callbacks, x_train, x_test,
                            y_train, y_test):
         if bench_params.walk_forward_testing:
@@ -239,6 +223,51 @@ class Benchmark:
             roc_auc = auc(fpr, tpr)
             return fpr, tpr, roc_auc
 
+    def create_model(self, bench_params):
+        """Create predicting model"""
+        pass
+
+    def create_callbacks(self, bench_params):
+        """Create callbacks used while learning"""
+        pass
+
+    def evaluate_predict(self, model, x_test, y_test):
+        """Evaluate on test data, predict labels for x_test, return (accuracy, loss, y_prediction)"""
+        pass
+
+    def fit_model(self, bench_params, model, callbacks, x_train, y_train, x_test, y_test, epochs=None):
+        """Fit model on train data, return learning history or none"""
+        pass
+
+    def update_walk_history(self, bench_params, history, walk_history):
+        """Update history object with walk forward learning history"""
+        pass
+
+    def create_history_object(self, bench_params):
+        """Create an empty history object for walk forward learning"""
+        pass
+
+
+class NnBenchmark(Benchmark):
+    def __init__(self, symbols, bench_params: NnBenchmarkParams, changing_params_dict: dict) -> None:
+        super().__init__(symbols, bench_params, changing_params_dict)
+
+    def create_callbacks(self, bench_params):
+        earlyStopping = EarlyStopping(monitor='val_' + bench_params.metric,
+                                      min_delta=bench_params.early_stopping_min_delta,
+                                      patience=bench_params.early_stopping_patience, verbose=0, mode='max',
+                                      restore_best_weights=True)
+        callbacks = [earlyStopping]
+        if bench_params.save_files:
+            mcp_save = ModelCheckpoint(
+                benchmark_file_helper.get_model_path(bench_params), save_best_only=True,
+                monitor='val_' + bench_params.metric, mode='max')
+            callbacks = [earlyStopping, mcp_save]
+        return callbacks
+
+    def create_model(self, bench_params):
+        return benchmark_nn_model.create_seq_model(bench_params)
+
     def evaluate_predict(self, model, x_test, y_test):
         ls, acc = model.evaluate(x_test, y_test, verbose=0)
         y_test_prediction = model.predict(x_test)
@@ -270,6 +299,5 @@ if __name__ == '__main__':
     bench_params.iterations = 2
     bench_params.walk_forward_testing = True
 
-
-    bench = Benchmark(['GOOGL', 'AMZN'], bench_params, {'epochs': [5],
-                                                        'layers': [[]]})
+    bench = NnBenchmark(['GOOGL', 'AMZN'], bench_params, {'epochs': [5, 10],
+                                                          'layers': [[]]})
