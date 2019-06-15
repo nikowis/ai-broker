@@ -126,13 +126,14 @@ class Benchmark:
                 round(loss, 4), round(accuracy, 4), number_of_epochs_it_ran, ''.join(
                     str(e) + " " for e in bench_params.layers))
 
-            if bench_params.walk_forward_testing:
-                concatenated_y_test = np.concatenate(y_test)
-            else:
-                concatenated_y_test = y_test
-            fpr, tpr, roc_auc = benchmark_plot_helper.plot_result(concatenated_y_test, y_test_prediction, bench_params,
-                                                                  history, fpr, tpr, roc_auc,
-                                                                  main_title)
+            if bench_params.save_files:
+                if bench_params.walk_forward_testing:
+                    concatenated_y_test = np.concatenate(y_test)
+                else:
+                    concatenated_y_test = y_test
+                benchmark_plot_helper.plot_result(concatenated_y_test, y_test_prediction, bench_params,
+                                                  history, fpr, tpr, roc_auc,
+                                                  main_title)
 
             result_dict = {CSV_ID_COL: bench_params.id,
                            CSV_TRAIN_TIME_COL: iter_time, CSV_ACC_COL: accuracy, CSV_ROC_AUC_COL: roc_auc,
