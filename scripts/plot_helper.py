@@ -11,7 +11,6 @@ from sklearn.metrics import roc_curve, auc
 import stock_constants as const
 from benchmark_params import BenchmarkParams
 
-BASE_IMG_PATH = const.TARGET_DIR + '/models/img'
 
 CLOSE_PRICE_USD_LABEL = 'Cena zamknięcia (USD)'
 DATE_LABEL = 'Data'
@@ -46,6 +45,7 @@ CLASS_ROC_LABEL = "Klasa '{0}' (obszar {1:0.2f})"
 MICRO_AVG_ROC_LABEL = 'Mikro-średnia klas (obszar {0:0.2f})'
 BINARY_ROC_LABEL = 'Krzywa ROC (obszar {0:0.2f})'
 
+
 def calculate_roc_auc(y_test, y_test_score, classes_count):
     if classes_count > 2:
         fpr = dict()
@@ -66,9 +66,9 @@ def calculate_roc_auc(y_test, y_test_score, classes_count):
         return fpr, tpr, roc_auc
 
 
-def plot_result(y_test, y_test_prediction, bench_params: BenchmarkParams, history, main_title, file_name, save_files, target_dir=BASE_IMG_PATH):
-    if not os.path.exists(target_dir):
-        os.makedirs(target_dir)
+def plot_result(y_test, y_test_prediction, bench_params: BenchmarkParams, history, main_title, file_name):
+    if not os.path.exists(bench_params.save_img_path):
+        os.makedirs(bench_params.save_img_path)
     if bench_params.classes_count == 2:
         class_labels = [FALL_LABEL, RISE_LABEL]
         xticks = [0, 1]
@@ -86,7 +86,7 @@ def plot_result(y_test, y_test_prediction, bench_params: BenchmarkParams, histor
     y_test = [np.argmax(pred, axis=None, out=None) for pred in y_test]
     y_test_prediction = [np.argmax(pred, axis=None, out=None) for pred in y_test_prediction]
 
-    if save_files:
+    if bench_params.save_files:
         if history is not None:
             plt.figure(figsize=(12, 12))
         else:
@@ -97,13 +97,10 @@ def plot_result(y_test, y_test_prediction, bench_params: BenchmarkParams, histor
 
         plt.subplot(2, 2, 1)
 
-        dftmp = pd.DataFrame({'tmpcol': y_test})
-
-        dftmp['tmpcol'].plot(kind='hist', xticks=xticks, alpha=0.7, label=RATE_CHANGE_LABEL)
-
-        dftmp = pd.DataFrame.from_records({'tmpcol': y_test_prediction})
-
-        dftmp['tmpcol'].plot(kind='hist', xticks=xticks, alpha=0.7, label=RATE_CHANGE_LABEL)
+        prediction_histogram = pd.DataFrame({'tmpcol': y_test})
+        prediction_histogram['tmpcol'].plot(kind='hist', xticks=xticks, alpha=0.7, label=RATE_CHANGE_LABEL)
+        prediction_histogram = pd.DataFrame.from_records({'tmpcol': y_test_prediction})
+        prediction_histogram['tmpcol'].plot(kind='hist', xticks=xticks, alpha=0.7, label=RATE_CHANGE_LABEL)
 
         plt.legend([REAL_LEGEND, PREDICTED_LEGEND], loc='upper left')
         plt.xticks(xticks, class_labels)
@@ -153,8 +150,8 @@ def plot_result(y_test, y_test_prediction, bench_params: BenchmarkParams, histor
         # plt.subplots_adjust(hspace=0.5, wspace=0.5)
         plt.tight_layout(rect=[0, 0.03, 1, 0.95])
 
-        # plt.savefig('{}/{}.pdf'.format(target_dir, file_name), format='pdf', dpi=1000)
-        plt.savefig('{}/{}.png'.format(target_dir, file_name))
+        # plt.savefig('{}/{}.pdf'.format(bench_params.save_img_path, file_name), format='pdf', dpi=1000)
+        plt.savefig('{}/{}.png'.format(bench_params.save_img_path, file_name))
         # plt.show()
         plt.close()
 
@@ -197,10 +194,10 @@ def plot_company_summary(df, symbol):
     plt.title(HISTOGRAM_TITLE)
 
     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
-    COMPANY_INFO_PATH = BASE_IMG_PATH + '/company_info'
-    if not os.path.exists(COMPANY_INFO_PATH):
-        os.makedirs(COMPANY_INFO_PATH)
-    plt.savefig('{}/{}.png'.format(COMPANY_INFO_PATH, symbol))
+    company_info_path = './../../target/company_info'
+    if not os.path.exists(company_info_path):
+        os.makedirs(company_info_path)
+    plt.savefig('{}/{}.png'.format(company_info_path, symbol))
 
     # plt.show()
     plt.close()

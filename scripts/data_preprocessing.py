@@ -25,9 +25,6 @@ HELPER_COLS = [const.LABEL_COL, const.LABEL_BINARY_COL, const.LABEL_DISCRETE_COL
 MIN_DATE = '2009-01-01'
 MAX_DATE = '2020-10-29'
 SELECTED_SYM = 'GOOGL'
-IMG_PATH = const.TARGET_DIR +'/documentation_plots_and_images/'
-if not os.path.exists(IMG_PATH):
-    os.makedirs(IMG_PATH)
 
 
 def get_redundant_pairs(df):
@@ -128,7 +125,9 @@ def standardize_and_pca(preprocessing_params, x_train, x_test):
     return x_train, x_test
 
 
-def plot_correlations(df_without_corelated_features):
+def plot_correlations(df_without_corelated_features, img_path='./../target/documentation_plots_and_images'):
+    if not os.path.exists(img_path):
+        os.makedirs(img_path)
     res = get_top_abs_correlations(df_without_corelated_features, 30)
     print('Most correalated features:')
     print(pd.DataFrame(res).to_latex())
@@ -142,13 +141,13 @@ def plot_correlations(df_without_corelated_features):
                 cmap=sns.diverging_palette(220, 10, as_cmap=True),
                 ax=ax)
     fig.tight_layout()
-    plt.savefig('{}/{}.pdf'.format(IMG_PATH, 'corr_matrix'), format='pdf', dpi=1000)
-    plt.savefig('{}/{}.png'.format(IMG_PATH, 'corr_matrix'))
+    plt.savefig('{}/{}.pdf'.format(img_path, 'corr_matrix'), format='pdf', dpi=1000)
+    plt.savefig('{}/{}.png'.format(img_path, 'corr_matrix'))
     plt.show()
     plt.close()
 
 
-def principal_component_analysis(x):
+def principal_component_analysis(x, img_path='./../target/documentation_plots_and_images'):
     pca = PCA().fit(x)
     pca_95 = PCA(.95).fit(x)
 
@@ -156,8 +155,8 @@ def principal_component_analysis(x):
     plt.title('PCA')
     plt.xlabel('Liczba komponentów')
     plt.ylabel('Suma wyjaśnionej wariancji')
-    plt.savefig('{}/{}.pdf'.format(IMG_PATH, 'pca_variance'), format='pdf', dpi=1000)
-    plt.savefig('{}/{}.png'.format(IMG_PATH, 'pca_variance'))
+    plt.savefig('{}/{}.pdf'.format(img_path, 'pca_variance'), format='pdf', dpi=1000)
+    plt.savefig('{}/{}.png'.format(img_path, 'pca_variance'))
     plt.show()
     plt.close()
     explained = np.cumsum(pca.explained_variance_ratio_)

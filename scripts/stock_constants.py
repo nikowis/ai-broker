@@ -1,6 +1,3 @@
-TARGET_DIR = './../target'
-# TARGET_DIR = './drive/My Drive/ai-broker/target'
-
 SYMBOL = 'symbol'
 ID = '_id'
 OPEN_COL = '1  open'

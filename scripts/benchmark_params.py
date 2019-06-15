@@ -1,22 +1,40 @@
 import time
 
+TARGET_DIR = './../target'
+# TARGET_DIR = './drive/My Drive/ai-broker/target'
+CSV_FILES_DIR = TARGET_DIR + '/data'
+SAVE_MODEL_PATH = TARGET_DIR + '/models'
+SAVE_IMG_PATH = SAVE_MODEL_PATH + '/img'
+SAVE_FILES = True
+CLEANUP_FILES = True
+SATYSFYING_TRESHOLD_BINARY = 0.86
+SATYSFYING_TRESHOLD_DISCRETE = 0.7
+
 
 class BenchmarkParams:
 
     def __init__(self, binary_classification) -> None:
+        self.target_dir = TARGET_DIR
+        self.csv_files_dir = CSV_FILES_DIR
+        self.save_model_path = SAVE_MODEL_PATH
+        self.save_img_path = SAVE_IMG_PATH
+        self.save_files = True
+        self.cleanup_files = True
+        self.verbose = True
+
         self.binary_classification = binary_classification
         if binary_classification:
             self.classes_count = 2
-            self.output_neurons = 1
             self.output_activation = 'sigmoid'
             self.loss = 'binary_crossentropy'
             self.metric = 'binary_accuracy'
+            self.satysfying_treshold = SATYSFYING_TRESHOLD_BINARY
         else:
             self.classes_count = 3
-            self.output_neurons = 3
             self.output_activation = 'softmax'
             self.loss = 'categorical_crossentropy'
             self.metric = 'categorical_accuracy'
+            self.satysfying_treshold = SATYSFYING_TRESHOLD_DISCRETE
         self.pca = 0.999
         self.test_size = 0.2
         self.standardize = True
@@ -51,6 +69,12 @@ class NnBenchmarkParams(BenchmarkParams):
 
     def __init__(self, binary_classification) -> None:
         super().__init__(binary_classification)
+
+        if binary_classification:
+            self.output_neurons=1
+        else:
+            self.output_neurons=3
+
         self.layers = [10]
         self.regularizer = 0.005
         self.activation = 'relu'
@@ -59,8 +83,6 @@ class NnBenchmarkParams(BenchmarkParams):
         self.loss = 'binary_crossentropy'  # categorical_crossentropy
         self.metric = 'binary_accuracy'  # categorical_accuracy
         self.use_bias = True
-        self.output_neurons = 1
-        self.id = str(time.time())
         self.epochs = 10
         self.batch_size = 10
         self.early_stopping_patience = 40

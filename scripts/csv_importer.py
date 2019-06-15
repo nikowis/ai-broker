@@ -1,9 +1,7 @@
 import pandas as pd
-import stock_constants as const
 
-CSV_FILES_DIR = const.TARGET_DIR + '/data'
 
-def import_data_from_files(tickers, path=CSV_FILES_DIR):
+def import_data_from_files(tickers, path):
     df_list = []
     sym_list = []
     for ticker in tickers:
