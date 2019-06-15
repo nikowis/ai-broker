@@ -11,12 +11,13 @@ from keras.callbacks import EarlyStopping, ModelCheckpoint
 from keras.engine.saving import load_model
 from sklearn.model_selection import ParameterGrid
 
+import benchmark_file_helper
+import benchmark_data_preprocessing
+import benchmark_plot_helper
+import benchmark_nn_model
 import benchmark_params
 import csv_importer
-import data_preprocessing
-import nn_model
-import plot_helper
-from benchmark_params import BenchmarkParams, NnBenchmarkParams
+from benchmark_params import BenchmarkParams
 
 CSV_TICKER = 'ticker'
 CSV_ROC_AUC_COL = 'roc_auc'
@@ -41,8 +42,7 @@ class Benchmark:
             data={CSV_ID_COL: [], CSV_EPOCHS_COL: [], CSV_TRAIN_TIME_COL: [], CSV_ACC_COL: [], CSV_ROC_AUC_COL: [],
                   CSV_TICKER: []})
 
-        if bench_params.save_files and not os.path.exists(bench_params.save_model_path):
-            os.makedirs(bench_params.save_model_path)
+        benchmark_file_helper.initialize_dirs(bench_params)
 
         grid = ParameterGrid(changing_params_dict)
         for param in grid:
@@ -56,8 +56,8 @@ class Benchmark:
             for symbol_it in range(0, len(symbols)):
                 df = self.df_list[symbol_it]
                 sym = self.sym_list[symbol_it]
-                df, x, y, x_train, x_test, y_train, y_test = data_preprocessing.preprocess(df,
-                                                                                           bench_params)
+                df, x, y, x_train, x_test, y_train, y_test = benchmark_data_preprocessing.preprocess(df,
+                                                                                                     bench_params)
 
                 results_df = self.run(x_train, x_test, y_train, y_test, bench_params, results_df, sym)
 
@@ -89,7 +89,7 @@ class Benchmark:
             curr_iter_num = curr_iter_num + 1
             iter_start_time = time.time()
 
-            model = nn_model.create_seq_model(input_size, bench_params)
+            model = benchmark_nn_model.create_seq_model(input_size, bench_params)
 
             callbacks = [earlyStopping]
             model_path = '{0}/nn_weights-{1}-{2}-{3}.hdf5'.format(bench_params.save_model_path, bench_params.id, sym,
@@ -141,8 +141,8 @@ class Benchmark:
                 concatenated_y_test = np.concatenate(y_test)
             else:
                 concatenated_y_test = y_test
-            fpr, tpr, roc_auc = plot_helper.plot_result(concatenated_y_test, y_test_prediction, bench_params, history,
-                                                        main_title,
+            fpr, tpr, roc_auc = benchmark_plot_helper.plot_result(concatenated_y_test, y_test_prediction, bench_params, history,
+                                                                  main_title,
                                                         'nn-{0}-{1}-{2}'.format(bench_params.id, sym, curr_iter_num))
 
             results_df = results_df.append(

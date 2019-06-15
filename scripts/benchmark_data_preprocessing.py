@@ -1,9 +1,4 @@
-import os
-
-import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
-import seaborn as sns
 from keras.utils import to_categorical
 from sklearn import model_selection
 from sklearn.decomposition import PCA
@@ -22,25 +17,7 @@ HELPER_COLS = [const.LABEL_COL, const.LABEL_BINARY_COL, const.LABEL_DISCRETE_COL
                const.BBANDS_10_RMB_COL, const.BBANDS_10_RUB_COL, const.BBANDS_20_RLB_COL, const.BBANDS_20_RMB_COL,
                const.BBANDS_20_RUB_COL, const.MACD_HIST_COL]
 
-MIN_DATE = '2009-01-01'
-MAX_DATE = '2020-10-29'
 SELECTED_SYM = 'GOOGL'
-
-
-def get_redundant_pairs(df):
-    pairs_to_drop = set()
-    cols = df.columns
-    for i in range(0, df.shape[1]):
-        for j in range(0, i + 1):
-            pairs_to_drop.add((cols[i], cols[j]))
-    return pairs_to_drop
-
-
-def get_top_abs_correlations(df, n=5):
-    au_corr = df.corr().abs().unstack()
-    labels_to_drop = get_redundant_pairs(df)
-    au_corr = au_corr.drop(labels=labels_to_drop).sort_values(ascending=False)
-    return au_corr[0:n]
 
 
 def preprocess(df, benchmark_params: BenchmarkParams):
@@ -125,80 +102,6 @@ def standardize_and_pca(preprocessing_params, x_train, x_test):
     return x_train, x_test
 
 
-def plot_correlations(df_without_corelated_features, img_path='./../target/documentation_plots_and_images'):
-    if not os.path.exists(img_path):
-        os.makedirs(img_path)
-    res = get_top_abs_correlations(df_without_corelated_features, 30)
-    print('Most correalated features:')
-    print(pd.DataFrame(res).to_latex())
-    corr = df_without_corelated_features.corr()
-    # sns.heatmap(corr, mask=np.zeros_like(corr, dtype=np.bool), cmap=sns.diverging_palette(220, 10, as_cmap=True),
-    #            square=True, ax=ax)
-    fig, ax = plt.subplots(figsize=(11, 10))
-    sns.heatmap(corr,
-                xticklabels=corr.columns.values,
-                yticklabels=corr.columns.values,
-                cmap=sns.diverging_palette(220, 10, as_cmap=True),
-                ax=ax)
-    fig.tight_layout()
-    plt.savefig('{}/{}.pdf'.format(img_path, 'corr_matrix'), format='pdf', dpi=1000)
-    plt.savefig('{}/{}.png'.format(img_path, 'corr_matrix'))
-    plt.show()
-    plt.close()
-
-
-def principal_component_analysis(x, img_path='./../target/documentation_plots_and_images'):
-    pca = PCA().fit(x)
-    pca_95 = PCA(.95).fit(x)
-
-    plt.plot(np.cumsum(pca.explained_variance_ratio_))
-    plt.title('PCA')
-    plt.xlabel('Liczba komponentów')
-    plt.ylabel('Suma wyjaśnionej wariancji')
-    plt.savefig('{}/{}.pdf'.format(img_path, 'pca_variance'), format='pdf', dpi=1000)
-    plt.savefig('{}/{}.png'.format(img_path, 'pca_variance'))
-    plt.show()
-    plt.close()
-    explained = np.cumsum(pca.explained_variance_ratio_)
-    print(explained)
-    print(pca.n_components_, ' components')
-    x = pca_95.transform(x)
-    return x
-
-
-def count_outliers(df):
-    df[const.ADJUSTED_CLOSE_COL] = df[const.ADJUSTED_CLOSE_COL].diff()
-    df[const.OPEN_COL] = df[const.OPEN_COL].diff()
-    df[const.CLOSE_COL] = df[const.CLOSE_COL].diff()
-    df[const.HIGH_COL] = df[const.HIGH_COL].diff()
-    df[const.LOW_COL] = df[const.LOW_COL].diff()
-    df[const.SMA_5_COL] = df[const.SMA_5_COL].diff()
-    df[const.SMA_10_COL] = df[const.SMA_10_COL].diff()
-    df[const.SMA_20_COL] = df[const.SMA_20_COL].diff()
-
-    df.dropna(inplace=True)
-    df_without_helper_cols = df.drop(
-        HELPER_COLS, axis=1)
-
-    df_without_corelated_features = df_without_helper_cols.drop(CORRELATED_COLS, axis=1)
-
-    Q1 = df_without_corelated_features.quantile(0.1)
-    Q3 = df_without_corelated_features.quantile(0.9)
-    IQR = Q3 - Q1
-    result = ((df_without_corelated_features < (Q1 - 1.5 * IQR)) | (
-            df_without_corelated_features > (Q3 + 1.5 * IQR))).sum()
-
-    row_count = len(df.index)
-
-    # result = result.add(pd.Series(row_count))
-    print(result)
-    print('Total rows ', row_count)
-
-
 if __name__ == '__main__':
     df_list, _ = csv_importer.import_data_from_files([SELECTED_SYM])
     df = df_list[0]
-    # df, x, y = preprocess(df)
-    # principal_component_analysis(x)
-    # plot_correlations(df)
-    count_outliers(df)
