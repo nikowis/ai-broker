@@ -14,12 +14,13 @@ SATYSFYING_TRESHOLD_DISCRETE = 0.7
 
 class BenchmarkParams:
 
-    def __init__(self, binary_classification, benchmark_name) -> None:
+    def __init__(self, binary_classification, examined_param, benchmark_name) -> None:
         self.benchmark_name = benchmark_name
         if benchmark_name is not None:
             self.benchmark_name_dir = '/' + benchmark_name
         else:
             self.benchmark_name_dir = ''
+        self.examined_param = examined_param
         self.curr_iter_num = None
         self.curr_sym = None
         self.csv_files_path = TARGET_PATH + '/data'
@@ -76,8 +77,8 @@ class BenchmarkParams:
 
 class NnBenchmarkParams(BenchmarkParams):
 
-    def __init__(self, binary_classification, benchmark_name='') -> None:
-        super().__init__(binary_classification, benchmark_name)
+    def __init__(self, binary_classification, examined_param=None, benchmark_name='') -> None:
+        super().__init__(binary_classification, examined_param, benchmark_name)
 
         if binary_classification:
             self.output_neurons = 1

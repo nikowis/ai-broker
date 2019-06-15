@@ -6,7 +6,6 @@ import numpy as np
 import pandas as pd
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 from keras.engine.saving import load_model
-from sklearn.metrics import roc_curve, auc
 from sklearn.model_selection import ParameterGrid
 
 import benchmark_data_preprocessing
@@ -14,15 +13,14 @@ import benchmark_file_helper
 import benchmark_nn_model
 import benchmark_params
 import benchmark_plot_helper
+import benchmark_roc_auc
 import csv_importer
 from benchmark_params import BenchmarkParams, NnBenchmarkParams
-from stock_constants import MICRO_ROC_KEY
 
 CSV_TICKER = 'ticker'
 CSV_ROC_AUC_COL = 'roc_auc'
 CSV_ACC_COL = 'accuracy'
 CSV_TRAIN_TIME_COL = 'train_time'
-CSV_EPOCHS_COL = 'epochs'
 CSV_ID_COL = 'ID'
 
 
@@ -37,9 +35,13 @@ class Benchmark:
     def __init__(self, symbols, bench_params: BenchmarkParams, changing_params_dict: dict) -> None:
         self.df_list, self.sym_list = csv_importer.import_data_from_files(symbols, bench_params.csv_files_path)
 
+        results_dict = {CSV_ID_COL: [], CSV_TRAIN_TIME_COL: [], CSV_ACC_COL: [], CSV_ROC_AUC_COL: [],
+                        CSV_TICKER: []}
+        if bench_params.examined_param is not None:
+            results_dict.update({bench_params.examined_param: []})
+
         results_df = pd.DataFrame(
-            data={CSV_ID_COL: [], CSV_EPOCHS_COL: [], CSV_TRAIN_TIME_COL: [], CSV_ACC_COL: [], CSV_ROC_AUC_COL: [],
-                  CSV_TICKER: []})
+            data=results_dict)
 
         benchmark_file_helper.initialize_dirs(bench_params)
 
@@ -132,12 +134,16 @@ class Benchmark:
                                                                   history, fpr, tpr, roc_auc,
                                                                   main_title)
 
+            result_dict = {CSV_ID_COL: bench_params.id,
+                           CSV_TRAIN_TIME_COL: iter_time, CSV_ACC_COL: accuracy, CSV_ROC_AUC_COL: roc_auc,
+                           CSV_TICKER: bench_params.curr_sym}
+
+            if bench_params.examined_param is not None:
+                result_dict.update(
+                    {bench_params.examined_param: getattr(bench_params, bench_params.examined_param, None)})
+
             results_df = results_df.append(
-                {CSV_ID_COL: bench_params.id, CSV_EPOCHS_COL: int(number_of_epochs_it_ran),
-                 CSV_TRAIN_TIME_COL: iter_time,
-                 CSV_ACC_COL: accuracy,
-                 CSV_ROC_AUC_COL: roc_auc,
-                 CSV_TICKER: bench_params.curr_sym}, ignore_index=True)
+                result_dict, ignore_index=True)
 
         rounded_accuracy_mean = round(np.mean(accuracies), 4)
         rounded_loss_mean = round(np.mean(losses), 4)
@@ -199,28 +205,9 @@ class Benchmark:
             accuracy, loss, y_test_prediction = self.evaluate_predict(model, x_test, y_test)
             roc_y_test = y_test
 
-        fpr, tpr, roc_auc = self.calculate_roc_auc(roc_y_test, y_test_prediction, bench_params.classes_count)
+        fpr, tpr, roc_auc = benchmark_roc_auc.calculate_roc_auc(roc_y_test, y_test_prediction,
+                                                                bench_params.classes_count)
         return model, accuracy, loss, fpr, tpr, roc_auc, y_test_prediction, history
-
-    def calculate_roc_auc(self, y_test, y_test_score, classes_count):
-        if classes_count > 2:
-            fpr = dict()
-            tpr = dict()
-            roc_auc = dict()
-
-            for i in range(classes_count):
-                fpr[i], tpr[i], _ = roc_curve(y_test[:, i], y_test_score[:, i])
-                roc_auc[i] = auc(fpr[i], tpr[i])
-
-            fpr[MICRO_ROC_KEY], tpr[MICRO_ROC_KEY], _ = roc_curve(y_test.ravel(), y_test_score.ravel())
-            roc_auc[MICRO_ROC_KEY] = auc(fpr[MICRO_ROC_KEY], tpr[MICRO_ROC_KEY])
-
-            return fpr, tpr, roc_auc
-        else:
-            y_test_score = y_test_score.flatten()
-            fpr, tpr, _ = roc_curve(y_test, y_test_score)
-            roc_auc = auc(fpr, tpr)
-            return fpr, tpr, roc_auc
 
     def create_model(self, bench_params):
         """Create predicting model"""
@@ -294,9 +281,10 @@ class NnBenchmark(Benchmark):
 
 
 if __name__ == '__main__':
-    bench_params = benchmark_params.NnBenchmarkParams(binary_classification=False, benchmark_name='nn-epochs')
+    bench_params = benchmark_params.NnBenchmarkParams(True, examined_param='epochs', benchmark_name='nn-epochs')
     bench_params.iterations = 2
-    bench_params.walk_forward_testing = True
+    bench_params.epochs = 5
+    bench_params.walk_forward_testing = False
 
     bench = NnBenchmark(['GOOGL', 'AMZN'], bench_params, {'epochs': [5, 10],
                                                           'layers': [[]]})
