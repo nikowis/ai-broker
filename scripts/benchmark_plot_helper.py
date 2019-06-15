@@ -7,6 +7,7 @@ from keras.utils import to_categorical
 from matplotlib import style
 from sklearn.metrics import roc_curve, auc
 
+import benchmark_file_helper
 from benchmark_params import BenchmarkParams
 
 CLOSE_PRICE_USD_LABEL = 'Cena zamknięcia (USD)'
@@ -43,7 +44,7 @@ MICRO_AVG_ROC_LABEL = 'Mikro-średnia klas (obszar {0:0.2f})'
 BINARY_ROC_LABEL = 'Krzywa ROC (obszar {0:0.2f})'
 
 
-def plot_result(y_test, y_test_prediction, bench_params: BenchmarkParams, history, main_title, file_name):
+def plot_result(y_test, y_test_prediction, bench_params: BenchmarkParams, history, main_title):
     if bench_params.classes_count == 2:
         class_labels = [FALL_LABEL, RISE_LABEL]
         xticks = [0, 1]
@@ -125,8 +126,9 @@ def plot_result(y_test, y_test_prediction, bench_params: BenchmarkParams, histor
         # plt.subplots_adjust(hspace=0.5, wspace=0.5)
         plt.tight_layout(rect=[0, 0.03, 1, 0.95])
 
-        # plt.savefig('{}/{}.pdf'.format(bench_params.save_img_path, file_name), format='pdf', dpi=1000)
-        plt.savefig('{}/{}.png'.format(bench_params.save_img_path, file_name))
+        plt.savefig('{}/{}.pdf'.format(bench_params.save_img_path, benchmark_file_helper.get_img_path(bench_params)),
+                    format='pdf', dpi=1000)
+        plt.savefig('{}/{}.png'.format(bench_params.save_img_path, benchmark_file_helper.get_img_path(bench_params)))
         # plt.show()
         plt.close()
 
