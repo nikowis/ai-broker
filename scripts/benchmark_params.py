@@ -1,7 +1,7 @@
 import time
 
 TARGET_PATH = './../target'
-# TARGET_DIR = './drive/My Drive/ai-broker/target'
+# TARGET_PATH = './drive/My Drive/ai-broker/target'
 CSV_FILES_DIR = '/data'
 SAVE_MODEL_DIR = '/models'
 BENCHMARKS_DIR = '/benchmarks'
@@ -55,7 +55,7 @@ class BenchmarkParams:
         self.walk_forward_testing = False
         self.walk_forward_max_train_window_size = None
         self.walk_forward_test_window_size = 200
-        self.iterations = 1
+        self.iterations = 3
 
     def update_from_dictionary(self, params_dict):
         self.id = str(time.time())
@@ -88,7 +88,7 @@ class NnBenchmarkParams(BenchmarkParams):
         else:
             self.output_neurons = 3
 
-        self.layers = [10]
+        self.layers = []
         self.regularizer = 0.005
         self.activation = 'relu'
         self.output_activation = 'sigmoid'  # softmax
@@ -96,9 +96,9 @@ class NnBenchmarkParams(BenchmarkParams):
         self.loss = 'binary_crossentropy'  # categorical_crossentropy
         self.metric = 'binary_accuracy'  # categorical_accuracy
         self.use_bias = True
-        self.epochs = 10
+        self.epochs = 150
         self.batch_size = 10
-        self.early_stopping_patience = 40
+        self.early_stopping_patience = 20
         self.early_stopping_min_delta = 0.005
 
         self.walk_forward_retrain_epochs = 10

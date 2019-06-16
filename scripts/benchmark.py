@@ -33,6 +33,7 @@ def json_handler(Obj):
 
 class Benchmark:
     def __init__(self, symbols, bench_params: BenchmarkParams, changing_params_dict: dict) -> None:
+        benchmark_time = time.time()
         self.df_list, self.sym_list = csv_importer.import_data_from_files(symbols, bench_params.csv_files_path)
 
         results_dict = {CSV_ID_COL: [], CSV_TRAIN_TIME_COL: [], CSV_ACC_COL: [], CSV_ROC_AUC_COL: [],
@@ -69,7 +70,12 @@ class Benchmark:
 
         benchmark_file_helper.save_results(results_df, bench_params)
 
-        print('Benchmark finished.')
+        if bench_params.examined_param is not None:
+            results_df[bench_params.examined_param] = results_df[bench_params.examined_param].astype(str)
+            mean_groupby = results_df.groupby([bench_params.examined_param]).mean()
+            print('Examination of {0}: {1}'.format(bench_params.examined_param, mean_groupby))
+
+        print('Benchmark finished in {0}.'.format(round(time.time() - benchmark_time, 2)))
 
     def run(self, x_train, x_test, y_train, y_test, bench_params, results_df):
 
@@ -117,14 +123,15 @@ class Benchmark:
             number_of_epochs_it_ran = len(history.history['loss'])
             iter_time = time.time() - iter_start_time
             if bench_params.verbose:
-                print('ID {0} iteration {1} of {2} loss {3} accuracy {4} epochs {5} time {6}'
-                      .format(bench_params.id, bench_params.curr_iter_num, bench_params.iterations, round(loss, 4),
+                print('ID {0} {1} iteration {2} of {3} loss {4} accuracy {5} epochs {6} time {7}'
+                      .format(bench_params.id, bench_params.curr_sym, bench_params.curr_iter_num,
+                              bench_params.iterations, round(loss, 4),
                               round(accuracy, 4),
                               number_of_epochs_it_ran, round(iter_time, 2)))
 
-            main_title = 'Neural network model loss: {0}, accuracy {1}, epochs {2}\n hidden layers [{3}]'.format(
+            main_title = 'Neural network model loss: {0}, accuracy {1}, epochs {2}\n hidden layers [{3}] {4}'.format(
                 round(loss, 4), round(accuracy, 4), number_of_epochs_it_ran, ''.join(
-                    str(e) + " " for e in bench_params.layers))
+                    str(e) + " " for e in bench_params.layers), bench_params.curr_sym)
 
             if bench_params.save_files:
                 if bench_params.walk_forward_testing:
@@ -282,10 +289,6 @@ class NnBenchmark(Benchmark):
 
 
 if __name__ == '__main__':
-    bench_params = benchmark_params.NnBenchmarkParams(True, examined_param='epochs', benchmark_name='nn-epochs')
-    bench_params.iterations = 2
-    bench_params.epochs = 5
-    bench_params.walk_forward_testing = False
-
-    bench = NnBenchmark(['GOOGL', 'AMZN'], bench_params, {'epochs': [5, 10],
-                                                          'layers': [[]]})
+    bench_params = benchmark_params.NnBenchmarkParams(True, examined_param='pca', benchmark_name='nn-pca')
+    bench_params.plot_partial = True
+    NnBenchmark(['GOOGL', 'AMZN'], bench_params, {'pca': [None, 0.999, 0.99, 0.97, 0.95, 0.90]})

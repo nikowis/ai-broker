@@ -10,7 +10,7 @@ def initialize_dirs(bench_params: BenchmarkParams):
         os.makedirs(bench_params.save_model_path)
     if bench_params.save_files and not os.path.exists(bench_params.save_img_path):
         os.makedirs(bench_params.save_img_path)
-    if bench_params.save_files and not os.path.exists(bench_params.save_partial_img_path):
+    if bench_params.save_files and bench_params.plot_partial and not os.path.exists(bench_params.save_partial_img_path):
         os.makedirs(bench_params.save_partial_img_path)
 
 
