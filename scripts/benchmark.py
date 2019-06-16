@@ -15,6 +15,7 @@ import benchmark_params
 import benchmark_plot_helper
 import benchmark_roc_auc
 import csv_importer
+import stock_constants
 from benchmark_params import BenchmarkParams, NnBenchmarkParams
 
 CSV_TICKER = 'ticker'
@@ -115,7 +116,7 @@ class Benchmark:
                     if bench_params.verbose:
                         print('ID {0}: encountering too many local minima - breaking infinite loop'.format(
                             bench_params.id))
-                    return
+                    return results_df
                 else:
                     continue
             losses.append(loss)
@@ -141,6 +142,9 @@ class Benchmark:
                 benchmark_plot_helper.plot_result(concatenated_y_test, y_test_prediction, bench_params,
                                                   history, fpr, tpr, roc_auc,
                                                   main_title)
+
+            if not bench_params.binary_classification:
+                roc_auc = roc_auc[stock_constants.MICRO_ROC_KEY]
 
             result_dict = {CSV_ID_COL: bench_params.id,
                            CSV_TRAIN_TIME_COL: iter_time, CSV_ACC_COL: accuracy, CSV_ROC_AUC_COL: roc_auc,
