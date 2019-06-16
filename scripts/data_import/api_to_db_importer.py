@@ -28,7 +28,7 @@ SYMBOL_KEY = "symbol"
 API_MAX_PER_MINUTE_CALLS = 5
 API_MAX_DAILY = 400
 
-SYMBOLS = ['GOOGL', 'MSFT', 'AAPL', 'CSCO', 'ORCL', 'INTC', 'VOD', 'QCOM', 'AMZN', 'AMGN']
+SYMBOLS = ['GOOGL', 'MSFT', 'AAPL', 'CSCO', 'INTC', 'FB', 'PEP',  'QCOM', 'AMZN', 'AMGN']
 
 SELECTED_SYM = 'GOOGL'
 
@@ -234,7 +234,7 @@ if __name__ == "__main__":
     imp.import_all(SYMBOLS)
     imp.import_all_technical_indicators(SYMBOLS)
     imp.process_data()
-    # imp.export_to_csv_files('./../../target/data')
+    imp.export_to_csv_files('./../../target/data')
     # dflist, _ = csv_importer.import_data_from_files([SELECTED_SYM], './../../target/data')
 
     print("Importing finished")

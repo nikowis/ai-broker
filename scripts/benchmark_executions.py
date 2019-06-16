@@ -1,7 +1,7 @@
 import benchmark_params
 from benchmark import NnBenchmark
 
-SYMBOLS = ['GOOGL', 'MSFT', 'AAPL', 'CSCO', 'ORCL', 'INTC', 'VOD', 'QCOM', 'AMZN', 'AMGN']
+SYMBOLS = ['GOOGL', 'MSFT', 'AAPL', 'CSCO', 'INTC', 'FB', 'PEP', 'QCOM', 'AMZN', 'AMGN']
 
 
 def nn_pca_GOOGL():
@@ -36,6 +36,7 @@ def nn_layers_GOOGL_discrete():
 
 
 if __name__ == '__main__':
+    nn_pca_GOOGL()
     # nn_pca_GOOGL_discrete()
-    nn_layers_GOOGL()
-    nn_layers_GOOGL_discrete()
+    # nn_layers_GOOGL()
+    # nn_layers_GOOGL_discrete()
