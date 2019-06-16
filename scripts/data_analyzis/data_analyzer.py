@@ -3,15 +3,19 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import seaborn as sns
 from matplotlib import style
+from sklearn import model_selection
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
 
+import csv_importer
 import stock_constants as const
-from data_import import db_access
 
 MIN_DATE = '1900-01-01'
 MAX_DATE = '2020-10-29'
 SELECTED_SYM = 'GOOGL'
-IMG_PATH = const.TARGET_DIR + '/data_analyzis/'
+IMG_PATH = './../../target/data_analyzis/'
 if not os.path.exists(IMG_PATH):
     os.makedirs(IMG_PATH)
 
@@ -23,6 +27,7 @@ HELPER_COLS = [const.LABEL_COL, const.LABEL_BINARY_COL, const.LABEL_DISCRETE_COL
                const.DIVIDENT_AMOUNT_COL, const.SPLIT_COEFFICIENT_COL, const.CLOSE_COL, const.BBANDS_10_RLB_COL,
                const.BBANDS_10_RMB_COL, const.BBANDS_10_RUB_COL, const.BBANDS_20_RLB_COL, const.BBANDS_20_RMB_COL,
                const.BBANDS_20_RUB_COL, const.MACD_HIST_COL]
+
 
 def plot_columns(df):
     style.use('ggplot')
@@ -171,6 +176,38 @@ def principal_component_analysis(x, img_path='./../target/documentation_plots_an
     return x
 
 
+def pca_vs_columns_len(df, pcas):
+    results_dict = {'pca': [], 'components': []}
+    results_df = pd.DataFrame(
+        data=results_dict)
+
+    df[const.ADJUSTED_CLOSE_COL] = df[const.ADJUSTED_CLOSE_COL].diff()
+    df[const.OPEN_COL] = df[const.OPEN_COL].diff()
+    df[const.CLOSE_COL] = df[const.CLOSE_COL].diff()
+    df[const.HIGH_COL] = df[const.HIGH_COL].diff()
+    df[const.LOW_COL] = df[const.LOW_COL].diff()
+    df[const.SMA_5_COL] = df[const.SMA_5_COL].diff()
+    df[const.SMA_10_COL] = df[const.SMA_10_COL].diff()
+    df[const.SMA_20_COL] = df[const.SMA_20_COL].diff()
+    df.dropna(inplace=True)
+    df_without_helper_cols = df.drop(HELPER_COLS, axis=1)
+    df_without_corelated_features = df_without_helper_cols.drop(CORRELATED_COLS, axis=1)
+    x = np.array(df_without_corelated_features)
+    y = np.array(df[const.LABEL_BINARY_COL])
+    x_train, _, _, _ = model_selection.train_test_split(x, y, test_size=0.8, shuffle=False)
+    scale = StandardScaler().fit(x_train)
+    x_train = scale.transform(x_train)
+    results_dict = {'pca': None, 'components': x_train.shape[1]}
+    results_df = results_df.append(results_dict, ignore_index=True)
+    for p in pcas:
+        pca = PCA(p).fit(x_train)
+        x_train = pca.transform(x_train)
+        results_dict = {'pca': p, 'components': x_train.shape[1]}
+        results_df = results_df.append(results_dict, ignore_index=True)
+
+    print(results_df.to_latex(index=False))
+
+
 def get_redundant_pairs(df):
     pairs_to_drop = set()
     cols = df.columns
@@ -188,10 +225,9 @@ def get_top_abs_correlations(df, n=5):
 
 
 if __name__ == '__main__':
-    db_conn = db_access.create_db_connection(remote=False)
-    df_list, sym_list = db_access.find_by_tickers_to_dateframe_parse_to_df_list(db_conn, [SELECTED_SYM],
-                                                                                min_date=MIN_DATE, max_date=MAX_DATE)
+    df_list, sym_list = csv_importer.import_data_from_files([SELECTED_SYM], './../../target/data/')
 
     df = df_list[0]
-    describe_df()
+    # describe_df()
     # plot_columns(df)
+    pca_vs_columns_len(df, [0.999, 0.99, 0.97, 0.95, 0.90, 0.80])
