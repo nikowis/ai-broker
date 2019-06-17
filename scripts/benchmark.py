@@ -130,9 +130,9 @@ class Benchmark:
                               round(accuracy, 4),
                               number_of_epochs_it_ran, round(iter_time, 2)))
 
-            main_title = 'Neural network model loss: {0}, accuracy {1}, epochs {2}\n hidden layers [{3}] {4}'.format(
+            main_title = 'Neural network model loss: {0}, accuracy {1}, epochs {2}\n hidden layers [{3}] company {4} examined param {5}:{6}'.format(
                 round(loss, 4), round(accuracy, 4), number_of_epochs_it_ran, ''.join(
-                    str(e) + " " for e in bench_params.layers), bench_params.curr_sym)
+                    str(e) + " " for e in bench_params.layers), bench_params.curr_sym, bench_params.examined_param, getattr(bench_params, bench_params.examined_param, ''))
 
             if bench_params.save_files:
                 if bench_params.walk_forward_testing:

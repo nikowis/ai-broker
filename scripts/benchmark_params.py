@@ -48,7 +48,7 @@ class BenchmarkParams:
             self.loss = 'categorical_crossentropy'
             self.metric = 'categorical_accuracy'
             self.satysfying_treshold = SATYSFYING_TRESHOLD_DISCRETE
-        self.pca = 0.999
+        self.pca = None
         self.test_size = 0.2
         self.standardize = True
         self.difference_non_stationary = True
