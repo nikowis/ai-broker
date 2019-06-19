@@ -85,10 +85,10 @@ class NnBenchmarkParams(BenchmarkParams):
 
         if binary_classification:
             self.output_neurons = 1
+            self.layers=[]
         else:
             self.output_neurons = 3
-
-        self.layers = []
+            self.layers = [10, 10]
         self.regularizer = 0.005
         self.activation = 'relu'
         self.output_activation = 'sigmoid'  # softmax
