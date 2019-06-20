@@ -96,12 +96,14 @@ class Benchmark:
                                                                                                            x_test,
                                                                                                            y_train,
                                                                                                            y_test)
+            if not bench_params.binary_classification:
+                roc_auc = roc_auc[stock_constants.MICRO_ROC_KEY]
 
-            if (bench_params.binary_classification and accuracy < 0.6) or (
-                    (not bench_params.binary_classification) and accuracy < 0.45):
+            if (bench_params.binary_classification and roc_auc < 0.7) or (
+                    (not bench_params.binary_classification) and accuracy < 0.65):
                 if bench_params.verbose:
-                    print('ID {0} iteration {1} encountered local minimum (accuracy {2}) retrying iteration...'.format(
-                        bench_params.id, bench_params.curr_iter_num, round(accuracy, 4)))
+                    print('ID {0} iteration {1} encountered local minimum (auc {2}) retrying iteration...'.format(
+                        bench_params.id, bench_params.curr_iter_num, round(roc_auc, 4)))
 
                 minima_encountered = minima_encountered + 1
                 bench_params.curr_iter_num = bench_params.curr_iter_num - 1
@@ -117,14 +119,14 @@ class Benchmark:
             number_of_epochs_it_ran = len(history.history['loss'])
             iter_time = time.time() - iter_start_time
             if bench_params.verbose:
-                print('ID {0} {1} iteration {2} of {3} loss {4} accuracy {5} epochs {6} time {7}'
+                print('ID {0} {1} iteration {2} of {3} loss {4} roc_auc {5} epochs {6} time {7}'
                       .format(bench_params.id, bench_params.curr_sym, bench_params.curr_iter_num,
                               bench_params.iterations, round(loss, 4),
-                              round(accuracy, 4),
+                              round(roc_auc, 4),
                               number_of_epochs_it_ran, round(iter_time, 2)))
 
-            main_title = 'Neural network model loss: {0}, accuracy {1}, epochs {2}\n hidden layers [{3}] company {4} examined param {5}:{6}'.format(
-                round(loss, 4), round(accuracy, 4), number_of_epochs_it_ran, ''.join(
+            main_title = 'Neural network model loss: {0}, roc_auc {1}, epochs {2}\n hidden layers [{3}] company {4} examined param {5}:{6}'.format(
+                round(loss, 4), round(roc_auc, 4), number_of_epochs_it_ran, ''.join(
                     str(e) + " " for e in bench_params.layers), bench_params.curr_sym,
                 bench_params.examined_params.split(',')[0],
                 getattr(bench_params, bench_params.examined_params.split(',')[0], ''))
@@ -138,9 +140,6 @@ class Benchmark:
                                                   history, fpr, tpr, roc_auc,
                                                   main_title)
 
-            if not bench_params.binary_classification:
-                roc_auc = roc_auc[stock_constants.MICRO_ROC_KEY]
-
             result_dict = {CSV_ID_COL: bench_params.id,
                            CSV_TRAIN_TIME_COL: iter_time, CSV_ACC_COL: accuracy, CSV_ROC_AUC_COL: roc_auc,
                            CSV_TICKER: bench_params.curr_sym}
@@ -153,14 +152,14 @@ class Benchmark:
             results_df = results_df.append(
                 result_dict, ignore_index=True)
 
-        rounded_accuracy_mean = round(np.mean(accuracies), 4)
+        rounded_roc_auc_mean = round(np.mean(roc_auc), 4)
         rounded_loss_mean = round(np.mean(losses), 4)
         print(
-            'ID {0} {1} avg loss {2} avg accuracy {3} total time {4} s.'.format(bench_params.id, bench_params.curr_sym,
-                                                                                rounded_loss_mean,
-                                                                                rounded_accuracy_mean,
-                                                                                round(time.time() - total_time, 2)))
-        if rounded_accuracy_mean > bench_params.satysfying_treshold:
+            'ID {0} {1} avg loss {2} avg roc_auc {3} total time {4} s.'.format(bench_params.id, bench_params.curr_sym,
+                                                                               rounded_loss_mean,
+                                                                               rounded_roc_auc_mean,
+                                                                               round(time.time() - total_time, 2)))
+        if rounded_roc_auc_mean > bench_params.satysfying_treshold:
             print('=============================================================================================')
         max_index = np.argmax(accuracies)
         benchmark_file_helper.copy_best_and_cleanup_files(bench_params, max_index,
@@ -186,6 +185,10 @@ class Benchmark:
                     epochs = bench_params.epochs
                 else:
                     epochs = bench_params.walk_forward_retrain_epochs
+
+                if bench_params.walk_forward_learn_from_scratch:
+                    epochs = bench_params.epochs
+                    model = self.create_model(bench_params)
 
                 history = self.fit_model(bench_params, model, callbacks, walk_x_train, walk_y_train, walk_x_test,
                                          walk_y_test, epochs)
@@ -289,12 +292,12 @@ class NnBenchmark(Benchmark):
 
 
 if __name__ == '__main__':
-    bench_params = benchmark_params.NnBenchmarkParams(True, examined_param='pca,walk_forward_test_window_size',
-                                                      benchmark_name='bench-multiple-examined-params')
+    bench_params = benchmark_params.NnBenchmarkParams(False, examined_param='pca,walk_forward_test_window_size',
+                                                      benchmark_name='bench-learn-from-scratch')
     bench_params.plot_partial = True
     bench_params.walk_forward_testing = True
     bench_params.walk_forward_learn_from_scratch = True
-    bench_params.epochs = 5
+    bench_params.epochs = 50
     bench_params.iterations = 2
     bench_params.walk_forward_retrain_epochs = 5
     NnBenchmark(['GOOGL'], bench_params, {'pca': [None, 0.9999], 'walk_forward_test_window_size': [300, 200]})
