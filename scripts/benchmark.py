@@ -36,17 +36,8 @@ class Benchmark:
     def __init__(self, symbols, bench_params: BenchmarkParams, changing_params_dict: dict) -> None:
         benchmark_time = time.time()
         self.df_list, self.sym_list = csv_importer.import_data_from_files(symbols, bench_params.csv_files_path)
-
-        results_dict = {CSV_ID_COL: [], CSV_TRAIN_TIME_COL: [], CSV_ACC_COL: [], CSV_ROC_AUC_COL: [],
-                        CSV_TICKER: []}
-        if bench_params.examined_param is not None:
-            results_dict.update({bench_params.examined_param: []})
-
-        results_df = pd.DataFrame(
-            data=results_dict)
-
+        results_df = pd.DataFrame()
         benchmark_file_helper.initialize_dirs(bench_params)
-
         grid = ParameterGrid(changing_params_dict)
         for param in grid:
             print('Parameters: {0}'.format(param))
@@ -71,10 +62,12 @@ class Benchmark:
 
         benchmark_file_helper.save_results(results_df, bench_params)
 
-        if bench_params.examined_param is not None:
-            results_df[bench_params.examined_param] = results_df[bench_params.examined_param].astype(str)
-            mean_groupby = results_df.groupby([bench_params.examined_param]).mean()
-            print('Examination of {0}: {1}'.format(bench_params.examined_param, mean_groupby))
+        if bench_params.examined_params is not None:
+            split_params = bench_params.examined_params.split(',')
+            for examined_param in split_params:
+                results_df[examined_param] = results_df[examined_param].astype(str)
+            mean_groupby = results_df.groupby(split_params).mean()
+            print('Examination of {0}: {1}'.format(bench_params.examined_params, mean_groupby))
 
         print('Benchmark finished in {0}.'.format(round(time.time() - benchmark_time, 2)))
 
@@ -132,8 +125,9 @@ class Benchmark:
 
             main_title = 'Neural network model loss: {0}, accuracy {1}, epochs {2}\n hidden layers [{3}] company {4} examined param {5}:{6}'.format(
                 round(loss, 4), round(accuracy, 4), number_of_epochs_it_ran, ''.join(
-                    str(e) + " " for e in bench_params.layers), bench_params.curr_sym, bench_params.examined_param,
-                getattr(bench_params, bench_params.examined_param, ''))
+                    str(e) + " " for e in bench_params.layers), bench_params.curr_sym,
+                bench_params.examined_params.split(',')[0],
+                getattr(bench_params, bench_params.examined_params.split(',')[0], ''))
 
             if bench_params.save_files:
                 if bench_params.walk_forward_testing:
@@ -151,9 +145,10 @@ class Benchmark:
                            CSV_TRAIN_TIME_COL: iter_time, CSV_ACC_COL: accuracy, CSV_ROC_AUC_COL: roc_auc,
                            CSV_TICKER: bench_params.curr_sym}
 
-            if bench_params.examined_param is not None:
-                result_dict.update(
-                    {bench_params.examined_param: getattr(bench_params, bench_params.examined_param, None)})
+            if bench_params.examined_params is not None:
+                examined_params = bench_params.examined_params.split(',')
+                for examined_param in examined_params:
+                    result_dict.update({examined_param: getattr(bench_params, examined_param, None)})
 
             results_df = results_df.append(
                 result_dict, ignore_index=True)
@@ -294,10 +289,12 @@ class NnBenchmark(Benchmark):
 
 
 if __name__ == '__main__':
-    bench_params = benchmark_params.NnBenchmarkParams(True, examined_param='walk_forward_test_window_size',
-                                                      benchmark_name='bench-1231')
+    bench_params = benchmark_params.NnBenchmarkParams(True, examined_param='pca,walk_forward_test_window_size',
+                                                      benchmark_name='bench-multiple-examined-params')
     bench_params.plot_partial = True
     bench_params.walk_forward_testing = True
+    bench_params.walk_forward_learn_from_scratch = True
     bench_params.epochs = 5
+    bench_params.iterations = 2
     bench_params.walk_forward_retrain_epochs = 5
-    NnBenchmark(['GOOGL'], bench_params, {'walk_forward_test_window_size': [300]})
+    NnBenchmark(['GOOGL'], bench_params, {'pca': [None, 0.9999], 'walk_forward_test_window_size': [300, 200]})

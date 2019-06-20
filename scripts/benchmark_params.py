@@ -21,7 +21,7 @@ class BenchmarkParams:
             self.benchmark_name_dir = '/' + benchmark_name
         else:
             self.benchmark_name_dir = ''
-        self.examined_param = examined_param
+        self.examined_params = examined_param
         self.curr_iter_num = None
         self.plot_partial = False
         self.curr_sym = None
@@ -55,6 +55,7 @@ class BenchmarkParams:
         self.walk_forward_testing = False
         self.walk_forward_max_train_window_size = None
         self.walk_forward_test_window_size = 200
+        self.walk_forward_learn_from_scratch = False
         self.iterations = 3
 
     def update_from_dictionary(self, params_dict):
@@ -73,6 +74,8 @@ class BenchmarkParams:
             self.walk_forward_max_train_window_size = params_dict['walk_forward_max_train_window_size']
         if 'walk_forward_test_window_size' in params_dict:
             self.walk_forward_test_window_size = params_dict['walk_forward_test_window_size']
+        if 'walk_forward_learn_from_scratch' in params_dict:
+            self.walk_forward_test_window_size = params_dict['walk_forward_learn_from_scratch']
 
     def jsonable(self):
         return self.__dict__
@@ -100,7 +103,6 @@ class NnBenchmarkParams(BenchmarkParams):
         self.batch_size = 10
         self.early_stopping_patience = 20
         self.early_stopping_min_delta = 0.005
-
         self.walk_forward_retrain_epochs = 10
 
     def update_from_dictionary(self, params_dict):

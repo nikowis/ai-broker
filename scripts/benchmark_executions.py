@@ -44,8 +44,9 @@ def nn_test_windows_size_GOOGL():
     bench_params.epochs = 50
     bench_params.walk_forward_retrain_epochs = 1
     bench_params.plot_partial = True
-    NnBenchmark(['GOOGL'], bench_params, {
-        'walk_forward_test_window_size': [720, 360, 240, 180, 144, 90, 45]})
+    NnBenchmark(['GOOGL'], bench_params, {'walk_forward_learn_from_scratch': [False, True],
+                                          'walk_forward_test_window_size': [720, 600, 500, 400, 360, 300, 200, 150, 100,
+                                                                            90]})
 
 
 def nn_test_windows_size_GOOGL_discrete():
@@ -55,8 +56,9 @@ def nn_test_windows_size_GOOGL_discrete():
     bench_params.epochs = 50
     bench_params.walk_forward_retrain_epochs = 3
     bench_params.plot_partial = True
-    NnBenchmark(['GOOGL'], bench_params, {
-        'walk_forward_test_window_size': [720, 360, 240, 180, 144, 90, 45]})
+    NnBenchmark(['GOOGL'], bench_params, {'walk_forward_learn_from_scratch': [False, True],
+                                          'walk_forward_test_window_size': [720, 600, 500, 400, 360, 300, 200, 150, 100,
+                                                                            90]})
 
 
 def nn_walk_forward_retrain_epochs_GOOGL():

@@ -5,14 +5,17 @@ TRAIN_TIME_COL = 'train_time'
 ACCURACY_COL = 'accuracy'
 
 
-def analyze_csv(filepath, examined_param, print_latex=False):
+def analyze_csv(filepath, examined_params, print_latex=False):
     df = pd.read_csv(filepath)
 
     print('Read {0}'.format(filepath))
-    df[examined_param] = df[examined_param].astype(str)
-    df[examined_param] = df[examined_param].astype(str)
-    mean_groupby = df.drop('ID', axis=1).groupby([examined_param]).mean()
-    print('Examination of {0}:\n {1}'.format(examined_param, mean_groupby))
+
+    split_params = examined_params.split(',')
+    for examined_param in split_params:
+        df[examined_param] = df[examined_param].astype(str)
+
+    mean_groupby = df.drop('ID', axis=1).groupby(split_params).mean()
+    print('Examination of {0}:\n {1}'.format(examined_params, mean_groupby))
     if print_latex:
         print(mean_groupby.to_latex())
     return mean_groupby
@@ -36,4 +39,6 @@ if __name__ == '__main__':
     # analyze_csv('results-nn-pca-GOOGL-discrete.csv', 'pca')
     # analyze_nn_layers('results-nn-layers-GOOGL-binary.csv')
     # analyze_nn_layers('results-nn-layers-GOOGL-discrete.csv')
+    analyze_csv('results-bench-multiple-examined-params.csv', 'pca,walk_forward_test_window_size')
+
     print('Result analyzer finished.')
