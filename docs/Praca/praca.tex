@@ -400,6 +400,32 @@ Porównanie modeli klasyfikujących jest zadaniem trywialnym tylko dla specyficz
 
 W zagadnieniu predykcji giełdowych sprowadzonym do klasyfikacji, można posłużyć się \textit{procentem prawidłowych klasyfikacji} jako podstawową miarą porównawczą. Wynika to z faktu, iż dla większości spółek różnica w licznościach klas mieści się w granicach kilku do kilkunastu procent całego zbioru danych. Taka dysproporcja jest jednak na tyle znacząca, że dla porównywania modeli o bliskich wynikach trzeba stosować dodatkową miarę porównawczą. Ze względu na niewrażliwość na dysproporcje w licznościach klas oraz swoją popularność, jako drugą metrykę wykorzystano \textit{pole AUC pod krzywą ROC}.
 
+
+\subsection{Uczenie modeli - specyfika szeregów czasowych}
+
+Każdy proces uczenia modeli sztucznej inteligencji zwieńczony jest analizą jakości. Zazwyczaj taką analizę przeprowadza się poprzez wydzielenie pewnej części zbioru danych i oznaczenia jej jako zbioru testowego. Reszta zbioru danych zwana jest zbiorem treningowym (rysunek \ref{train_test_split}). Taki podział wszystkich próbek pozwala na używanie części treningowej do nauki modelu, zaś części testowej do jego oceny. Ocena modelu na podstawie próbek, któych model nie widział podczas procesu uczenia daje wiarygodne wyniki.
+
+\begin{figure}[H]
+\centering 
+\includegraphics[scale=0.5]{img/train_test_split.png}
+\caption{Podział danych na zbiór treningowy i testowy \cite{train_test_split}}
+\label{train_test_split}
+\end{figure}
+
+Ten model podziału jest najbardziej powszechny pośród zagadnień klasyfikacyjnych ze względu na swoją prostotę i odporność na zjawisko przeuczenia (ang. overfitting). Dane giełdowe jako szeregi czasowe posiadają dodatkową cechę - umiejscowienie próbek na osi czasu. Wykorzystanie faktu, iż kolejne próbki danych pojawiają się stopniowo wraz z upływem czasu, pozwala na udoskonalenie metody doboru danych do uczenia się. Uczenie i ocena metodą kroczącą (ang. walk forward) polega na stopniowym powiększaniu zbioru danych treningowych o kolejne próbki ze zbioru testowego podczas procesu oceny jakości. 
+
+\textit{Przykład:} podczas oceny jakości model przewiduje cenę za pomocą próbki z dnia $t$ mając do uprzedniej nauki wszystkie próbki od $t_0$ do $t-1$. Po tej predykcji próbka z dnia $t$ zostaje wcielona do zbioru uczącego. Model może, ale nie musi, zostać ponownie poddany procesowi uczenia przed przystąpieniem do oceny jakości dla predykcji kolejnej próbki $t+1$. Proces ten zobrazowany jest na rysunku \ref{train_test_split_time_series}. Na niebiesko oznaczono próbki zbioru treningowego, na czerwono zaś próbkę zbioru testowego podlegającą ocenie.
+
+\begin{figure}[H]
+\centering 
+\includegraphics[scale=0.75]{img/train_test_split_time_series.png}
+\caption{Podział danych na zbiór treningowy i testowy metodą kroczącą \cite{train_test_split_time_series}}
+\label{train_test_split_time_series}
+\end{figure}
+
+Wykorzystanie metody kroczącej do podziału zbioru danych pozwala zmaksymalizować ilość informacji przekazanych do modelu podczas procesu uczenia, a tym samym poprawia końcowe wyniki klasyfikacji. 
+
+
 \subsection{Wnioski i uwagi}
 
 Do zagadnienia predykcji cen na giełdzie można podchodzić na kilka sposobów. Najbardziej intuicyjnym rozwiązaniem z perspektywy początkującego inwestora, jest model, który na wyjściu wyznacza jaką akcję powinien wykonać inwestor w stosunku do akcji konkretnej spółki. Doświadczony makler do wyznaczania cen zapewne wybrałby model regresyjny, który poza określeniem trendu daje możliwość oceny jak duże są wahania ceny. Dzięki temu mógłby dobrać spółki, dla których wzrost cen będzie największy. Przy ocenie jakości regresji błąd jest zazwyczaj określany za pomocą odległości przewidywanej wartości ceny od rzeczywistej wartości ceny. Informacja że dany model aproksymuje wartość ceny z błędem $\pm 5 \$$ jest ciężka do zinterpretowania wprost. Na podstawie takiej oceny makler nie jest w stanie bezpośrednio stwierdzić czy taki model nadaje się do użycia na giełdzie. Dla zagadnienia klasyfikacji błąd jest określony jako $\%$ prawidłowych klasyfikacji, więc daje dużo lepsze wyobrażenie na temat jakości i możliwości wykorzystania modelu do obrotu akcjami.
@@ -611,30 +637,6 @@ Po odrzuceniu najmocniej skorelowanych danych można skorzystać z jednej z meto
 \label{pca_variance}
 \end{figure}
 
-\subsection{Uczenie modeli - specyfika szeregów czasowych}
-
-Każdy proces uczenia modeli sztucznej inteligencji zwieńczony jest analizą jakości. Zazwyczaj taką analizę przeprowadza się poprzez wydzielenie pewnej części zbioru danych i oznaczenia jej jako zbioru testowego. Reszta zbioru danych zwana jest zbiorem treningowym (rysunek \ref{train_test_split}). Taki podział wszystkich próbek pozwala na używanie części treningowej do nauki modelu, zaś części testowej do jego oceny. Ocena modelu na podstawie próbek, któych model nie widział podczas procesu uczenia daje wiarygodne wyniki.
-
-\begin{figure}[H]
-\centering 
-\includegraphics[scale=0.5]{img/train_test_split.png}
-\caption{Podział danych na zbiór treningowy i testowy \cite{train_test_split}}
-\label{train_test_split}
-\end{figure}
-
-Ten model podziału jest najbardziej powszechny pośród zagadnień klasyfikacyjnych ze względu na swoją prostotę i odporność na zjawisko przeuczenia (ang. overfitting). Dane giełdowe jako szeregi czasowe posiadają dodatkową cechę - umiejscowienie próbek na osi czasu. Wykorzystanie faktu, iż kolejne próbki danych pojawiają się stopniowo wraz z upływem czasu, pozwala na udoskonalenie metody doboru danych do uczenia się. Uczenie i ocena metodą kroczącą (ang. walk forward) polega na stopniowym powiększaniu zbioru danych treningowych o kolejne próbki ze zbioru testowego podczas procesu oceny jakości. 
-
-\textit{Przykład:} podczas oceny jakości model przewiduje cenę za pomocą próbki z dnia $t$ mając do uprzedniej nauki wszystkie próbki od $t_0$ do $t-1$. Po tej predykcji próbka z dnia $t$ zostaje wcielona do zbioru uczącego. Model może, ale nie musi, zostać ponownie poddany procesowi uczenia przed przystąpieniem do oceny jakości dla predykcji kolejnej próbki $t+1$. Proces ten zobrazowany jest na rysunku \ref{train_test_split_time_series}. Na niebiesko oznaczono próbki zbioru treningowego, na czerwono zaś próbkę zbioru testowego podlegającą ocenie.
-
-\begin{figure}[H]
-\centering 
-\includegraphics[scale=0.75]{img/train_test_split_time_series.png}
-\caption{Podział danych na zbiór treningowy i testowy metodą kroczącą \cite{train_test_split_time_series}}
-\label{train_test_split_time_series}
-\end{figure}
-
-Wykorzystanie metody kroczącej do podziału zbioru danych pozwala zmaksymalizować ilość informacji przekazanych do modelu podczas procesu uczenia, a tym samym poprawia końcowe wyniki klasyfikacji. 
-
 \newpage
 
 \section{Wybrane algorytmy do prognozowania}
@@ -701,26 +703,26 @@ Jednym z najprostszych przykładów sieci neuronowych jest perceptron wielowarst
 Najprostszą implementacja sieci do predykcji danych giełdowych jest sieć przyjmująca na wejściu wektor informacji o akcjach spółki z jednego dnia, zwracająca na wyjściu przewidywaną wartość ceny akcji następnego dnia. Perceptron wielowarstwowy można również zaprojektować tak, aby na wyjściu zwracał wynik klasyfikacji, czyli procentowy wynik przypisania danych wejściowych do każdej z możliwych klas. W tej pracy badane były sieci neuronowe klasyfikujące dane wejściowe według trzech klas: spadek wartości poniżej pewnego progu, utrzymanie wartości w ramach tego progu oraz wzrost wartości powyżej tego progu. 
 
 
-\subsubsection{Sieci rekurencyjne}
+% \subsubsection{Sieci rekurencyjne}
 
-W przeciwieństwie do sieci MLP, sieci rekurencyjne posiadają sprzężenia zwrotne sygnału wychodzącego z neuronów. Dzięki wtórnemu sygnałowi sieci te posiadają pewną pamięć przepływających sygnałów. Wpływem sygnału wtórnego na końcowy wynik można sterować za pomocą wag na połączeniach między odpowiednimi neuronami.
+% W przeciwieństwie do sieci MLP, sieci rekurencyjne posiadają sprzężenia zwrotne sygnału wychodzącego z neuronów. Dzięki wtórnemu sygnałowi sieci te posiadają pewną pamięć przepływających sygnałów. Wpływem sygnału wtórnego na końcowy wynik można sterować za pomocą wag na połączeniach między odpowiednimi neuronami.
 
-\subsubsection{Sieć typu LSTM \cite{lstm}}
+% \subsubsection{Sieć typu LSTM \cite{lstm}}
 
-Sieci LSTM (ang. Long Short Term Memory) są specjalnym rodzajem sieci rekurencyjnych, będących w stanie zapamiętywać długoterminowe zależności. Jak widać na rysunku \ref{lstm-net} sieć typu LSTM jest postaci łańcucha komórek. Każda komórka jest odpowiedzialna za zestawienie i przetworzenie sygnału wejściowego $x_t$ z sygnałem wychodzącym z poprzedniego modułu.
+% Sieci LSTM (ang. Long Short Term Memory) są specjalnym rodzajem sieci rekurencyjnych, będących w stanie zapamiętywać długoterminowe zależności. Jak widać na rysunku \ref{lstm-net} sieć typu LSTM jest postaci łańcucha komórek. Każda komórka jest odpowiedzialna za zestawienie i przetworzenie sygnału wejściowego $x_t$ z sygnałem wychodzącym z poprzedniego modułu.
 
-\begin{figure}[H]
-\centering \includegraphics[scale=0.22]{img/lstm.png}
-\caption{Schemat sieci neuronowej typu LSTM \cite{lstm-scheme}}
-\label{lstm-net}
-\end{figure}
+% \begin{figure}[H]
+% \centering \includegraphics[scale=0.22]{img/lstm.png}
+% \caption{Schemat sieci neuronowej typu LSTM \cite{lstm-scheme}}
+% \label{lstm-net}
+% \end{figure}
 
-Głównym elementem każdej komórki jest sygnał $c_{t-1}$ zmieniający się w $c_{t}$, który jest jej stanem. Pierwszym krokiem przy zmianie stanu komórki jest $F_t$ z funkcją sigmoidalną,tak zwana forget gate layer.  Odpowiada ona za zdecydowanie, jaka część sygnału zostanie odrzucona. Kolejnym elementem jest $i_t$, \textit{input gate layer}, która decyduje o tym jakie dane wejściowe zostaną użyte do zmiany stanu komórki. Ostatecznie warstwa $O_t$, \textit{output layer}, decyduje o tym jaka część sygnału powinna przejść do następnej komórki.
+% Głównym elementem każdej komórki jest sygnał $c_{t-1}$ zmieniający się w $c_{t}$, który jest jej stanem. Pierwszym krokiem przy zmianie stanu komórki jest $F_t$ z funkcją sigmoidalną,tak zwana forget gate layer.  Odpowiada ona za zdecydowanie, jaka część sygnału zostanie odrzucona. Kolejnym elementem jest $i_t$, \textit{input gate layer}, która decyduje o tym jakie dane wejściowe zostaną użyte do zmiany stanu komórki. Ostatecznie warstwa $O_t$, \textit{output layer}, decyduje o tym jaka część sygnału powinna przejść do następnej komórki.
 
-\bigskip
+% \bigskip
 
-W ostatnich latach sieci tego rodzaju znajdują szerokie zastosowanie w takich dziedzinach jak rozpoznawanie mowy, tłumaczenia czy też opisywanie obrazów. Sieci LSTM mogą również być użyteczne w pracy z szeregami czasowymi, gdzie możliwe są zależności danych w czasie, tak jak na przykład na 
-giełdzie. 
+% W ostatnich latach sieci tego rodzaju znajdują szerokie zastosowanie w takich dziedzinach jak rozpoznawanie mowy, tłumaczenia czy też opisywanie obrazów. Sieci LSTM mogą również być użyteczne w pracy z szeregami czasowymi, gdzie możliwe są zależności danych w czasie, tak jak na przykład na 
+% giełdzie. 
 
 \subsection{Metody zespołowe}
 
@@ -769,15 +771,181 @@ Predykcja kursu cen na giełdzie jest zagadnieniem zaawansowanym pod względem t
 
 \newpage
 
-\section{Wspomaganie decyzji giełdowych}
-
-
-
-\section{Projekt aplikacji}
-
 \section{Eksperymenty numeryczne}
 
+W poniższym rozdziale zostały opisane przeprowadzone eksperymenty numeryczne z wykorzystaniem różnych modeli predykcyjnych. Głównym celem tego rozdziału jest taki dobór modelu wraz z jego hiperparametrami, aby zmaksymalizować wybrane miary jakości. Podstawowym założeniem jest nauczanie modelu dla każdej ze spółek osobno, gdyż mogą one prezentować różną dynamikę i charakterystykę danych. Testy i optymalizacje były wykonyawne dla pojedynczej spółki ze względu na ograniczenia mocy obliczeniowej i czasu. Końcowe porównywanie jakości różnych modeli zostało wykonane na podstawie wyników 10 spośród największych spółek z giełdy \textit{NASDAQ}. Wybrane spółki oraz ich kapitalizacją rynkową zostały przedstawione w tabeli \ref{tab:biggest_companies}.
 
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|}
+    \hline
+        \textbf{Spółka} & \textbf{Kapitalizacja (mld USD)} \\ \hline
+        MSFT & 1014.94 \\ \hline 
+        AMZN & 920.5 \\ \hline 
+        AAPL & 886.81 \\ \hline 
+        GOOGL & 754.16 \\ \hline 
+        FB & 517.6 \\ \hline 
+        CSCO & 234.37 \\ \hline 
+        PEP & 186.06 \\ \hline 
+        INTC & 206.79 \\ \hline 
+        AMGN & 107.4 \\ \hline 
+        QCOM & 83.54 \\ \hline 
+    \end{tabular}
+    \caption{Spółki wykorzystane do oceny jakości nauczonych modeli}
+    \label{tab:biggest_companies}
+\end{table}
+
+Wszystkie eksperymenty dla każdego zestawu parametrów zostały przeprowadzone 3 razy, a wartości dokładności i AUC zostały uśrednione. Czas uczenia jest czasem wykonania 3 iteracji testu dla danego zestawu parametrów.
+
+\subsection{Sieci neuronowe}
+
+Sieci neuronowe posiadają wiele parametrów, których zmiana może poprawić lub pogorszyć jakość klasyfikacji. Ze względu na liczność hiperparametrów, testy i optymalizacje zostały wykonane w sposób sekwencyjny. Najciekawsze wyniki zostały przedstawione poniżej.
+
+\bigskip
+
+Pierwszym analizowanym parametrem, jest parametr wariancji przy redukcji rozmiaru problemu metodą PCA. Kolejne progi (wraz z liczbą zmiennych po transformacji), dla których zostały przeprowadzone testy zostały przedstawione w tabeli \ref{tab:pca_component_number}. Jak widać zmniejszenie wariancji o jedną tysięczną pozwala na ograniczenie rozmiaru wejściowych problemów o $\frac{1}{4}$, a zmniejszenie o jedną setną redukuje rozmiar aż o połowę. Nie można jednak z góry, bez testów, przesądzić jak ograniczanie rozmiaru zadania wpłynie na końcowe wyniki. 
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|}
+    \hline
+        \textbf{PCA (wariancja)} & \textbf{Liczba zmiennych} \\ \hline
+        0.800 & 4 \\ \hline 
+        0.900 & 8 \\ \hline 
+        0.950 & 12 \\ \hline 
+        0.970 & 16 \\ \hline 
+        0.990 & 23 \\ \hline
+        0.999 & 31 \\ \hline 
+        Brak & 41 \\ \hline 
+    \end{tabular}
+    \caption{Wybrana wartość wariancji, a liczba zmiennych po wykonaniu PCA}
+    \label{tab:pca_component_number}
+\end{table}
+
+Wyniki testów klasyfikacji binarnej dla różnych progów wariancji, zostały przedstawione w tabeli \ref{tab:nn_pca_binary}. Pomimo znikomej różnicy w wariancji danych ograniczanie rozmiaru wektora wejściowego nie okazało się korzystne pod względem uzyskanych wyników. Najlepszy wynik $\sim
+85\%$ został uzyskany przy braku przetworzenia danych metodą PCA, jednak  wykorzystując PCA z wariancją 0.999 uzyskany został bardzo podobny wynik.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+        \textbf{PCA} & \textbf{Dokładność} &  \textbf{AUC} &  \textbf{Czas (s)} \\ \hline
+                0.8                &  0.617620 &  0.643831 &   19.264398 \\ \hline
+                0.9                &  0.656676 &  0.706562 &   16.363249 \\ \hline
+                0.95               &  0.695692 &  0.737381 &   20.543109 \\ \hline
+                0.97               &  0.690703 &  0.759737 &   12.415674 \\ \hline
+                0.99               &  0.779592 &  0.864910 &   \textbf{11.990797} \\ \hline
+                0.999              &  0.843084 &  0.912399 &   12.368648 \\ \hline
+                Brak                &  \textbf{0.851701} &  \textbf{0.916636} &   19.666576 \\ \hline
+    \end{tabular}
+    \caption{Wyniki klasyfikacji binarnej dla spółki \textit{GOOGL} w zależności od wybranej wartości wariancji}
+    \label{tab:nn_pca_binary}
+\end{table}
+
+Na wykresach \ref{img:nn_pca_binary_vs_accuracy} została przedstawiona dokładność w zależności od czasu uczenia sieci neuronowych (wyrażona w epokach). Można zauważyć iż używając PCA model jest w stanie dużo szybciej osiągnąć wartości bliskie jego maksimum dokładności. Co za tym idzie używając metody PCA sieć neuronowa dużo szybciej zbiega do minimum funcji celu. Sieć bez użycia PCA osiąga minimum funkcji celu w czasie 40 epok, zaś używająć PCA z wariancją 0.999 satysfakcjonujący wynik jest osiągany już po 5 epokach. Wynika to zapewne z ograniczenia rozmiaru danych wejściowych oraz z przekształcenia układu współrzędnych maksymalizującego wariancję. Wraz ze zmniejszaniem liczby danych wejściowych widać stopniowe pogarszanie wyników oraz wzrost różnicy pomiędzy wynikami zbioru treningowego, a zbioru testowego co jest sygnałem, że dochodzi do przeuczenia.
+
+
+\begin{figure}[H]%
+\centering
+\subfigure[Brak PCA]{%
+\includegraphics[scale=0.4685]{img/results/nn/nn_pca_none_binary_acc_googl.pdf}}%
+\qquad
+\subfigure[PCA wariancja 0.999]{%
+\includegraphics[scale=0.4685]{img/results/nn/nn_pca_0999_binary_acc_googl.pdf}}%
+\qquad
+\subfigure[PCA wariancja 0.99]{%
+\includegraphics[scale=0.4685]{img/results/nn/nn_pca_099_binary_acc_googl.pdf}}%
+\qquad
+\subfigure[PCA wariancja 0.9]{%
+\includegraphics[scale=0.4685]{img/results/nn/nn_pca_09_binary_acc_googl.pdf}}%
+
+\caption{Wykresy zależności dokładności od redukcji danych metodą PCA dla klasyfikacji binarnej}
+\label{img:nn_pca_binary_vs_accuracy}
+\end{figure}
+
+Takie same testy zostały przeprowadzone dla klasyfikacji na 3 klasy. Wyniki zostały zaprezentowane w tabeli \ref{tab:nn_pca_discrete}. Tutaj najlepszy wynik dokładności $\sim{77\%}$ został uzyskany przy użyciu PCA z największą wybraną wariancją, jednak najlepszy wynik mierzony miarą AUC został uzyskany bez używania redukcji rozmiaru zadania. Ta druga miara jest miarą bardziej obiektywną ze względu na uwzględnienie różnic w licznościach klas.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+        \textbf{PCA} & \textbf{Dokładność} &  \textbf{AUC} &  \textbf{Czas (s)} \\ \hline
+                0.8                &  0.670905 &  0.629899 &   16.840079 \\ \hline
+                0.9                &  0.691341 &  0.666932 &   18.075863 \\ \hline
+                0.95               &  0.702494 &  0.696979 &   13.666302 \\ \hline
+                0.97               &  0.715495 &  0.714092 &   13.087611 \\ \hline
+                0.99               &  0.759184 &  0.781967 &   11.921126 \\ \hline
+                0.999              &  \textbf{0.775510} &  0.811065 &   \textbf{11.439666} \\ \hline
+                Brak                &  0.774603 &  \textbf{0.818209} &   15.747297 \\ \hline
+    \end{tabular}
+    \caption{Wyniki klasyfikacji na 3 klasy dla spółki \textit{GOOGL} w zależności od wybranej wartości wariancji}
+    \label{tab:nn_pca_discrete}
+\end{table}
+
+Najlepsze wyniki zostały uzyskane wówczas gdy dane nie zostały przetworzone metodą PCA. Wpływało to negatywnie na długość uczenia modelu, jednak czas uczenia ograniczał się do rzędu kilku sekund, co jest akceptowalnym czasem. Przy następnych testach dane nie były redukowane metodą PCA.
+
+\bigskip
+
+Następnym parametrem zbadanym podczas uczenia sieci jest liczba warstw ukrytych wraz z liczbą neuronów w każdej z warstw. Dla uproszczenia eksperymentów liczba warstw ukrytych w sieci neuronowej została ograniczona do wartości \{0, 1, 2, 3\}, zaś liczba neuronów w każdej z warstw była taka sama. Wyniki mierzone miarą AUC dla klasyfikacji binarnej zostały przedstawione w tabeli \ref{tab:nn_layers_binary}. Dla tego rodzaju klasyfikacji najlepszym modelem okazał się model sieci neuronowej złożony jedynie z warstwy wejściowej oraz warstwy wyjściowej. Uzyskał on wynik \textbf{0.919} AUC. Model bez warstwy ukrytej w przypadku klasyfikacji binarnej okazuje się najlepszy najprawdopodobniej ze względu na pojedynczy neuron w warstwie wyjściowej. Taka uproszczona architektura pozwala na znalezienie odpowiednich zależności w danych bez dodawania warstw ukrytych. Wyniki wydają się być odwrotnie proporcjonalne do liczby użytych neuronów, lecz nie odbiegają znacznie od najlepszego wyniku.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+        \hline
+         & &  \multicolumn{10}{c|}{Liczba neuronów w każdej warstwie}  \\ \hline
+        \multirow{5}{*}{Warstwy} & & 0 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10  \\ \cline{2 - 12}
+			& 0 & \textbf{0.919} & - & - & - & - & - & - & - & - & - \\ \cline{2 - 12} 
+			& 1 & - &  0.907 &  0.909 &  0.912 &  0.906 &  0.904 &  0.901 &  0.902 &  0.905 & 0.901 \\ \cline{2 - 12} 
+			& 2 & - & 0.909 &   0.911 &   0.904 &   0.903 &   0.908 &   0.901 &   0.902 &   0.901 & 0.901 \\ \cline{2 - 12}
+			& 3 & - & 0.904 &      0.912 &      0.914 &      0.908 &      0.903 &      0.907 &        0.900 &      0.904 & 0.900 \\ \hline
+    \end{tabular}
+    \caption{Wartości miary AUC dla różnych konfiguracji warstw ukrytych i liczby neuronów dla klasyfikacji binarnej (wyniki zaokrąglone)}
+    \label{tab:nn_layers_binary}
+\end{table}
+
+Analogicznie do klasyfikacji binarnej został przeprowadzony test dla klasyfikacji na 3 klasy, wyniki przedstawiono w tabeli \ref{tab:nn_layers_discrete}. Najlepszy wynik \textbf{0.85} AUC został osiągnięty przy użyciu dwóch warstw ukrytych o 10 neuronach. W odróżnieniu do klasyfikacji binarnej, warstwa wyjściowa posiada 3 neurony, a co za tym idzie potrzeba bardziej skomplikowanej architektury sieci do uzyskania optymalnego wyniku. Zauważyć można również iż wykorzystanie wielu warstw ukrytych o małej liczbie neuronów znacznie pogarsza wynik co jest spowodowane zbyt małą liczbą połączeń między kolejnymi warstwami by zachować zależności między danymi.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+        \hline
+         & &  \multicolumn{10}{c|}{Liczba neuronów w każdej warstwie}  \\ \hline
+        \multirow{5}{*}{Warstwy} & & 0 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10  \\ \cline{2 - 12}
+			& 0 & 0.818 & - & - & - & - & - & - & - & - & - \\ \cline{2 - 12} 
+			& 1 & - &  0.816 &  0.835 &  0.840 &  0.842 &  0.829 &  0.823 &  0.821 &  0.833 & 0.840 \\ \cline{2 - 12} 
+			& 2 & - & 0.777 &   0.836 &   0.812 &   0.834 &   0.825 &   0.843 &   0.831 &   0.828 & \textbf{0.850} \\ \cline{2 - 12}
+			& 3 & - & 0.610 &      0.584 &      0.836 &      0.824 &      0.817 &      0.727 &      0.788 &      0.822 & 0.831 \\ \hline
+    \end{tabular}
+    \caption{Wartości miary AUC dla różnych konfiguracji warstw ukrytych i liczby neuronów dla klasyfikacji na 3 klasy (wyniki zaokrąglone)}
+    \label{tab:nn_layers_discrete}
+\end{table}
+
+Na wykresach \ref{img:nn_layers_discrete} przedstawione zostały krzywe ROC dla 3 klas, wraz z ich mikro-średnią, dla dwóch konfiguracji warstw ukrytych. Analizując te wykresy widać iż zmiana wartości AUC mikro-średniej ROC o 3 setne, jest odzwierciedlona w znacznej poprawie w klasyfikacji dla klasy utrzymania ceny. Wartość AUC wzrosła dla tej klasy aż o $0.11$. Z tego wynika iż relatywnie mała poprawa w ogólnym wyniku AUC może nieść znaczną poprawę w wykorzystywaniu modelu do transakcji giełdowych.
+
+\begin{figure}[H]%
+\centering
+\subfigure[Jedna warstwa ukryta, 10 neuronów]{%
+\includegraphics[scale=0.4685]{img/results/nn/nn_layers_10_discrete_roc-googl.pdf}}%
+\qquad
+\subfigure[Dwie warstwy ukryte, 10 neuronów]{%
+\includegraphics[scale=0.4685]{img/results/nn/nn_layers_10_10_discrete_roc_googl.pdf}}%
+
+\caption{Wykresy zależności miary AUC od liczby warstw ukrytych dla klasyfikacji na 3 klasy}
+\label{img:nn_layers_discrete}
+\end{figure}
+
+W kolejnych testach do klasyfikacji binarnej nie zostały użyte warstwy ukrytne, zaś do klasyfikacji na 3 klasy były wykorzystywane dwie warstwy ukryte mające po 10 neuronów.
+
+\bigskip
+
+Kolejnym analizowanym parametrem był rozmiar zbioru testowego wykorzystywanego w każdej iteracji uczenia modelu metodą kroczącą. Domyślnie model był uczony w jednej iteracji metody kroczącej z wielkością zbioru testowego równej $0.2$ całego zbioru danych. Dzieląc zbiór testowy na mniejsze części, w każdej iteracji włączając już przetestowane próbki danych do zbioru treningowego, potencjalnie powiększany jest zbiór informacji przekazywanych modelom w trakcie uczenia.
+
+\newpage
+
+\section{Wspomaganie decyzji giełdowych}
+
+\section{Projekt aplikacji}
 
 \section{Podsumowanie}
 
