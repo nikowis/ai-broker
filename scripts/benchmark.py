@@ -51,7 +51,7 @@ class Benchmark:
                 df = self.df_list[symbol_it]
                 sym = self.sym_list[symbol_it]
                 bench_params.curr_sym = sym
-                df, x, y, x_train, x_test, y_train, y_test = benchmark_data_preprocessing.preprocess(df,
+                x, y, x_train, x_test, y_train, y_test = benchmark_data_preprocessing.preprocess(df,
                                                                                                      bench_params)
                 if bench_params.walk_forward_testing:
                     bench_params.input_size = x_train[0].shape[1]
@@ -75,7 +75,7 @@ class Benchmark:
 
         total_time = time.time()
         losses = []
-        accuracies = []
+        roc_auc_values = []
 
         bench_params.curr_iter_num = 0
         minima_encountered = 0
@@ -96,14 +96,17 @@ class Benchmark:
                                                                                                            x_test,
                                                                                                            y_train,
                                                                                                            y_test)
-            if not bench_params.binary_classification:
-                roc_auc = roc_auc[stock_constants.MICRO_ROC_KEY]
 
-            if (bench_params.binary_classification and roc_auc < 0.7) or (
+            if bench_params.binary_classification:
+                roc_auc_value = roc_auc
+            else:
+                roc_auc_value = roc_auc[stock_constants.MICRO_ROC_KEY]
+
+            if (bench_params.binary_classification and roc_auc_value < 0.7) or (
                     (not bench_params.binary_classification) and accuracy < 0.65):
                 if bench_params.verbose:
                     print('ID {0} iteration {1} encountered local minimum (auc {2}) retrying iteration...'.format(
-                        bench_params.id, bench_params.curr_iter_num, round(roc_auc, 4)))
+                        bench_params.id, bench_params.curr_iter_num, round(roc_auc_value, 4)))
 
                 minima_encountered = minima_encountered + 1
                 bench_params.curr_iter_num = bench_params.curr_iter_num - 1
@@ -115,18 +118,18 @@ class Benchmark:
                 else:
                     continue
             losses.append(loss)
-            accuracies.append(accuracy)
+            roc_auc_values.append(roc_auc_value)
             number_of_epochs_it_ran = len(history.history['loss'])
             iter_time = time.time() - iter_start_time
             if bench_params.verbose:
                 print('ID {0} {1} iteration {2} of {3} loss {4} roc_auc {5} epochs {6} time {7}'
                       .format(bench_params.id, bench_params.curr_sym, bench_params.curr_iter_num,
                               bench_params.iterations, round(loss, 4),
-                              round(roc_auc, 4),
+                              round(roc_auc_value, 4),
                               number_of_epochs_it_ran, round(iter_time, 2)))
 
             main_title = 'Neural network model loss: {0}, roc_auc {1}, epochs {2}\n hidden layers [{3}] company {4} examined param {5}:{6}'.format(
-                round(loss, 4), round(roc_auc, 4), number_of_epochs_it_ran, ''.join(
+                round(loss, 4), round(roc_auc_value, 4), number_of_epochs_it_ran, ''.join(
                     str(e) + " " for e in bench_params.layers), bench_params.curr_sym,
                 bench_params.examined_params.split(',')[0],
                 getattr(bench_params, bench_params.examined_params.split(',')[0], ''))
@@ -141,7 +144,7 @@ class Benchmark:
                                                   main_title)
 
             result_dict = {CSV_ID_COL: bench_params.id,
-                           CSV_TRAIN_TIME_COL: iter_time, CSV_ACC_COL: accuracy, CSV_ROC_AUC_COL: roc_auc,
+                           CSV_TRAIN_TIME_COL: iter_time, CSV_ACC_COL: accuracy, CSV_ROC_AUC_COL: roc_auc_value,
                            CSV_TICKER: bench_params.curr_sym}
 
             if bench_params.examined_params is not None:
@@ -152,7 +155,7 @@ class Benchmark:
             results_df = results_df.append(
                 result_dict, ignore_index=True)
 
-        rounded_roc_auc_mean = round(np.mean(roc_auc), 4)
+        rounded_roc_auc_mean = round(np.mean(roc_auc_values), 4)
         rounded_loss_mean = round(np.mean(losses), 4)
         print(
             'ID {0} {1} avg loss {2} avg roc_auc {3} total time {4} s.'.format(bench_params.id, bench_params.curr_sym,
@@ -161,9 +164,9 @@ class Benchmark:
                                                                                round(time.time() - total_time, 2)))
         if rounded_roc_auc_mean > bench_params.satysfying_treshold:
             print('=============================================================================================')
-        max_index = np.argmax(accuracies)
+        max_index = np.argmax(roc_auc_values)
         benchmark_file_helper.copy_best_and_cleanup_files(bench_params, max_index,
-                                                          round(max(accuracies), 4))
+                                                          round(max(roc_auc_values), 4))
 
         return results_df
 

@@ -21,25 +21,26 @@ SELECTED_SYM = 'GOOGL'
 
 
 def preprocess(df, benchmark_params: BenchmarkParams):
+    df_copy = df.copy()
     if benchmark_params.difference_non_stationary:
-        df[const.ADJUSTED_CLOSE_COL] = df[const.ADJUSTED_CLOSE_COL].diff()
-        df[const.OPEN_COL] = df[const.OPEN_COL].diff()
-        df[const.CLOSE_COL] = df[const.CLOSE_COL].diff()
-        df[const.HIGH_COL] = df[const.HIGH_COL].diff()
-        df[const.LOW_COL] = df[const.LOW_COL].diff()
-        df[const.SMA_5_COL] = df[const.SMA_5_COL].diff()
-        df[const.SMA_10_COL] = df[const.SMA_10_COL].diff()
-        df[const.SMA_20_COL] = df[const.SMA_20_COL].diff()
+        df_copy[const.ADJUSTED_CLOSE_COL] = df_copy[const.ADJUSTED_CLOSE_COL].diff()
+        df_copy[const.OPEN_COL] = df_copy[const.OPEN_COL].diff()
+        df_copy[const.CLOSE_COL] = df_copy[const.CLOSE_COL].diff()
+        df_copy[const.HIGH_COL] = df_copy[const.HIGH_COL].diff()
+        df_copy[const.LOW_COL] = df_copy[const.LOW_COL].diff()
+        df_copy[const.SMA_5_COL] = df_copy[const.SMA_5_COL].diff()
+        df_copy[const.SMA_10_COL] = df_copy[const.SMA_10_COL].diff()
+        df_copy[const.SMA_20_COL] = df_copy[const.SMA_20_COL].diff()
 
-    df.dropna(inplace=True)
-    df_without_helper_cols = df.drop(HELPER_COLS, axis=1)
+    df_copy.dropna(inplace=True)
+    df_without_helper_cols = df_copy.drop(HELPER_COLS, axis=1)
 
     df_without_corelated_features = df_without_helper_cols.drop(CORRELATED_COLS, axis=1)
 
     if benchmark_params.binary_classification:
-        y = np.array(df[const.LABEL_BINARY_COL])
+        y = np.array(df_copy[const.LABEL_BINARY_COL])
     else:
-        y = np.array(df[const.LABEL_DISCRETE_COL])
+        y = np.array(df_copy[const.LABEL_DISCRETE_COL])
     x = np.array(df_without_corelated_features)
 
     if benchmark_params.binary_classification:
@@ -88,7 +89,7 @@ def preprocess(df, benchmark_params: BenchmarkParams):
                                                                             shuffle=False)
         x_train, x_test = standardize_and_pca(benchmark_params, x_train, x_test)
 
-    return df, x, y, x_train, x_test, y_train, y_test
+    return x, y, x_train, x_test, y_train, y_test
 
 
 def standardize_and_pca(preprocessing_params, x_train, x_test):
