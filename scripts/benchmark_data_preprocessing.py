@@ -57,7 +57,8 @@ def preprocess(df, benchmark_params: BenchmarkParams):
         test_window_size = benchmark_params.walk_forward_test_window_size
         train_window_size = benchmark_params.walk_forward_max_train_window_size
 
-        for i in range(0, int((test_size * len(x) / test_window_size))):
+        full_windows_count = int((test_size * len(x) / test_window_size))
+        for i in range(0, full_windows_count + 1):
             train_end_idx = int((1 - test_size) * len(x) + i * test_window_size)
             if train_window_size is None:
                 train_start_idx = 0

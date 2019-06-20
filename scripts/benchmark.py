@@ -132,7 +132,8 @@ class Benchmark:
 
             main_title = 'Neural network model loss: {0}, accuracy {1}, epochs {2}\n hidden layers [{3}] company {4} examined param {5}:{6}'.format(
                 round(loss, 4), round(accuracy, 4), number_of_epochs_it_ran, ''.join(
-                    str(e) + " " for e in bench_params.layers), bench_params.curr_sym, bench_params.examined_param, getattr(bench_params, bench_params.examined_param, ''))
+                    str(e) + " " for e in bench_params.layers), bench_params.curr_sym, bench_params.examined_param,
+                getattr(bench_params, bench_params.examined_param, ''))
 
             if bench_params.save_files:
                 if bench_params.walk_forward_testing:
@@ -293,6 +294,10 @@ class NnBenchmark(Benchmark):
 
 
 if __name__ == '__main__':
-    bench_params = benchmark_params.NnBenchmarkParams(True, examined_param='pca', benchmark_name='nn-pca')
+    bench_params = benchmark_params.NnBenchmarkParams(True, examined_param='walk_forward_test_window_size',
+                                                      benchmark_name='bench-1231')
     bench_params.plot_partial = True
-    NnBenchmark(['GOOGL', 'AMZN'], bench_params, {'pca': [None, 0.999, 0.99, 0.97, 0.95, 0.90]})
+    bench_params.walk_forward_testing = True
+    bench_params.epochs = 5
+    bench_params.walk_forward_retrain_epochs = 5
+    NnBenchmark(['GOOGL'], bench_params, {'walk_forward_test_window_size': [300]})

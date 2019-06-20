@@ -37,9 +37,57 @@ def nn_layers_GOOGL_discrete():
                    [6, 6, 6], [7, 7, 7], [8, 8, 8], [9, 9, 9], [10, 10, 10]]})
 
 
+def nn_test_windows_size_GOOGL():
+    bench_params = benchmark_params.NnBenchmarkParams(True, examined_param='walk_forward_test_window_size',
+                                                      benchmark_name='nn-test-windows-size-GOOGL-binary-2')
+    bench_params.walk_forward_testing = True
+    bench_params.epochs = 50
+    bench_params.walk_forward_retrain_epochs = 1
+    bench_params.plot_partial = True
+    NnBenchmark(['GOOGL'], bench_params, {
+        'walk_forward_test_window_size': [720, 360, 240, 180, 144, 90, 45]})
+
+
+def nn_test_windows_size_GOOGL_discrete():
+    bench_params = benchmark_params.NnBenchmarkParams(False, examined_param='walk_forward_test_window_size',
+                                                      benchmark_name='nn-test-windows-size-GOOGL-discrete')
+    bench_params.walk_forward_testing = True
+    bench_params.epochs = 50
+    bench_params.walk_forward_retrain_epochs = 3
+    bench_params.plot_partial = True
+    NnBenchmark(['GOOGL'], bench_params, {
+        'walk_forward_test_window_size': [720, 360, 240, 180, 144, 90, 45]})
+
+
+def nn_walk_forward_retrain_epochs_GOOGL():
+    bench_params = benchmark_params.NnBenchmarkParams(True, examined_param='walk_forward_retrain_epochs',
+                                                      benchmark_name='nn-walk_forward_retrain_epochs-GOOGL-binary')
+    bench_params.walk_forward_testing = True
+    bench_params.epochs = 50
+    bench_params.walk_forward_test_window_size = 180
+    bench_params.plot_partial = True
+    NnBenchmark(['GOOGL'], bench_params, {
+        'walk_forward_retrain_epochs': [1, 2, 3, 4, 5, 7, 9, 11]})
+
+
+def nn_walk_forward_retrain_epochs_GOOGL_discrete():
+    bench_params = benchmark_params.NnBenchmarkParams(False, examined_param='walk_forward_retrain_epochs',
+                                                      benchmark_name='nn-walk_forward_retrain_epochs-GOOGL-discrete')
+    bench_params.walk_forward_testing = True
+    bench_params.epochs = 50
+    bench_params.walk_forward_test_window_size = 180
+    bench_params.plot_partial = True
+    NnBenchmark(['GOOGL'], bench_params, {
+        'walk_forward_retrain_epochs': [1, 2, 3, 4, 5, 7, 9, 11]})
+
+
 if __name__ == '__main__':
     # nn_pca_GOOGL()
     # nn_pca_GOOGL_discrete()
     # nn_layers_GOOGL()
     # nn_layers_GOOGL_discrete()
+    nn_test_windows_size_GOOGL()
+    nn_test_windows_size_GOOGL_discrete()
+    # nn_walk_forward_retrain_epochs_GOOGL()
+    # nn_walk_forward_retrain_epochs_GOOGL_discrete()
     print('Benchmark executions finished.')
