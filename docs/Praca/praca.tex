@@ -897,7 +897,7 @@ Następnym parametrem zbadanym podczas uczenia sieci jest liczba warstw ukrytych
          & &  \multicolumn{10}{c|}{Liczba neuronów w każdej warstwie}  \\ \hline
         \multirow{4}{*}{Warstwy} & & 0 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10  \\ \cline{2 - 12}
 			& 0 & \textbf{0.919} & - & - & - & - & - & - & - & - & - \\ \cline{2 - 12} 
-			& 1 & - &  0.919 &  0.918 &  0.916 &  0.907 &  0.917 &  0.915 &  0.915 &  0.915  & 0.919 \\ \cline{2 - 12} 
+			& 1 & - &  0.919 &  0.918 &  0.916 &  0.907 &  0.917 &  0.915 &  0.915 &  0.915  & 0.917 \\ \cline{2 - 12} 
 			& 2 & - & 0.909 &    0.910 &   0.908 &   0.911 &   0.917 &   0.908 &   0.905 &   0.914 & 0.915 \\ \cline{2 - 12} \hline
 
     \end{tabular}
@@ -905,7 +905,7 @@ Następnym parametrem zbadanym podczas uczenia sieci jest liczba warstw ukrytych
     \label{tab:nn_layers_binary}
 \end{table}
 
-Analogicznie do klasyfikacji binarnej został przeprowadzony test dla klasyfikacji na 3 klasy, wyniki przedstawiono w tabeli \ref{tab:nn_layers_discrete}. Najlepszy wynik \textbf{0.857} AUC (78\% dokładności) został osiągnięty przy użyciu jednej warstwy ukrytej o 10 neuronach. W odróżnieniu do klasyfikacji binarnej, warstwa wyjściowa posiada 3 neurony, a co za tym idzie potrzeba bardziej skomplikowanej architektury sieci do uzyskania optymalnego wyniku. Zauważyć można również iż wykorzystanie wielu warstw ukrytych o małej liczbie neuronów znacznie pogarsza wynik co jest spowodowane zbyt małą liczbą połączeń między kolejnymi warstwami by zachować zależności między danymi.
+Analogicznie do klasyfikacji binarnej został przeprowadzony test dla klasyfikacji na 3 klasy, wyniki przedstawiono w tabeli \ref{tab:nn_layers_discrete}. Najlepszy wynik \textbf{0.858} AUC (68\% dokładności) został osiągnięty przy użyciu jednej warstwy ukrytej o 10 neuronach. W odróżnieniu do klasyfikacji binarnej, warstwa wyjściowa posiada 3 neurony, a co za tym idzie potrzeba bardziej skomplikowanej architektury sieci do uzyskania optymalnego wyniku. Zauważyć można również iż wykorzystanie wielu warstw ukrytych o małej liczbie neuronów znacznie pogarsza wynik co jest spowodowane zbyt małą liczbą połączeń między kolejnymi warstwami by zachować zależności między danymi.
 
 \begin{table}[H]
     \centering
@@ -913,9 +913,9 @@ Analogicznie do klasyfikacji binarnej został przeprowadzony test dla klasyfikac
         \hline
          & &  \multicolumn{10}{c|}{Liczba neuronów w każdej warstwie}  \\ \hline
         \multirow{4}{*}{Warstwy} & & 0 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10  \\ \cline{2 - 12}
-			& 0 & 0.821 & - & - & - & - & - & - & - & - & - \\ \cline{2 - 12} 
-			& 1 & - &  0.805 &  0.836 &  0.852 &  0.857 &  0.844 &  0.847 &  0.850 &  0.853 & \textbf{0.857} \\ \cline{2 - 12} 
-			& 2 & - & 0.702 &   0.841 &   0.828 &   0.814 &   0.846 &    0.840 &   0.850 &    0.850 &   0.843  \\ \cline{2 - 12} \hline
+			& 0 & 0.832 & - & - & - & - & - & - & - & - & - \\ \cline{2 - 12} 
+			& 1 & - &  0.817 &  0.825 &  0.845 &  0.844 &  0.856 &  0.854 &  0.857 &  0.857 & \textbf{0.858} \\ \cline{2 - 12} 
+			& 2 & - & 0.808 &   0.819 &   0.847 &   0.846 &   0.843 &   0.849 &   0.854 &   0.856 &   0.851  \\ \cline{2 - 12} \hline
 
     \end{tabular}
     \caption{Wartości miary AUC dla różnych konfiguracji warstw ukrytych i liczby neuronów dla klasyfikacji na 3 klasy (wyniki zaokrąglone)}
@@ -937,37 +937,43 @@ Na wykresie \ref{img:nn_layers_discrete} przedstawione zostały krzywe ROC dla 3
 
 \bigskip
 
-Kolejnym analizowanym parametrem był rozmiar zbioru testowego wykorzystywanego w każdej iteracji uczenia modelu metodą kroczącą. Domyślnie model był uczony w jednej iteracji metody kroczącej z wielkością zbioru testowego równej $0.2$ całego zbioru danych. Dzieląc zbiór testowy na mniejsze części, w każdej iteracji włączając już przetestowane próbki danych do zbioru treningowego, potencjalnie powiększany jest zbiór informacji przekazywanych modelom w trakcie uczenia. Tabela \ref{tab:nn_walk_forward_test_binary} przedstawia wyniki dla różnych rozmiarów zbioru testowego. Jak się okazuje najlepsze wyniki są osiągane przy jednokrotnym nauczaniu modelu. Powiększanie zbioru treningowego nie ma większego wpływu na predykcję klasyfikacji binarnej.
+Kolejnym analizowanym parametrem był rozmiar zbioru testowego wykorzystywanego w każdej iteracji uczenia modelu metodą kroczącą. Domyślnie model był uczony w jednej iteracji metody kroczącej z wielkością zbioru testowego równej $0.2$ całego zbioru danych. Dzieląc zbiór testowy na mniejsze części, w każdej iteracji włączając już przetestowane próbki danych do zbioru treningowego, potencjalnie powiększany jest zbiór informacji przekazywanych modelom w trakcie uczenia. Tabela \ref{tab:nn_walk_forward_test_binary} przedstawia wyniki dla różnych rozmiarów zbioru testowego. Najlepszy wynik dla klasyfikacji binarnej został osiągnięty przy 360 próbkach w zbiorze testowym. Dzięki tak prostemu zabiegowi dokładność modelu ulepszyła się aż o 3\%. Niestety wraz ze zmniejszaniem zbioru testowego drastycznie zwiększa się czas uczenia. 
 
 \begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|}
     \hline
-        \textbf{Rozmiar zbioru testowego} & \textbf{Dokładność} &  \textbf{AUC} &  \textbf{Czas (s)} \\ \hline
-180                      &  0.874603 &  0.918016 &  166.771393  \\ \hline
-360                         &  0.886596 &  0.916540 &   87.104339  \\ \hline
-720                         &  \textbf{0.891832} &  \textbf{0.918088} &   \textbf{49.621471} \\ \hline
+        \textbf{Rozmiar zbioru testowego} & \textbf{Dokładność} &  \textbf{AUC} &  \textbf{Czas (s)} \\ \hline 
+max                           &  0.855781 &  \textbf{0.919433} &   \textbf{17} \\  \hline
+360                         &  \textbf{0.888757} &  0.918279 &   64 \\  \hline
+180                         &  0.878307 &  0.917263 &  148 \\  \hline
+90                          &  0.876426 &  0.915586 &  297 \\ \hline
+45                          &  0.877280 &  0.910868 &   405 \\ \hline
+22                          &  0.880905 &  0.904669 &  1163 \\ \hline
     \end{tabular}
     \caption{Wyniki klasyfikacji binarnej dla spółki \textit{GOOGL} w zależności rozmiaru testowego}
     \label{tab:nn_walk_forward_test_binary}
 \end{table}
 
-W tabeli \ref{tab:nn_walk_forward_test_discrete} przestawione zostały analogiczne wyniki dla klasyfikacji na 3 klasy. Jak widać miara AUC delikatnie wzrasta wraz ze zmniejszaniem rozmiaru testowego. Jednak 
+W tabeli \ref{tab:nn_walk_forward_test_discrete} przestawione zostały analogiczne wyniki dla klasyfikacji na 3 klasy. Jak widać dla bardziej złożonego zagadnienia klasyfikacji zmniejszanie zbioru testowego jest bardzo korzystne. Wynik dokładności wzrósł aż o 10\% dla zbioru testowego o 22 próbkach. Dalsze zmniejszanie zbioru jest jednak problematyczne ze względu na rosnącą długość obliczeń.
 
 \begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|}
     \hline
         \textbf{Rozmiar zbioru testowego} & \textbf{Dokładność} &  \textbf{AUC} &  \textbf{Czas (s)} \\ \hline
-180                         &  0.812787 &  \textbf{0.864025} &  221.496965   \\ \hline
-360                         &  \textbf{0.820933} &  0.858580 &   96.196779  \\ \hline
-720                         &  0.811332 &  0.855413 &   \textbf{67.233384}    \\ \hline
+max    &  0.682993 &  0.857121 &  \textbf{38} \\ \hline
+360     &  0.731041 &  0.866818 &  54 \\ \hline
+180   &  0.730847 &  0.867762 &  127 \\ \hline
+90   &  0.740388 &  0.869632 &  316 \\ \hline
+45     &  0.760286 &  0.873949 &  1146 \\ \hline
+22  &  \textbf{0.787767} &  \textbf{0.882507} &  3229 \\ \hline
     \end{tabular}
     \caption{Wyniki klasyfikacji na 3 klasy dla spółki \textit{GOOGL} w zależności od wybranej wartości wariancji}
     \label{tab:nn_walk_forward_test_discrete}
 \end{table}
 
-\newpage
+Ostatecznie dla klasyfikacji binarnej zostały użyte zbiory testowe z 360 próbkami, zaś dla klasyfikacji trójklasowej zbiory z 22 próbkami.
 
 \section{Wspomaganie decyzji giełdowych}
 

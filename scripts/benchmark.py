@@ -33,32 +33,19 @@ def json_handler(Obj):
 
 
 class Benchmark:
-    def __init__(self, symbols, bench_params: BenchmarkParams, changing_params_dict: dict) -> None:
+    def __init__(self, symbols, bench_params: BenchmarkParams, changing_params_dict: dict = None) -> None:
         benchmark_time = time.time()
         self.df_list, self.sym_list = csv_importer.import_data_from_files(symbols, bench_params.csv_files_path)
         results_df = pd.DataFrame()
         benchmark_file_helper.initialize_dirs(bench_params)
-        grid = ParameterGrid(changing_params_dict)
-        for param in grid:
-            print('Parameters: {0}'.format(param))
-            bench_params.update_from_dictionary(param)
-
-            if bench_params.save_files:
-                with open('{0}/config-{1}.json'.format(bench_params.save_model_path, bench_params.id), 'w') as outfile:
-                    json.dump(bench_params, outfile, default=json_handler, indent=True)
-
-            for symbol_it in range(0, len(symbols)):
-                df = self.df_list[symbol_it]
-                sym = self.sym_list[symbol_it]
-                bench_params.curr_sym = sym
-                x, y, x_train, x_test, y_train, y_test = benchmark_data_preprocessing.preprocess(df,
-                                                                                                     bench_params)
-                if bench_params.walk_forward_testing:
-                    bench_params.input_size = x_train[0].shape[1]
-                else:
-                    bench_params.input_size = x_train.shape[1]
-
-                results_df = self.run(x_train, x_test, y_train, y_test, bench_params, results_df)
+        if changing_params_dict is not None:
+            grid = ParameterGrid(changing_params_dict)
+            for param in grid:
+                print('Parameters: {0}'.format(param))
+                bench_params.update_from_dictionary(param)
+                results_df = self.run(bench_params, results_df, symbols)
+        else:
+            results_df = self.run(bench_params, results_df, symbols)
 
         benchmark_file_helper.save_results(results_df, bench_params)
 
@@ -71,10 +58,28 @@ class Benchmark:
 
         print('Benchmark finished in {0}.'.format(round(time.time() - benchmark_time, 2)))
 
-    def run(self, x_train, x_test, y_train, y_test, bench_params, results_df):
+    def run(self, bench_params, results_df, symbols):
+        if bench_params.save_files:
+            with open('{0}/config-{1}.json'.format(bench_params.save_model_path, bench_params.id), 'w') as outfile:
+                json.dump(bench_params, outfile, default=json_handler, indent=True)
+        for symbol_it in range(0, len(symbols)):
+            df = self.df_list[symbol_it]
+            sym = self.sym_list[symbol_it]
+            bench_params.curr_sym = sym
+            x, y, x_train, x_test, y_train, y_test = benchmark_data_preprocessing.preprocess(df,
+                                                                                             bench_params)
+            if bench_params.walk_forward_testing:
+                bench_params.input_size = x_train[0].shape[1]
+            else:
+                bench_params.input_size = x_train.shape[1]
+
+            results_df = self.run_single_company(x_train, x_test, y_train, y_test, bench_params, results_df)
+        return results_df
+
+    def run_single_company(self, x_train, x_test, y_train, y_test, bench_params, results_df):
 
         total_time = time.time()
-        losses = []
+        accuracies = []
         roc_auc_values = []
 
         bench_params.curr_iter_num = 0
@@ -103,7 +108,7 @@ class Benchmark:
                 roc_auc_value = roc_auc[stock_constants.MICRO_ROC_KEY]
 
             if (bench_params.binary_classification and roc_auc_value < 0.7) or (
-                    (not bench_params.binary_classification) and accuracy < 0.65):
+                    (not bench_params.binary_classification) and roc_auc_value < 0.65):
                 if bench_params.verbose:
                     print('ID {0} iteration {1} encountered local minimum (auc {2}) retrying iteration...'.format(
                         bench_params.id, bench_params.curr_iter_num, round(roc_auc_value, 4)))
@@ -117,14 +122,14 @@ class Benchmark:
                     return results_df
                 else:
                     continue
-            losses.append(loss)
+            accuracies.append(accuracy)
             roc_auc_values.append(roc_auc_value)
             number_of_epochs_it_ran = len(history.history['loss'])
             iter_time = time.time() - iter_start_time
             if bench_params.verbose:
-                print('ID {0} {1} iteration {2} of {3} loss {4} roc_auc {5} epochs {6} time {7}'
+                print('ID {0} {1} iteration {2} of {3} accuracy {4} roc_auc {5} epochs {6} time {7}'
                       .format(bench_params.id, bench_params.curr_sym, bench_params.curr_iter_num,
-                              bench_params.iterations, round(loss, 4),
+                              bench_params.iterations, round(accuracy, 4),
                               round(roc_auc_value, 4),
                               number_of_epochs_it_ran, round(iter_time, 2)))
 
@@ -156,10 +161,10 @@ class Benchmark:
                 result_dict, ignore_index=True)
 
         rounded_roc_auc_mean = round(np.mean(roc_auc_values), 4)
-        rounded_loss_mean = round(np.mean(losses), 4)
+        rounded_acc_mean = round(np.mean(accuracies), 4)
         print(
-            'ID {0} {1} avg loss {2} avg roc_auc {3} total time {4} s.'.format(bench_params.id, bench_params.curr_sym,
-                                                                               rounded_loss_mean,
+            'ID {0} {1} avg accuracy {2} avg roc_auc {3} total time {4} s.'.format(bench_params.id, bench_params.curr_sym,
+                                                                               rounded_acc_mean,
                                                                                rounded_roc_auc_mean,
                                                                                round(time.time() - total_time, 2)))
         if rounded_roc_auc_mean > bench_params.satysfying_treshold:
@@ -249,7 +254,7 @@ class Benchmark:
 
 
 class NnBenchmark(Benchmark):
-    def __init__(self, symbols, bench_params: NnBenchmarkParams, changing_params_dict: dict) -> None:
+    def __init__(self, symbols, bench_params: NnBenchmarkParams, changing_params_dict: dict = None) -> None:
         super().__init__(symbols, bench_params, changing_params_dict)
 
     def create_callbacks(self, bench_params):
@@ -298,6 +303,6 @@ if __name__ == '__main__':
     bench_params = benchmark_params.NnBenchmarkParams(False, examined_param='pca,regularizer',
                                                       benchmark_name='bench-pca-regularizer')
     bench_params.plot_partial = True
-    bench_params.pca=None
-    bench_params.regularizer=0.01
-    NnBenchmark(['GOOGL'], bench_params, {'regularizer':[None, 0.0025, 0.005, 0.01],'pca': [0.9999]})
+    bench_params.pca = None
+    bench_params.regularizer = 0.01
+    NnBenchmark(['GOOGL'], bench_params, {'regularizer': [None, 0.0025, 0.005, 0.01], 'pca': [0.9999]})

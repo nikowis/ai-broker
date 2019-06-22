@@ -15,7 +15,8 @@ SATYSFYING_TRESHOLD_DISCRETE = 0.87
 
 class BenchmarkParams:
 
-    def __init__(self, binary_classification, examined_param, benchmark_name) -> None:
+    def __init__(self, binary_classification, examined_param='', benchmark_name='') -> None:
+        self.id = str(time.time())
         self.benchmark_name = benchmark_name
         if benchmark_name is not None:
             self.benchmark_name_dir = '/' + benchmark_name
@@ -39,16 +40,17 @@ class BenchmarkParams:
         if binary_classification:
             self.classes_count = 2
             self.satysfying_treshold = SATYSFYING_TRESHOLD_BINARY
+            self.walk_forward_test_window_size = 360
         else:
             self.classes_count = 3
             self.satysfying_treshold = SATYSFYING_TRESHOLD_DISCRETE
+            self.walk_forward_test_window_size = 22
         self.pca = 0.9999
         self.test_size = 0.2
         self.standardize = True
         self.difference_non_stationary = True
         self.walk_forward_testing = False
         self.max_train_window_size = None
-        self.walk_forward_test_window_size = 180
         self.walk_forward_learn_from_scratch = True
         self.iterations = 3
 
@@ -77,7 +79,7 @@ class BenchmarkParams:
 
 class NnBenchmarkParams(BenchmarkParams):
 
-    def __init__(self, binary_classification, examined_param=None, benchmark_name='') -> None:
+    def __init__(self, binary_classification, examined_param='', benchmark_name='') -> None:
         super().__init__(binary_classification, examined_param, benchmark_name)
 
         if binary_classification:

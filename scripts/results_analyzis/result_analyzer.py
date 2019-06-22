@@ -40,8 +40,7 @@ if __name__ == '__main__':
     # analyze_nn_layers('results-nn-layers-GOOGL-binary.csv')
     # analyze_nn_layers('results-nn-layers-GOOGL-discrete.csv')
     # analyze_csv('results-nn-max_train_window_size-GOOGL-discrete.csv', 'max_train_window_size', True)
-    # analyze_csv('results-nn-walk_forward_test_window_size-GOOGL-binary.csv', 'walk_forward_test_window_size', False)
-    # analyze_csv('results-nn-walk_forward_test_window_size-GOOGL-discrete.csv', 'walk_forward_test_window_size', False)
-    # analyze_csv('results-nn-max_train_window_size-GOOGL-binary.csv', 'max_train_window_size')
-    # analyze_csv('results-nn-max_train_window_size-GOOGL-discrete.csv', 'max_train_window_size')
+    analyze_csv('results-nn-walk_forward_test_window_size-GOOGL-binary.csv', 'walk_forward_test_window_size', True)
+    analyze_csv('results-nn-walk_forward_test_window_size-GOOGL-discrete.csv', 'walk_forward_test_window_size', True)
+
     print('Result analyzer finished.')
