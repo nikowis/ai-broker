@@ -3,10 +3,10 @@ import pandas as pd
 ROC_AUC_COL = 'roc_auc'
 TRAIN_TIME_COL = 'train_time'
 ACCURACY_COL = 'accuracy'
-
+RESULT_PATH = './../../target/results/'
 
 def analyze_csv(filepath, examined_params, print_latex=False):
-    df = pd.read_csv(filepath)
+    df = pd.read_csv(RESULT_PATH + filepath)
 
     print('Read {0}'.format(filepath))
 
@@ -35,10 +35,13 @@ def analyze_nn_layers(filepath, examined_param='layers', print_latex=True):
 
 
 if __name__ == '__main__':
-    # analyze_csv('nn-pca-GOOGL-binary.csv', 'pca')
-    # analyze_csv('results-nn-pca-GOOGL-discrete.csv', 'pca')
+    # analyze_csv('results-nn-pca-GOOGL-binary.csv', 'pca', True)
+    # analyze_csv('results-nn-pca-GOOGL-discrete.csv', 'pca', True)
     # analyze_nn_layers('results-nn-layers-GOOGL-binary.csv')
     # analyze_nn_layers('results-nn-layers-GOOGL-discrete.csv')
-    analyze_csv('results-bench-multiple-examined-params.csv', 'pca,walk_forward_test_window_size')
-
+    # analyze_csv('results-nn-max_train_window_size-GOOGL-discrete.csv', 'max_train_window_size', True)
+    # analyze_csv('results-nn-walk_forward_test_window_size-GOOGL-binary.csv', 'walk_forward_test_window_size', False)
+    # analyze_csv('results-nn-walk_forward_test_window_size-GOOGL-discrete.csv', 'walk_forward_test_window_size', False)
+    # analyze_csv('results-nn-max_train_window_size-GOOGL-binary.csv', 'max_train_window_size')
+    # analyze_csv('results-nn-max_train_window_size-GOOGL-discrete.csv', 'max_train_window_size')
     print('Result analyzer finished.')

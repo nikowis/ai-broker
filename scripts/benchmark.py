@@ -295,12 +295,9 @@ class NnBenchmark(Benchmark):
 
 
 if __name__ == '__main__':
-    bench_params = benchmark_params.NnBenchmarkParams(False, examined_param='pca,walk_forward_test_window_size',
-                                                      benchmark_name='bench-learn-from-scratch')
+    bench_params = benchmark_params.NnBenchmarkParams(False, examined_param='pca,regularizer',
+                                                      benchmark_name='bench-pca-regularizer')
     bench_params.plot_partial = True
-    bench_params.walk_forward_testing = True
-    bench_params.walk_forward_learn_from_scratch = True
-    bench_params.epochs = 50
-    bench_params.iterations = 2
-    bench_params.walk_forward_retrain_epochs = 5
-    NnBenchmark(['GOOGL'], bench_params, {'pca': [None, 0.9999], 'walk_forward_test_window_size': [300, 200]})
+    bench_params.pca=None
+    bench_params.regularizer=0.01
+    NnBenchmark(['GOOGL'], bench_params, {'regularizer':[None, 0.0025, 0.005, 0.01],'pca': [0.9999]})

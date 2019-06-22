@@ -56,7 +56,7 @@ def preprocess(df, benchmark_params: BenchmarkParams):
         y_tests_list = []
         test_size = benchmark_params.test_size
         test_window_size = benchmark_params.walk_forward_test_window_size
-        train_window_size = benchmark_params.walk_forward_max_train_window_size
+        train_window_size = benchmark_params.max_train_window_size
 
         full_windows_count = int((test_size * len(x) / test_window_size))
         for i in range(0, full_windows_count + 1):
@@ -87,6 +87,15 @@ def preprocess(df, benchmark_params: BenchmarkParams):
         x_train, x_test, y_train, y_test = model_selection.train_test_split(x, encoded_y,
                                                                             test_size=benchmark_params.test_size,
                                                                             shuffle=False)
+        if benchmark_params.max_train_window_size is not None and benchmark_params.max_train_window_size < \
+                x_train.shape[0]:
+            row_count = x_train.shape[0]
+            x_train = x_train[row_count - benchmark_params.max_train_window_size:, :]
+            if benchmark_params.binary_classification:
+                y_train = y_train[row_count - benchmark_params.max_train_window_size:]
+            else:
+                y_train = y_train[row_count - benchmark_params.max_train_window_size:, :]
+
         x_train, x_test = standardize_and_pca(benchmark_params, x_train, x_test)
 
     return x, y, x_train, x_test, y_train, y_test

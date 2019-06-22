@@ -230,4 +230,4 @@ if __name__ == '__main__':
     df = df_list[0]
     # describe_df()
     # plot_columns(df)
-    pca_vs_columns_len(df, [0.999, 0.99, 0.97, 0.95, 0.90, 0.80])
+    pca_vs_columns_len(df, [0.9999, 0.999, 0.99, 0.98, 0.97])

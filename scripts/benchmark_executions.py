@@ -4,92 +4,48 @@ from benchmark import NnBenchmark
 SYMBOLS = ['GOOGL', 'MSFT', 'AAPL', 'CSCO', 'INTC', 'FB', 'PEP', 'QCOM', 'AMZN', 'AMGN']
 
 
-def nn_pca_GOOGL():
-    bench_params = benchmark_params.NnBenchmarkParams(True, examined_param='pca', benchmark_name='nn-pca-GOOGL-binary')
+def nn_examine(binary_classification, examined_params, param_lists, companies=['GOOGL'], walk_forward_testing=False):
+    split_params = examined_params.split(',')
+    if len(split_params) != len(param_lists):
+        print('Examined params length not equal to param lists')
+        return
+
+    param_dict = {}
+    for i in range(0, len(split_params)):
+        examined_param = split_params[i]
+        param_list = param_lists[i]
+        param_dict.update({examined_param: param_list})
+
+    benchmark_name = 'nn-{0}{1}'.format(''.join(str(p) + "-" for p in split_params),
+                                        ''.join(str(c) + "-" for c in companies))
+    if binary_classification:
+        benchmark_name = benchmark_name + 'binary'
+    else:
+        benchmark_name = benchmark_name + 'discrete'
+
+    bench_params = benchmark_params.NnBenchmarkParams(binary_classification, examined_param=examined_params,
+                                                      benchmark_name=benchmark_name)
     bench_params.plot_partial = True
-    NnBenchmark(['GOOGL'], bench_params, {'pca': [None, 0.999, 0.99, 0.97, 0.95, 0.90, 0.80]})
-
-
-def nn_pca_GOOGL_discrete():
-    bench_params = benchmark_params.NnBenchmarkParams(False, examined_param='pca',
-                                                      benchmark_name='nn-pca-GOOGL-discrete')
-    bench_params.plot_partial = True
-    NnBenchmark(['GOOGL'], bench_params, {'pca': [None, 0.999, 0.99, 0.97, 0.95, 0.90, 0.80]})
-
-
-def nn_layers_GOOGL():
-    bench_params = benchmark_params.NnBenchmarkParams(True, examined_param='layers',
-                                                      benchmark_name='nn-layers-GOOGL-binary')
-    bench_params.plot_partial = True
-    NnBenchmark(['GOOGL'], bench_params, {
-        'layers': [[], [2], [3], [4], [5], [6], [7], [8], [9], [10], [2, 2], [3, 3], [4, 4], [5, 5],
-                   [6, 6], [7, 7], [8, 8], [9, 9], [10, 10], [2, 2, 2], [3, 3, 3], [4, 4, 4], [5, 5, 5],
-                   [6, 6, 6], [7, 7, 7], [8, 8, 8], [9, 9, 9], [10, 10, 10]]})
-
-
-def nn_layers_GOOGL_discrete():
-    bench_params = benchmark_params.NnBenchmarkParams(False, examined_param='layers',
-                                                      benchmark_name='nn-layers-GOOGL-discrete')
-    bench_params.plot_partial = True
-    NnBenchmark(['GOOGL'], bench_params, {
-        'layers': [[], [2], [3], [4], [5], [6], [7], [8], [9], [10], [2, 2], [3, 3], [4, 4], [5, 5],
-                   [6, 6], [7, 7], [8, 8], [9, 9], [10, 10], [2, 2, 2], [3, 3, 3], [4, 4, 4], [5, 5, 5],
-                   [6, 6, 6], [7, 7, 7], [8, 8, 8], [9, 9, 9], [10, 10, 10]]})
-
-
-def nn_test_windows_size_GOOGL():
-    bench_params = benchmark_params.NnBenchmarkParams(True, examined_param='walk_forward_test_window_size',
-                                                      benchmark_name='nn-test-windows-size-GOOGL-binary-2')
-    bench_params.walk_forward_testing = True
-    bench_params.epochs = 50
-    bench_params.walk_forward_retrain_epochs = 1
-    bench_params.plot_partial = True
-    NnBenchmark(['GOOGL'], bench_params, {'walk_forward_learn_from_scratch': [False, True],
-                                          'walk_forward_test_window_size': [720, 600, 500, 400, 360, 300, 200, 150, 100,
-                                                                            90]})
-
-
-def nn_test_windows_size_GOOGL_discrete():
-    bench_params = benchmark_params.NnBenchmarkParams(False, examined_param='walk_forward_test_window_size',
-                                                      benchmark_name='nn-test-windows-size-GOOGL-discrete')
-    bench_params.walk_forward_testing = True
-    bench_params.epochs = 50
-    bench_params.walk_forward_retrain_epochs = 3
-    bench_params.plot_partial = True
-    NnBenchmark(['GOOGL'], bench_params, {'walk_forward_learn_from_scratch': [False, True],
-                                          'walk_forward_test_window_size': [720, 600, 500, 400, 360, 300, 200, 150, 100,
-                                                                            90]})
-
-
-def nn_walk_forward_retrain_epochs_GOOGL():
-    bench_params = benchmark_params.NnBenchmarkParams(True, examined_param='walk_forward_retrain_epochs',
-                                                      benchmark_name='nn-walk_forward_retrain_epochs-GOOGL-binary')
-    bench_params.walk_forward_testing = True
-    bench_params.epochs = 50
-    bench_params.walk_forward_test_window_size = 180
-    bench_params.plot_partial = True
-    NnBenchmark(['GOOGL'], bench_params, {
-        'walk_forward_retrain_epochs': [1, 2, 3, 4, 5, 7, 9, 11]})
-
-
-def nn_walk_forward_retrain_epochs_GOOGL_discrete():
-    bench_params = benchmark_params.NnBenchmarkParams(False, examined_param='walk_forward_retrain_epochs',
-                                                      benchmark_name='nn-walk_forward_retrain_epochs-GOOGL-discrete')
-    bench_params.walk_forward_testing = True
-    bench_params.epochs = 50
-    bench_params.walk_forward_test_window_size = 180
-    bench_params.plot_partial = True
-    NnBenchmark(['GOOGL'], bench_params, {
-        'walk_forward_retrain_epochs': [1, 2, 3, 4, 5, 7, 9, 11]})
+    bench_params.walk_forward_testing = walk_forward_testing
+    NnBenchmark(companies, bench_params, param_dict)
 
 
 if __name__ == '__main__':
-    # nn_pca_GOOGL()
-    # nn_pca_GOOGL_discrete()
-    # nn_layers_GOOGL()
-    # nn_layers_GOOGL_discrete()
-    nn_test_windows_size_GOOGL()
-    nn_test_windows_size_GOOGL_discrete()
-    # nn_walk_forward_retrain_epochs_GOOGL()
-    # nn_walk_forward_retrain_epochs_GOOGL_discrete()
+    # nn_examine(True, 'pca', [[None, 0.9999, 0.999, 0.99, 0.98, 0.97]])
+    nn_examine(False, 'pca', [[None, 0.9999, 0.999, 0.99, 0.98, 0.97]])
+    # nn_examine(True, 'regularizer', [[None, 0.005, 0.01, 0.02]])
+    nn_examine(False, 'regularizer', [[None, 0.005, 0.01, 0.02]])
+    # nn_examine(True, 'layers', [[[], [2], [3], [4], [5], [6], [7], [8], [9], [10], [2, 2], [3, 3], [4, 4], [5, 5],
+    #                              [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]]])
+    # nn_examine(False, 'layers', [[[], [2], [3], [4], [5], [6], [7], [8], [9], [10], [2, 2], [3, 3], [4, 4], [5, 5],
+    #                               [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]]])
+    # nn_examine(True, 'batch_size', [[1, 5, 10, 20, 40]])
+    # nn_examine(False, 'batch_size', [[1, 5, 10, 20, 40]])
+    # nn_examine(False, 'max_train_window_size', [[None, 2400, 2000, 1500, 1000]])
+    # nn_examine(True, 'max_train_window_size', [[None, 2400, 2000, 1500, 1000]])
+    # nn_examine(True, 'walk_forward_test_window_size', [[360, 180, 90]],
+    #            walk_forward_testing=True)
+    # nn_examine(False, 'walk_forward_test_window_size', [[360, 180, 90]],
+    #            walk_forward_testing=True)
+
     print('Benchmark executions finished.')

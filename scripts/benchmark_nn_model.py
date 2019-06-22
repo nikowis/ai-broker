@@ -9,7 +9,10 @@ def create_seq_model(bench_params:NnBenchmarkParams):
     model = Sequential()
     layers = bench_params.layers
 
-    regularizer = l2(bench_params.regularizer)
+    if bench_params.regularizer is not None:
+        regularizer = l2(bench_params.regularizer)
+    else:
+        regularizer = None
     if len(layers) == 0:
         model.add(Dense(bench_params.output_neurons, use_bias=bench_params.use_bias, input_shape=(bench_params.input_size,),
                         activation=bench_params.output_activation))
