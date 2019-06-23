@@ -146,9 +146,11 @@ class SVMBenchmarkParams(BenchmarkParams):
         self.c = 1
         self.kernel = 'rbf'
         self.degree = 3
-        self.gamma = 'auto'
+        self.gamma = 0.005
+        self.epsilon = 0.1
         self.one_hot_encode_labels = False
         self.save_model = False
+        self.iterations = 1
 
     def update_from_dictionary(self, params_dict):
         super().update_from_dictionary(params_dict)

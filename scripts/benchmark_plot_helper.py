@@ -56,7 +56,8 @@ def plot_result(y_test, y_test_prediction, bench_params: BenchmarkParams, histor
         class_labels = [FALL_LABEL, IDLE_LABEL, RISE_LABEL]
         xticks = [0, 1, 2]
 
-    y_test = [np.argmax(pred, axis=None, out=None) for pred in y_test]
+    if bench_params.one_hot_encode_labels:
+        y_test = [np.argmax(pred, axis=None, out=None) for pred in y_test]
     y_test_prediction = [np.argmax(pred, axis=None, out=None) for pred in y_test_prediction]
 
     style.use('ggplot')
@@ -96,9 +97,15 @@ def plot_summary(y_test, y_test_prediction, bench_params: BenchmarkParams, histo
     else:
         plt.figure(figsize=(12, 6))
     plt.suptitle(main_title)
-    plt.subplot(2, 2, 1)
+    if history is not None:
+        plt.subplot(2, 2, 1)
+    else:
+        plt.subplot(1, 2, 1)
     plot_prediction_histogram(class_labels, xticks, y_test, y_test_prediction)
-    plt.subplot(2, 2, 2)
+    if history is not None:
+        plt.subplot(2, 2, 2)
+    else:
+        plt.subplot(1, 2, 2)
     plot_roc(bench_params, class_labels, fpr, roc_auc, tpr)
     if history is not None:
         plt.subplot(2, 2, 3)

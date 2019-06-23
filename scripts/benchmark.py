@@ -133,13 +133,13 @@ class Benchmark:
                               round(roc_auc_value, 4),
                               number_of_epochs_it_ran, round(iter_time, 2)))
 
-            main_title = 'Neural network model accuracy: {0}, roc_auc {1}, epochs {2}, company {3}'.format(
+            main_title = 'Neural network model accuracy: {0}, roc_auc {1}, epochs {2}, company {3}\n'.format(
                 round(accuracy, 4), round(roc_auc_value, 4), number_of_epochs_it_ran, bench_params.curr_sym)
             if bench_params.examined_params is not None and bench_params.examined_params != '':
-                main_title = main_title + '\n examined param {4}:{5}'.format(bench_params.examined_params.split(',')[0],
-                                                                             getattr(bench_params,
-                                                                                     bench_params.examined_params.split(
-                                                                                         ',')[0], ''))
+                split_params = bench_params.examined_params.split(',')
+                for param in split_params:
+                    main_title = main_title + ' {0}:{1} '.format(param,
+                                                               getattr(bench_params, param, ''))
             if bench_params.save_files:
                 if bench_params.walk_forward_testing:
                     concatenated_y_test = np.concatenate(y_test)

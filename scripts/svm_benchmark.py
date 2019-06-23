@@ -17,7 +17,8 @@ class SVMBenchmark(Benchmark):
         super().__init__(symbols, bench_params, changing_params_dict)
 
     def create_model(self, bench_params: SVMBenchmarkParams):
-        return SVC(C=bench_params.c, kernel=bench_params.kernel, degree=bench_params.degree, gamma=bench_params.gamma)
+        return SVC(C=bench_params.c, kernel=bench_params.kernel, degree=bench_params.degree, gamma=bench_params.gamma,
+                   probability=True)
 
     def create_callbacks(self, bench_params):
         """Create callbacks used while learning"""
@@ -26,7 +27,7 @@ class SVMBenchmark(Benchmark):
     def evaluate_predict(self, model, x_test, y_test):
         """Evaluate on test data, predict labels for x_test, return (accuracy, loss, y_prediction)"""
         acc = model.score(x_test, y_test)
-        y_test_prediction = model.predict(x_test)
+        y_test_prediction = model.predict_proba(x_test)
         return acc, None, y_test_prediction
 
     def fit_model(self, bench_params, model, callbacks, x_train, y_train, x_test, y_test, epochs=None):

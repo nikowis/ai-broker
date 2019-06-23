@@ -55,7 +55,7 @@ class NnBenchmark(Benchmark):
 
 
 if __name__ == '__main__':
-    bench_params = benchmark_params.NnBenchmarkParams(True, examined_param='pca,regularizer',
+    bench_params = benchmark_params.NnBenchmarkParams(False, examined_param='pca,regularizer',
                                                       benchmark_name='bench-pca-regularizer')
     bench_params.plot_partial = True
     bench_params.pca = None

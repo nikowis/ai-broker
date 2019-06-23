@@ -57,5 +57,8 @@ if __name__ == '__main__':
     # analyze_csv('results-nn-max_train_window_size-GOOGL-discrete.csv', 'max_train_window_size', True)
     # analyze_csv('results-nn-walk_forward_test_window_size-GOOGL-binary.csv', 'walk_forward_test_window_size', True)
     # analyze_csv('results-nn-walk_forward_test_window_size-GOOGL-discrete.csv', 'walk_forward_test_window_size', True)
-    analyze_final("results-nn-final-binary.csv")
+    # analyze_final("results-nn-final-binary.csv")
+    analyze_csv('results-svm-kernel-GOOGL-binary.csv', 'kernel', True)
+    analyze_csv('results-svm-kernel-GOOGL-discrete.csv', 'kernel', True)
+
     print('Result analyzer finished.')

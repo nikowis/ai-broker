@@ -39,16 +39,18 @@ def nn_final_binary():
     bench_params.iterations = 3
     NnBenchmark(SYMBOLS, bench_params)
 
+
 def nn_final_discrete():
-    for i in range(0, len(SYMBOLS)):
+    for i in range(2, len(SYMBOLS)):
         sym = SYMBOLS[i]
-        benchmark_name = 'nn-final-discrete-i'
+        benchmark_name = 'nn-final-discrete-' + str(i)
         bench_params = benchmark_params.NnBenchmarkParams(False, benchmark_name=benchmark_name)
         bench_params.plot_partial = False
         benchmark_params.verbose = True
         bench_params.walk_forward_testing = True
         bench_params.iterations = 3
         NnBenchmark([sym], bench_params)
+
 
 if __name__ == '__main__':
     # nn_examine(True, 'pca', [[None, 0.9999, 0.999, 0.99, 0.98, 0.97]])
