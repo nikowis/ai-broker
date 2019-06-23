@@ -5,6 +5,7 @@ TRAIN_TIME_COL = 'train_time'
 ACCURACY_COL = 'accuracy'
 RESULT_PATH = './../../target/results/'
 
+
 def analyze_csv(filepath, examined_params, print_latex=False):
     df = pd.read_csv(RESULT_PATH + filepath)
 
@@ -34,13 +35,27 @@ def analyze_nn_layers(filepath, examined_param='layers', print_latex=True):
         print(three_layer_df.to_latex())
 
 
+def analyze_final(filepath):
+    df = pd.read_csv(RESULT_PATH + filepath)
+
+    print('Read {0}'.format(filepath))
+
+    mean_groupby = df.drop(['ID', 'train_time'], axis=1).groupby('ticker').mean()
+    avg_groupby = df.drop(['ID', 'train_time', 'ticker'], axis=1).mean()
+    print('Final analyzis:\n {0}'.format(mean_groupby))
+    print('Average:\n {0}'.format(avg_groupby))
+
+    print(mean_groupby.to_latex())
+    return mean_groupby
+
+
 if __name__ == '__main__':
     # analyze_csv('results-nn-pca-GOOGL-binary.csv', 'pca', True)
     # analyze_csv('results-nn-pca-GOOGL-discrete.csv', 'pca', True)
     # analyze_nn_layers('results-nn-layers-GOOGL-binary.csv')
     # analyze_nn_layers('results-nn-layers-GOOGL-discrete.csv')
     # analyze_csv('results-nn-max_train_window_size-GOOGL-discrete.csv', 'max_train_window_size', True)
-    analyze_csv('results-nn-walk_forward_test_window_size-GOOGL-binary.csv', 'walk_forward_test_window_size', True)
-    analyze_csv('results-nn-walk_forward_test_window_size-GOOGL-discrete.csv', 'walk_forward_test_window_size', True)
-
+    # analyze_csv('results-nn-walk_forward_test_window_size-GOOGL-binary.csv', 'walk_forward_test_window_size', True)
+    # analyze_csv('results-nn-walk_forward_test_window_size-GOOGL-discrete.csv', 'walk_forward_test_window_size', True)
+    analyze_final("results-nn-final-binary.csv")
     print('Result analyzer finished.')

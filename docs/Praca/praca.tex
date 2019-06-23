@@ -951,7 +951,7 @@ max                           &  0.855781 &  \textbf{0.919433} &   \textbf{17} \
 45                          &  0.877280 &  0.910868 &   405 \\ \hline
 22                          &  0.880905 &  0.904669 &  1163 \\ \hline
     \end{tabular}
-    \caption{Wyniki klasyfikacji binarnej dla spółki \textit{GOOGL} w zależności rozmiaru testowego}
+    \caption{Wyniki klasyfikacji binarnej dla spółki \textit{GOOGL} w zależności od rozmiaru zbioru testowego}
     \label{tab:nn_walk_forward_test_binary}
 \end{table}
 
@@ -969,11 +969,45 @@ max    &  0.682993 &  0.857121 &  \textbf{38} \\ \hline
 45     &  0.760286 &  0.873949 &  1146 \\ \hline
 22  &  \textbf{0.787767} &  \textbf{0.882507} &  3229 \\ \hline
     \end{tabular}
-    \caption{Wyniki klasyfikacji na 3 klasy dla spółki \textit{GOOGL} w zależności od wybranej wartości wariancji}
+    \caption{Wyniki klasyfikacji na 3 klasy dla spółki \textit{GOOGL} w zależności od rozmiaru zbioru testowego}
     \label{tab:nn_walk_forward_test_discrete}
 \end{table}
 
 Ostatecznie dla klasyfikacji binarnej zostały użyte zbiory testowe z 360 próbkami, zaś dla klasyfikacji trójklasowej zbiory z 22 próbkami.
+
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|}
+    \hline
+        \textbf{Spółka} & \textbf{Dokładność} &  \textbf{AUC} \\ \hline
+AAPL   &  0.823688 &  0.904442 \\ \hline
+AMGN   &  0.826799 &  0.902411 \\ \hline
+AMZN   &  0.811963 &  0.874611 \\ \hline
+CSCO   &  0.819011 &  0.888930 \\ \hline
+FB     &  0.836207 &  0.903972 \\ \hline
+GOOGL  &  0.885767 &  0.917592 \\ \hline
+INTC   &  0.837402 &  0.906616 \\ \hline
+MSFT   &  0.826206 &  0.900397 \\ \hline
+PEP    &  0.843401 &  0.908477 \\ \hline
+QCOM   &  0.836926 &  0.909138 \\ \hline \hline
+\textbf{Średnia} &  \textbf{0.834737} & \textbf{0.901659} \\  \hline
+    \end{tabular}
+    \caption{Końcowe klasyfikacji binarnej sieci neuronowych dla różnych spółek}
+    \label{tab:nn_final_binary}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|}
+    \hline
+        \textbf{Spółka} & \textbf{Dokładność} &  \textbf{AUC} \\ \hline
+
+    \end{tabular}
+    \caption{Wyniki klasyfikacji na 3 klasy sieci neuronowych dla różnych spółek}
+    \label{tab:nn_final_discrete}
+\end{table}
+
 
 \section{Wspomaganie decyzji giełdowych}
 

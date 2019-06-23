@@ -133,8 +133,8 @@ class Benchmark:
                               round(roc_auc_value, 4),
                               number_of_epochs_it_ran, round(iter_time, 2)))
 
-            main_title = 'Neural network model loss: {0}, roc_auc {1}, epochs {2}\n hidden layers [{3}] company {4} examined param {5}:{6}'.format(
-                round(loss, 4), round(roc_auc_value, 4), number_of_epochs_it_ran, ''.join(
+            main_title = 'Neural network model accuracy: {0}, roc_auc {1}, epochs {2}\n hidden layers [{3}] company {4} examined param {5}:{6}'.format(
+                round(accuracy, 4), round(roc_auc_value, 4), number_of_epochs_it_ran, ''.join(
                     str(e) + " " for e in bench_params.layers), bench_params.curr_sym,
                 bench_params.examined_params.split(',')[0],
                 getattr(bench_params, bench_params.examined_params.split(',')[0], ''))
