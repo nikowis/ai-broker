@@ -30,11 +30,36 @@ def svm_examine(binary_classification, examined_params, param_lists, companies=[
     SVMBenchmark(companies, bench_params, param_dict)
 
 
+def svm_final_binary(binary):
+    benchmark_name = 'nn-final-'
+    if binary:
+        benchmark_name = benchmark_name + 'binary'
+    else:
+        benchmark_name = benchmark_name + 'discrete'
+    bench_params = benchmark_params.SVMBenchmarkParams(binary, benchmark_name=benchmark_name)
+    bench_params.plot_partial = False
+    benchmark_params.verbose = True
+    bench_params.walk_forward_testing = True
+    SVMBenchmark(SYMBOLS, bench_params)
+
+
 if __name__ == '__main__':
     # svm_examine(True, 'kernel', [['linear', 'poly', 'rbf', 'sigmoid']])
     # svm_examine(False, 'kernel', [['linear', 'poly', 'rbf', 'sigmoid']])
-    svm_examine(False, 'c,epsilon,kernel',
-                [[25, 10, 5, 1, 0.5, 0.1, 0.01, 0.005], [0.2, 0.15, 0.1, 0.05, 0.025], ['linear']])
-    svm_examine(True, 'c,epsilon,kernel',
-                [[25, 10, 5, 1, 0.5, 0.1, 0.01, 0.005], [0.2, 0.15, 0.1, 0.05, 0.025], ['linear']])
+
+    # svm_examine(True, 'c,kernel',
+    #             [[25, 10, 5, 1, 0.5, 0.1, 0.01, 0.005], ['linear']])
+    # svm_examine(False, 'c,kernel',
+    #             [[25, 10, 5, 1, 0.5, 0.1, 0.01, 0.005], ['linear']])
+    # svm_examine(True, 'c,gamma,kernel',
+    #             [[25, 10, 5, 1, 0.5, 0.1, 0.01, 0.005], [10, 1, 0.5, 0.1, 0.01, 0.001],
+    #              ['rbf']])
+    # svm_examine(False, 'c,gamma,kernel',
+    #             [[25, 10, 5, 1, 0.5, 0.1, 0.01, 0.005], [10, 1, 0.5, 0.1, 0.01, 0.001],
+    #              ['rbf']])
+    svm_examine(True, 'walk_forward_test_window_size', [[360, 180, 90, 45, 22]],
+                walk_forward_testing=True)
+    svm_examine(False, 'walk_forward_test_window_size', [[360, 180, 90, 45, 22]],
+                walk_forward_testing=True)
+
     print('Benchmark executions finished.')

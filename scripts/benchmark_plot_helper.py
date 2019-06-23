@@ -56,7 +56,7 @@ def plot_result(y_test, y_test_prediction, bench_params: BenchmarkParams, histor
         class_labels = [FALL_LABEL, IDLE_LABEL, RISE_LABEL]
         xticks = [0, 1, 2]
 
-    if bench_params.one_hot_encode_labels:
+    if len(y_test.shape) > 0:
         y_test = [np.argmax(pred, axis=None, out=None) for pred in y_test]
     y_test_prediction = [np.argmax(pred, axis=None, out=None) for pred in y_test_prediction]
 

@@ -143,8 +143,8 @@ class SVMBenchmarkParams(BenchmarkParams):
             self.output_neurons = 1
         else:
             self.output_neurons = 3
-        self.c = 1
-        self.kernel = 'rbf'
+        self.c = 10
+        self.kernel = 'linear'
         self.degree = 3
         self.gamma = 0.005
         self.epsilon = 0.1
@@ -158,6 +158,8 @@ class SVMBenchmarkParams(BenchmarkParams):
             self.c = params_dict['c']
         if 'kernel' in params_dict:
             self.kernel = params_dict['kernel']
+        if 'epsilon' in params_dict:
+            self.epsilon = params_dict['epsilon']
         if 'degree' in params_dict:
             self.degree = params_dict['degree']
         if 'gamma' in params_dict:

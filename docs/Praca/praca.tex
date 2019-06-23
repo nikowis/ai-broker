@@ -862,7 +862,7 @@ Na wykresach \ref{img:nn_pca_binary_vs_accuracy} została przedstawiona dokładn
 \subfigure[PCA wariancja 0.97]{%
 \includegraphics[scale=0.4685]{img/results/nn/nn_pca_097_binary_acc_googl.pdf}}%
 
-\caption{Wykresy zależności dokładności od redukcji danych metodą PCA dla klasyfikacji binarnej}
+\caption{Wykresy zależności dokładności od redukcji danych metodą PCA dla klasyfikacji binarnej (opracowanie własne)}
 \label{img:nn_pca_binary_vs_accuracy}
 \end{figure}
 
@@ -931,7 +931,7 @@ Na wykresie \ref{img:nn_layers_discrete} przedstawione zostały krzywe ROC dla 3
 
 \begin{figure}[H]
 \centering \includegraphics[scale=0.8]{img/results/nn/nn_layers_10_discrete_roc-googl.pdf}
-\caption{Wykres ROC sieci neuronowej o jednej warstwie neuronowej z 10 neuronami dla klasyfikacji na 3 klasy}
+\caption{Wykres ROC sieci neuronowej o jednej warstwie neuronowej z 10 neuronami dla klasyfikacji na 3 klasy (opracowanie własne)}
 \label{img:nn_layers_discrete}
 \end{figure}
 
@@ -977,7 +977,7 @@ Ostatecznie dla klasyfikacji binarnej zostały użyte zbiory testowe z 360 prób
 
 \bigskip
 
-Tabele \ref{tab:nn_final_binary} oraz \ref{tab:nn_final_discrete}
+Tabele \ref{tab:nn_final_binary} oraz \ref{tab:nn_final_discrete} przedstawiają końcowe wyniki dla wszystkich wybranych spółek wraz z ich średnią. 
 
 \begin{table}[H]
     \centering
@@ -1013,8 +1013,78 @@ QCOM   &  0.836926 &  0.909138 \\ \hline \hline
 
 \subsection{SVM}
 
+Analiza maszyn wektorów nośnych należy zacząć od wyboru odpowiedniej funkcji jądra. Początkowo wykorzystane zostały domyślne parametry SVM z biblioteki \textit{sklearn} \cite{bib:sklearnsvm}. Tabele \ref{tab:svm_kernel_binary} oraz \ref{tab:svm_kernel_discrete} przedstawiają wyniki klasyfikacji w zależności od wybranej funkcji jądra. W obu przypadkach najlepsza okazała się funkcja liniowa osiągając 84\% dokładności dla klasyfikacji binarnej oraz 67\% dokładności w klasyfikacji na 3 klasy.
+ 
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+        \textbf{Kernel} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
+linear  &  \textbf{0.848980} &  \textbf{0.849554} &    2.351031 \\ \hline
+poly    &  0.530612 &  0.634002 &    2.357999 \\ \hline
+rbf     &  0.805442 &  0.808863 &    \textbf{2.145996} \\ \hline
+sigmoid &  0.789116 &  0.792252 &    2.246001 \\ \hline
+    \end{tabular}
+    \caption{Wyniki klasyfikacji binarnej dla spółki \textit{GOOGL} w zależności wykorzystanego jądra}
+    \label{tab:svm_kernel_binary}
+\end{table}
 
 
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+        \textbf{Kernel} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
+linear  &  \textbf{0.673469} &  \textbf{0.848302} &    2.806034 \\ \hline
+poly    &  0.378231 &  0.594664 &    \textbf{2.571024} \\ \hline
+rbf     &  0.609524 &  0.838035 &    2.763033 \\ \hline
+sigmoid &  0.589116 &  0.811750 &    2.918002 \\ \hline
+    \end{tabular}
+    \caption{Wyniki klasyfikacji na 3 klasy dla spółki \textit{GOOGL} w zależności wykorzystanego jądra}
+    \label{tab:svm_kernel_discrete}
+\end{table}
+
+
+
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+        \textbf{C} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
+0.005 &  0.813605 &  0.811315 &    1.528037 \\ \hline
+0.01  &  0.827211 &  0.820457 &    1.358999 \\ \hline
+0.1   &  0.846259 &  0.843590 &    \textbf{1.202999} \\ \hline
+0.5   &  0.848980 &  0.847938 &    1.599977 \\ \hline
+1.0   &  0.848980 &  0.849554 &    2.088028 \\ \hline
+5.0   &  0.850340 &  \textbf{0.851338} &    5.381001 \\ \hline
+10.0  &  \textbf{0.851701} &  0.848439 &    9.490025 \\ \hline
+25.0  &  0.848980 &  0.846488 &   18.815997 \\ \hline
+    \end{tabular}
+    \caption{Wyniki klasyfikacji binarnej dla spółki \textit{GOOGL} w zależności wykorzystanego c}
+    \label{tab:svm_c_binary}
+\end{table}
+
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+        \textbf{C} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
+0.005 &  0.600000 &  0.833851 &    1.851034 \\ \hline
+0.01  &  0.638095 &  0.848663 &    1.773027 \\ \hline
+0.1   &  0.670748 &  0.857033 &    \textbf{1.660041} \\ \hline
+0.5   &  0.672109 &  0.849077 &    2.105039 \\ \hline
+1.0   &  0.673469 &  0.848400 &    2.824997 \\ \hline
+5.0   &  0.674830 &  0.846707 &    7.747027 \\ \hline
+10.0  &  \textbf{0.676190} &  0.847141 &   13.023001 \\ \hline
+25.0  &  0.673469 &  \textbf{0.847253} &   30.673997 \\ \hline
+    \end{tabular}
+    \caption{Wyniki klasyfikacji na 3 klasy dla spółki \textit{GOOGL} w zależności wykorzystanego c}
+\end{table}
+    
+    
 \section{Wspomaganie decyzji giełdowych}
 
 \section{Projekt aplikacji}
@@ -1155,6 +1225,13 @@ Guolin Ke, Qi Meng, Thomas Finley, Taifeng Wang,Wei Chen, Weidong Ma, Qiwei Ye, 
   \textit{LightGBM: A Highly Efficient Gradient Boosting Decision Tree}
 	MACHINE LEARNING  Volume: 45   Issue: 1   Pages: 5-32   Published: OCT 2001
 
+\bibitem{wikidecisiontree}
+	Decision tree learning, \url{https://www.wikiwand.com/en/Decision_tree_learning} 
+	Data dostępu: 06.04.2019
+
+\bibitem{bib:sklearnsvm}
+	Sklearn SVM, \url{https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html#sklearn.svm.SVC}
+	Data dostępu: 23.06.2019
 
 
 \end{thebibliography}

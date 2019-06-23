@@ -24,11 +24,16 @@ class SVMBenchmark(Benchmark):
         """Create callbacks used while learning"""
         pass
 
+    def get_walk_forward_epochs(self, bench_params, iteration):
+        """Get walk forward epochs for iteration"""
+        return None
+
+
     def evaluate_predict(self, model, x_test, y_test):
         """Evaluate on test data, predict labels for x_test, return (accuracy, loss, y_prediction)"""
         acc = model.score(x_test, y_test)
         y_test_prediction = model.predict_proba(x_test)
-        return acc, None, y_test_prediction
+        return acc, 0, y_test_prediction
 
     def fit_model(self, bench_params, model, callbacks, x_train, y_train, x_test, y_test, epochs=None):
         """Fit model on train data, return learning history or none"""

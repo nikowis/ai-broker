@@ -104,8 +104,8 @@ class Benchmark:
             else:
                 roc_auc_value = roc_auc[stock_constants.MICRO_ROC_KEY]
 
-            if (bench_params.binary_classification and roc_auc_value < 0.7) or (
-                    (not bench_params.binary_classification) and roc_auc_value < 0.65):
+            if (bench_params.binary_classification and roc_auc_value < 0.5) or (
+                    (not bench_params.binary_classification) and roc_auc_value < 0.5):
                 if bench_params.verbose:
                     print('ID {0} iteration {1} encountered local minimum (auc {2}) retrying iteration...'.format(
                         bench_params.id, bench_params.curr_iter_num, round(roc_auc_value, 4)))
@@ -177,7 +177,7 @@ class Benchmark:
 
         return results_df
 
-    def learn_and_evaluate(self, model, bench_params: benchmark_params.NnBenchmarkParams, callbacks, x_train, x_test,
+    def learn_and_evaluate(self, model, bench_params: benchmark_params.BenchmarkParams, callbacks, x_train, x_test,
                            y_train, y_test):
         if bench_params.walk_forward_testing:
             walk_iterations = len(x_train)
@@ -191,15 +191,11 @@ class Benchmark:
                 walk_x_test = x_test[walk_it]
                 walk_y_train = y_train[walk_it]
                 walk_y_test = y_test[walk_it]
-                if walk_it == 0:
-                    epochs = bench_params.epochs
-                else:
-                    epochs = bench_params.walk_forward_retrain_epochs
+
+                epochs = self.get_walk_forward_epochs(bench_params, walk_it)
 
                 if bench_params.walk_forward_learn_from_scratch:
-                    epochs = bench_params.epochs
                     model = self.create_model(bench_params)
-
                 history = self.fit_model(bench_params, model, callbacks, walk_x_train, walk_y_train, walk_x_test,
                                          walk_y_test, epochs)
                 self.update_walk_history(bench_params, history, walk_history)
@@ -231,6 +227,10 @@ class Benchmark:
                                                                 bench_params.one_hot_encode_labels)
 
         return model, accuracy, loss, fpr, tpr, roc_auc, y_test_prediction, history
+
+    def get_walk_forward_epochs(self, bench_params, iteration):
+        """Get walk forward epochs for iteration"""
+        pass
 
     def create_model(self, bench_params):
         """Create predicting model, return model"""
