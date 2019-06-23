@@ -1,4 +1,5 @@
 import time
+import uuid
 
 TARGET_PATH = './../target'
 # TARGET_PATH = './drive/My Drive/ai-broker/target'
@@ -15,7 +16,7 @@ SATYSFYING_TRESHOLD_DISCRETE = 0.87
 
 class BenchmarkParams:
 
-    def __init__(self, binary_classification, examined_param='', benchmark_name='') -> None:
+    def __init__(self, binary_classification, examined_param='', benchmark_name=str(uuid.uuid4())) -> None:
         self.id = str(time.time())
         self.benchmark_name = benchmark_name
         if benchmark_name is not None:
@@ -32,6 +33,7 @@ class BenchmarkParams:
         self.save_img_path = self.benchmark_path + SAVE_IMG_DIR
         self.save_partial_img_path = self.save_img_path + SAVE_PARTIAL_IMG_DIR
         self.save_files = SAVE_FILES
+        self.save_model = SAVE_FILES
         self.cleanup_files = CLEANUP_FILES
         self.verbose = True
 
@@ -53,6 +55,7 @@ class BenchmarkParams:
         self.max_train_window_size = None
         self.walk_forward_learn_from_scratch = True
         self.iterations = 3
+        self.one_hot_encode_labels = True
 
     def update_from_dictionary(self, params_dict):
         self.id = str(time.time())
@@ -79,7 +82,7 @@ class BenchmarkParams:
 
 class NnBenchmarkParams(BenchmarkParams):
 
-    def __init__(self, binary_classification, examined_param='', benchmark_name='') -> None:
+    def __init__(self, binary_classification, examined_param='', benchmark_name=str(uuid.uuid4())) -> None:
         super().__init__(binary_classification, examined_param, benchmark_name)
 
         if binary_classification:
@@ -133,7 +136,7 @@ class NnBenchmarkParams(BenchmarkParams):
 
 class SVMBenchmarkParams(BenchmarkParams):
 
-    def __init__(self, binary_classification, examined_param=None, benchmark_name='') -> None:
+    def __init__(self, binary_classification, examined_param=None, benchmark_name=str(uuid.uuid4())) -> None:
         super().__init__(binary_classification, examined_param, benchmark_name)
 
         if binary_classification:
@@ -143,6 +146,17 @@ class SVMBenchmarkParams(BenchmarkParams):
         self.c = 1
         self.kernel = 'rbf'
         self.degree = 3
+        self.gamma = 'auto'
+        self.one_hot_encode_labels = False
+        self.save_model = False
 
     def update_from_dictionary(self, params_dict):
         super().update_from_dictionary(params_dict)
+        if 'c' in params_dict:
+            self.c = params_dict['c']
+        if 'kernel' in params_dict:
+            self.kernel = params_dict['kernel']
+        if 'degree' in params_dict:
+            self.degree = params_dict['degree']
+        if 'gamma' in params_dict:
+            self.gamma = params_dict['gamma']

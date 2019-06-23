@@ -1,5 +1,5 @@
 import benchmark_params
-from benchmark import NnBenchmark
+from nn_benchmark import NnBenchmark
 
 SYMBOLS = ['GOOGL', 'MSFT', 'AAPL', 'CSCO', 'INTC', 'FB', 'PEP', 'QCOM', 'AMZN', 'AMGN']
 
@@ -30,20 +30,25 @@ def nn_examine(binary_classification, examined_params, param_lists, companies=['
     NnBenchmark(companies, bench_params, param_dict)
 
 
-def nn_final(binary_classification):
-    benchmark_name = 'nn-final-'
-    if binary_classification:
-        benchmark_name = benchmark_name + 'binary'
-    else:
-        benchmark_name = benchmark_name + 'discrete'
-
-    bench_params = benchmark_params.NnBenchmarkParams(binary_classification, benchmark_name=benchmark_name)
+def nn_final_binary():
+    benchmark_name = 'nn-final-binary'
+    bench_params = benchmark_params.NnBenchmarkParams(True, benchmark_name=benchmark_name)
     bench_params.plot_partial = False
     benchmark_params.verbose = True
     bench_params.walk_forward_testing = True
-    bench_params.iterations = 5
+    bench_params.iterations = 3
     NnBenchmark(SYMBOLS, bench_params)
 
+def nn_final_discrete():
+    for i in range(0, len(SYMBOLS)):
+        sym = SYMBOLS[i]
+        benchmark_name = 'nn-final-discrete-i'
+        bench_params = benchmark_params.NnBenchmarkParams(False, benchmark_name=benchmark_name)
+        bench_params.plot_partial = False
+        benchmark_params.verbose = True
+        bench_params.walk_forward_testing = True
+        bench_params.iterations = 3
+        NnBenchmark([sym], bench_params)
 
 if __name__ == '__main__':
     # nn_examine(True, 'pca', [[None, 0.9999, 0.999, 0.99, 0.98, 0.97]])
@@ -61,6 +66,6 @@ if __name__ == '__main__':
     #            walk_forward_testing=True)
     # nn_examine(False, 'walk_forward_test_window_size', [[360, 180, 90, 45, 22]],
     #            walk_forward_testing=True)
-    nn_final(True)
-    nn_final(False)
+    # nn_final_binary()
+    nn_final_discrete()
     print('Benchmark executions finished.')

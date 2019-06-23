@@ -47,7 +47,11 @@ def preprocess(df, benchmark_params: BenchmarkParams):
         encoder = LabelEncoder()
         encoded_y = encoder.fit_transform(y)
     else:
-        encoded_y = to_categorical(y)
+        if benchmark_params.one_hot_encode_labels:
+            encoded_y = to_categorical(y)
+        else:
+            encoder = LabelEncoder()
+            encoded_y = encoder.fit_transform(y)
 
     if benchmark_params.walk_forward_testing:
         x_trains_list = []

@@ -1,22 +1,19 @@
 import json
 import time
 
-import keras
 import numpy as np
 import pandas as pd
-from keras.callbacks import EarlyStopping, ModelCheckpoint
 from keras.engine.saving import load_model
 from sklearn.model_selection import ParameterGrid
 
 import benchmark_data_preprocessing
 import benchmark_file_helper
-import benchmark_nn_model
 import benchmark_params
 import benchmark_plot_helper
 import benchmark_roc_auc
 import csv_importer
 import stock_constants
-from benchmark_params import BenchmarkParams, NnBenchmarkParams
+from benchmark_params import BenchmarkParams
 
 CSV_TICKER = 'ticker'
 CSV_ROC_AUC_COL = 'roc_auc'
@@ -124,7 +121,10 @@ class Benchmark:
                     continue
             accuracies.append(accuracy)
             roc_auc_values.append(roc_auc_value)
-            number_of_epochs_it_ran = len(history.history['loss'])
+            if history is not None:
+                number_of_epochs_it_ran = len(history.history['loss'])
+            else:
+                number_of_epochs_it_ran = None
             iter_time = time.time() - iter_start_time
             if bench_params.verbose:
                 print('ID {0} {1} iteration {2} of {3} accuracy {4} roc_auc {5} epochs {6} time {7}'
@@ -133,12 +133,13 @@ class Benchmark:
                               round(roc_auc_value, 4),
                               number_of_epochs_it_ran, round(iter_time, 2)))
 
-            main_title = 'Neural network model accuracy: {0}, roc_auc {1}, epochs {2}\n hidden layers [{3}] company {4} examined param {5}:{6}'.format(
-                round(accuracy, 4), round(roc_auc_value, 4), number_of_epochs_it_ran, ''.join(
-                    str(e) + " " for e in bench_params.layers), bench_params.curr_sym,
-                bench_params.examined_params.split(',')[0],
-                getattr(bench_params, bench_params.examined_params.split(',')[0], ''))
-
+            main_title = 'Neural network model accuracy: {0}, roc_auc {1}, epochs {2}, company {3}'.format(
+                round(accuracy, 4), round(roc_auc_value, 4), number_of_epochs_it_ran, bench_params.curr_sym)
+            if bench_params.examined_params is not None and bench_params.examined_params != '':
+                main_title = main_title + '\n examined param {4}:{5}'.format(bench_params.examined_params.split(',')[0],
+                                                                             getattr(bench_params,
+                                                                                     bench_params.examined_params.split(
+                                                                                         ',')[0], ''))
             if bench_params.save_files:
                 if bench_params.walk_forward_testing:
                     concatenated_y_test = np.concatenate(y_test)
@@ -163,15 +164,16 @@ class Benchmark:
         rounded_roc_auc_mean = round(np.mean(roc_auc_values), 4)
         rounded_acc_mean = round(np.mean(accuracies), 4)
         print(
-            'ID {0} {1} avg accuracy {2} avg roc_auc {3} total time {4} s.'.format(bench_params.id, bench_params.curr_sym,
-                                                                               rounded_acc_mean,
-                                                                               rounded_roc_auc_mean,
-                                                                               round(time.time() - total_time, 2)))
+            'ID {0} {1} avg accuracy {2} avg roc_auc {3} total time {4} s.'.format(bench_params.id,
+                                                                                   bench_params.curr_sym,
+                                                                                   rounded_acc_mean,
+                                                                                   rounded_roc_auc_mean,
+                                                                                   round(time.time() - total_time, 2)))
         if rounded_roc_auc_mean > bench_params.satysfying_treshold:
             print('=============================================================================================')
-        max_index = np.argmax(roc_auc_values)
+        max_index = np.argmax(accuracies)
         benchmark_file_helper.copy_best_and_cleanup_files(bench_params, max_index,
-                                                          round(max(roc_auc_values), 4))
+                                                          round(max(accuracies), 4))
 
         return results_df
 
@@ -218,18 +220,20 @@ class Benchmark:
 
         else:
             history = self.fit_model(bench_params, model, callbacks, x_train, y_train, x_test, y_test)
-            if bench_params.save_files:
+            if bench_params.save_files and bench_params.save_model:
                 # restores best epoch of this iteration
                 model = load_model(benchmark_file_helper.get_model_path(bench_params))
             accuracy, loss, y_test_prediction = self.evaluate_predict(model, x_test, y_test)
             roc_y_test = y_test
 
         fpr, tpr, roc_auc = benchmark_roc_auc.calculate_roc_auc(roc_y_test, y_test_prediction,
-                                                                bench_params.classes_count)
+                                                                bench_params.classes_count,
+                                                                bench_params.one_hot_encode_labels)
+
         return model, accuracy, loss, fpr, tpr, roc_auc, y_test_prediction, history
 
     def create_model(self, bench_params):
-        """Create predicting model"""
+        """Create predicting model, return model"""
         pass
 
     def create_callbacks(self, bench_params):
@@ -251,58 +255,3 @@ class Benchmark:
     def create_history_object(self, bench_params):
         """Create an empty history object for walk forward learning"""
         pass
-
-
-class NnBenchmark(Benchmark):
-    def __init__(self, symbols, bench_params: NnBenchmarkParams, changing_params_dict: dict = None) -> None:
-        super().__init__(symbols, bench_params, changing_params_dict)
-
-    def create_callbacks(self, bench_params):
-        earlyStopping = EarlyStopping(monitor='val_' + bench_params.metric,
-                                      min_delta=bench_params.early_stopping_min_delta,
-                                      patience=bench_params.early_stopping_patience, verbose=0, mode='max',
-                                      restore_best_weights=True)
-        callbacks = [earlyStopping]
-        if bench_params.save_files:
-            mcp_save = ModelCheckpoint(
-                benchmark_file_helper.get_model_path(bench_params), save_best_only=True,
-                monitor='val_' + bench_params.metric, mode='max')
-            callbacks = [earlyStopping, mcp_save]
-        return callbacks
-
-    def create_model(self, bench_params):
-        return benchmark_nn_model.create_seq_model(bench_params)
-
-    def evaluate_predict(self, model, x_test, y_test):
-        ls, acc = model.evaluate(x_test, y_test, verbose=0)
-        y_test_prediction = model.predict(x_test)
-        return acc, ls, y_test_prediction
-
-    def fit_model(self, bench_params, model, callbacks, x_train, y_train, x_test, y_test, epochs=None):
-        if epochs is None:
-            epochs = bench_params.epochs
-        return model.fit(x_train, y_train, validation_data=(x_test, y_test),
-                         epochs=epochs, batch_size=bench_params.batch_size,
-                         callbacks=callbacks, verbose=0)
-
-    def update_walk_history(self, bench_params, history, walk_history):
-        walk_history.history['loss'] += history.history['loss']
-        walk_history.history['val_loss'] += history.history['val_loss']
-        walk_history.history[bench_params.metric] += history.history[bench_params.metric]
-        walk_history.history['val_' + bench_params.metric] += history.history[
-            'val_' + bench_params.metric]
-
-    def create_history_object(self, bench_params):
-        walk_history = keras.callbacks.History()
-        walk_history.history = {'loss': [], 'val_loss': [], bench_params.metric: [],
-                                'val_' + bench_params.metric: []}
-        return walk_history
-
-
-if __name__ == '__main__':
-    bench_params = benchmark_params.NnBenchmarkParams(False, examined_param='pca,regularizer',
-                                                      benchmark_name='bench-pca-regularizer')
-    bench_params.plot_partial = True
-    bench_params.pca = None
-    bench_params.regularizer = 0.01
-    NnBenchmark(['GOOGL'], bench_params, {'regularizer': [None, 0.0025, 0.005, 0.01], 'pca': [0.9999]})

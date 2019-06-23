@@ -30,8 +30,9 @@ def copy_best_and_cleanup_files(bench_params: BenchmarkParams, max_index, rounde
     id = bench_params.id
     model_path = bench_params.save_model_path
     if bench_params.save_files:
-        copyfile(get_model_path(bench_params),
-                 '{0}/weights-{1}-{2}-{3}.hdf5'.format(model_path, id, sym, rounded_acc))
+        if bench_params.save_model:
+            copyfile(get_model_path(bench_params),
+                     '{0}/weights-{1}-{2}-{3}.hdf5'.format(model_path, id, sym, rounded_acc))
         copyfile('{0}/{1}-{2}-{3}.png'.format(bench_params.save_img_path, id, sym, max_index + 1),
                  '{0}/{1}-{2}-{3}.png'.format(bench_params.save_img_path, id, sym, rounded_acc))
         copyfile('{0}/{1}-{2}-{3}.pdf'.format(bench_params.save_img_path, id, sym, max_index + 1),
