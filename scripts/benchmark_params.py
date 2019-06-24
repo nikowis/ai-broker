@@ -42,11 +42,9 @@ class BenchmarkParams:
         if binary_classification:
             self.classes_count = 2
             self.satysfying_treshold = SATYSFYING_TRESHOLD_BINARY
-            self.walk_forward_test_window_size = 360
         else:
             self.classes_count = 3
             self.satysfying_treshold = SATYSFYING_TRESHOLD_DISCRETE
-            self.walk_forward_test_window_size = 22
         self.pca = 0.9999
         self.test_size = 0.2
         self.standardize = True
@@ -91,12 +89,14 @@ class NnBenchmarkParams(BenchmarkParams):
             self.output_activation = 'sigmoid'
             self.loss = 'binary_crossentropy'
             self.metric = 'binary_accuracy'
+            self.walk_forward_test_window_size = 360
         else:
             self.output_neurons = 3
             self.layers = [10]
             self.output_activation = 'softmax'
             self.loss = 'categorical_crossentropy'
             self.metric = 'categorical_accuracy'
+            self.walk_forward_test_window_size = 22
 
         self.regularizer = 0.0025
         self.activation = 'relu'
@@ -143,6 +143,7 @@ class SVMBenchmarkParams(BenchmarkParams):
             self.output_neurons = 1
         else:
             self.output_neurons = 3
+        self.walk_forward_test_window_size = 360
         self.c = 10
         self.kernel = 'linear'
         self.degree = 3

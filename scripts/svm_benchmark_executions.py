@@ -30,7 +30,7 @@ def svm_examine(binary_classification, examined_params, param_lists, companies=[
     SVMBenchmark(companies, bench_params, param_dict)
 
 
-def svm_final_binary(binary):
+def svm_final(binary):
     benchmark_name = 'nn-final-'
     if binary:
         benchmark_name = benchmark_name + 'binary'
@@ -39,7 +39,7 @@ def svm_final_binary(binary):
     bench_params = benchmark_params.SVMBenchmarkParams(binary, benchmark_name=benchmark_name)
     bench_params.plot_partial = False
     benchmark_params.verbose = True
-    bench_params.walk_forward_testing = True
+    bench_params.walk_forward_testing = False
     SVMBenchmark(SYMBOLS, bench_params)
 
 
@@ -57,9 +57,28 @@ if __name__ == '__main__':
     # svm_examine(False, 'c,gamma,kernel',
     #             [[25, 10, 5, 1, 0.5, 0.1, 0.01, 0.005], [10, 1, 0.5, 0.1, 0.01, 0.001],
     #              ['rbf']])
-    svm_examine(True, 'walk_forward_test_window_size', [[360, 180, 90, 45, 22]],
-                walk_forward_testing=True)
-    svm_examine(False, 'walk_forward_test_window_size', [[360, 180, 90, 45, 22]],
-                walk_forward_testing=True)
+    # svm_examine(True, 'pca',
+    #             [[None, 0.9999, 0.999, 0.99, 0.98, 0.95]])
+    # svm_examine(False, 'pca',
+    #             [[None, 0.9999, 0.999, 0.99, 0.98, 0.95]])
 
+    # svm_examine(True, 'walk_forward_test_window_size', [[360, 180, 90, 45, 22]],
+    #             walk_forward_testing=True)
+    # svm_examine(False, 'walk_forward_test_window_size', [[360, 180, 90, 45, 22]],
+    #             walk_forward_testing=True)
+
+    # svm_examine(True, 'walk_forward_test_window_size,c', [[360, 180], [1]],
+    #             walk_forward_testing=True)
+    # svm_examine(False, 'walk_forward_test_window_size,c', [[360, 180], [1]],
+    #             walk_forward_testing=True)
+
+    # svm_examine(True, 'walk_forward_test_window_size,max_train_window_size',
+    #             [[90, 45], [2500, 2000, 1500, 1000]],
+    #             walk_forward_testing=True)
+    # svm_examine(False, 'walk_forward_test_window_size,max_train_window_size',
+    #             [[90, 45], [2500, 2000, 1500, 1000]],
+    #             walk_forward_testing=True)
+    #
+    svm_final(True)
+    svm_final(False)
     print('Benchmark executions finished.')

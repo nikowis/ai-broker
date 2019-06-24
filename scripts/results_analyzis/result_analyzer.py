@@ -60,7 +60,14 @@ if __name__ == '__main__':
     # analyze_final("results-nn-final-binary.csv")
     # analyze_csv('results-svm-kernel-GOOGL-binary.csv', 'kernel', True)
     # analyze_csv('results-svm-kernel-GOOGL-discrete.csv', 'kernel', True)
-    analyze_csv('results-svm-c-kernel-GOOGL-binary.csv', 'c', True)
-    analyze_csv('results-svm-c-kernel-GOOGL-discrete.csv', 'c', True)
+    # analyze_csv('results-svm-c-kernel-GOOGL-binary.csv', 'c', True)
+    # analyze_csv('results-svm-c-kernel-GOOGL-discrete.csv', 'c', True)
+    # analyze_csv('results-svm-c-kernel-GOOGL-binary.csv', 'c', True)
+    # analyze_csv('results-svm-c-kernel-GOOGL-discrete.csv', 'c', True)
+    # analyze_csv('results-svm-walk_forward_test_window_size-GOOGL-binary.csv', 'walk_forward_test_window_size', True)
+    # analyze_csv('results-svm-walk_forward_test_window_size-GOOGL-discrete.csv', 'walk_forward_test_window_size', True)
+    analyze_csv('results-svm-walk_forward_test_window_size-GOOGL-binary.csv', 'walk_forward_test_window_size', True)
+    analyze_csv('results-svm-walk_forward_test_window_size-GOOGL-discrete.csv', 'walk_forward_test_window_size', True)
+
 
     print('Result analyzer finished.')
