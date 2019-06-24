@@ -138,11 +138,6 @@ class SVMBenchmarkParams(BenchmarkParams):
 
     def __init__(self, binary_classification, examined_param=None, benchmark_name=str(uuid.uuid4())) -> None:
         super().__init__(binary_classification, examined_param, benchmark_name)
-
-        if binary_classification:
-            self.output_neurons = 1
-        else:
-            self.output_neurons = 3
         self.walk_forward_test_window_size = 360
         self.c = 10
         self.kernel = 'linear'
@@ -165,3 +160,19 @@ class SVMBenchmarkParams(BenchmarkParams):
             self.degree = params_dict['degree']
         if 'gamma' in params_dict:
             self.gamma = params_dict['gamma']
+
+
+class LightGBMBenchmarkParams(BenchmarkParams):
+
+    def __init__(self, binary_classification, examined_param=None, benchmark_name=str(uuid.uuid4())) -> None:
+        super().__init__(binary_classification, examined_param, benchmark_name)
+
+
+        self.one_hot_encode_labels = False
+        self.save_model = False
+        self.iterations = 1
+
+    def update_from_dictionary(self, params_dict):
+        super().update_from_dictionary(params_dict)
+
+

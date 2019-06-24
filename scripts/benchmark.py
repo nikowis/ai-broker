@@ -139,7 +139,7 @@ class Benchmark:
                 split_params = bench_params.examined_params.split(',')
                 for param in split_params:
                     main_title = main_title + ' {0}:{1} '.format(param,
-                                                               getattr(bench_params, param, ''))
+                                                                 getattr(bench_params, param, ''))
             if bench_params.save_files:
                 if bench_params.walk_forward_testing:
                     concatenated_y_test = np.concatenate(y_test)
@@ -196,8 +196,8 @@ class Benchmark:
 
                 if bench_params.walk_forward_learn_from_scratch:
                     model = self.create_model(bench_params)
-                history = self.fit_model(bench_params, model, callbacks, walk_x_train, walk_y_train, walk_x_test,
-                                         walk_y_test, epochs)
+                model, history = self.fit_model(bench_params, model, callbacks, walk_x_train, walk_y_train, walk_x_test,
+                                                walk_y_test, epochs)
                 self.update_walk_history(bench_params, history, walk_history)
 
                 acc, ls, y_test_prediction = self.evaluate_predict(model, walk_x_test, walk_y_test)
@@ -215,7 +215,7 @@ class Benchmark:
             history = walk_history
 
         else:
-            history = self.fit_model(bench_params, model, callbacks, x_train, y_train, x_test, y_test)
+            model, history = self.fit_model(bench_params, model, callbacks, x_train, y_train, x_test, y_test)
             if bench_params.save_files and bench_params.save_model:
                 # restores best epoch of this iteration
                 model = load_model(benchmark_file_helper.get_model_path(bench_params))
@@ -230,28 +230,28 @@ class Benchmark:
 
     def get_walk_forward_epochs(self, bench_params, iteration):
         """Get walk forward epochs for iteration"""
-        pass
+        return None
 
     def create_model(self, bench_params):
         """Create predicting model, return model"""
-        pass
+        return None
 
     def create_callbacks(self, bench_params):
         """Create callbacks used while learning"""
-        pass
+        return None
 
     def evaluate_predict(self, model, x_test, y_test):
         """Evaluate on test data, predict labels for x_test, return (accuracy, loss, y_prediction)"""
-        pass
+        return None, None, None
 
     def fit_model(self, bench_params, model, callbacks, x_train, y_train, x_test, y_test, epochs=None):
-        """Fit model on train data, return learning history or none"""
-        pass
+        """Fit model on train data, return model and learning history or none"""
+        return None, None
 
     def update_walk_history(self, bench_params, history, walk_history):
         """Update history object with walk forward learning history"""
-        pass
+        return None
 
     def create_history_object(self, bench_params):
         """Create an empty history object for walk forward learning"""
-        pass
+        return None

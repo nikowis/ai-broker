@@ -45,7 +45,7 @@ class NnBenchmark(Benchmark):
     def fit_model(self, bench_params, model, callbacks, x_train, y_train, x_test, y_test, epochs=None):
         if epochs is None:
             epochs = bench_params.epochs
-        return model.fit(x_train, y_train, validation_data=(x_test, y_test),
+        return model, model.fit(x_train, y_train, validation_data=(x_test, y_test),
                          epochs=epochs, batch_size=bench_params.batch_size,
                          callbacks=callbacks, verbose=0)
 

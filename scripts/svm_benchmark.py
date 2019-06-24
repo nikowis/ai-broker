@@ -4,12 +4,6 @@ import benchmark_params
 from benchmark import Benchmark
 from benchmark_params import SVMBenchmarkParams
 
-CSV_TICKER = 'ticker'
-CSV_ROC_AUC_COL = 'roc_auc'
-CSV_ACC_COL = 'accuracy'
-CSV_TRAIN_TIME_COL = 'train_time'
-CSV_ID_COL = 'ID'
-
 
 class SVMBenchmark(Benchmark):
 
@@ -39,7 +33,7 @@ class SVMBenchmark(Benchmark):
         """Fit model on train data, return learning history or none"""
 
         model.fit(x_train, y_train)
-        return None
+        return model, None
 
     def update_walk_history(self, bench_params, history, walk_history):
         """Update history object with walk forward learning history"""
