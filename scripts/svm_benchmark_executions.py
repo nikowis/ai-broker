@@ -31,7 +31,7 @@ def svm_examine(binary_classification, examined_params, param_lists, companies=[
 
 
 def svm_final(binary):
-    benchmark_name = 'nn-final-'
+    benchmark_name = 'svm-final-'
     if binary:
         benchmark_name = benchmark_name + 'binary'
     else:
@@ -79,6 +79,6 @@ if __name__ == '__main__':
     #             [[90, 45], [2500, 2000, 1500, 1000]],
     #             walk_forward_testing=True)
     #
-    svm_final(True)
-    svm_final(False)
+    # svm_final(True)
+    # svm_final(False)
     print('Benchmark executions finished.')

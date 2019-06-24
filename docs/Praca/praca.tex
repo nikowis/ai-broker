@@ -996,7 +996,7 @@ PEP    &  0.843401 &  0.908477 \\ \hline
 QCOM   &  0.836926 &  0.909138 \\ \hline \hline
 \textbf{Średnia} &  \textbf{0.834737} & \textbf{0.901659} \\  \hline
     \end{tabular}
-    \caption{Końcowe klasyfikacji binarnej sieci neuronowych dla różnych spółek}
+    \caption{Końcowe wyniki klasyfikacji binarnej sieci neuronowych dla różnych spółek}
     \label{tab:nn_final_binary}
 \end{table}
 
@@ -1007,15 +1007,15 @@ QCOM   &  0.836926 &  0.909138 \\ \hline \hline
         \textbf{Spółka} & \textbf{Dokładność} &  \textbf{AUC} \\ \hline
 
     \end{tabular}
-    \caption{Wyniki klasyfikacji na 3 klasy sieci neuronowych dla różnych spółek}
+    \caption{Końcowe wyniki klasyfikacji na 3 klasy sieci neuronowych dla różnych spółek}
     \label{tab:nn_final_discrete}
 \end{table}
 
 \subsection{SVM}
 
 Analiza maszyn wektorów nośnych należy zacząć od wyboru odpowiedniej funkcji jądra. Początkowo wykorzystane zostały domyślne parametry SVM z biblioteki \textit{sklearn} \cite{bib:sklearnsvm}. Tabele \ref{tab:svm_kernel_binary} oraz \ref{tab:svm_kernel_discrete} przedstawiają wyniki klasyfikacji w zależności od wybranej funkcji jądra. W obu przypadkach najlepsza okazała się funkcja liniowa osiągając 84\% dokładności dla klasyfikacji binarnej oraz 67\% dokładności w klasyfikacji na 3 klasy.
- 
-
+ Jak widać w obu przypadakch najgorsze wyniki osiąga funkcja wielomianowa (\textit{poly}). 
+W dalszych eksperymentach wykorzystywana była funkcja liniowa.
 \begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|}
@@ -1029,7 +1029,6 @@ sigmoid &  0.789116 &  0.792252 &    2.246001 \\ \hline
     \caption{Wyniki klasyfikacji binarnej dla spółki \textit{GOOGL} w zależności wykorzystanego jądra}
     \label{tab:svm_kernel_binary}
 \end{table}
-
 
 \begin{table}[H]
     \centering
@@ -1045,7 +1044,7 @@ sigmoid &  0.589116 &  0.811750 &    2.918002 \\ \hline
     \label{tab:svm_kernel_discrete}
 \end{table}
 
-
+Następnym optymalizowanym parametrem był parametr kary \textit{C}. Domyślną wartością \textit{C} jest 1. Niestety manipulacja tym parametrem pozwoliła jedynie na poprawę dokładności rzędu $0.03$ dla obu przypadków klasyfikacji (tabela \ref{tab:svm_c_binary} oraz \ref{tab:svm_c_discrete}. Najlepszą wartością \textit{C} okazało się 10. 
 
 
 \begin{table}[H]
@@ -1082,9 +1081,90 @@ sigmoid &  0.589116 &  0.811750 &    2.918002 \\ \hline
 25.0  &  0.673469 &  \textbf{0.847253} &   30.673997 \\ \hline
     \end{tabular}
     \caption{Wyniki klasyfikacji na 3 klasy dla spółki \textit{GOOGL} w zależności wykorzystanego c}
+    \label{tab:svm_c_discrete}
+\end{table}
+
+
+Na koniec wykonane zostały testy dokładności w zależności od rozmiaru zbioru testowego w kontekście uczenia SVM metodą kroczącą. Z wyników w tabelach \ref{tab:svm_walk_forward_binary} oraz \ref{tab:svm_walk_forward_discrete} można zauważyć iż ta optymalizacja nie polepszyła znacznie wyników tak jak miało to miejsce w przypadku sieci neuronowych. Poprawa wyniosła 1\% dla klasyfikacji binarnej oraz 2\% dla klasyfikacji na 3 klasy. Optymalny rozmiar zbioru testowego wyniósł 360 próbek.
+
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+        \textbf{Rozmiar zbioru testowego} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
+max                        &  0.851701 &  0.848439 &   \textbf{9.490025} \\ \hline
+360                        &  \textbf{0.865079} &  0.834325 &   33.307443 \\ \hline
+180                      &  0.860159 &  0.841421 &   62.537217 \\ \hline
+90                         &  0.852557 &  \textbf{0.843217} &  103.744769 \\ \hline
+45                       &  0.844164 &  0.843217 &  250.237508 \\ \hline
+22                       &  0.841243 &  0.841935 &  529.248996 \\ \hline
+    \end{tabular}
+    \caption{Wyniki klasyfikacji binarnej dla spółki \textit{GOOGL} w zależności od rozmiaru zbioru testowego}
+    \label{tab:svm_walk_forward_binary}
+\end{table}
+
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+        \textbf{Rozmiar zbioru testowego} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
+max                        &  0.676190 &  0.847141 &   \textbf{13.023001} \\ \hline
+360                        &  \textbf{0.697354} &  0.855685 &   68.528990 \\ \hline
+180                        &  0.686190 &  0.861628 &  107.270033 \\ \hline
+90                         &  0.691711 &  \textbf{0.865852} &  193.407998 \\ \hline
+45                         &  0.687768 &  0.865695 &  364.011001 \\ \hline
+22                          &  0.691176 &  0.867509 &  724.383028 \\ \hline
+    \end{tabular}
+    \caption{Wyniki klasyfikacji na 3 klasy dla spółki \textit{GOOGL} w zależności od rozmiaru zbioru testowego}
+    \label{tab:svm_walk_forward_discrete}
 \end{table}
     
     
+    
+ \begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|}
+    \hline
+        \textbf{Spółka} & \textbf{Dokładność} &  \textbf{AUC} \\ \hline
+AAPL   &  0.807656 &  0.807442 \\ \hline
+AMGN   &  0.799253 &  0.804483 \\ \hline
+AMZN   &  0.773109 &  0.774013 \\ \hline
+CSCO   &  0.815126 &  0.810548 \\ \hline
+FB     &  0.825215 &  0.825025 \\ \hline
+GOOGL  &  0.851701 &  0.848439 \\ \hline
+INTC   &  0.829132 &  0.829314 \\ \hline
+MSFT   &  0.800187 &  0.804542 \\ \hline
+PEP    &  0.827586 &  0.824069 \\ \hline
+QCOM   &  0.835668 &  0.833690 \\ \hline  \hline
+\textbf{Średnia} &  \textbf{0.816463} & \textbf{0.816157} \\  \hline
+    \end{tabular}
+    \caption{Końcowe wyniki klasyfikacji binarnej SVM dla różnych spółek}
+    \label{tab:svm_final_binary}
+\end{table}   
+
+ \begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|}
+    \hline
+        \textbf{Spółka} & \textbf{Dokładność} &  \textbf{AUC} \\ \hline
+AAPL   &  0.671335 &  0.834981 \\ \hline
+AMGN   &  0.676937 &  0.849250 \\ \hline
+AMZN   &  0.625584 &  0.780425 \\ \hline
+CSCO   &  0.661064 &  0.853134 \\ \hline
+FB     &  0.604585 &  0.788980 \\ \hline
+GOOGL  &  0.676190 &  0.847226 \\ \hline
+INTC   &  0.718954 &  0.883384 \\ \hline
+MSFT   &  0.672269 &  0.842861 \\ \hline
+PEP    &  0.678472 &  0.853407 \\ \hline
+QCOM   &  0.687208 &  0.858990 \\ \hline \hline
+\textbf{Średnia} &  \textbf{0.667260} & \textbf{0.839264} \\  \hline
+    \end{tabular}
+    \caption{Końcowe wyniki klasyfikacji na 3 klasy SVM dla różnych spółek}
+    \label{tab:svm_final_binary}
+\end{table}   
+
 \section{Wspomaganie decyzji giełdowych}
 
 \section{Projekt aplikacji}
