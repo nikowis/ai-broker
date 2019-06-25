@@ -167,12 +167,47 @@ class LightGBMBenchmarkParams(BenchmarkParams):
     def __init__(self, binary_classification, examined_param=None, benchmark_name=str(uuid.uuid4())) -> None:
         super().__init__(binary_classification, examined_param, benchmark_name)
 
+        if self.binary_classification:
+            self.objective = 'binary'
+            self.model_num_class = 1
+        else:
+            self.objective = 'multiclassova'
+            self.model_num_class = 3
 
         self.one_hot_encode_labels = False
         self.save_model = False
         self.iterations = 1
 
+        self.num_leaves = 31
+        self.learning_rate = 0.1
+        self.max_bin = 255
+        self.max_depth = -1
+
+        # self.bagging_fraction  = 0.9
+        # self.bagging_freq  = 2
+        self.boosting = 'gbdt' # gbdt, gbrt, rf, random_forest, dart, goss
+        self.feature_fraction  = 0.8
+
+
+
+
     def update_from_dictionary(self, params_dict):
         super().update_from_dictionary(params_dict)
+        if 'num_leaves' in params_dict:
+            self.num_leaves = params_dict['num_leaves']
+        if 'learning_rate' in params_dict:
+            self.learning_rate = params_dict['learning_rate']
+        if 'max_bin' in params_dict:
+            self.max_bin = params_dict['max_bin']
+        if 'max_depth' in params_dict:
+            self.max_depth = params_dict['max_depth']
+        if 'boosting' in params_dict:
+            self.boosting = params_dict['boosting']
+        if 'bagging_fraction' in params_dict:
+            self.bagging_fraction = params_dict['bagging_fraction']
+        if 'bagging_freq' in params_dict:
+            self.bagging_freq = params_dict['bagging_freq']
+        if 'feature_fraction' in params_dict:
+            self.feature_fraction = params_dict['feature_fraction']
 
 

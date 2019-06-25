@@ -8,7 +8,6 @@ from sklearn.model_selection import ParameterGrid
 
 import benchmark_data_preprocessing
 import benchmark_file_helper
-import benchmark_params
 import benchmark_plot_helper
 import benchmark_roc_auc
 import csv_importer
@@ -31,6 +30,7 @@ def json_handler(Obj):
 
 class Benchmark:
     def __init__(self, symbols, bench_params: BenchmarkParams, changing_params_dict: dict = None) -> None:
+        self.bench_params = bench_params
         benchmark_time = time.time()
         self.df_list, self.sym_list = csv_importer.import_data_from_files(symbols, bench_params.csv_files_path)
         results_df = pd.DataFrame()
@@ -40,9 +40,9 @@ class Benchmark:
             for param in grid:
                 print('Parameters: {0}'.format(param))
                 bench_params.update_from_dictionary(param)
-                results_df = self.run(bench_params, results_df, symbols)
+                results_df = self.run(results_df, symbols)
         else:
-            results_df = self.run(bench_params, results_df, symbols)
+            results_df = self.run(results_df, symbols)
 
         benchmark_file_helper.save_results(results_df, bench_params)
 
@@ -55,7 +55,8 @@ class Benchmark:
 
         print('Benchmark finished in {0}.'.format(round(time.time() - benchmark_time, 2)))
 
-    def run(self, bench_params, results_df, symbols):
+    def run(self, results_df, symbols):
+        bench_params = self.bench_params
         if bench_params.save_files:
             with open('{0}/config-{1}.json'.format(bench_params.save_model_path, bench_params.id), 'w') as outfile:
                 json.dump(bench_params, outfile, default=json_handler, indent=True)
@@ -70,11 +71,11 @@ class Benchmark:
             else:
                 bench_params.input_size = x_train.shape[1]
 
-            results_df = self.run_single_company(x_train, x_test, y_train, y_test, bench_params, results_df)
+            results_df = self.run_single_company(x_train, x_test, y_train, y_test, results_df)
         return results_df
 
-    def run_single_company(self, x_train, x_test, y_train, y_test, bench_params, results_df):
-
+    def run_single_company(self, x_train, x_test, y_train, y_test, results_df):
+        bench_params = self.bench_params
         total_time = time.time()
         accuracies = []
         roc_auc_values = []
@@ -87,12 +88,11 @@ class Benchmark:
             bench_params.curr_iter_num = bench_params.curr_iter_num + 1
             iter_start_time = time.time()
 
-            model = self.create_model(bench_params)
+            model = self.create_model()
 
-            callbacks = self.create_callbacks(bench_params)
+            callbacks = self.create_callbacks()
 
             model, accuracy, loss, fpr, tpr, roc_auc, y_test_prediction, history = self.learn_and_evaluate(model,
-                                                                                                           bench_params,
                                                                                                            callbacks,
                                                                                                            x_train,
                                                                                                            x_test,
@@ -177,14 +177,15 @@ class Benchmark:
 
         return results_df
 
-    def learn_and_evaluate(self, model, bench_params: benchmark_params.BenchmarkParams, callbacks, x_train, x_test,
+    def learn_and_evaluate(self, model, callbacks, x_train, x_test,
                            y_train, y_test):
+        bench_params = self.bench_params
         if bench_params.walk_forward_testing:
             walk_iterations = len(x_train)
             walk_losses = []
             walk_accuracies = []
             walk_y_test_prediction = []
-            walk_history = self.create_history_object(bench_params)
+            walk_history = self.create_history_object()
 
             for walk_it in range(0, walk_iterations):
                 walk_x_train = x_train[walk_it]
@@ -192,13 +193,13 @@ class Benchmark:
                 walk_y_train = y_train[walk_it]
                 walk_y_test = y_test[walk_it]
 
-                epochs = self.get_walk_forward_epochs(bench_params, walk_it)
+                epochs = self.get_walk_forward_epochs(walk_it)
 
                 if bench_params.walk_forward_learn_from_scratch:
-                    model = self.create_model(bench_params)
-                model, history = self.fit_model(bench_params, model, callbacks, walk_x_train, walk_y_train, walk_x_test,
+                    model = self.create_model()
+                model, history = self.fit_model(model, callbacks, walk_x_train, walk_y_train, walk_x_test,
                                                 walk_y_test, epochs)
-                self.update_walk_history(bench_params, history, walk_history)
+                self.update_walk_history(history, walk_history)
 
                 acc, ls, y_test_prediction = self.evaluate_predict(model, walk_x_test, walk_y_test)
                 walk_losses.append(ls)
@@ -215,7 +216,7 @@ class Benchmark:
             history = walk_history
 
         else:
-            model, history = self.fit_model(bench_params, model, callbacks, x_train, y_train, x_test, y_test)
+            model, history = self.fit_model(model, callbacks, x_train, y_train, x_test, y_test)
             if bench_params.save_files and bench_params.save_model:
                 # restores best epoch of this iteration
                 model = load_model(benchmark_file_helper.get_model_path(bench_params))
@@ -228,15 +229,15 @@ class Benchmark:
 
         return model, accuracy, loss, fpr, tpr, roc_auc, y_test_prediction, history
 
-    def get_walk_forward_epochs(self, bench_params, iteration):
+    def get_walk_forward_epochs(self, iteration):
         """Get walk forward epochs for iteration"""
         return None
 
-    def create_model(self, bench_params):
+    def create_model(self):
         """Create predicting model, return model"""
         return None
 
-    def create_callbacks(self, bench_params):
+    def create_callbacks(self):
         """Create callbacks used while learning"""
         return None
 
@@ -244,14 +245,14 @@ class Benchmark:
         """Evaluate on test data, predict labels for x_test, return (accuracy, loss, y_prediction)"""
         return None, None, None
 
-    def fit_model(self, bench_params, model, callbacks, x_train, y_train, x_test, y_test, epochs=None):
+    def fit_model(self, model, callbacks, x_train, y_train, x_test, y_test, epochs=None):
         """Fit model on train data, return model and learning history or none"""
         return None, None
 
-    def update_walk_history(self, bench_params, history, walk_history):
+    def update_walk_history(self, history, walk_history):
         """Update history object with walk forward learning history"""
         return None
 
-    def create_history_object(self, bench_params):
+    def create_history_object(self):
         """Create an empty history object for walk forward learning"""
         return None

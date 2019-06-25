@@ -24,7 +24,7 @@ def lgbm_examine(binary_classification, examined_params, param_lists, companies=
         benchmark_name = benchmark_name + 'discrete'
 
     bench_params = benchmark_params.LightGBMBenchmarkParams(binary_classification, examined_param=examined_params,
-                                                      benchmark_name=benchmark_name)
+                                                            benchmark_name=benchmark_name)
     bench_params.plot_partial = True
     bench_params.walk_forward_testing = walk_forward_testing
     LightGBMBenchmark(companies, bench_params, param_dict)
@@ -44,4 +44,22 @@ def lgbm_final(binary):
 
 
 if __name__ == '__main__':
+    # lgbm_examine(True, 'feature_fraction', [[1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2]])
+    # lgbm_examine(False, 'feature_fraction',[[1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2]])
+    # lgbm_examine(True, 'num_leaves', [[5, 10, 20, 30, 50, 60, 70, 80, 90, 100, 200]])
+    # lgbm_examine(False, 'num_leaves', [[5, 10, 20, 30, 50, 60, 70, 80, 90, 100, 200]])
+    # lgbm_examine(True, 'max_depth', [[-1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]])
+    # lgbm_examine(False, 'max_depth', [[-1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]])
+    # lgbm_examine(True, 'max_bin', [[10, 50, 100, 200, 300, 500, 700, 1000, 1200, 1400, 1600, 2000]])
+    # lgbm_examine(False, 'max_bin', [[10, 50, 100, 200, 300, 500, 700, 1000, 1200, 1400, 1600, 2000]])
+    # lgbm_examine(True, 'boosting', [['dart', 'gbdt', 'gbrt','goss']])
+    # lgbm_examine(False, 'boosting', [['dart', 'gbdt', 'gbrt','goss']])
+    # lgbm_examine(True, 'walk_forward_test_window_size', [[360, 180, 90, 45, 22]],
+    #             walk_forward_testing=True)
+    # lgbm_examine(False, 'walk_forward_test_window_size', [[360, 180, 90, 45, 22]],
+    #             walk_forward_testing=True)
+
+
+
+
     print('Benchmark executions finished.')

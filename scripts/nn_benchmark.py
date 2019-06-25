@@ -12,7 +12,8 @@ class NnBenchmark(Benchmark):
     def __init__(self, symbols, bench_params: NnBenchmarkParams, changing_params_dict: dict = None) -> None:
         super().__init__(symbols, bench_params, changing_params_dict)
 
-    def create_callbacks(self, bench_params):
+    def create_callbacks(self):
+        bench_params = self.bench_params
         earlyStopping = EarlyStopping(monitor='val_' + bench_params.metric,
                                       min_delta=bench_params.early_stopping_min_delta,
                                       patience=bench_params.early_stopping_patience, verbose=0, mode='max',
@@ -25,10 +26,12 @@ class NnBenchmark(Benchmark):
             callbacks = [earlyStopping, mcp_save]
         return callbacks
 
-    def create_model(self, bench_params):
+    def create_model(self):
+        bench_params = self.bench_params
         return benchmark_nn_model.create_seq_model(bench_params)
 
-    def get_walk_forward_epochs(self, bench_params, iteration):
+    def get_walk_forward_epochs(self, iteration):
+        bench_params = self.bench_params
         if iteration == 0:
             epochs = bench_params.epochs
         else:
@@ -42,21 +45,24 @@ class NnBenchmark(Benchmark):
         y_test_prediction = model.predict(x_test)
         return acc, ls, y_test_prediction
 
-    def fit_model(self, bench_params, model, callbacks, x_train, y_train, x_test, y_test, epochs=None):
+    def fit_model(self, model, callbacks, x_train, y_train, x_test, y_test, epochs=None):
+        bench_params = self.bench_params
         if epochs is None:
             epochs = bench_params.epochs
         return model, model.fit(x_train, y_train, validation_data=(x_test, y_test),
                          epochs=epochs, batch_size=bench_params.batch_size,
                          callbacks=callbacks, verbose=0)
 
-    def update_walk_history(self, bench_params, history, walk_history):
+    def update_walk_history(self, history, walk_history):
+        bench_params = self.bench_params
         walk_history.history['loss'] += history.history['loss']
         walk_history.history['val_loss'] += history.history['val_loss']
         walk_history.history[bench_params.metric] += history.history[bench_params.metric]
         walk_history.history['val_' + bench_params.metric] += history.history[
             'val_' + bench_params.metric]
 
-    def create_history_object(self, bench_params):
+    def create_history_object(self):
+        bench_params = self.bench_params
         walk_history = keras.callbacks.History()
         walk_history.history = {'loss': [], 'val_loss': [], bench_params.metric: [],
                                 'val_' + bench_params.metric: []}

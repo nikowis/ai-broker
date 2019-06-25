@@ -41,7 +41,7 @@ def nn_final_binary():
 
 
 def nn_final_discrete():
-    for i in range(6, len(SYMBOLS)):
+    for i in range(9, len(SYMBOLS)):
         sym = SYMBOLS[i]
         benchmark_name = 'nn-final-discrete-' + str(i)
         bench_params = benchmark_params.NnBenchmarkParams(False, benchmark_name=benchmark_name)

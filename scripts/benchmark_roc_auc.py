@@ -23,7 +23,7 @@ def calculate_roc_auc(y_test, y_test_score, classes_count, one_hot_encode_labels
     else:
         if one_hot_encode_labels:
             y_test_score = y_test_score.flatten()
-        else:
+        elif len(y_test_score.shape) > 1:
             y_test_score = np.array([np.argmax(pred, axis=None, out=None) for pred in y_test_score])
         fpr, tpr, _ = roc_curve(y_test, y_test_score)
         roc_auc = auc(fpr, tpr)
