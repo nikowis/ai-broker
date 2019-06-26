@@ -42,6 +42,7 @@ def preprocess(df, benchmark_params: BenchmarkParams):
     else:
         y = np.array(df_copy[const.LABEL_DISCRETE_COL])
     x = np.array(df_without_corelated_features)
+    benchmark_params.feature_names = list(df_without_corelated_features.columns)
 
     if benchmark_params.binary_classification:
         encoder = LabelEncoder()

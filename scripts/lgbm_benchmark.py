@@ -50,6 +50,8 @@ class LightGBMBenchmark(Benchmark):
             # "bagging_fraction" : bench_params.bagging_fraction,
             # "bagging_freq" : bench_params.bagging_freq,
             "feature_fraction": bench_params.feature_fraction,
+            "min_sum_hessian_in_leaf": bench_params.min_sum_hessian_in_leaf,
+            "min_data_in_leaf": bench_params.min_data_in_leaf,
             "verbosity": -1
         }
 
@@ -58,22 +60,16 @@ class LightGBMBenchmark(Benchmark):
         train_data = lgb.Dataset(x_train, label=y_train)
         test_data = lgb.Dataset(x_test, label=y_test)
         bst = lgb.train(params, train_data, valid_sets=[test_data, train_data], num_boost_round=bench_params.num_boost_round
-                        , early_stopping_rounds=20, verbose_eval=20)#, evals_result=evaluating_history)
+                        , early_stopping_rounds=20, verbose_eval=20
+                        , feature_name=bench_params.feature_names)
+                        #, evals_result=evaluating_history)
 
         # print('Plotting metrics recorded during training...')
-        # ax = lgb.plot_metric(evaluating_history, metric='l1')
+        # ax = lgb.plot_metric(evaluating_history, metric='binary_logloss')
         # plt.show()
         #
         # print('Plotting feature importances...')
-        # ax = lgb.plot_importance(bst, max_num_features=10)
-        # plt.show()
-        #
-        # print('Plotting split value histogram...')
-        # ax = lgb.plot_split_value_histogram(bst, feature='f26', bins='auto')
-        # plt.show()
-        #
-        # print('Plotting 54th tree...')  # one tree use categorical feature to split
-        # ax = lgb.plot_tree(bst, tree_index=53, figsize=(15, 15), show_info=['split_gain'])
+        # ax = lgb.plot_importance(bst, max_num_features=20)
         # plt.show()
 
         return bst, None
@@ -88,5 +84,5 @@ class LightGBMBenchmark(Benchmark):
 
 
 if __name__ == '__main__':
-    bench_params = LightGBMBenchmarkParams(False, benchmark_name='lgbm_first')
+    bench_params = LightGBMBenchmarkParams(True, benchmark_name='lgbm_first')
     LightGBMBenchmark(['GOOGL'], bench_params)

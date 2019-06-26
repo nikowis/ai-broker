@@ -841,7 +841,7 @@ Wyniki testów klasyfikacji binarnej dla różnych progów wariancji, zostały p
 Brak                &  \textbf{0.854875} &  0.918459 &   21.490562 \\ \hline
 
     \end{tabular}
-    \caption{Wyniki klasyfikacji binarnej dla spółki \textit{GOOGL} w zależności od wybranej wartości wariancji}
+    \caption{MLP: wyniki klasyfikacji binarnej w zależności od wybranej wartości wariancji}
     \label{tab:nn_pca_binary}
 \end{table}
 
@@ -880,7 +880,7 @@ Takie same testy zostały przeprowadzone dla klasyfikacji na 3 klasy. Wyniki zos
 0.9999             &  \textbf{0.782766} &  \textbf{0.850174} &   26.393088 \\ \hline
 Brak                &  0.779138 &  0.848541 &   29.234138 \\ \hline
     \end{tabular}
-    \caption{Wyniki klasyfikacji na 3 klasy dla spółki \textit{GOOGL} w zależności od wybranej wartości wariancji}
+    \caption{MLP: wyniki klasyfikacji na 3 klasy w zależności od wybranej wartości wariancji}
     \label{tab:nn_pca_discrete}
 \end{table}
 
@@ -901,7 +901,7 @@ Następnym parametrem zbadanym podczas uczenia sieci jest liczba warstw ukrytych
 			& 2 & - & 0.909 &    0.910 &   0.908 &   0.911 &   0.917 &   0.908 &   0.905 &   0.914 & 0.915 \\ \cline{2 - 12} \hline
 
     \end{tabular}
-    \caption{Wartości miary AUC dla różnych konfiguracji warstw ukrytych i liczby neuronów dla klasyfikacji binarnej (wyniki zaokrąglone)}
+    \caption{MLP: wartości miary AUC dla różnych konfiguracji warstw ukrytych i liczby neuronów dla klasyfikacji binarnej (wyniki zaokrąglone)}
     \label{tab:nn_layers_binary}
 \end{table}
 
@@ -918,7 +918,7 @@ Analogicznie do klasyfikacji binarnej został przeprowadzony test dla klasyfikac
 			& 2 & - & 0.808 &   0.819 &   0.847 &   0.846 &   0.843 &   0.849 &   0.854 &   0.856 &   0.851  \\ \cline{2 - 12} \hline
 
     \end{tabular}
-    \caption{Wartości miary AUC dla różnych konfiguracji warstw ukrytych i liczby neuronów dla klasyfikacji na 3 klasy (wyniki zaokrąglone)}
+    \caption{MLP: wartości miary AUC dla różnych konfiguracji warstw ukrytych i liczby neuronów dla klasyfikacji na 3 klasy (wyniki zaokrąglone)}
     \label{tab:nn_layers_discrete}
 \end{table}
 
@@ -951,7 +951,7 @@ max                           &  0.855781 &  \textbf{0.919433} &   \textbf{17} \
 45                          &  0.877280 &  0.910868 &   405 \\ \hline
 22                          &  0.880905 &  0.904669 &  1163 \\ \hline
     \end{tabular}
-    \caption{Wyniki klasyfikacji binarnej dla spółki \textit{GOOGL} w zależności od rozmiaru zbioru testowego}
+    \caption{MLP: wyniki klasyfikacji binarnej w zależności od rozmiaru zbioru testowego}
     \label{tab:nn_walk_forward_test_binary}
 \end{table}
 
@@ -969,7 +969,7 @@ max    &  0.682993 &  0.857121 &  \textbf{38} \\ \hline
 45     &  0.760286 &  0.873949 &  1146 \\ \hline
 22  &  \textbf{0.787767} &  \textbf{0.882507} &  3229 \\ \hline
     \end{tabular}
-    \caption{Wyniki klasyfikacji na 3 klasy dla spółki \textit{GOOGL} w zależności od rozmiaru zbioru testowego}
+    \caption{MLP: wyniki klasyfikacji na 3 klasy w zależności od rozmiaru zbioru testowego}
     \label{tab:nn_walk_forward_test_discrete}
 \end{table}
 
@@ -1005,7 +1005,17 @@ QCOM   &  0.836926 &  0.909138 \\ \hline \hline
     \begin{tabular}{|c|c|c|}
     \hline
         \textbf{Spółka} & \textbf{Dokładność} &  \textbf{AUC} \\ \hline
-
+AAPL   &  0.779353 &  0.870174 \\ \hline
+AMGN   &  0.793533 &  0.882921 \\ \hline
+AMZN   &  0.758636 &  0.850956 \\ \hline
+CSCO   &  0.776217 &  0.873816 \\ \hline
+FB     &  0.740004 &  0.838994 \\ \hline
+GOOGL  &  0.789327 &  0.884055 \\ \hline
+INTC   &  0.812174 &  0.896550 \\ \hline
+MSFT   &  0.785449 &  0.881777 \\ \hline
+PEP    &  0.807127 &  0.892511 \\ \hline
+QCOM   &  0.777542 &  0.874250 \\ \hline \hline
+\textbf{Średnia}  &  \textbf{0.781936} & \textbf{0.874600} \\  \hline
     \end{tabular}
     \caption{Końcowe wyniki klasyfikacji na 3 klasy sieci neuronowych dla różnych spółek}
     \label{tab:nn_final_discrete}
@@ -1026,7 +1036,7 @@ poly    &  0.530612 &  0.634002 &    2.357999 \\ \hline
 rbf     &  0.805442 &  0.808863 &    \textbf{2.145996} \\ \hline
 sigmoid &  0.789116 &  0.792252 &    2.246001 \\ \hline
     \end{tabular}
-    \caption{Wyniki klasyfikacji binarnej dla spółki \textit{GOOGL} w zależności wykorzystanego jądra}
+    \caption{SVM: wyniki klasyfikacji binarnej w zależności od wykorzystanej funkcji jądra}
     \label{tab:svm_kernel_binary}
 \end{table}
 
@@ -1040,7 +1050,7 @@ poly    &  0.378231 &  0.594664 &    \textbf{2.571024} \\ \hline
 rbf     &  0.609524 &  0.838035 &    2.763033 \\ \hline
 sigmoid &  0.589116 &  0.811750 &    2.918002 \\ \hline
     \end{tabular}
-    \caption{Wyniki klasyfikacji na 3 klasy dla spółki \textit{GOOGL} w zależności wykorzystanego jądra}
+    \caption{SVM: wyniki klasyfikacji na 3 klasy w zależności od wykorzystanej funkcji jądra}
     \label{tab:svm_kernel_discrete}
 \end{table}
 
@@ -1061,7 +1071,7 @@ Następnym optymalizowanym parametrem był parametr kary \textit{C}. Domyślną 
 10.0  &  \textbf{0.851701} &  0.848439 &    9.490025 \\ \hline
 25.0  &  0.848980 &  0.846488 &   18.815997 \\ \hline
     \end{tabular}
-    \caption{Wyniki klasyfikacji binarnej dla spółki \textit{GOOGL} w zależności wykorzystanego c}
+    \caption{SVM: wyniki klasyfikacji binarnej w zależności wykorzystanego parametru C}
     \label{tab:svm_c_binary}
 \end{table}
 
@@ -1080,7 +1090,7 @@ Następnym optymalizowanym parametrem był parametr kary \textit{C}. Domyślną 
 10.0  &  \textbf{0.676190} &  0.847141 &   13.023001 \\ \hline
 25.0  &  0.673469 &  \textbf{0.847253} &   30.673997 \\ \hline
     \end{tabular}
-    \caption{Wyniki klasyfikacji na 3 klasy dla spółki \textit{GOOGL} w zależności wykorzystanego c}
+    \caption{SVM: wyniki klasyfikacji na 3 klasy w zależności wykorzystanego parametru C}
     \label{tab:svm_c_discrete}
 \end{table}
 
@@ -1100,7 +1110,7 @@ max                        &  0.851701 &  0.848439 &   \textbf{9.490025} \\ \hli
 45                       &  0.844164 &  0.843217 &  250.237508 \\ \hline
 22                       &  0.841243 &  0.841935 &  529.248996 \\ \hline
     \end{tabular}
-    \caption{Wyniki klasyfikacji binarnej dla spółki \textit{GOOGL} w zależności od rozmiaru zbioru testowego}
+    \caption{SVM: wyniki klasyfikacji binarnej w zależności od rozmiaru zbioru testowego}
     \label{tab:svm_walk_forward_binary}
 \end{table}
 
@@ -1117,7 +1127,7 @@ max                        &  0.676190 &  0.847141 &   \textbf{13.023001} \\ \hl
 45                         &  0.687768 &  0.865695 &  364.011001 \\ \hline
 22                          &  0.691176 &  0.867509 &  724.383028 \\ \hline
     \end{tabular}
-    \caption{Wyniki klasyfikacji na 3 klasy dla spółki \textit{GOOGL} w zależności od rozmiaru zbioru testowego}
+    \caption{SVM: wyniki klasyfikacji na 3 klasy w zależności od rozmiaru zbioru testowego}
     \label{tab:svm_walk_forward_discrete}
 \end{table}
     
@@ -1162,8 +1172,184 @@ QCOM   &  0.687208 &  0.858990 \\ \hline \hline
 \textbf{Średnia} &  \textbf{0.667260} & \textbf{0.839264} \\  \hline
     \end{tabular}
     \caption{Końcowe wyniki klasyfikacji na 3 klasy SVM dla różnych spółek}
-    \label{tab:svm_final_binary}
+    \label{tab:svm_final_discrete}
 \end{table}   
+
+\subsection{Light GBM}
+
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+        \textbf{PCA} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
+0.9                &  0.617687 &  0.658673 &    \textbf{0.112996} \\ \hline
+0.99               &  0.760544 &  0.845203 &    0.355000 \\ \hline
+0.999    &  0.791837 &  0.877228 &    0.765001 \\ \hline
+0.9999             &  0.802721 &  0.879168 &    0.903005 \\ \hline
+Brak                &  \textbf{0.824490} &  \textbf{0.910806} &    0.632995 \\ \hline
+    \end{tabular}
+    \caption{Light GBM: wyniki klasyfikacji binarnej w zależności od wybranej wartości wariancji}
+    \label{tab:lgbm_pca_}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+        \textbf{PCA} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
+0.9                &  0.438095 &  0.587427 &    \textbf{0.247017} \\  \hline
+0.99               &  0.570068 &  0.757724 &    0.899004 \\ \hline
+0.999 &  0.579592 &  0.765829 &    1.133001 \\ \hline
+0.9999             &  0.571429 &  0.765824 &    1.166996 \\ \hline
+Brak                &  \textbf{0.646259} &  \textbf{0.820201} &    1.241000 \\ \hline
+    \end{tabular}
+    \caption{Light GBM: wyniki klasyfikacji na 3 klasy w zależności od wybranej wartości wariancji}
+    \label{tab:lgbm_pca_discrete}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+        \textbf{Procent cech} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
+20              &  0.745578 &  0.832768 &    0.661063 \\ \hline
+30              &  0.785034 &  0.884036 &    \textbf{0.391003} \\ \hline
+40              &  0.806803 &  0.889521 &    0.710010 \\ \hline
+50             &  0.809524 &  0.897808 &    1.246994 \\ \hline
+60              &  0.821769 &  0.910041 &    1.367518 \\ \hline
+70              &  0.813605 &  0.905641 &    5.311466 \\ \hline
+80              &  0.824490 &  0.910806 &    1.581059 \\ \hline
+90              &  0.813605 &  0.910754 &    2.108266 \\ \hline
+100              &  \textbf{0.831293} &  \textbf{0.911758} &    1.717000 \\ \hline
+    \end{tabular}
+    \caption{Light GBM: wyniki klasyfikacji binarnej w zależności od procenta cech wykorzystanych do tworzenia pojedynczego drzewa}
+    \label{tab:lgbm_feature_fraction_binary}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+        \textbf{Procent cech} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
+20          &  0.541497 &  0.698834 &    \textbf{0.589999} \\ \hline
+30              &  0.606803 &  0.775659 &    1.528000 \\ \hline
+40              &  0.602721 &  0.780493 &    0.855000 \\ \hline
+50              &  0.625850 &  0.796584 &    1.453674 \\ \hline
+60              &  0.648980 &  0.821857 &    3.013062 \\ \hline
+70              &  0.640816 &  0.819061 &    2.339054 \\ \hline
+80              &  0.646259 &  0.820201 &    3.221801 \\ \hline
+90              &  0.648980 &  0.821506 &    2.187508 \\ \hline
+100              &  \textbf{0.654422} &  \textbf{0.831571} &    1.666998 \\ \hline
+    \end{tabular}
+    \caption{Light GBM: wyniki klasyfikacji na 3 klasy w zależności od procenta cech wykorzystanych do tworzenia pojedynczego drzewa}
+    \label{tab:lgbm_feature_fraction_discrete}
+\end{table}
+
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+        \textbf{Boosting} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
+dart     &  0.817687 &  0.906808 &    2.796990 \\ \hline
+gbdt     &  \textbf{0.834014} &  \textbf{0.911832} &    \textbf{1.173999} \\ \hline
+gbrt     &  0.834014 &  0.911832 &    1.244001 \\ \hline
+goss     &  0.797279 &  0.902891 &    0.748003 \\ \hline
+    \end{tabular}
+    \caption{Light GBM: wyniki klasyfikacji na 3 klasy w zależności od wybranego rodzaju boostingu}
+    \label{tab:lgbm_boosting_binary}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+        \textbf{Boosting} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
+dart     &  \textbf{0.663946} &  \textbf{0.835296} &    7.743999 \\ \hline
+gbdt     &  0.654422 &  0.831571 &    1.947000 \\ \hline
+gbrt     &  0.654422 &  0.831571 &    1.154999 \\ \hline
+goss     &  0.646259 &  0.810499 &    \textbf{1.321007} \\ \hline
+    \end{tabular}
+    \caption{Light GBM: wyniki klasyfikacji na 3 klasy w zależności od wybranego rodzaju boostingu}
+    \label{tab:lgbm_boosting_discrete}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+        \textbf{Rozmiar zbioru testowego} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
+360                         &  \textbf{0.867857} &  0.915407 &    \textbf{1.874000} \\ \hline
+180                         &  0.855714 &  \textbf{0.918232} &    5.498513 \\ \hline
+90                         &  0.837743 &  0.915601 &    6.347999 \\ \hline
+45                          &  0.837628 &  0.914706 &   11.757001 \\ \hline
+22                          &  0.847594 &  0.921981 &   23.754002 \\ \hline
+    \end{tabular}
+    \caption{Light GBM: wyniki klasyfikacji binarnej w zależności od rozmiaru zbioru testowego}
+    \label{tab:lgbm_walk_forward_binary}
+\end{table}
+
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+        \textbf{Rozmiar zbioru testowego} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
+360                         &  \textbf{0.727381} &  0.831340 &   \textbf{26.352005} \\ \hline
+180                         &  0.700317 &  \textbf{0.832342} &   45.234971 \\ \hline
+90                          &  0.680423 &  0.833708 &   75.542997 \\ \hline
+45                          &  0.681793 &  0.837955 &  137.898603 \\ \hline
+22                          &  0.665441 &  0.834180 &  398.519057 \\ \hline
+    \end{tabular}
+    \caption{Light GBM: wyniki klasyfikacji na 3 klasy w zależności od rozmiaru zbioru testowego}
+    \label{tab:lgbm_walk_forward_discrete}
+\end{table}
+
+ \begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|}
+    \hline
+        \textbf{Spółka} & \textbf{Dokładność} &  \textbf{AUC} \\ \hline
+AAPL   &  0.811402 &  0.908662 \\ \hline
+AMGN   &  0.819947 &  0.911287 \\ \hline
+AMZN   &  0.820503 &  0.902479 \\ \hline
+CSCO   &  0.811429 &  0.898069 \\ \hline
+FB     &  0.801724 &  0.886451 \\ \hline
+GOOGL  &  0.859524 &  0.913752 \\ \hline
+INTC   &  0.829101 &  0.907293 \\ \hline
+MSFT   &  0.798307 &  0.892258 \\ \hline
+PEP    &  0.830135 &  0.911192 \\ \hline
+QCOM   &  0.815132 &  0.911047 \\ \hline  \hline
+\textbf{Średnia} &  \textbf{0.819720} & \textbf{0.904249} \\  \hline
+    \end{tabular}
+    \caption{Końcowe wyniki klasyfikacji binarnej klasy Light GBM dla różnych spółek}
+    \label{tab:lgbm_final_binary}
+\end{table}   
+
+
+ \begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|}
+    \hline
+        \textbf{Spółka} & \textbf{Dokładność} &  \textbf{AUC} \\ \hline
+AAPL   &  0.650688 &  0.835158 \\ \hline
+AMGN   &  0.649841 &  0.829871 \\ \hline
+AMZN   &  0.660079 &  0.834420 \\ \hline
+CSCO   &  0.632989 &  0.820418 \\ \hline
+FB     &  0.678161 &  0.822698 \\ \hline
+GOOGL  &  0.729233 &  0.837079 \\ \hline
+INTC   &  0.668836 &  0.842349 \\ \hline
+MSFT   &  0.636958 &  0.822135 \\ \hline
+PEP    &  0.670854 &  0.837247 \\ \hline
+QCOM   &  0.661878 &  0.827209 \\ \hline \hline
+\textbf{Średnia} &  \textbf{0.663952} & \textbf{0.830858} \\  \hline
+    \end{tabular}
+    \caption{Końcowe wyniki klasyfikacji na 3 klasy Light GBM dla różnych spółek}
+    \label{tab:lgbm_final_discrete}
+\end{table}   
+
+\subsection{Podsumowanie}
 
 \section{Wspomaganie decyzji giełdowych}
 

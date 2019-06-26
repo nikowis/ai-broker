@@ -54,6 +54,7 @@ class BenchmarkParams:
         self.walk_forward_learn_from_scratch = True
         self.iterations = 3
         self.one_hot_encode_labels = True
+        self.feature_names = []
 
     def update_from_dictionary(self, params_dict):
         self.id = str(time.time())
@@ -181,11 +182,14 @@ class LightGBMBenchmarkParams(BenchmarkParams):
         self.save_model = False
         self.iterations = 1
         self.num_leaves = 31
-        self.learning_rate = 0.1
+        self.learning_rate = 0.05
         self.num_boost_round = 300
         self.max_bin = 255
         self.pca = None
-        self.feature_fraction  = 1
+        self.feature_fraction = 1
+        self.min_sum_hessian_in_leaf = 1e-3
+        self.min_data_in_leaf = 20
+        self.walk_forward_test_window_size = 360
 
     def update_from_dictionary(self, params_dict):
         super().update_from_dictionary(params_dict)
@@ -203,5 +207,7 @@ class LightGBMBenchmarkParams(BenchmarkParams):
             self.feature_fraction = params_dict['feature_fraction']
         if 'num_boost_round' in params_dict:
             self.num_boost_round = params_dict['num_boost_round']
-
-
+        if 'min_sum_hessian_in_leaf' in params_dict:
+            self.min_sum_hessian_in_leaf = params_dict['min_sum_hessian_in_leaf']
+        if 'min_data_in_leaf' in params_dict:
+            self.min_data_in_leaf = params_dict['min_data_in_leaf']

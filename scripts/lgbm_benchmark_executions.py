@@ -39,7 +39,7 @@ def lgbm_final(binary):
     bench_params = benchmark_params.LightGBMBenchmarkParams(binary, benchmark_name=benchmark_name)
     bench_params.plot_partial = False
     benchmark_params.verbose = True
-    bench_params.walk_forward_testing = False
+    bench_params.walk_forward_testing = True
     LightGBMBenchmark(SYMBOLS, bench_params)
 
 
@@ -56,9 +56,15 @@ if __name__ == '__main__':
     # lgbm_examine(False, 'num_leaves', [[5, 10, 20, 30, 50, 60, 70, 80, 90, 100, 20]])
     # lgbm_examine(True, 'max_bin', [[10, 50, 100, 200, 300, 500, 700, 1000, 1200, 1400, 1600]])
     # lgbm_examine(False, 'max_bin', [[10, 50, 100, 200, 300, 500, 700, 1000, 1200, 1400, 1600]])
+    # lgbm_examine(True, 'min_sum_hessian_in_leaf', [[0.001, 0.01, 0.1, 1, 2, 5 ,8, 10, 15, 25, 50, 100]])
+    # lgbm_examine(False, 'min_sum_hessian_in_leaf', [[0.001, 0.01, 0.1, 1, 2, 5 ,8, 10, 15, 25, 50, 100]])
+    # lgbm_examine(True, 'min_data_in_leaf', [[1, 3, 5, 10, 15, 20, 25, 50, 100]])
+    # lgbm_examine(False, 'min_data_in_leaf', [[1, 3, 5, 10, 15, 20, 25, 50, 100]])
 
-    lgbm_examine(True, 'walk_forward_test_window_size', [[360, 180, 90, 45, 22]],
-                walk_forward_testing=True)
+    # lgbm_examine(True, 'walk_forward_test_window_size', [[360, 180, 90, 45, 22]],
+    #             walk_forward_testing=True)
     # lgbm_examine(False, 'walk_forward_test_window_size', [[360, 180, 90, 45, 22]],
     #             walk_forward_testing=True)
+    lgbm_final(True)
+    lgbm_final(False)
     print('Benchmark executions finished.')
