@@ -69,6 +69,9 @@ if __name__ == '__main__':
     # analyze_csv('results-svm-walk_forward_test_window_size-GOOGL-binary.csv', 'walk_forward_test_window_size', True)
     # analyze_csv('results-svm-walk_forward_test_window_size-GOOGL-discrete.csv', 'walk_forward_test_window_size', True)
     # analyze_final('results-svm-final-binary.csv')
-    analyze_final('results-svm-final-discrete.csv')
-
+    # analyze_final('results-svm-final-discrete.csv')
+    # analyze_csv('results-lgbm-pca-GOOGL-binary.csv', 'pca', True)
+    # analyze_csv('results-lgbm-pca-GOOGL-discrete.csv', 'pca', True)
+    analyze_csv('results-lgbm-feature_fraction-GOOGL-discrete.csv', 'feature_fraction', True)
+    analyze_csv('results-lgbm-feature_fraction-GOOGL-binary.csv', 'feature_fraction', True)
     print('Result analyzer finished.')
