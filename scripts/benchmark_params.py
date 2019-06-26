@@ -171,13 +171,12 @@ class LightGBMBenchmarkParams(BenchmarkParams):
             self.objective = 'binary'
             self.model_num_class = 1
             self.max_depth = -1
-            # self.boosting = 'gbdt'
+            self.boosting = 'gbdt'
         else:
             self.objective = 'multiclassova'
             self.model_num_class = 3
             self.max_depth = -1
-            # self.boosting = 'dart'  # gbdt, gbrt, rf, random_forest, dart, goss
-        self.boosting = 'dart'
+            self.boosting = 'dart'  # gbdt, gbrt, rf, random_forest, dart, goss
         self.one_hot_encode_labels = False
         self.save_model = False
         self.iterations = 1
@@ -186,8 +185,6 @@ class LightGBMBenchmarkParams(BenchmarkParams):
         self.num_boost_round = 300
         self.max_bin = 255
         self.pca = None
-        # self.bagging_fraction  = 0.9
-        # self.bagging_freq  = 2
         self.feature_fraction  = 1
 
     def update_from_dictionary(self, params_dict):
@@ -202,10 +199,6 @@ class LightGBMBenchmarkParams(BenchmarkParams):
             self.max_depth = params_dict['max_depth']
         if 'boosting' in params_dict:
             self.boosting = params_dict['boosting']
-        if 'bagging_fraction' in params_dict:
-            self.bagging_fraction = params_dict['bagging_fraction']
-        if 'bagging_freq' in params_dict:
-            self.bagging_freq = params_dict['bagging_freq']
         if 'feature_fraction' in params_dict:
             self.feature_fraction = params_dict['feature_fraction']
         if 'num_boost_round' in params_dict:

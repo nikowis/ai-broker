@@ -48,8 +48,8 @@ if __name__ == '__main__':
     # lgbm_examine(False, 'pca', [[None, 0.9999, 0.999, 0.99, 0.9]])
     # lgbm_examine(True, 'feature_fraction', [[1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2]])
     # lgbm_examine(False, 'feature_fraction',[[1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2]])
-    lgbm_examine(True, 'boosting', [['dart', 'gbdt', 'gbrt','goss']])
-    lgbm_examine(False, 'boosting', [['dart', 'gbdt', 'gbrt','goss']])
+    # lgbm_examine(True, 'boosting', [['dart', 'gbdt', 'gbrt','goss']])
+    # lgbm_examine(False, 'boosting', [['dart', 'gbdt', 'gbrt','goss']])
     # lgbm_examine(True, 'max_depth', [[-1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 ,15]])
     # lgbm_examine(False, 'max_depth', [[-1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 ,15]])
     # lgbm_examine(True, 'num_leaves', [[5, 10, 20, 30, 50, 60, 70, 80, 90, 100, 200]])
@@ -57,8 +57,8 @@ if __name__ == '__main__':
     # lgbm_examine(True, 'max_bin', [[10, 50, 100, 200, 300, 500, 700, 1000, 1200, 1400, 1600]])
     # lgbm_examine(False, 'max_bin', [[10, 50, 100, 200, 300, 500, 700, 1000, 1200, 1400, 1600]])
 
-    # lgbm_examine(True, 'walk_forward_test_window_size', [[360, 180, 90, 45, 22]],
-    #             walk_forward_testing=True)
+    lgbm_examine(True, 'walk_forward_test_window_size', [[360, 180, 90, 45, 22]],
+                walk_forward_testing=True)
     # lgbm_examine(False, 'walk_forward_test_window_size', [[360, 180, 90, 45, 22]],
     #             walk_forward_testing=True)
     print('Benchmark executions finished.')
