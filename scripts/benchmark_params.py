@@ -211,3 +211,56 @@ class LightGBMBenchmarkParams(BenchmarkParams):
             self.min_sum_hessian_in_leaf = params_dict['min_sum_hessian_in_leaf']
         if 'min_data_in_leaf' in params_dict:
             self.min_data_in_leaf = params_dict['min_data_in_leaf']
+
+
+class RandomForestBenchmarkParams(BenchmarkParams):
+
+    def __init__(self, binary_classification, examined_param=None, benchmark_name=str(uuid.uuid4())) -> None:
+        super().__init__(binary_classification, examined_param, benchmark_name)
+
+        self.one_hot_encode_labels = False
+        self.save_model = False
+        self.iterations = 3
+        self.pca = 0.999
+
+        self.n_estimators = 1500
+        self.criterion = 'gini'
+        self.max_depth = None
+        self.min_samples_split = 2
+        self.min_samples_leaf = 1
+        self.min_weight_fraction_leaf = 0
+        self.max_features = 'auto'
+        self.max_leaf_nodes = None
+        self.min_impurity_decrease = 0
+        self.bootstrap = True
+        self.oob_score = False
+        self.warm_start  = False
+        self.n_jobs = -1
+        self.walk_forward_test_window_size = 360
+
+    def update_from_dictionary(self, params_dict):
+        super().update_from_dictionary(params_dict)
+        if 'n_estimators' in params_dict:
+            self.n_estimators = params_dict['n_estimators']
+        if 'criterion' in params_dict:
+            self.criterion = params_dict['criterion']
+        if 'max_depth' in params_dict:
+            self.max_depth = params_dict['max_depth']
+        if 'min_samples_split' in params_dict:
+            self.min_samples_split = params_dict['min_samples_split']
+        if 'min_samples_leaf' in params_dict:
+            self.min_samples_leaf = params_dict['min_samples_leaf']
+        if 'min_weight_fraction_leaf' in params_dict:
+            self.min_weight_fraction_leaf = params_dict['min_weight_fraction_leaf']
+        if 'max_features' in params_dict:
+            self.max_features = params_dict['max_features']
+        if 'max_leaf_nodes' in params_dict:
+            self.max_leaf_nodes = params_dict['max_leaf_nodes']
+        if 'min_impurity_decrease' in params_dict:
+            self.min_impurity_decrease = params_dict['min_impurity_decrease']
+        if 'bootstrap' in params_dict:
+            self.bootstrap = params_dict['bootstrap']
+        if 'oob_score' in params_dict:
+            self.oob_score = params_dict['oob_score']
+        if 'warm_start' in params_dict:
+            self.warm_start = params_dict['warm_start']
