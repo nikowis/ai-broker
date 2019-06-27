@@ -39,7 +39,7 @@ def lgbm_final(binary):
     bench_params = benchmark_params.LightGBMBenchmarkParams(binary, benchmark_name=benchmark_name)
     bench_params.plot_partial = False
     benchmark_params.verbose = True
-    bench_params.walk_forward_testing = True
+    bench_params.walk_forward_testing = False
     LightGBMBenchmark(SYMBOLS, bench_params)
 
 
@@ -65,6 +65,6 @@ if __name__ == '__main__':
     #             walk_forward_testing=True)
     # lgbm_examine(False, 'walk_forward_test_window_size', [[360, 180, 90, 45, 22]],
     #             walk_forward_testing=True)
-    lgbm_final(True)
+    # lgbm_final(True)
     lgbm_final(False)
     print('Benchmark executions finished.')

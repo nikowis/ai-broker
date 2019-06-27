@@ -189,7 +189,7 @@ class LightGBMBenchmarkParams(BenchmarkParams):
         self.feature_fraction = 1
         self.min_sum_hessian_in_leaf = 1e-3
         self.min_data_in_leaf = 20
-        self.walk_forward_test_window_size = 360
+        self.walk_forward_test_window_size = None
 
     def update_from_dictionary(self, params_dict):
         super().update_from_dictionary(params_dict)

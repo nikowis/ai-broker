@@ -724,9 +724,9 @@ Najprostszą implementacja sieci do predykcji danych giełdowych jest sieć przy
 % W ostatnich latach sieci tego rodzaju znajdują szerokie zastosowanie w takich dziedzinach jak rozpoznawanie mowy, tłumaczenia czy też opisywanie obrazów. Sieci LSTM mogą również być użyteczne w pracy z szeregami czasowymi, gdzie możliwe są zależności danych w czasie, tak jak na przykład na 
 % giełdzie. 
 
-\subsection{Metody zespołowe}
+%\subsection{Metody zespołowe}
 
-Metody zespołowe (ang. ensemble methods) polegają na tworzeniu wielu klasyfikatorów o małej złożoności, które w odosobnieniu nie dają zadowalających wyników (często są niewiele lepsze od klasyfikatora losowego), a następnie łączenie ich w komitety. Wyniki komitetów mogą być interpretowane na wiele sposobów np. poprzez głosowanie gdzie każdy członek komitetu oddaje swój głos na konkretny wynik klasyfikacji. Okazuje się że w praktyce stosowanie tej metody często daje bardzo konkurencyjne wyniki w stosunku do stosowania pojedynczych złożonych modeli klasyfikacyjnych bądź regresyjnych.
+%Metody zespołowe (ang. ensemble methods) polegają na tworzeniu wielu klasyfikatorów o małej złożoności, które w odosobnieniu nie dają zadowalających wyników (często są niewiele lepsze od klasyfikatora losowego), a następnie łączenie ich w komitety. Wyniki komitetów mogą być interpretowane na wiele sposobów np. poprzez głosowanie gdzie każdy członek komitetu oddaje swój głos na konkretny wynik klasyfikacji. Okazuje się że w praktyce stosowanie tej metody często daje bardzo konkurencyjne wyniki w stosunku do stosowania pojedynczych złożonych modeli klasyfikacyjnych bądź regresyjnych.
 
 \subsection{Random forest \cite{randforest}}
 
@@ -740,7 +740,7 @@ Las losowy (ang. \textit{random forest}) jest modelem opartym o drzewa decyzyjne
 
 Dla złożonych zagadnień predykcji takich jak przewidywanie trendu giełdy, drzewa decyzyjne okazują się zbyt prostym modelem. Las losowy jest rozwinięciem koncepcji drzew decyzyjnych w zakresie metod zespołowych. Głównym założeniem jest stworzenie wielu drzew decyzyjnych i opieranie końcowego wyniku na podstawie poszczególnych wyników każdego z drzew. W celu wprowadzenia różnorodności podczas konstrukcji węzłów drzew, losowane są cechy spośród których będą dobrane cechy decyzyjne w danym węźle. Metoda ta zazwyczaj daje dużo lepsze efekty niż pojedyncze drzewa decyzyjne, oraz często pomaga w ograniczaniu zjawiska przeuczania (ang. overfitting).  
 
-\subsubsection{Light GBM \cite{lgbm}}
+\subsection{Light GBM \cite{lgbm}}
 
 \textit{Light GBM} jest algorytmem z rodziny \textit{gradient boosting decision trees}. Algorytmy te oparte są o zespół drzew decyzyjnych. W przeciwieństwie do metody \textit{lasu losowego} konstrukcja kolejnych drzew jest wykonywana w sposób sekwencyjny, oraz zależny od wyników poprzednich drzew. Dzięki takiemu zabiegowi, zespół drzew dąży do ulepszenia swoich wyników jako całości. Algorytm \textit{light GBM} przewyższa inne algorytmy ze swojej klasy takie jak \textit{XGBoost} dzięki innemu podejściu do tworzenia drzew. Podczas gdy większość algorytmów powiększa drzewa decyzyjne wgłąb (\textit{level-wise}  rysunek \ref{level-wise}), \textit{light GBM} powiększa drzewa decyzyjne ze względu na liście (\textit{leaf-wise} rysunek \ref{leaf-wise}). Ten zabieg wraz z innymi optymalizacjami sprawia, że algorytm ten osiąga porównywalne wyniki do innych algorytmów ze swojej klasy, przy dużym skrócenia czasu uczenia się. 
 
@@ -797,6 +797,118 @@ W poniższym rozdziale zostały opisane przeprowadzone eksperymenty numeryczne z
 \end{table}
 
 Wszystkie eksperymenty dla każdego zestawu parametrów zostały przeprowadzone 3 razy, a wartości dokładności i AUC zostały uśrednione. Czas uczenia jest czasem wykonania 3 iteracji testu dla danego zestawu parametrów.
+
+\subsection{SVM}
+
+Analiza maszyn wektorów nośnych należy zacząć od wyboru odpowiedniej funkcji jądra. Początkowo wykorzystane zostały domyślne parametry SVM z biblioteki \textit{sklearn} \cite{bib:sklearnsvm}. Tabele \ref{tab:svm_kernel_binary} oraz \ref{tab:svm_kernel_discrete} przedstawiają wyniki klasyfikacji w zależności od wybranej funkcji jądra. W obu przypadkach najlepsza okazała się funkcja liniowa osiągając 84\% dokładności dla klasyfikacji binarnej oraz 67\% dokładności w klasyfikacji na 3 klasy.
+ Jak widać w obu przypadakch najgorsze wyniki osiąga funkcja wielomianowa (\textit{poly}). 
+W dalszych eksperymentach wykorzystywana była funkcja liniowa.
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+        \textbf{Kernel} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
+linear  &  \textbf{0.848980} &  \textbf{0.849554} &    2.351031 \\ \hline
+poly    &  0.530612 &  0.634002 &    2.357999 \\ \hline
+rbf     &  0.805442 &  0.808863 &    \textbf{2.145996} \\ \hline
+sigmoid &  0.789116 &  0.792252 &    2.246001 \\ \hline
+    \end{tabular}
+    \caption{SVM: wyniki klasyfikacji binarnej w zależności od wykorzystanej funkcji jądra}
+    \label{tab:svm_kernel_binary}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+        \textbf{Kernel} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
+linear  &  \textbf{0.673469} &  \textbf{0.848302} &    2.806034 \\ \hline
+poly    &  0.378231 &  0.594664 &    \textbf{2.571024} \\ \hline
+rbf     &  0.609524 &  0.838035 &    2.763033 \\ \hline
+sigmoid &  0.589116 &  0.811750 &    2.918002 \\ \hline
+    \end{tabular}
+    \caption{SVM: wyniki klasyfikacji na 3 klasy w zależności od wykorzystanej funkcji jądra}
+    \label{tab:svm_kernel_discrete}
+\end{table}
+
+Następnym optymalizowanym parametrem był parametr kary \textit{C}. Domyślną wartością \textit{C} jest 1. Niestety manipulacja tym parametrem pozwoliła jedynie na poprawę dokładności rzędu $0.03$ dla obu przypadków klasyfikacji (tabela \ref{tab:svm_c_binary} oraz \ref{tab:svm_c_discrete}. Najlepszą wartością \textit{C} okazało się 10. 
+
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+        \textbf{C} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
+0.005 &  0.813605 &  0.811315 &    1.528037 \\ \hline
+0.01  &  0.827211 &  0.820457 &    1.358999 \\ \hline
+0.1   &  0.846259 &  0.843590 &    \textbf{1.202999} \\ \hline
+0.5   &  0.848980 &  0.847938 &    1.599977 \\ \hline
+1.0   &  0.848980 &  0.849554 &    2.088028 \\ \hline
+5.0   &  0.850340 &  \textbf{0.851338} &    5.381001 \\ \hline
+10.0  &  \textbf{0.851701} &  0.848439 &    9.490025 \\ \hline
+25.0  &  0.848980 &  0.846488 &   18.815997 \\ \hline
+    \end{tabular}
+    \caption{SVM: wyniki klasyfikacji binarnej w zależności wykorzystanego parametru C}
+    \label{tab:svm_c_binary}
+\end{table}
+
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+        \textbf{C} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
+0.005 &  0.600000 &  0.833851 &    1.851034 \\ \hline
+0.01  &  0.638095 &  0.848663 &    1.773027 \\ \hline
+0.1   &  0.670748 &  0.857033 &    \textbf{1.660041} \\ \hline
+0.5   &  0.672109 &  0.849077 &    2.105039 \\ \hline
+1.0   &  0.673469 &  0.848400 &    2.824997 \\ \hline
+5.0   &  0.674830 &  0.846707 &    7.747027 \\ \hline
+10.0  &  \textbf{0.676190} &  0.847141 &   13.023001 \\ \hline
+25.0  &  0.673469 &  \textbf{0.847253} &   30.673997 \\ \hline
+    \end{tabular}
+    \caption{SVM: wyniki klasyfikacji na 3 klasy w zależności wykorzystanego parametru C}
+    \label{tab:svm_c_discrete}
+\end{table}
+
+
+Na koniec wykonane zostały testy dokładności w zależności od rozmiaru zbioru testowego w kontekście uczenia SVM metodą kroczącą. Z wyników w tabelach \ref{tab:svm_walk_forward_binary} oraz \ref{tab:svm_walk_forward_discrete} można zauważyć iż ta optymalizacja nie polepszyła znacznie wyników tak jak miało to miejsce w przypadku sieci neuronowych. Poprawa wyniosła 1\% dla klasyfikacji binarnej oraz 2\% dla klasyfikacji na 3 klasy. Optymalny rozmiar zbioru testowego wyniósł 360 próbek.
+
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+        \textbf{Rozmiar zbioru testowego} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
+max                        &  0.851701 &  0.848439 &   \textbf{9.490025} \\ \hline
+360                        &  \textbf{0.865079} &  0.834325 &   33.307443 \\ \hline
+180                      &  0.860159 &  0.841421 &   62.537217 \\ \hline
+90                         &  0.852557 &  \textbf{0.843217} &  103.744769 \\ \hline
+45                       &  0.844164 &  0.843217 &  250.237508 \\ \hline
+22                       &  0.841243 &  0.841935 &  529.248996 \\ \hline
+    \end{tabular}
+    \caption{SVM: wyniki klasyfikacji binarnej w zależności od rozmiaru zbioru testowego}
+    \label{tab:svm_walk_forward_binary}
+\end{table}
+
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+        \textbf{Rozmiar zbioru testowego} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
+max                        &  0.676190 &  0.847141 &   \textbf{13.023001} \\ \hline
+360                        &  \textbf{0.697354} &  0.855685 &   68.528990 \\ \hline
+180                        &  0.686190 &  0.861628 &  107.270033 \\ \hline
+90                         &  0.691711 &  \textbf{0.865852} &  193.407998 \\ \hline
+45                         &  0.687768 &  0.865695 &  364.011001 \\ \hline
+22                          &  0.691176 &  0.867509 &  724.383028 \\ \hline
+    \end{tabular}
+    \caption{SVM: wyniki klasyfikacji na 3 klasy w zależności od rozmiaru zbioru testowego}
+    \label{tab:svm_walk_forward_discrete}
+\end{table}
+    
+    
 
 \subsection{Sieci neuronowe}
 
@@ -975,104 +1087,39 @@ max    &  0.682993 &  0.857121 &  \textbf{38} \\ \hline
 
 Ostatecznie dla klasyfikacji binarnej zostały użyte zbiory testowe z 360 próbkami, zaś dla klasyfikacji trójklasowej zbiory z 22 próbkami.
 
-\bigskip
 
-Tabele \ref{tab:nn_final_binary} oraz \ref{tab:nn_final_discrete} przedstawiają końcowe wyniki dla wszystkich wybranych spółek wraz z ich średnią. 
 
-\begin{table}[H]
-    \centering
-    \begin{tabular}{|c|c|c|}
-    \hline
-        \textbf{Spółka} & \textbf{Dokładność} &  \textbf{AUC} \\ \hline
-AAPL   &  0.823688 &  0.904442 \\ \hline
-AMGN   &  0.826799 &  0.902411 \\ \hline
-AMZN   &  0.811963 &  0.874611 \\ \hline
-CSCO   &  0.819011 &  0.888930 \\ \hline
-FB     &  0.836207 &  0.903972 \\ \hline
-GOOGL  &  0.885767 &  0.917592 \\ \hline
-INTC   &  0.837402 &  0.906616 \\ \hline
-MSFT   &  0.826206 &  0.900397 \\ \hline
-PEP    &  0.843401 &  0.908477 \\ \hline
-QCOM   &  0.836926 &  0.909138 \\ \hline \hline
-\textbf{Średnia} &  \textbf{0.834737} & \textbf{0.901659} \\  \hline
-    \end{tabular}
-    \caption{Końcowe wyniki klasyfikacji binarnej sieci neuronowych dla różnych spółek}
-    \label{tab:nn_final_binary}
-\end{table}
-
-\begin{table}[H]
-    \centering
-    \begin{tabular}{|c|c|c|}
-    \hline
-        \textbf{Spółka} & \textbf{Dokładność} &  \textbf{AUC} \\ \hline
-AAPL   &  0.779353 &  0.870174 \\ \hline
-AMGN   &  0.793533 &  0.882921 \\ \hline
-AMZN   &  0.758636 &  0.850956 \\ \hline
-CSCO   &  0.776217 &  0.873816 \\ \hline
-FB     &  0.740004 &  0.838994 \\ \hline
-GOOGL  &  0.789327 &  0.884055 \\ \hline
-INTC   &  0.812174 &  0.896550 \\ \hline
-MSFT   &  0.785449 &  0.881777 \\ \hline
-PEP    &  0.807127 &  0.892511 \\ \hline
-QCOM   &  0.777542 &  0.874250 \\ \hline \hline
-\textbf{Średnia}  &  \textbf{0.781936} & \textbf{0.874600} \\  \hline
-    \end{tabular}
-    \caption{Końcowe wyniki klasyfikacji na 3 klasy sieci neuronowych dla różnych spółek}
-    \label{tab:nn_final_discrete}
-\end{table}
-
-\subsection{SVM}
-
-Analiza maszyn wektorów nośnych należy zacząć od wyboru odpowiedniej funkcji jądra. Początkowo wykorzystane zostały domyślne parametry SVM z biblioteki \textit{sklearn} \cite{bib:sklearnsvm}. Tabele \ref{tab:svm_kernel_binary} oraz \ref{tab:svm_kernel_discrete} przedstawiają wyniki klasyfikacji w zależności od wybranej funkcji jądra. W obu przypadkach najlepsza okazała się funkcja liniowa osiągając 84\% dokładności dla klasyfikacji binarnej oraz 67\% dokładności w klasyfikacji na 3 klasy.
- Jak widać w obu przypadakch najgorsze wyniki osiąga funkcja wielomianowa (\textit{poly}). 
-W dalszych eksperymentach wykorzystywana była funkcja liniowa.
-\begin{table}[H]
-    \centering
-    \begin{tabular}{|c|c|c|c|}
-    \hline
-        \textbf{Kernel} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
-linear  &  \textbf{0.848980} &  \textbf{0.849554} &    2.351031 \\ \hline
-poly    &  0.530612 &  0.634002 &    2.357999 \\ \hline
-rbf     &  0.805442 &  0.808863 &    \textbf{2.145996} \\ \hline
-sigmoid &  0.789116 &  0.792252 &    2.246001 \\ \hline
-    \end{tabular}
-    \caption{SVM: wyniki klasyfikacji binarnej w zależności od wykorzystanej funkcji jądra}
-    \label{tab:svm_kernel_binary}
-\end{table}
+\subsection{Random forest}
 
 \begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|}
     \hline
-        \textbf{Kernel} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
-linear  &  \textbf{0.673469} &  \textbf{0.848302} &    2.806034 \\ \hline
-poly    &  0.378231 &  0.594664 &    \textbf{2.571024} \\ \hline
-rbf     &  0.609524 &  0.838035 &    2.763033 \\ \hline
-sigmoid &  0.589116 &  0.811750 &    2.918002 \\ \hline
+        \textbf{PCA} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
+0.95               &  0.650340 &  0.652564 &    \textbf{1.084675} \\ \hline
+0.98               &  0.735147 &  0.734262 &    1.515345 \\ \hline
+0.99               &  0.752834 &  0.753326 &    1.626672 \\ \hline
+0.999 &  0.772789 &  0.772018 &    1.704345 \\ \hline
+0.9999             &  \textbf{0.777778} &  \textbf{0.777053} &    1.710322 \\ \hline
+Brak                &  0.753741 &  0.754849 &    2.229286 \\ \hline
     \end{tabular}
-    \caption{SVM: wyniki klasyfikacji na 3 klasy w zależności od wykorzystanej funkcji jądra}
-    \label{tab:svm_kernel_discrete}
+    \caption{Random forest: wyniki klasyfikacji binarnej w zależności od wybranej wartości wariancji}
+    \label{tab:rf_pca_binary}
 \end{table}
-
-Następnym optymalizowanym parametrem był parametr kary \textit{C}. Domyślną wartością \textit{C} jest 1. Niestety manipulacja tym parametrem pozwoliła jedynie na poprawę dokładności rzędu $0.03$ dla obu przypadków klasyfikacji (tabela \ref{tab:svm_c_binary} oraz \ref{tab:svm_c_discrete}. Najlepszą wartością \textit{C} okazało się 10. 
-
-
 \begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|}
     \hline
-        \textbf{C} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
-0.005 &  0.813605 &  0.811315 &    1.528037 \\ \hline
-0.01  &  0.827211 &  0.820457 &    1.358999 \\ \hline
-0.1   &  0.846259 &  0.843590 &    \textbf{1.202999} \\ \hline
-0.5   &  0.848980 &  0.847938 &    1.599977 \\ \hline
-1.0   &  0.848980 &  0.849554 &    2.088028 \\ \hline
-5.0   &  0.850340 &  \textbf{0.851338} &    5.381001 \\ \hline
-10.0  &  \textbf{0.851701} &  0.848439 &    9.490025 \\ \hline
-25.0  &  0.848980 &  0.846488 &   18.815997 \\ \hline
+        \textbf{PCA} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
+0.95               &  0.487075 &  0.677503 &    \textbf{1.226344} \\ \hline
+0.98               &  0.547846 &  0.742437 &    1.437373 \\ \hline
+0.99               &  0.568254 &  0.758338 &    1.406685 \\ \hline
+0.999 &  0.570068 &  0.765132 &    1.711658 \\ \hline
+0.9999             &  \textbf{0.576417} &  \textbf{0.767606} &    1.747348 \\ \hline
+Brak                &  0.567347 &  0.768452 &    2.043028 \\ \hline
     \end{tabular}
-    \caption{SVM: wyniki klasyfikacji binarnej w zależności wykorzystanego parametru C}
-    \label{tab:svm_c_binary}
+    \caption{Random forest: wyniki klasyfikacji na 3 klasy w zależności od wybranej wartości wariancji}
+    \label{tab:rf_pca_discrete}
 \end{table}
 
 
@@ -1080,38 +1127,33 @@ Następnym optymalizowanym parametrem był parametr kary \textit{C}. Domyślną 
     \centering
     \begin{tabular}{|c|c|c|c|}
     \hline
-        \textbf{C} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
-0.005 &  0.600000 &  0.833851 &    1.851034 \\ \hline
-0.01  &  0.638095 &  0.848663 &    1.773027 \\ \hline
-0.1   &  0.670748 &  0.857033 &    \textbf{1.660041} \\ \hline
-0.5   &  0.672109 &  0.849077 &    2.105039 \\ \hline
-1.0   &  0.673469 &  0.848400 &    2.824997 \\ \hline
-5.0   &  0.674830 &  0.846707 &    7.747027 \\ \hline
-10.0  &  \textbf{0.676190} &  0.847141 &   13.023001 \\ \hline
-25.0  &  0.673469 &  \textbf{0.847253} &   30.673997 \\ \hline
+        \textbf{Liczba drzew} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
+100        &  0.779138 &  0.778948 &    \textbf{1.254666} \\ \hline
+200        &  0.781859 &  0.781289 &    2.391548 \\ \hline
+300        &  0.786395 &  0.785786 &    3.506159 \\ \hline
+500       &  0.779138 &  0.778837 &    5.656016 \\ \hline
+1000       &  0.782313 &  0.781438 &   10.835435 \\ \hline
+1500      &  \textbf{0.787755} &  \textbf{0.787179} &   16.527833 \\ \hline
+2000       &  0.782766 &  0.782144 &   21.734268 \\ \hline
     \end{tabular}
-    \caption{SVM: wyniki klasyfikacji na 3 klasy w zależności wykorzystanego parametru C}
-    \label{tab:svm_c_discrete}
+    \caption{Random forest: wyniki klasyfikacji binarnej w zależności od liczby utworzonych drzew}
+    \label{tab:rf_estimators_binary}
 \end{table}
-
-
-Na koniec wykonane zostały testy dokładności w zależności od rozmiaru zbioru testowego w kontekście uczenia SVM metodą kroczącą. Z wyników w tabelach \ref{tab:svm_walk_forward_binary} oraz \ref{tab:svm_walk_forward_discrete} można zauważyć iż ta optymalizacja nie polepszyła znacznie wyników tak jak miało to miejsce w przypadku sieci neuronowych. Poprawa wyniosła 1\% dla klasyfikacji binarnej oraz 2\% dla klasyfikacji na 3 klasy. Optymalny rozmiar zbioru testowego wyniósł 360 próbek.
-
-
 \begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|}
     \hline
-        \textbf{Rozmiar zbioru testowego} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
-max                        &  0.851701 &  0.848439 &   \textbf{9.490025} \\ \hline
-360                        &  \textbf{0.865079} &  0.834325 &   33.307443 \\ \hline
-180                      &  0.860159 &  0.841421 &   62.537217 \\ \hline
-90                         &  0.852557 &  \textbf{0.843217} &  103.744769 \\ \hline
-45                       &  0.844164 &  0.843217 &  250.237508 \\ \hline
-22                       &  0.841243 &  0.841935 &  529.248996 \\ \hline
+        \textbf{Liczba drzew} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
+100        &  0.574150 &  0.763649 &    \textbf{1.228010} \\ \hline
+200        &  0.574150 &  0.767209 &    2.428561 \\ \hline
+300        &  0.574150 &  0.768572 &    3.478281 \\ \hline
+500        &  0.585395 &  0.774938 &    5.866535 \\ \hline
+1000       &  0.584127 &  0.775766 &   11.639547 \\ \hline
+1500       &  \textbf{0.585988} &  \textbf{0.778329} &   15.834652 \\ \hline
+2000      &  0.585441 &  0.776137 &   20.285341 \\ \hline
     \end{tabular}
-    \caption{SVM: wyniki klasyfikacji binarnej w zależności od rozmiaru zbioru testowego}
-    \label{tab:svm_walk_forward_binary}
+    \caption{Random forest: wyniki klasyfikacji na 3 klasy w zależności od liczby utworzonych drzew}
+    \label{tab:rf_estimators_discrete}
 \end{table}
 
 
@@ -1120,63 +1162,34 @@ max                        &  0.851701 &  0.848439 &   \textbf{9.490025} \\ \hli
     \begin{tabular}{|c|c|c|c|}
     \hline
         \textbf{Rozmiar zbioru testowego} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
-max                        &  0.676190 &  0.847141 &   \textbf{13.023001} \\ \hline
-360                        &  \textbf{0.697354} &  0.855685 &   68.528990 \\ \hline
-180                        &  0.686190 &  0.861628 &  107.270033 \\ \hline
-90                         &  0.691711 &  \textbf{0.865852} &  193.407998 \\ \hline
-45                         &  0.687768 &  0.865695 &  364.011001 \\ \hline
-22                          &  0.691176 &  0.867509 &  724.383028 \\ \hline
+max                         &  \textbf{0.787755} &  \textbf{0.787179} &  \textbf{16.527833} \\ \hline
+360                         &  0.753131 &  0.759844 &   65.553659 \\ \hline        
+180                         &  0.749894 &  0.756907 &  105.710007 \\ \hline
+90                          &  0.755908 &  0.758301 &  180.461685 \\ \hline
+45                          &  0.753906 &  0.754997 &  336.741707 \\ \hline
+22                          &  0.751783 &  0.755511 &  716.216814 \\ \hline
     \end{tabular}
-    \caption{SVM: wyniki klasyfikacji na 3 klasy w zależności od rozmiaru zbioru testowego}
-    \label{tab:svm_walk_forward_discrete}
+    \caption{Random forest: wyniki klasyfikacji binarnej w zależności od rozmiaru zbioru testowego}
+    \label{tab:rf_walk_forward_binary}
 \end{table}
-    
-    
-    
- \begin{table}[H]
-    \centering
-    \begin{tabular}{|c|c|c|}
-    \hline
-        \textbf{Spółka} & \textbf{Dokładność} &  \textbf{AUC} \\ \hline
-AAPL   &  0.807656 &  0.807442 \\ \hline
-AMGN   &  0.799253 &  0.804483 \\ \hline
-AMZN   &  0.773109 &  0.774013 \\ \hline
-CSCO   &  0.815126 &  0.810548 \\ \hline
-FB     &  0.825215 &  0.825025 \\ \hline
-GOOGL  &  0.851701 &  0.848439 \\ \hline
-INTC   &  0.829132 &  0.829314 \\ \hline
-MSFT   &  0.800187 &  0.804542 \\ \hline
-PEP    &  0.827586 &  0.824069 \\ \hline
-QCOM   &  0.835668 &  0.833690 \\ \hline  \hline
-\textbf{Średnia} &  \textbf{0.816463} & \textbf{0.816157} \\  \hline
-    \end{tabular}
-    \caption{Końcowe wyniki klasyfikacji binarnej SVM dla różnych spółek}
-    \label{tab:svm_final_binary}
-\end{table}   
 
- \begin{table}[H]
+\begin{table}[H]
     \centering
-    \begin{tabular}{|c|c|c|}
+    \begin{tabular}{|c|c|c|c|}
     \hline
-        \textbf{Spółka} & \textbf{Dokładność} &  \textbf{AUC} \\ \hline
-AAPL   &  0.671335 &  0.834981 \\ \hline
-AMGN   &  0.676937 &  0.849250 \\ \hline
-AMZN   &  0.625584 &  0.780425 \\ \hline
-CSCO   &  0.661064 &  0.853134 \\ \hline
-FB     &  0.604585 &  0.788980 \\ \hline
-GOOGL  &  0.676190 &  0.847226 \\ \hline
-INTC   &  0.718954 &  0.883384 \\ \hline
-MSFT   &  0.672269 &  0.842861 \\ \hline
-PEP    &  0.678472 &  0.853407 \\ \hline
-QCOM   &  0.687208 &  0.858990 \\ \hline \hline
-\textbf{Średnia} &  \textbf{0.667260} & \textbf{0.839264} \\  \hline
+        \textbf{Rozmiar zbioru testowego} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
+max                         &  \textbf{0.585988} &  0.778329 &  \textbf{15.834652} \\ \hline
+360                         &  0.556173 &  0.779862 &   67.133358 \\ \hline
+180                         &  0.570370 &  0.786893 &  121.863561 \\ \hline
+90                         &  0.569959 &  \textbf{0.788930} &  223.579185 \\ \hline
+45                          &  0.574946 &  0.787879 &  443.906251 \\ \hline
+22                          &  0.573864 &  0.787886 &  834.891297 \\ \hline
     \end{tabular}
-    \caption{Końcowe wyniki klasyfikacji na 3 klasy SVM dla różnych spółek}
-    \label{tab:svm_final_discrete}
-\end{table}   
+    \caption{Random forest: wyniki klasyfikacji na 3 klasy w zależności od rozmiaru zbioru testowego}
+    \label{tab:rf_walk_forward_discrete}
+\end{table}
 
 \subsection{Light GBM}
-
 
 \begin{table}[H]
     \centering
@@ -1190,7 +1203,7 @@ QCOM   &  0.687208 &  0.858990 \\ \hline \hline
 Brak                &  \textbf{0.824490} &  \textbf{0.910806} &    0.632995 \\ \hline
     \end{tabular}
     \caption{Light GBM: wyniki klasyfikacji binarnej w zależności od wybranej wartości wariancji}
-    \label{tab:lgbm_pca_}
+    \label{tab:lgbm_pca_binary}
 \end{table}
 
 \begin{table}[H]
@@ -1280,7 +1293,8 @@ goss     &  0.646259 &  0.810499 &    \textbf{1.321007} \\ \hline
     \begin{tabular}{|c|c|c|c|}
     \hline
         \textbf{Rozmiar zbioru testowego} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
-360                         &  \textbf{0.867857} &  0.915407 &    \textbf{1.874000} \\ \hline
+max    &  0.834014 &  0.911832 &  \textbf{1.173999} \\ \hline
+360                         &  \textbf{0.867857} &  0.915407 &   1.874000 \\ \hline
 180                         &  0.855714 &  \textbf{0.918232} &    5.498513 \\ \hline
 90                         &  0.837743 &  0.915601 &    6.347999 \\ \hline
 45                          &  0.837628 &  0.914706 &   11.757001 \\ \hline
@@ -1296,7 +1310,8 @@ goss     &  0.646259 &  0.810499 &    \textbf{1.321007} \\ \hline
     \begin{tabular}{|c|c|c|c|}
     \hline
         \textbf{Rozmiar zbioru testowego} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
-360                         &  \textbf{0.727381} &  0.831340 &   \textbf{26.352005} \\ \hline
+max   						 &  0.663946 &  0.835296 &  \textbf{7.743999} \\ \hline
+360                         &  \textbf{0.727381} &  0.831340 &   26.352005 \\ \hline
 180                         &  0.700317 &  \textbf{0.832342} &   45.234971 \\ \hline
 90                          &  0.680423 &  0.833708 &   75.542997 \\ \hline
 45                          &  0.681793 &  0.837955 &  137.898603 \\ \hline
@@ -1306,50 +1321,56 @@ goss     &  0.646259 &  0.810499 &    \textbf{1.321007} \\ \hline
     \label{tab:lgbm_walk_forward_discrete}
 \end{table}
 
- \begin{table}[H]
-    \centering
-    \begin{tabular}{|c|c|c|}
-    \hline
-        \textbf{Spółka} & \textbf{Dokładność} &  \textbf{AUC} \\ \hline
-AAPL   &  0.811402 &  0.908662 \\ \hline
-AMGN   &  0.819947 &  0.911287 \\ \hline
-AMZN   &  0.820503 &  0.902479 \\ \hline
-CSCO   &  0.811429 &  0.898069 \\ \hline
-FB     &  0.801724 &  0.886451 \\ \hline
-GOOGL  &  0.859524 &  0.913752 \\ \hline
-INTC   &  0.829101 &  0.907293 \\ \hline
-MSFT   &  0.798307 &  0.892258 \\ \hline
-PEP    &  0.830135 &  0.911192 \\ \hline
-QCOM   &  0.815132 &  0.911047 \\ \hline  \hline
-\textbf{Średnia} &  \textbf{0.819720} & \textbf{0.904249} \\  \hline
-    \end{tabular}
-    \caption{Końcowe wyniki klasyfikacji binarnej klasy Light GBM dla różnych spółek}
-    \label{tab:lgbm_final_binary}
-\end{table}   
-
-
- \begin{table}[H]
-    \centering
-    \begin{tabular}{|c|c|c|}
-    \hline
-        \textbf{Spółka} & \textbf{Dokładność} &  \textbf{AUC} \\ \hline
-AAPL   &  0.650688 &  0.835158 \\ \hline
-AMGN   &  0.649841 &  0.829871 \\ \hline
-AMZN   &  0.660079 &  0.834420 \\ \hline
-CSCO   &  0.632989 &  0.820418 \\ \hline
-FB     &  0.678161 &  0.822698 \\ \hline
-GOOGL  &  0.729233 &  0.837079 \\ \hline
-INTC   &  0.668836 &  0.842349 \\ \hline
-MSFT   &  0.636958 &  0.822135 \\ \hline
-PEP    &  0.670854 &  0.837247 \\ \hline
-QCOM   &  0.661878 &  0.827209 \\ \hline \hline
-\textbf{Średnia} &  \textbf{0.663952} & \textbf{0.830858} \\  \hline
-    \end{tabular}
-    \caption{Końcowe wyniki klasyfikacji na 3 klasy Light GBM dla różnych spółek}
-    \label{tab:lgbm_final_discrete}
-\end{table}   
 
 \subsection{Podsumowanie}
+
+
+
+ \begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|}
+    \hline
+        \textbf{Spółka} & \textbf{SVM} &  \textbf{MLP}  &  \textbf{Random forest}  &  \textbf{Light GBM} \\ \hline
+AAPL   &  0.807656 & 0.823688  & 0.740741 & 0.811402\\ \hline
+AMGN   &  0.799253 &  0.826799 &0.772487 &  0.819947 \\ \hline
+AMZN   &  0.773109 & 0.811963 & 0.634609 & 0.820503 \\ \hline
+CSCO   &  0.815126 &  0.819011 & 0.814815 &  0.811429 \\ \hline
+FB     &  0.825215 & 0.836207 & 0.714422 & 0.801724 \\ \hline
+GOOGL  &  0.851701 &  0.885767 & 0.787302 & 0.859524 \\ \hline
+INTC   &  0.829132 & 0.837402  & 0.791783 & 0.829101 \\ \hline
+MSFT   &  0.800187 &   0.826206 & 0.767818 &  0.798307\\ \hline
+PEP    &  0.827586 & 0.843401  & 0.765455 & 0.830135 \\ \hline
+QCOM   &  0.835668 &  0.836926 & 0.808901 & 0.815132 \\ \hline \hline
+\textbf{Średnia dokładność} &  0.816463 & \textbf{0.834737} & 0.759833 & 0.81972 \\  \hline  
+\textbf{Średnia ROC} &  0.816157 & \textbf{0.904259} & 0.761041 & 0.901649 \\  \hline
+    \end{tabular}
+    \caption{Końcowe wyniki dokładności dla klasyfikacji binarnej różnych spółek}
+    \label{tab:comparison_final_binary}
+\end{table}   
+
+
+
+ \begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|}
+    \hline
+        \textbf{Spółka} & \textbf{SVM} &  \textbf{MLP}  &  \textbf{Random forest}  &  \textbf{Light GBM} \\ \hline
+AAPL   &  0.671335 & 0.779353  & 0.607221 & 0.650688 \\ \hline
+AMGN   &  0.676937 &  0.793533 & 0.610644 &  0.649841 \\ \hline
+AMZN   &  0.625584 & 0.758636 & 0.510115  & 0.660079 \\ \hline
+CSCO   &  0.661064 &  0.776217 & 0.619359 &  0.632989 \\ \hline
+FB     &  0.604585 & 0.740004 & 0.543457 & 0.678161 \\ \hline
+GOOGL  &  0.676190 &  0.789327 & 0.589116 & 0.729233 \\ \hline
+INTC   &  0.718954 & 0.812174  & 0.641768 & 0.668836 \\ \hline
+MSFT   &  0.672269 &   0.785449 & 0.604108 &  0.636958 \\ \hline
+PEP    &  0.678472 & 0.807127  & 0.610127 & 0.670854 \\ \hline
+QCOM   &  0.687208 &  0.777542 & 0.641457 & 0.661878 \\ \hline \hline
+\textbf{Średnia dokładność} &  0.667260 & \textbf{0.781936} & 0.597737 & 0.663952 \\  \hline  
+\textbf{Średnia ROC} &  0.839264 & \textbf{0.874600} & 0.783574 & 0.830858 \\  \hline
+    \end{tabular}
+    \caption{Końcowe wyniki dokładności dla klasyfikacji na 3 klasy różnych spółek}
+    \label{tab:comparison_final_discrete}
+\end{table}   
 
 \section{Wspomaganie decyzji giełdowych}
 
