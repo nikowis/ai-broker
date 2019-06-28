@@ -67,7 +67,7 @@ if __name__ == '__main__':
     # analyze_csv('results-svm-c-GOOGL-discrete.csv', 'c', True)
     # analyze_csv('results-svm-c-kernel-GOOGL-binary.csv', 'c', True)
     # analyze_csv('results-svm-c-kernel-GOOGL-discrete.csv', 'c', True)
-    analyze_csv('results-svm-walk_forward_test_window_size-GOOGL-binary.csv', 'walk_forward_test_window_size', True)
+    # analyze_csv('results-svm-walk_forward_test_window_size-GOOGL-binary.csv', 'walk_forward_test_window_size', True)
     # analyze_csv('results-svm-walk_forward_test_window_size-GOOGL-discrete.csv', 'walk_forward_test_window_size', True)
     # analyze_csv('results-svm-walk_forward_test_window_size-GOOGL-binary.csv', 'walk_forward_test_window_size', True)
     # analyze_csv('results-svm-walk_forward_test_window_size-GOOGL-discrete.csv', 'walk_forward_test_window_size', True)

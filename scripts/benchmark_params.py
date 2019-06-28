@@ -93,11 +93,11 @@ class NnBenchmarkParams(BenchmarkParams):
             self.walk_forward_test_window_size = 360
         else:
             self.output_neurons = 3
-            self.layers = [10]
+            self.layers = []
             self.output_activation = 'softmax'
             self.loss = 'categorical_crossentropy'
             self.metric = 'categorical_accuracy'
-            self.walk_forward_test_window_size = 22
+            self.walk_forward_test_window_size = None
 
         self.regularizer = 0.0025
         self.activation = 'relu'
@@ -142,11 +142,10 @@ class SVMBenchmarkParams(BenchmarkParams):
         if binary_classification:
             self.pca = 0.9999
             self.c = 10
-            self.walk_forward_test_window_size = 360
         else:
             self.pca = None
             self.c = 25
-            self.walk_forward_test_window_size = 360
+        self.walk_forward_test_window_size = 360
         self.kernel = 'linear'
         self.degree = 3
         self.gamma = 0.005
@@ -243,7 +242,7 @@ class RandomForestBenchmarkParams(BenchmarkParams):
         self.oob_score = False
         self.warm_start  = False
         self.n_jobs = -1
-        self.walk_forward_test_window_size = 360
+        self.walk_forward_test_window_size = None
 
     def update_from_dictionary(self, params_dict):
         super().update_from_dictionary(params_dict)

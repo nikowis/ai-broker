@@ -773,7 +773,7 @@ Predykcja kursu cen na giełdzie jest zagadnieniem zaawansowanym pod względem t
 
 \section{Eksperymenty numeryczne}
 
-W poniższym rozdziale zostały opisane przeprowadzone eksperymenty numeryczne z wykorzystaniem różnych modeli predykcyjnych. Głównym celem tego rozdziału jest taki dobór modelu wraz z jego hiperparametrami, aby zmaksymalizować wybrane miary jakości. Podstawowym założeniem jest nauczanie modelu dla każdej ze spółek osobno, gdyż mogą one prezentować różną dynamikę i charakterystykę danych. Testy i optymalizacje były wykonyawne dla pojedynczej spółki ze względu na ograniczenia mocy obliczeniowej i czasu. Końcowe porównywanie jakości różnych modeli zostało wykonane na podstawie wyników 10 spośród największych spółek z giełdy \textit{NASDAQ}. Wybrane spółki oraz ich kapitalizacją rynkową zostały przedstawione w tabeli \ref{tab:biggest_companies}.
+W poniższym rozdziale zostały opisane przeprowadzone eksperymenty numeryczne z wykorzystaniem różnych modeli predykcyjnych. Głównym celem tego rozdziału jest taki dobór modelu wraz z jego hiperparametrami, aby zmaksymalizować wybrane miary jakości. Podstawowym założeniem jest nauczanie modelu dla każdej ze spółek osobno (od zera), gdyż mogą one prezentować różną dynamikę i charakterystykę danych. Testy i optymalizacje były wykonyawne dla pojedynczej spółki \textit{GOOGL}, ze względu na ograniczenia mocy obliczeniowej i czasu. Końcowe porównywanie jakości różnych modeli zostało wykonane na podstawie wyników 10 spośród największych spółek z giełdy \textit{NASDAQ}. Wybrane spółki wraz z ich kapitalizacją rynkową zostały przedstawione w tabeli \ref{tab:biggest_companies}.
 
 
 \begin{table}[H]
@@ -796,127 +796,12 @@ W poniższym rozdziale zostały opisane przeprowadzone eksperymenty numeryczne z
     \label{tab:biggest_companies}
 \end{table}
 
-Wszystkie eksperymenty dla każdego zestawu parametrów zostały przeprowadzone 3 razy, a wartości dokładności i AUC zostały uśrednione. Czas uczenia jest czasem wykonania 3 iteracji testu dla danego zestawu parametrów.
-
-\subsection{SVM}
-
-Analiza maszyn wektorów nośnych należy zacząć od wyboru odpowiedniej funkcji jądra. Początkowo wykorzystane zostały domyślne parametry SVM z biblioteki \textit{sklearn} \cite{bib:sklearnsvm}. Tabele \ref{tab:svm_kernel_binary} oraz \ref{tab:svm_kernel_discrete} przedstawiają wyniki klasyfikacji w zależności od wybranej funkcji jądra. W obu przypadkach najlepsza okazała się funkcja liniowa osiągając 84\% dokładności dla klasyfikacji binarnej oraz 67\% dokładności w klasyfikacji na 3 klasy.
- Jak widać w obu przypadakch najgorsze wyniki osiąga funkcja wielomianowa (\textit{poly}). 
-W dalszych eksperymentach wykorzystywana była funkcja liniowa.
-\begin{table}[H]
-    \centering
-    \begin{tabular}{|c|c|c|c|}
-    \hline
-        \textbf{Kernel} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
-linear  &  \textbf{0.848980} &  \textbf{0.849554} &    2.351031 \\ \hline
-poly    &  0.530612 &  0.634002 &    2.357999 \\ \hline
-rbf     &  0.805442 &  0.808863 &    \textbf{2.145996} \\ \hline
-sigmoid &  0.789116 &  0.792252 &    2.246001 \\ \hline
-    \end{tabular}
-    \caption{SVM: wyniki klasyfikacji binarnej w zależności od wykorzystanej funkcji jądra}
-    \label{tab:svm_kernel_binary}
-\end{table}
-
-\begin{table}[H]
-    \centering
-    \begin{tabular}{|c|c|c|c|}
-    \hline
-        \textbf{Kernel} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
-linear  &  \textbf{0.673469} &  \textbf{0.848302} &    2.806034 \\ \hline
-poly    &  0.378231 &  0.594664 &    \textbf{2.571024} \\ \hline
-rbf     &  0.609524 &  0.838035 &    2.763033 \\ \hline
-sigmoid &  0.589116 &  0.811750 &    2.918002 \\ \hline
-    \end{tabular}
-    \caption{SVM: wyniki klasyfikacji na 3 klasy w zależności od wykorzystanej funkcji jądra}
-    \label{tab:svm_kernel_discrete}
-\end{table}
-
-Następnym optymalizowanym parametrem był parametr kary \textit{C}. Domyślną wartością \textit{C} jest 1. Niestety manipulacja tym parametrem pozwoliła jedynie na poprawę dokładności rzędu $0.03$ dla obu przypadków klasyfikacji (tabela \ref{tab:svm_c_binary} oraz \ref{tab:svm_c_discrete}. Najlepszą wartością \textit{C} okazało się 10. 
-
-
-\begin{table}[H]
-    \centering
-    \begin{tabular}{|c|c|c|c|}
-    \hline
-        \textbf{C} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
-0.005 &  0.813605 &  0.811315 &    1.528037 \\ \hline
-0.01  &  0.827211 &  0.820457 &    1.358999 \\ \hline
-0.1   &  0.846259 &  0.843590 &    \textbf{1.202999} \\ \hline
-0.5   &  0.848980 &  0.847938 &    1.599977 \\ \hline
-1.0   &  0.848980 &  0.849554 &    2.088028 \\ \hline
-5.0   &  0.850340 &  \textbf{0.851338} &    5.381001 \\ \hline
-10.0  &  \textbf{0.851701} &  0.848439 &    9.490025 \\ \hline
-25.0  &  0.848980 &  0.846488 &   18.815997 \\ \hline
-    \end{tabular}
-    \caption{SVM: wyniki klasyfikacji binarnej w zależności wykorzystanego parametru C}
-    \label{tab:svm_c_binary}
-\end{table}
-
-
-\begin{table}[H]
-    \centering
-    \begin{tabular}{|c|c|c|c|}
-    \hline
-        \textbf{C} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
-0.005 &  0.600000 &  0.833851 &    1.851034 \\ \hline
-0.01  &  0.638095 &  0.848663 &    1.773027 \\ \hline
-0.1   &  0.670748 &  0.857033 &    \textbf{1.660041} \\ \hline
-0.5   &  0.672109 &  0.849077 &    2.105039 \\ \hline
-1.0   &  0.673469 &  0.848400 &    2.824997 \\ \hline
-5.0   &  0.674830 &  0.846707 &    7.747027 \\ \hline
-10.0  &  \textbf{0.676190} &  0.847141 &   13.023001 \\ \hline
-25.0  &  0.673469 &  \textbf{0.847253} &   30.673997 \\ \hline
-    \end{tabular}
-    \caption{SVM: wyniki klasyfikacji na 3 klasy w zależności wykorzystanego parametru C}
-    \label{tab:svm_c_discrete}
-\end{table}
-
-
-Na koniec wykonane zostały testy dokładności w zależności od rozmiaru zbioru testowego w kontekście uczenia SVM metodą kroczącą. Z wyników w tabelach \ref{tab:svm_walk_forward_binary} oraz \ref{tab:svm_walk_forward_discrete} można zauważyć iż ta optymalizacja nie polepszyła znacznie wyników tak jak miało to miejsce w przypadku sieci neuronowych. Poprawa wyniosła 1\% dla klasyfikacji binarnej oraz 2\% dla klasyfikacji na 3 klasy. Optymalny rozmiar zbioru testowego wyniósł 360 próbek.
-
-
-\begin{table}[H]
-    \centering
-    \begin{tabular}{|c|c|c|c|}
-    \hline
-        \textbf{Rozmiar zbioru testowego} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
-max                        &  0.851701 &  0.848439 &   \textbf{9.490025} \\ \hline
-360                        &  \textbf{0.865079} &  0.834325 &   33.307443 \\ \hline
-180                      &  0.860159 &  0.841421 &   62.537217 \\ \hline
-90                         &  0.852557 &  \textbf{0.843217} &  103.744769 \\ \hline
-45                       &  0.844164 &  0.843217 &  250.237508 \\ \hline
-22                       &  0.841243 &  0.841935 &  529.248996 \\ \hline
-    \end{tabular}
-    \caption{SVM: wyniki klasyfikacji binarnej w zależności od rozmiaru zbioru testowego}
-    \label{tab:svm_walk_forward_binary}
-\end{table}
-
-
-\begin{table}[H]
-    \centering
-    \begin{tabular}{|c|c|c|c|}
-    \hline
-        \textbf{Rozmiar zbioru testowego} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
-max                        &  0.676190 &  0.847141 &   \textbf{13.023001} \\ \hline
-360                        &  \textbf{0.697354} &  0.855685 &   68.528990 \\ \hline
-180                        &  0.686190 &  0.861628 &  107.270033 \\ \hline
-90                         &  0.691711 &  \textbf{0.865852} &  193.407998 \\ \hline
-45                         &  0.687768 &  0.865695 &  364.011001 \\ \hline
-22                          &  0.691176 &  0.867509 &  724.383028 \\ \hline
-    \end{tabular}
-    \caption{SVM: wyniki klasyfikacji na 3 klasy w zależności od rozmiaru zbioru testowego}
-    \label{tab:svm_walk_forward_discrete}
-\end{table}
-    
-    
-
-\subsection{Sieci neuronowe}
-
-Sieci neuronowe posiadają wiele parametrów, których zmiana może poprawić lub pogorszyć jakość klasyfikacji. Ze względu na liczność hiperparametrów, testy i optymalizacje zostały wykonane w sposób sekwencyjny. Najciekawsze wyniki zostały przedstawione poniżej.
+Wszystkie eksperymenty dla każdego zestawu parametrów zostały przeprowadzone 3 razy, a wartości dokładności i AUC zostały uśrednione. Czas uczenia jest czasem wykonania 3 iteracji testu dla danego zestawu parametrów. W rozdziale zawarto jedynie opis optymalizacji parametrów dających najciekawsze wyniki oraz te parametry, których zmiana przyniosła największą poprawę.
 
 \bigskip
 
-Pierwszym analizowanym parametrem, jest parametr wariancji przy redukcji rozmiaru problemu metodą PCA. Kolejne progi (wraz z liczbą zmiennych po transformacji), dla których zostały przeprowadzone testy zostały przedstawione w tabeli \ref{tab:pca_component_number}. Jak widać zmniejszenie wariancji o jedną tysięczną pozwala na ograniczenie rozmiaru wejściowych problemów o $\frac{1}{4}$, a zmniejszenie o jedną setną redukuje rozmiar aż o połowę. Nie można jednak z góry, bez testów, przesądzić jak ograniczanie rozmiaru zadania wpłynie na końcowe wyniki. 
+Parametrem rozpatrywanym z osobna przy każdym z modeli jest użycie metody \textbf{PCA} do wstępnego przetworzenia danych. W tabeli \ref{tab:pca_component_number} przedstawiona została liczba zmiennych w zależności od wybranej wariancji przy reudukowaniu rozmiaru wektora wejściowego. Jak widać zmniejszenie wariancji o jedną tysięczną pozwala na ograniczenie rozmiaru wejściowych problemów o $\frac{1}{4}$, a zmniejszenie o jedną setną redukuje rozmiar aż o połowę. Nie można jednak z góry, bez testów, przesądzić jak ograniczanie rozmiaru zadania wpłynie na końcowe wyniki. 
+
 
 \begin{table}[H]
     \centering
@@ -937,18 +822,176 @@ Pierwszym analizowanym parametrem, jest parametr wariancji przy redukcji rozmiar
     \label{tab:pca_component_number}
 \end{table}
 
-Wyniki testów klasyfikacji binarnej dla różnych progów wariancji, zostały przedstawione w tabeli \ref{tab:nn_pca_binary}. Pomimo znikomej różnicy w wariancji danych ograniczanie rozmiaru wektora wejściowego nie okazało się korzystne pod względem uzyskanych wyników. Najlepszy wynik $\sim
-85\%$ został uzyskany przy braku przetworzenia danych metodą PCA, jednak  wykorzystując PCA z wariancją 0.9999 lub 0.999 uzyskany został bardzo podobny wynik.
+\bigskip
+
+Kolejnym parametrem rozpatrywanym przy każdym modelu jest \textbf{rozmiar zbioru testowego} w kontekście uczenia metodą kroczącą. Domyślnie modele były uczone w jednej iteracji metody kroczącej z wielkością zbioru testowego równej $0.2$ całego zbioru danych. Dzieląc zbiór testowy na mniejsze części, w każdej iteracji włączając już przetestowane próbki danych do zbioru treningowego, potencjalnie powiększany jest zbiór informacji przekazywanych modelom w trakcie uczenia. Taki zabieg jest powinien pozwolić na poprawę wyników i zbliżenie scenariusza testów do rzeczywistego wykorzystywania modelu predykcyjnego do handlu na giełdzie, gdzie model może być regularnie douczany wraz z upływem czasu. Poza maksymalnym rozmiarem zbioru testowego równego $0.2$ całego zbioru danych, wykorzystane zostały rozmiary $360, 180, 90, 45$ oraz $22$. Po każdym powiększeniu zbioru treningowego o nowe próbki modele były uczone od zera, a ich jakość była oceniana na podstawie kolejnej partii zbioru testowego.
+
+\subsection{SVM}
+
+Początkowo do testów SVM wykorzystane zostały domyślne parametry z biblioteki \textit{sklearn} \cite{bib:sklearnsvm}. Analizę optymalizacji maszyn wektorów nośnych należy zacząć od wyboru odpowiedniej funkcji jądra. Tabele \ref{tab:svm_kernel_binary} oraz \ref{tab:svm_kernel_discrete} przedstawiają wyniki klasyfikacji w zależności od wybranej funkcji jądra. W obu przypadkach najlepsza okazała się funkcja liniowa osiągając $\sim 84\%$ dokładności dla klasyfikacji binarnej oraz $\sim 67\%$  dokładności w klasyfikacji na 3 klasy. Jak widać najgorsze wyniki w obu przypadakch osiąga funkcja wielomianowa (\textit{poly}).  W dalszych eksperymentach wykorzystywana była funkcja liniowa.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+        \textbf{Funkcja jądra} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
+linear  &  \textbf{0.848980} &  \textbf{0.849554} &    2.351031 \\ \hline
+poly    &  0.530612 &  0.634002 &    2.357999 \\ \hline
+rbf     &  0.805442 &  0.808863 &    \textbf{2.145996} \\ \hline
+sigmoid &  0.789116 &  0.792252 &    2.246001 \\ \hline
+    \end{tabular}
+    \caption{SVM: wyniki klasyfikacji binarnej w zależności od wykorzystanej funkcji jądrowej}
+    \label{tab:svm_kernel_binary}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+        \textbf{Funkcja jądra} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
+linear  &  \textbf{0.673469} &  \textbf{0.848302} &    2.806034 \\ \hline
+poly    &  0.378231 &  0.594664 &    \textbf{2.571024} \\ \hline
+rbf     &  0.609524 &  0.838035 &    2.763033 \\ \hline
+sigmoid &  0.589116 &  0.811750 &    2.918002 \\ \hline
+    \end{tabular}
+    \caption{SVM: wyniki klasyfikacji na 3 klasy w zależności od wykorzystanej funkcji jądrowej}
+    \label{tab:svm_kernel_discrete}
+\end{table}
+
+
+Kolejnym testem jest porównanie wyników klasyfikacji w zależności od użycia metody PCA. Pomimo znikomej różnicy w wariancji danych znaczne ograniczanie rozmiaru wektora wejściowego nie okazało się korzystne pod względem uzyskanych wyników. W tabelach \ref{tab:svm_pca_binary} oraz \ref{tab:svm_pca_discrete} zostały przedstawione wyniki klasyfikacji w zależności od zachowanej wariancji przy użyciu metody PCA. Do klasyfikacji binarnej została wybrana wariancja $0.9999$, zaś do klasyfikacji 3 klasy nie została użyta metoda PCA.
+
 
 \begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|}
     \hline
         \textbf{PCA} & \textbf{Dokładność} &  \textbf{AUC} &  \textbf{Czas (s)} \\ \hline
-0.9700               &  0.702948 &  0.748728 &   15.459319 \\ \hline
-0.9800               &  0.745125 &  0.821377 &   \textbf{12.693174} \\ \hline
-0.9900               &  0.795918 &  0.877171 &   15.743771 \\ \hline
-0.9990           &  0.854875 &  \textbf{0.919237} &   14.903868 \\ \hline
+0.95               &  0.687075 &  0.683055 &    3.364004 \\ \hline
+0.98               &  0.741497 &  0.735061 &    2.588999 \\ \hline
+0.99               &  0.789116 &  0.792865 &    \textbf{2.532526} \\ \hline
+0.999             &  \textbf{0.850340} &  0.846990 &    2.603002 \\ \hline
+0.9999             &  0.848980 &  0.\textbf{0.849554} &    2.563003 \\ \hline
+Brak                &  0.844898 &  0.842308 &    2.942107 \\ \hline
+    \end{tabular}
+    \caption{SVM: wyniki klasyfikacji binarnej w zależności od wybranej wartości wariancji w metodzie PCA}
+    \label{tab:svm_pca_binary}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+        \textbf{PCA} & \textbf{Dokładność} &  \textbf{AUC} &  \textbf{Czas (s)} \\ \hline
+0.95               &  0.510204 &  0.705873 &    3.740000 \\ \hline
+0.98               &  0.579592 &  0.788663 &    \textbf{3.095082} \\ \hline
+0.99               &  0.653061 &  0.832938 &    3.428001 \\ \hline
+0.999              &  0.673469 &  0.848779 &    3.283513 \\ \hline
+0.9999             &  0.673469 &  0.848351 &    3.398995 \\ \hline
+Brak               &  \textbf{0.681633} &  \textbf{0.851243} &    4.757034 \\ \hline
+    \end{tabular}
+    \caption{SVM: wyniki klasyfikacji na 3 klasy w zależności od wybranej wartości wariancji w metodzie PCA}
+    \label{tab:svm_pca_discrete}
+\end{table}
+
+
+Następnym optymalizowanym parametrem był parametr kary \textit{C}. Wpływa on na wielkość marginesu separacji hiperpłaszczyzny od danych. Im większa wartość \textit{C} tym mniejszy margines. Domyślną wartością \textit{C} jest 1. Niestety manipulacja tym parametrem pozwoliła jedynie na poprawę dokładności rzędu $0.003$ dla obu przypadków klasyfikacji (tabela \ref{tab:svm_c_binary} oraz \ref{tab:svm_c_discrete}). Wraz ze zwiększaniem \textit{C} zauważalny jest znaczny wzrost czasu uczenia modelu. Najlepszą wartością \textit{C} dla klasyfikacji binarnej okazało się 10, zaś dla klasyfikacji na 3 klasy wybrana została wartość 25. 
+
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+        \textbf{C} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
+0.005 &  0.813605 &  0.811315 &    1.714988 \\ \hline
+0.01  &  0.827211 &  0.821739 &    1.886997 \\ \hline
+0.1   &  0.846259 &  0.846656 &    \textbf{1.653000} \\ \hline
+0.5   &  0.848980 &  0.849554 &    1.900010 \\ \hline
+1.0   &  0.848980 &  0.849554 &    2.626542 \\ \hline
+5.0   &  0.850340 &  \textbf{0.849889} &    6.406000 \\ \hline
+10.0  &  \textbf{0.851701} &  0.849721 &   10.317813 \\ \hline
+25.0  &  0.848980 &  0.846656 &   20.054430 \\ \hline
+50.0  &  0.85034 &  0.848439 &   44.470990 \\ \hline
+100.0  &  0.85034 &  0.845541 &   65.944478 \\ \hline
+    \end{tabular}
+    \caption{SVM: wyniki klasyfikacji binarnej w zależności wykorzystanego parametru C}
+    \label{tab:svm_c_binary}
+\end{table}
+
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+        \textbf{C} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
+0.005 &  0.598639 &  0.834132 &    2.763999 \\ \hline
+0.01  &  0.638095 &  0.849006 &    2.746000 \\ \hline
+0.1   &  0.676190 &  0.858078 &    \textbf{2.491998} \\ \hline
+0.5   &  0.677551 &  0.850738 &    2.952996 \\ \hline
+1.0   &  0.681633 &  0.851362 &    3.779023 \\ \hline
+5.0   &  0.681633 &  0.852015 &    9.155009 \\ \hline
+10.0  &  0.680272 &  0.853454 &   16.950008 \\ \hline
+25.0  &  \textbf{0.685714} &  \textbf{0.853973} &   33.401029 \\ \hline
+50.0  & 0.682993  &  0.853559 &  71.039315  \\ \hline
+100.0  &  0.685714 &  0.853622 &  124.964237 \\ \hline
+    \end{tabular}
+    \caption{SVM: wyniki klasyfikacji na 3 klasy w zależności wykorzystanego parametru C}
+    \label{tab:svm_c_discrete}
+\end{table}
+
+
+Na koniec wykonane zostały testy dokładności w zależności od rozmiaru zbioru testowego w kontekście uczenia SVM metodą kroczącą. Z wyników w tabelach \ref{tab:svm_walk_forward_binary} oraz \ref{tab:svm_walk_forward_discrete} można zauważyć iż ta optymalizacja nie polepszyła znacznie wyników. Poprawa w przypadku użycia zbioru testowego o 360 próbkach wyniosła $\sim 1.5\%$ dla obu rodzajów klasyfikacji.
+
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+        \textbf{Rozmiar zbioru testowego} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
+max                        &  0.851701 &  \textbf{0.849721} &   \textbf{10.317813} \\ \hline
+360                         &  \textbf{0.865079} &  0.843043 &   38.907647 \\ \hline
+180                        &  0.860159 &  0.841592 &   68.341332 \\ \hline
+90                          &  0.852557 &  0.844671 &  115.171602 \\ \hline
+45                          &  0.844164 &  0.843217 &  230.034670 \\ \hline
+22                          &  0.841243 &  0.840482 &  430.545312 \\ \hline
+    \end{tabular}
+    \caption{SVM: wyniki klasyfikacji binarnej w zależności od rozmiaru zbioru testowego}
+    \label{tab:svm_walk_forward_binary}
+\end{table}
+
+
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+        \textbf{Rozmiar zbioru testowego} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
+max                        &  0.685714 &  0.853973 &   \textbf{33.401029} \\ \hline
+360.0                         &  \textbf{0.699206} &  0.866392 &   112.669902 \\ \hline
+180.0                         &  0.688413 &  0.862114 &   183.599683 \\ \hline
+90.0                          &  0.691711 &  0.865704 &   332.625968 \\ \hline
+45.0                          &  0.685154 &  0.866440 &   649.421637 \\ \hline
+22.0                          &  0.683155 &  \textbf{0.868147} &  1618.037420 \\ \hline
+    \end{tabular}
+    \caption{SVM: wyniki klasyfikacji na 3 klasy w zależności od rozmiaru zbioru testowego}
+    \label{tab:svm_walk_forward_discrete}
+\end{table}
+    
+W końcowych testach dla obu rodzajów klasyfikacji został użyty zbiór testowy o 360 próbkach.
+
+\subsection{Sieci neuronowe}
+
+Sieci neuronowe posiadają wiele parametrów, których zmiana może znacznie wpłynąć jakość klasyfikacji. Pierwszym analizowanym parametrem, jest parametr wariancji przy redukcji rozmiaru problemu metodą PCA. Wyniki testów klasyfikacji binarnej dla różnych progów wariancji, zostały przedstawione w tabeli \ref{tab:nn_pca_binary}.  Najlepszy wynik $\sim 85\%$ został uzyskany przy braku przetworzenia danych metodą PCA, jednak  wykorzystując PCA z wariancją 0.9999 lub 0.999 uzyskany został bardzo podobny wynik.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+        \textbf{PCA} & \textbf{Dokładność} &  \textbf{AUC} &  \textbf{Czas (s)} \\ \hline
+0.97               &  0.702948 &  0.748728 &   15.459319 \\ \hline
+0.98               &  0.745125 &  0.821377 &   \textbf{12.693174} \\ \hline
+0.99               &  0.795918 &  0.877171 &   15.743771 \\ \hline
+0.999           &  0.854875 &  \textbf{0.919237} &   14.903868 \\ \hline
 0.9999             &  0.852608 &  0.918613 &   13.461666 \\ \hline
 Brak                &  \textbf{0.854875} &  0.918459 &   21.490562 \\ \hline
 
@@ -957,7 +1000,7 @@ Brak                &  \textbf{0.854875} &  0.918459 &   21.490562 \\ \hline
     \label{tab:nn_pca_binary}
 \end{table}
 
-Na wykresach \ref{img:nn_pca_binary_vs_accuracy} została przedstawiona dokładność w zależności od czasu uczenia sieci neuronowych (wyrażona w epokach). Można zauważyć iż używając PCA model jest w stanie dużo szybciej osiągnąć wartości dokładności bliskie jego maksimum. Co za tym idzie używając metody PCA sieć neuronowa dużo szybciej zbiega do minimum funcji celu. Sieć bez użycia PCA osiąga minimum funkcji celu w czasie 40 epok, zaś używająć PCA z wariancją 0.999 satysfakcjonujący wynik jest osiągany już po 5 epokach. Wynika to zapewne z ograniczenia rozmiaru danych wejściowych oraz z przekształcenia układu współrzędnych maksymalizującego wariancję. Wraz ze zmniejszaniem liczby danych wejściowych widać stopniowe pogarszanie wyników oraz wzrost różnicy pomiędzy wynikami zbioru treningowego, a zbioru testowego co jest sygnałem, że dochodzi do przeuczenia.
+Na wykresach \ref{img:nn_pca_binary_vs_accuracy} została przedstawiona dokładność w zależności od czasu uczenia sieci neuronowych (wyrażona w epokach). Można zauważyć iż używając PCA model jest w stanie dużo szybciej osiągnąć wartości dokładności bliskie jego maksimum. Co za tym idzie używając metody PCA sieć neuronowa dużo szybciej zbiega do minimum funcji celu. Sieć bez użycia PCA osiąga minimum funkcji celu w czasie 40 epok, zaś używająć PCA z wariancją 0.999 satysfakcjonujący wynik jest osiągany już po 5 epokach. Wynika to zapewne z ograniczenia rozmiaru danych wejściowych oraz z przekształcenia układu współrzędnych w sposób maksymalizujący wariancję danych. Wraz ze zmniejszaniem liczby danych wejściowych widać stopniowe pogarszanie wyników oraz wzrost różnicy pomiędzy wynikami zbioru treningowego, a zbioru testowego co jest sygnałem, że dochodzi do przeuczenia.
 
 
 \begin{figure}[H]%
@@ -978,29 +1021,29 @@ Na wykresach \ref{img:nn_pca_binary_vs_accuracy} została przedstawiona dokładn
 \label{img:nn_pca_binary_vs_accuracy}
 \end{figure}
 
-Takie same testy zostały przeprowadzone dla klasyfikacji na 3 klasy. Wyniki zostały zaprezentowane w tabeli \ref{tab:nn_pca_discrete}. Tutaj najlepszy wynik dokładności $\sim{78\%}$ został uzyskany przy użyciu PCA z największą wybraną wariancją. Wyniki są analogiczne do wyników klasyfikacji binarnej, 
+Takie same testy zostały przeprowadzone dla klasyfikacji na 3 klasy. Wyniki zostały zaprezentowane w tabeli \ref{tab:nn_pca_discrete}. Najlepsze wyniki zostały uzyskane wówczas gdy dane zostały przetworzone metodą PCA z parametrem wariancji $0.9999$. Dodatkowym atutem takiej konfiguracji jest przyspieszenie czasu nauki modelu oraz poprawa stabilności wyników. 
 
 \begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|}
     \hline
         \textbf{PCA} & \textbf{Dokładność} &  \textbf{AUC} &  \textbf{Czas (s)} \\ \hline
-0.9700               &  0.716402 &  0.719409 &   32.111927 \\ \hline
-0.9800               &  0.745578 &  0.774588 &   29.711963 \\ \hline
-0.9900               &  0.762661 &  0.809976 &   26.185506 \\ \hline
-0.9990              &  0.777778 &  0.847995 &   \textbf{21.621159} \\ \hline
-0.9999             &  \textbf{0.782766} &  \textbf{0.850174} &   26.393088 \\ \hline
-Brak                &  0.779138 &  0.848541 &   29.234138 \\ \hline
+0.97               &  0.545125 &  0.723263 &   21.973598 \\ \hline
+0.98               &  0.607256 &  0.789558 &   \textbf{21.367600} \\ \hline
+0.99               &  0.663946 &  0.829368 &   22.170482 \\ \hline
+0.999               &  0.679365 &  \textbf{0.855526} &   24.234406 \\ \hline
+0.9999             &  \textbf{0.684086} &  0.854986 &   26.053283 \\ \hline
+Brak                &  0.682889 &  0.853353 &   39.720696 \\ \hline
     \end{tabular}
     \caption{MLP: wyniki klasyfikacji na 3 klasy w zależności od wybranej wartości wariancji}
     \label{tab:nn_pca_discrete}
 \end{table}
 
-Najlepsze wyniki zostały uzyskane wówczas gdy dane zostały przetworzone metodą PCA z parametrem wariancji $0.9999$. Dodatkowym atutem takiej konfiguracji jest przyspieszenie czasu nauki modelu oraz poprawa stabilności wyników.  Przy następnych testach dla obu rodzajów klasyfikacji dane były redukowane metodą PCA z parametrem wariancji $0.9999$.
+Przy następnych testach dla obu rodzajów klasyfikacji dane były redukowane metodą PCA z parametrem wariancji $0.9999$. 
 
 \bigskip
 
-Następnym parametrem zbadanym podczas uczenia sieci jest liczba warstw ukrytych wraz z liczbą neuronów w każdej z warstw. Dla uproszczenia eksperymentów liczba warstw ukrytych w sieci neuronowej została ograniczona do wartości \{0, 1, 2\}, zaś liczba neuronów w każdej z warstw była taka sama. Wyniki mierzone miarą AUC dla klasyfikacji binarnej zostały przedstawione w tabeli \ref{tab:nn_layers_binary}. Dla tego rodzaju klasyfikacji najlepszym modelem okazał się model sieci neuronowej złożony jedynie z warstwy wejściowej oraz warstwy wyjściowej. Uzyskał on wynik \textbf{0.919} AUC i 85\% dokładności. Model bez warstwy ukrytej w przypadku klasyfikacji binarnej okazuje się najlepszy najprawdopodobniej ze względu na pojedynczy neuron w warstwie wyjściowej. Taka uproszczona architektura pozwala na znalezienie odpowiednich zależności w danych bez dodawania warstw ukrytych. Wyniki wydają się być odwrotnie proporcjonalne do liczby użytych neuronów, lecz nie odbiegają znacznie od najlepszego wyniku.
+Następnym parametrem zbadanym podczas uczenia sieci jest liczba warstw ukrytych wraz z liczbą neuronów w każdej z warstw. Dla uproszczenia eksperymentów liczba warstw ukrytych w sieci neuronowej została ograniczona do wartości \{0, 1, 2\}, zaś liczba neuronów w każdej z warstw była taka sama. Wyniki mierzone miarą AUC dla klasyfikacji binarnej zostały przedstawione w tabeli \ref{tab:nn_layers_binary}. Dla tego rodzaju klasyfikacji najlepszym modelem okazał się model sieci neuronowej złożony jedynie z warstwy wejściowej oraz warstwy wyjściowej. Uzyskał on wynik \textbf{0.919} AUC i $\sim 85\%$ dokładności. Model bez warstwy ukrytej w przypadku klasyfikacji binarnej okazuje się najlepszy najprawdopodobniej ze względu na pojedynczy neuron w warstwie wyjściowej. Taka uproszczona architektura pozwala na znalezienie odpowiednich zależności w danych bez dodawania warstw ukrytych. Wyniki wydają się być odwrotnie proporcjonalne do liczby użytych neuronów, lecz nie odbiegają znacznie od najlepszego wyniku.
 
 \begin{table}[H]
     \centering
@@ -1017,7 +1060,7 @@ Następnym parametrem zbadanym podczas uczenia sieci jest liczba warstw ukrytych
     \label{tab:nn_layers_binary}
 \end{table}
 
-Analogicznie do klasyfikacji binarnej został przeprowadzony test dla klasyfikacji na 3 klasy, wyniki przedstawiono w tabeli \ref{tab:nn_layers_discrete}. Najlepszy wynik \textbf{0.858} AUC (68\% dokładności) został osiągnięty przy użyciu jednej warstwy ukrytej o 10 neuronach. W odróżnieniu do klasyfikacji binarnej, warstwa wyjściowa posiada 3 neurony, a co za tym idzie potrzeba bardziej skomplikowanej architektury sieci do uzyskania optymalnego wyniku. Zauważyć można również iż wykorzystanie wielu warstw ukrytych o małej liczbie neuronów znacznie pogarsza wynik co jest spowodowane zbyt małą liczbą połączeń między kolejnymi warstwami by zachować zależności między danymi.
+Analogicznie do klasyfikacji binarnej został przeprowadzony test dla klasyfikacji na 3 klasy, wyniki przedstawiono w tabeli \ref{tab:nn_layers_discrete}. Najlepszy wynik \textbf{0.858} AUC ($\sim 68\%$ dokładności) został osiągnięty przy użyciu jednej warstwy ukrytej o 10 neuronach. W odróżnieniu do klasyfikacji binarnej, warstwa wyjściowa posiada 3 neurony, a co za tym idzie, potrzebna jest bardziej skomplikowana architektura sieci do uzyskania optymalnego wyniku. Zauważyć można również iż wykorzystanie wielu warstw ukrytych o małej liczbie neuronów znacznie pogarsza wynik co jest spowodowane zbyt małą liczbą połączeń między kolejnymi warstwami by zachować zależności między danymi.
 
 \begin{table}[H]
     \centering
@@ -1038,48 +1081,37 @@ W kolejnych testach do klasyfikacji binarnej nie zostały użyte warstwy ukrytne
 
 \bigskip
 
-Na wykresie \ref{img:nn_layers_discrete} przedstawione zostały krzywe ROC dla 3 klas, wraz z ich mikro-średnią, dla sieci neuronowej o jednej warstwie ukrytej z 10 neuronami. Analizując wykres łatwo zauważyć, iż model ma największą trudność z przewidywaniem klasy utrzymania ceny. Taka rozbieżność może być problematyczna na etapie używania nauczonego modelu do predykcji. Im większa rozbieżność między AUC poszczególnych klas tym gorzej. Może się bowiem okazać iż dwa modele o porównywalnej mierze AUC będą uzyskiwały rozbieżne wyniki w grze na giełdzie. Mogłoby to wynikać z faktu iż model w ogóle nie zwraca w swoich przewidywaniach jednej z klas, zaś pozostałe estymuje bardzo dobrze. Na przykład model mógłby nigdy nie dawać sygnału do sprzedaży, a to całkowicie wyklucza jego praktyczne użycie. 
-
-
-\begin{figure}[H]
-\centering \includegraphics[scale=0.8]{img/results/nn/nn_layers_10_discrete_roc-googl.pdf}
-\caption{Wykres ROC sieci neuronowej o jednej warstwie neuronowej z 10 neuronami dla klasyfikacji na 3 klasy (opracowanie własne)}
-\label{img:nn_layers_discrete}
-\end{figure}
-
-\bigskip
-
-Kolejnym analizowanym parametrem był rozmiar zbioru testowego wykorzystywanego w każdej iteracji uczenia modelu metodą kroczącą. Domyślnie model był uczony w jednej iteracji metody kroczącej z wielkością zbioru testowego równej $0.2$ całego zbioru danych. Dzieląc zbiór testowy na mniejsze części, w każdej iteracji włączając już przetestowane próbki danych do zbioru treningowego, potencjalnie powiększany jest zbiór informacji przekazywanych modelom w trakcie uczenia. Tabela \ref{tab:nn_walk_forward_test_binary} przedstawia wyniki dla różnych rozmiarów zbioru testowego. Najlepszy wynik dla klasyfikacji binarnej został osiągnięty przy 360 próbkach w zbiorze testowym. Dzięki tak prostemu zabiegowi dokładność modelu ulepszyła się aż o 3\%. Niestety wraz ze zmniejszaniem zbioru testowego drastycznie zwiększa się czas uczenia. 
+Kolejnym analizowanym parametrem był rozmiar zbioru testowego wykorzystywanego w każdej iteracji uczenia modelu metodą kroczącą. Tabela \ref{tab:nn_walk_forward_test_binary} przedstawia wyniki dla różnych rozmiarów zbioru testowego. Najlepszy wynik dla klasyfikacji binarnej został osiągnięty przy 360 próbkach w zbiorze testowym. Dzięki tak prostemu zabiegowi dokładność modelu ulepszyła się o $\sim 3\%$. Niestety wraz ze zmniejszaniem zbioru testowego znacząco zwiększa się czas uczenia. 
 
 \begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|}
     \hline
         \textbf{Rozmiar zbioru testowego} & \textbf{Dokładność} &  \textbf{AUC} &  \textbf{Czas (s)} \\ \hline 
-max                           &  0.855781 &  \textbf{0.919433} &   \textbf{17} \\  \hline
-360                         &  \textbf{0.888757} &  0.918279 &   64 \\  \hline
-180                         &  0.878307 &  0.917263 &  148 \\  \hline
-90                          &  0.876426 &  0.915586 &  297 \\ \hline
-45                          &  0.877280 &  0.910868 &   405 \\ \hline
-22                          &  0.880905 &  0.904669 &  1163 \\ \hline
+max                           &  0.855781 &  \textbf{0.919433} &   \textbf{17.971821} \\  \hline
+360                         &  \textbf{0.888757} &  0.918279 &   64.217482 \\  \hline
+180                         &  0.878307 &  0.917263 &  148.310481 \\  \hline
+90                          &  0.876426 &  0.915586 &  297.019231 \\ \hline
+45                          &  0.877280 &  0.910868 &   405.719231 \\ \hline
+22                          &  0.880905 &  0.904669 &  1163.856892 \\ \hline
     \end{tabular}
     \caption{MLP: wyniki klasyfikacji binarnej w zależności od rozmiaru zbioru testowego}
     \label{tab:nn_walk_forward_test_binary}
 \end{table}
 
-W tabeli \ref{tab:nn_walk_forward_test_discrete} przestawione zostały analogiczne wyniki dla klasyfikacji na 3 klasy. Jak widać dla bardziej złożonego zagadnienia klasyfikacji zmniejszanie zbioru testowego jest bardzo korzystne. Wynik dokładności wzrósł aż o 10\% dla zbioru testowego o 22 próbkach. Dalsze zmniejszanie zbioru jest jednak problematyczne ze względu na rosnącą długość obliczeń.
+W tabeli \ref{tab:nn_walk_forward_test_discrete} przestawione zostały analogiczne wyniki dla klasyfikacji na 3 klasy. Jak widać dla bardziej złożonego zagadnienia klasyfikacji zmniejszanie zbioru testowego jest bardzo korzystne. Wynik dokładności wzrósł aż o $\sim 10\%$ dla zbioru testowego o 22 próbkach. Dalsze zmniejszanie zbioru jest jednak problematyczne ze względu na rosnący czas obliczeń.
 
 \begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|}
     \hline
         \textbf{Rozmiar zbioru testowego} & \textbf{Dokładność} &  \textbf{AUC} &  \textbf{Czas (s)} \\ \hline
-max    &  0.682993 &  0.857121 &  \textbf{38} \\ \hline
-360     &  0.731041 &  0.866818 &  54 \\ \hline
-180   &  0.730847 &  0.867762 &  127 \\ \hline
-90   &  0.740388 &  0.869632 &  316 \\ \hline
-45     &  0.760286 &  0.873949 &  1146 \\ \hline
-22  &  \textbf{0.787767} &  \textbf{0.882507} &  3229 \\ \hline
+max    &  0.682993 &  0.857121 &  \textbf{38.663478} \\ \hline
+360     &  0.731041 &  0.866818 &  54.312463 \\ \hline
+180   &  0.730847 &  0.867762 &  127.654863 \\ \hline
+90   &  0.740388 &  0.869632 &  316.48475 \\ \hline
+45     &  0.760286 &  0.873949 &  1146.761132 \\ \hline
+22  &  \textbf{0.787767} &  \textbf{0.882507} &  3229.764589 \\ \hline
     \end{tabular}
     \caption{MLP: wyniki klasyfikacji na 3 klasy w zależności od rozmiaru zbioru testowego}
     \label{tab:nn_walk_forward_test_discrete}
@@ -1090,6 +1122,8 @@ Ostatecznie dla klasyfikacji binarnej zostały użyte zbiory testowe z 360 prób
 
 
 \subsection{Random forest}
+
+Testy lasów losowych rozpoczęte zostały od analizy przetworzenia danych metodą PCA. Najlepsze wyniki klasyfikacji zostały uzyskane przy wybraniu wariancji o wartości $0.9999$ (tabele \ref{tab:rf_pca_binary} oraz \ref{tab:rf_pca_discrete}). Dla klasyfikacji binarnej osiągnięty został wynik $\sim 78\%$, zaś dla klasyfikacji wieloklasowej  $\sim 58\%$.
 
 \begin{table}[H]
     \centering
@@ -1103,7 +1137,7 @@ Ostatecznie dla klasyfikacji binarnej zostały użyte zbiory testowe z 360 prób
 0.9999             &  \textbf{0.777778} &  \textbf{0.777053} &    1.710322 \\ \hline
 Brak                &  0.753741 &  0.754849 &    2.229286 \\ \hline
     \end{tabular}
-    \caption{Random forest: wyniki klasyfikacji binarnej w zależności od wybranej wartości wariancji}
+    \caption{Random forest: wyniki klasyfikacji binarnej w zależności od wybranej wartości wariancji w metodzie PCA}
     \label{tab:rf_pca_binary}
 \end{table}
 \begin{table}[H]
@@ -1118,10 +1152,11 @@ Brak                &  0.753741 &  0.754849 &    2.229286 \\ \hline
 0.9999             &  \textbf{0.576417} &  \textbf{0.767606} &    1.747348 \\ \hline
 Brak                &  0.567347 &  0.768452 &    2.043028 \\ \hline
     \end{tabular}
-    \caption{Random forest: wyniki klasyfikacji na 3 klasy w zależności od wybranej wartości wariancji}
+    \caption{Random forest: wyniki klasyfikacji na 3 klasy w zależności od wybranej wartości wariancji w metodzie PCA}
     \label{tab:rf_pca_discrete}
 \end{table}
 
+Podstawowym parametrem przy używaniu modelu lasu losowego jest dobór odpowiedniej liczby drzew, tworzących las. W poprzednich testach ten parametr miał wartość 150. Im więcej drzew tym bardziej wydłuża się czas obliczeń, jednak zwiększa się liczba elementów biorących udział w predykcji co potencjalnie może polepszać wyniki klasyfikacji. Tabele \ref{tab:rf_estimators_binary} oraz \ref{tab:rf_estimators_discrete} przedstawiają wyniki klasyfikacji w zależności od liczby drzew w lesie. Niestety dobór większej liczby drzew tylko nieznacznie poprawia otrzymywane wyniki, jednocześnie znacznie wydłużając czas obliczeń. Dla obu typów klasyfikacji najlepszy wynik uzyskał las liczący 1500 drzew.
 
 \begin{table}[H]
     \centering
@@ -1139,12 +1174,13 @@ Brak                &  0.567347 &  0.768452 &    2.043028 \\ \hline
     \caption{Random forest: wyniki klasyfikacji binarnej w zależności od liczby utworzonych drzew}
     \label{tab:rf_estimators_binary}
 \end{table}
+
 \begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|}
     \hline
         \textbf{Liczba drzew} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
-100        &  0.574150 &  0.763649 &    \textbf{1.228010} \\ \hline
+100        &  0.553851 &  0.763649 &    \textbf{1.228010} \\ \hline
 200        &  0.574150 &  0.767209 &    2.428561 \\ \hline
 300        &  0.574150 &  0.768572 &    3.478281 \\ \hline
 500        &  0.585395 &  0.774938 &    5.866535 \\ \hline
@@ -1156,6 +1192,7 @@ Brak                &  0.567347 &  0.768452 &    2.043028 \\ \hline
     \label{tab:rf_estimators_discrete}
 \end{table}
 
+Ostatnim przeanalizowanym parametrem podobnie jak dla poprzednich modeli jest rozmiar zbioru testowego dla uczenia metodą kroczącą. W przeciwieństwie do poprzednich modeli metoda lasu losowego nie wykazuje poprawy podczas iteracyjnej ewaluacji modelu (tabele \ref{tab:rf_walk_forward_binary} oraz \ref{tab:rf_walk_forward_discrete}). Najlepsze wyniki są uzyskane przy jednokrotnym uczeniu oraz ewaluacji modelu, co oznacza że lasy losowe nie są w stanie przyswoić nowych informacji ponad te zawarte w podstawowym zbiorze treningowym. Wobec tego dla tego modelu nie była stosowana ewaluacja metodą kroczącą.
 
 \begin{table}[H]
     \centering
@@ -1191,6 +1228,8 @@ max                         &  \textbf{0.585988} &  0.778329 &  \textbf{15.83465
 
 \subsection{Light GBM}
 
+Podobnie jak w przypadku poprzednich modeli dla Light GBM analizowana była zależność jakości klasyfikacji od redukcji rozmiaru danych metodą PCA. Wyniki tej analizy zostały przedstawione w tabelach \ref{tab:lgbm_pca_binary} oraz \ref{tab:lgbm_pca_discrete}. W odróżnieniu od innych klasyfikatorów używanie PCA nawet z zachowaniem największej wartości wariancji powoduje znaczny spadek jakości klasyfikacji. Dzieje się tak zarówno dla klasyfikacji binarnej jak i klasyfikacji wieloklasowej, aczkolwiek dla tej drugiej jest to duż obardziej widoczne. Bez użycia PCA osiągane są  wyniki dokładności $\sim 82\%$ dla klasyfikacji binarnej oraz $\sim 64\%$ dla klasyfikacji na 3 klasy.
+
 \begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|}
@@ -1202,7 +1241,7 @@ max                         &  \textbf{0.585988} &  0.778329 &  \textbf{15.83465
 0.9999             &  0.802721 &  0.879168 &    0.903005 \\ \hline
 Brak                &  \textbf{0.824490} &  \textbf{0.910806} &    0.632995 \\ \hline
     \end{tabular}
-    \caption{Light GBM: wyniki klasyfikacji binarnej w zależności od wybranej wartości wariancji}
+    \caption{Light GBM: wyniki klasyfikacji binarnej w zależności od wybranej wartości wariancji w metodzie PCA}
     \label{tab:lgbm_pca_binary}
 \end{table}
 
@@ -1217,9 +1256,11 @@ Brak                &  \textbf{0.824490} &  \textbf{0.910806} &    0.632995 \\ \
 0.9999             &  0.571429 &  0.765824 &    1.166996 \\ \hline
 Brak                &  \textbf{0.646259} &  \textbf{0.820201} &    1.241000 \\ \hline
     \end{tabular}
-    \caption{Light GBM: wyniki klasyfikacji na 3 klasy w zależności od wybranej wartości wariancji}
+    \caption{Light GBM: wyniki klasyfikacji na 3 klasy w zależności od wybranej wartości wariancji w metodzie PCA}
     \label{tab:lgbm_pca_discrete}
 \end{table}
+
+Kolejnym parametrem, który może zostać wykorzystany do optymalizacji modelu Light GBM jest procent cech wykorzystanych do utworzenia każdego z drzew. Na przykład jeżeli ustawimy ten parametr na $0.5$ każde drzewo będzie utworzone biorąc pod uwagę tylko połowę kolumn z wektora wejściowego. Cechy są wybierane losowo w momencie tworzenia kolejnego drzewa z lasu. Domyślnie ten parametr został ustawiony na $0.8$. Wyniki tego eksperymentu przedstawione są w tabelach \ref{tab:lgbm_feature_fraction_binary} oraz \ref{tab:lgbm_feature_fraction_discrete}. W przypadku obu klasyfikacji najbardziej korzystne wyniki daje wykorzystanie całego wektora danych przy tworzeniu każdego z drzew. Zmiana tego parametru pozwoliła na poprawienie miary dokładności o $\sim 1\%$ w obu przypadkach klasyfikacji.
 
 \begin{table}[H]
     \centering
@@ -1259,6 +1300,7 @@ Brak                &  \textbf{0.646259} &  \textbf{0.820201} &    1.241000 \\ \
     \label{tab:lgbm_feature_fraction_discrete}
 \end{table}
 
+Metoda Light GBM daje możliwość wyboru używanej metody \textit{boostingu}. Domyślnym algorytmem jest \textit{boosting} drzew decyzyjnych (\textit{gbdt}). W tabelach \ref{tab:lgbm_boosting_binary} oraz \ref{tab:lgbm_boosting_discrete} zostały przedstawione wyniki użycia różnych metod \textit{boostingu}. Jak widać dla klasyfikacji binarnej domyślny parametr \textit{gbdt} okazuje się najlepszym. Dla klasyfikacji wieloklasowej lepszy wynik daje metoda \textit{dart} \cite{lightbgm:dart}, poprawiając wynik dokładności o $\sim 1\%$.
 
 \begin{table}[H]
     \centering
@@ -1270,7 +1312,7 @@ gbdt     &  \textbf{0.834014} &  \textbf{0.911832} &    \textbf{1.173999} \\ \hl
 gbrt     &  0.834014 &  0.911832 &    1.244001 \\ \hline
 goss     &  0.797279 &  0.902891 &    0.748003 \\ \hline
     \end{tabular}
-    \caption{Light GBM: wyniki klasyfikacji na 3 klasy w zależności od wybranego rodzaju boostingu}
+    \caption{Light GBM: wyniki klasyfikacji binarnej w zależności od wybranego rodzaju boostingu}
     \label{tab:lgbm_boosting_binary}
 \end{table}
 
@@ -1287,6 +1329,8 @@ goss     &  0.646259 &  0.810499 &    \textbf{1.321007} \\ \hline
     \caption{Light GBM: wyniki klasyfikacji na 3 klasy w zależności od wybranego rodzaju boostingu}
     \label{tab:lgbm_boosting_discrete}
 \end{table}
+
+Ostatnim badanym parametrem jest rozmiar zbioru testowego wykorzystanego podczas uczenia metodą kroczącą. Wyniki badania zostały przedstawione w tabelach \ref{tab:lgbm_walk_forward_binary} oraz \ref{tab:lgbm_walk_forward_discrete}. Dla modelu Light GBM widać znaczną poprawę w klasyfikacji przy używaniu zbioru testowego o 360 próbkach. Dla klasyfikacji binarnej nastąpiła poprawa dokładności o $\sim 3\%$, zaś dla klasyfikacji na 3 klasy wynik poprawił się aż o $\sim 6\%$. Dalsze zmniejszanie zbioru testowego pogarszało wyniki wbrew oczekiwaniom.
 
 \begin{table}[H]
     \centering
@@ -1342,36 +1386,42 @@ MSFT   &  0.800187 &   0.826206 & 0.767818 &  0.798307\\ \hline
 PEP    &  0.827586 & 0.843401  & 0.765455 & 0.830135 \\ \hline
 QCOM   &  0.835668 &  0.836926 & 0.808901 & 0.815132 \\ \hline \hline
 \textbf{Średnia dokładność} &  0.816463 & \textbf{0.834737} & 0.759833 & 0.81972 \\  \hline  
-\textbf{Średnia ROC} &  0.816157 & \textbf{0.904259} & 0.761041 & 0.901649 \\  \hline
+\textbf{Średnia ROC} &  0.815958 & \textbf{0.904259} & 0.761041 & 0.901649 \\  \hline
     \end{tabular}
     \caption{Końcowe wyniki dokładności dla klasyfikacji binarnej różnych spółek}
     \label{tab:comparison_final_binary}
 \end{table}   
-
-
 
  \begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|c|}
     \hline
         \textbf{Spółka} & \textbf{SVM} &  \textbf{MLP}  &  \textbf{Random forest}  &  \textbf{Light GBM} \\ \hline
-AAPL   &  0.671335 & 0.779353  & 0.607221 & 0.650688 \\ \hline
-AMGN   &  0.676937 &  0.793533 & 0.610644 &  0.649841 \\ \hline
-AMZN   &  0.625584 & 0.758636 & 0.510115  & 0.660079 \\ \hline
-CSCO   &  0.661064 &  0.776217 & 0.619359 &  0.632989 \\ \hline
-FB     &  0.604585 & 0.740004 & 0.543457 & 0.678161 \\ \hline
-GOOGL  &  0.676190 &  0.789327 & 0.589116 & 0.729233 \\ \hline
-INTC   &  0.718954 & 0.812174  & 0.641768 & 0.668836 \\ \hline
-MSFT   &  0.672269 &   0.785449 & 0.604108 &  0.636958 \\ \hline
-PEP    &  0.678472 & 0.807127  & 0.610127 & 0.670854 \\ \hline
-QCOM   &  0.687208 &  0.777542 & 0.641457 & 0.661878 \\ \hline \hline
-\textbf{Średnia dokładność} &  0.667260 & \textbf{0.781936} & 0.597737 & 0.663952 \\  \hline  
-\textbf{Średnia ROC} &  0.839264 & \textbf{0.874600} & 0.783574 & 0.830858 \\  \hline
+AAPL   &  0.667600 & 0.779353  & 0.607221 & 0.650688 \\ \hline
+AMGN   &  0.687208 &  0.793533 & 0.610644 &  0.649841 \\ \hline
+AMZN   &  0.616246 & 0.758636 & 0.510115  & 0.660079 \\ \hline
+CSCO   &  0.676004 &  0.776217 & 0.619359 &  0.632989 \\ \hline
+FB     &  0.624642 & 0.740004 & 0.543457 & 0.678161 \\ \hline
+GOOGL  &  0.685714 &  0.789327 & 0.589116 & 0.729233 \\ \hline
+INTC   &  0.719888 & 0.812174  & 0.641768 & 0.668836 \\ \hline
+MSFT   &  0.680672 &   0.785449 & 0.604108 &  0.636958 \\ \hline
+PEP    &  0.683131 & 0.807127  & 0.610127 & 0.670854 \\ \hline
+QCOM   &  0.683473 &  0.777542 & 0.641457 & 0.661878 \\ \hline \hline
+\textbf{Średnia dokładność} &  0.672458 & \textbf{0.781936} & 0.597737 & 0.663952 \\  \hline  
+\textbf{Średnia ROC} &  0.843943 & \textbf{0.874600} & 0.783574 & 0.830858 \\  \hline
     \end{tabular}
     \caption{Końcowe wyniki dokładności dla klasyfikacji na 3 klasy różnych spółek}
     \label{tab:comparison_final_discrete}
 \end{table}   
 
+Na wykresie \ref{img:nn_layers_discrete} przedstawione zostały krzywe ROC dla 3 klas, wraz z ich mikro-średnią, dla sieci neuronowej o jednej warstwie ukrytej z 10 neuronami. Analizując wykres łatwo zauważyć, iż model ma największą trudność z przewidywaniem klasy utrzymania ceny. Taka rozbieżność może być problematyczna na etapie używania nauczonego modelu do predykcji. Im większa rozbieżność między AUC poszczególnych klas tym gorzej. Może się bowiem okazać iż dwa modele o porównywalnej mierze AUC będą uzyskiwały rozbieżne wyniki w grze na giełdzie. Mogłoby to wynikać z faktu iż model w ogóle nie zwraca w swoich przewidywaniach jednej z klas, zaś pozostałe estymuje bardzo dobrze. Na przykład model mógłby nigdy nie dawać sygnału do sprzedaży, a to całkowicie wyklucza jego praktyczne użycie. 
+
+
+\begin{figure}[H]
+\centering \includegraphics[scale=0.8]{img/results/nn/nn_layers_10_discrete_roc-googl.pdf}
+\caption{Wykres ROC sieci neuronowej o jednej warstwie neuronowej z 10 neuronami dla klasyfikacji na 3 klasy (opracowanie własne)}
+\label{img:nn_layers_discrete}
+\end{figure}
 \section{Wspomaganie decyzji giełdowych}
 
 \section{Projekt aplikacji}
@@ -1520,6 +1570,10 @@ Guolin Ke, Qi Meng, Thomas Finley, Taifeng Wang,Wei Chen, Weidong Ma, Qiwei Ye, 
 	Sklearn SVM, \url{https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html#sklearn.svm.SVC}
 	Data dostępu: 23.06.2019
 
+\bibitem{lightgbm:dart}
+	K. V. Rashmi, Ran Gilad-Bachrach
+	\textit{DART: Dropouts meet Multiple Additive Regression Trees}
+	CoRR Volume: abs/1505.01866 \url{http://arxiv.org/abs/1505.01866} Published: AUG 2018
 
 \end{thebibliography}
 

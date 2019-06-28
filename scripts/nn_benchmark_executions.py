@@ -54,7 +54,7 @@ def nn_final_discrete():
 
 if __name__ == '__main__':
     # nn_examine(True, 'pca', [[None, 0.9999, 0.999, 0.99, 0.98, 0.97]])
-    # nn_examine(False, 'pca', [[None, 0.9999, 0.999, 0.99, 0.98, 0.97]])
+    nn_examine(False, 'pca', [[None, 0.9999, 0.999, 0.99, 0.98, 0.97]])
     # nn_examine(True, 'regularizer', [[None, 0.005, 0.01, 0.02]])
     # nn_examine(False, 'regularizer', [[None, 0.005, 0.01, 0.02]])
     # nn_examine(True, 'layers', [[[], [2], [3], [4], [5], [6], [7], [8], [9], [10], [2, 2], [3, 3], [4, 4], [5, 5],
@@ -69,5 +69,5 @@ if __name__ == '__main__':
     # nn_examine(False, 'walk_forward_test_window_size', [[360, 180, 90, 45, 22]],
     #            walk_forward_testing=True)
     # nn_final_binary()
-    nn_final_discrete()
+    # nn_final_discrete()
     print('Benchmark executions finished.')
