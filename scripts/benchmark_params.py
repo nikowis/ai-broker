@@ -139,8 +139,14 @@ class SVMBenchmarkParams(BenchmarkParams):
 
     def __init__(self, binary_classification, examined_param=None, benchmark_name=str(uuid.uuid4())) -> None:
         super().__init__(binary_classification, examined_param, benchmark_name)
-        self.walk_forward_test_window_size = 360
-        self.c = 10
+        if binary_classification:
+            self.pca = 0.9999
+            self.c = 10
+            self.walk_forward_test_window_size = 360
+        else:
+            self.pca = None
+            self.c = 25
+            self.walk_forward_test_window_size = 360
         self.kernel = 'linear'
         self.degree = 3
         self.gamma = 0.005
@@ -148,6 +154,7 @@ class SVMBenchmarkParams(BenchmarkParams):
         self.one_hot_encode_labels = False
         self.save_model = False
         self.iterations = 1
+
 
     def update_from_dictionary(self, params_dict):
         super().update_from_dictionary(params_dict)
