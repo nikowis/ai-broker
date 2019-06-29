@@ -1,19 +1,27 @@
+import os
+
 import matplotlib.pyplot as plt
 from matplotlib import style
+import matplotlib.dates as mdates
 
 import csv_importer
 import stock_constants as const
 
-
-CSV_FILES_DIR = './../../target/data'
+TARGET_PATH = './../../target'
+CSV_FILES_PATH = TARGET_PATH + '/data'
+COMPANY_FILES_PATH = TARGET_PATH + '/company_info'
 
 FORECAST_COUNT_LABEL = 'Liczba prognoz'
 VALUE_CHANGE_LABEL = 'Zmiana wartości'
+HISTOGRAM_TITLE = 'Histogram predykcji dla zbioru testowego'
 
 RATE_CHANGE_LABEL = 'Zmiana kursu'
 RISE_LABEL = 'wzrost'
 IDLE_LABEL = 'utrzymanie'
 FALL_LABEL = 'spadek'
+
+if not os.path.exists(COMPANY_FILES_PATH):
+    os.makedirs(COMPANY_FILES_PATH)
 
 
 def plot_company_summary(df, symbol):
@@ -49,58 +57,96 @@ def plot_company_summary(df, symbol):
     plt.title(HISTOGRAM_TITLE)
 
     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
-    company_info_path = './../../target/company_info'
-    if not os.path.exists(company_info_path):
-        os.makedirs(company_info_path)
-    plt.savefig('{}/{}.png'.format(company_info_path, symbol))
+
+    plt.savefig('{}/{}.png'.format(COMPANY_FILES_PATH, symbol))
 
     # plt.show()
     plt.close()
 
-def main():
-    symbols = ['USLM']
-    df_list, _ = csv_importer.import_data_from_files(symbols, CSV_FILES_DIR)
+def compare_adj_one_plot():
+    symbols = ['GOOGL', 'AMZN']
+    df_list, _ = csv_importer.import_data_from_files(symbols, CSV_FILES_PATH)
 
     balanced_syms = []
 
     for i in range(0, len(symbols)):
         sym = symbols[i]
         df = df_list[i]
-        MIN_DATE = '1900-01-01'
+        MIN_DATE = '1990-01-01'
+        MAX_DATE = '2020-10-29'
+        df = df[(df.index > MIN_DATE)]
+        df = df[(df.index < MAX_DATE)]
+        style.use('ggplot')
+        df[const.ADJUSTED_CLOSE_COL].plot(kind='line', x_compat=True, label='Cena zamknięcia ' + sym)
+    # plt.title(sym)
+    plt.ylabel('Cena zamknięcia (USD)')
+    plt.xlabel('Data')
+    plt.legend()
+    # plt.show()
+    plt.savefig('{}/{}.pdf'.format(COMPANY_FILES_PATH, 'close_comparison'),
+                format='pdf', dpi=1000)
+    plt.savefig('{}/{}.png'.format(COMPANY_FILES_PATH, 'close_comparison'))
+    plt.close()
+
+def plot_close_line_and_label_histograms():
+    symbols = ['GOOGL', 'INTC', 'FB']
+    df_list, _ = csv_importer.import_data_from_files(symbols, CSV_FILES_PATH)
+
+    balanced_syms = []
+
+    for i in range(0, len(symbols)):
+        sym = symbols[i]
+        df = df_list[i]
+        MIN_DATE = '2010-01-01'
         MAX_DATE = '2020-10-29'
         df = df[(df.index > MIN_DATE)]
         df = df[(df.index < MAX_DATE)]
 
-        bincount = df[const.LABEL_BINARY_COL].value_counts(normalize=True)
-        discretecount = df[const.LABEL_DISCRETE_COL].value_counts(normalize=True)
-
-        bin_fall = bincount.loc[0.0]
-        bin_raise = bincount.loc[1.0]
-
-        dis_fall = discretecount.loc[0.0]
-        dis_keep = discretecount.loc[1.0]
-        dis_raise = discretecount.loc[2.0]
+        # bincount = df[const.LABEL_BINARY_COL].value_counts(normalize=True)
+        # discretecount = df[const.LABEL_DISCRETE_COL].value_counts(normalize=True)
+        #
+        # bin_fall = bincount.loc[0.0]
+        # bin_raise = bincount.loc[1.0]
+        #
+        # dis_fall = discretecount.loc[0.0]
+        # dis_keep = discretecount.loc[1.0]
+        # dis_raise = discretecount.loc[2.0]
 
         style.use('ggplot')
+        df[const.ADJUSTED_CLOSE_COL].plot(kind='line', x_compat=True, label='Cena zamknięcia')
 
-        df[const.ADJUSTED_CLOSE_COL].plot(kind='line')
-        plt.title('Close price')
-        plt.ylabel('Price')
-        plt.xlabel('Date')
-        plt.show()
+        plt.title(sym)
+        plt.ylabel('Cena zamknięcia (USD)')
+        plt.xlabel('Data')
+        plt.legend()
+        # plt.show()
+        plt.savefig('{}/{}.pdf'.format(COMPANY_FILES_PATH, sym + '_adj_close'),
+                    format='pdf', dpi=1000)
+        plt.savefig('{}/{}.png'.format(COMPANY_FILES_PATH, sym + '_adj_close'))
         plt.close()
 
-        df[const.LABEL_BINARY_COL].plot(kind='hist', xticks=[-1, 1])
-        plt.xticks([-1, 1], ['Fall', 'Rise'])
-        plt.xlabel('Class')
-        plt.ylabel('Freq')
-        plt.show()
+        df[const.LABEL_BINARY_COL].plot(kind='hist', xticks=[0, 2])
+        plt.xticks([0, 2], ['Spadek', 'Wzrost'])
+        plt.title(sym)
+        plt.xlabel('Klasa')
+        plt.ylabel('Liczba próbek')
+        plt.savefig('{}/{}.pdf'.format(COMPANY_FILES_PATH, sym + '_binary_hist'),
+                    format='pdf', dpi=1000)
+        plt.savefig('{}/{}.png'.format(COMPANY_FILES_PATH, sym + '_binary_hist'))
         plt.close()
 
-    print(len(balanced_syms))
-    print(balanced_syms)
+        df[const.LABEL_DISCRETE_COL].plot(kind='hist', xticks=[0, 1, 2])
+        plt.xticks([0, 1, 2], ['Spadek', 'Utrzymanie', 'Wzrost'])
+        plt.title(sym)
+        plt.xlabel('Klasa')
+        plt.ylabel('Liczba próbek')
+        plt.savefig('{}/{}.pdf'.format(COMPANY_FILES_PATH, sym + '_discrete_hist'),
+                    format='pdf', dpi=1000)
+        plt.savefig('{}/{}.png'.format(COMPANY_FILES_PATH, sym + '_discrete_hist'))
+        plt.close()
 
 
 if __name__ == '__main__':
-    main()
+    plot_close_line_and_label_histograms()
+    compare_adj_one_plot()
     print('FINISHED')
