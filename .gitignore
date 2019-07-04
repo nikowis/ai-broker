@@ -120,3 +120,6 @@ docs/~$licki DPL_mgr-pol_2018-19c Nikodem.doc
 docs/Praca/praca.bbl
 docs/Praca/praca.blg
 *.py___jb_tmp___
+
+*.lof
+*.lot

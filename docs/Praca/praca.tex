@@ -283,15 +283,6 @@ Dla potwierdzenia zasadności takiego modelu, należy upewnić się że dzienne 
 \label{img:googl_pct_change_last_30}
 \end{figure}
 
-
-%\subsubsection{Selekcja cech}
-
-%Według niektórych badań wolumen obrotów akcji nie jest skorelowany w żaden sposób z jej ceną. Modele mogą więc wykazywać lepsze wyniki przy mniejszej lub większej liczbie wejściowych parametrów. Niektóre parametry mogą okazać się zbędne lub wręcz mogą osłabiać przewidywanie wartości.
-
-%\subsubsection{Dobór spółek}
-
-%Modele oceniane na podstawie danych poszczególnych spółek mogą dawać w skrajnych przypadkach zafałszowane wyniki. Wiele spółek wykazuje wysoką korelację cen akcji między sobą. W celu uniknięcia pułapki przetrenowania, do uczenia i testowania użyte zostały dane spółek o niskiej korelacji i różnych trendach wzrostu/spadku.
-
 \subsection{Kryteria oceny modeli predykcji}
 
 Porównywanie jakości i wydajności jest nierozłącznym elementem tworzenia i testowania metod uczenia maszynowego. Istnieje wiele sposobów na realizację tego nietrywialnego zadania, które jak się okazuje, często wymaga porównywania modeli na kilku płaszczyznach. Najpopularniejszymi miarami porównawczymi są:
@@ -314,8 +305,6 @@ W przypadku klasyfikacji dwuklasowej na klasy A i B każdą predykcję można pr
 \item True Negative (TN) - gdy przewidziano klasę B dla etykiety B
 \end{itemize}
 
-%TODO dodać schemat macierzy błedu
-
 Graficzną reprezentację podziału klasyfikacji na powyższe kategorie nazywamy \textit{macierzą błędu}. Zastosowanie miar opartych o tablicę błędów dla problemów z większą liczbą klas wymaga dodatkowych kroków. W celu policzenia wartości TP, FN, FP i TN należy wyróżnić konkretną klasę, a pozostałe klasy należy zagregować w sztuczną klasę przeciwną. W ten sposób należy wyliczyć konkretną miarę tyle razy ile jest klas. Ostatecznym krokiem w celu uzyskania jednolitej oceny modelu jest na przykład wyliczenie średniej ważonej z wyników dla każdej z klas.
 
 
@@ -335,7 +324,7 @@ $$ TPR = \frac{TP}{TP+FN}\ \ \ \ \ \ \ \ FPR = \frac{FP}{FP+TN} $$
 
 Klasyfikatory w większości przypadków nie zwracają dokładnego wyniku przypisania przykładu do klasy. Zazwyczaj wynikiem klasyfikacji jest liczba rzeczywista z przedziału $[0, 1]$, którą można identyfikować jako prawdopodobieństwo. Można przyjąć że jeżeli klasyfikator zwróci $0$ oznacza to przypisanie do klasy A, zaś $1$ oznacza przypisanie do klasy B. Dla wartości z zakresu $(0, 1)$ przypisuje się pewną wartość progową rozgraniczającą obie klasy. Dla tego progu mniejsze od niego wartości przypisujemy do klasy A, zaś resztę do klasy B. Intuicyjnie jest to zazwyczaj połowa przedziału czyli $0.5$.
 
-Krzywa ROC jest graficzną reprezentacją skuteczności modelu klasyfikacyjnego. Jest ona skonstruowana poprzez wykreślenie stosunku $TPR$ do $FPR$ dla różnych progów rozgraniczających klasy. Na rysunku \ref{roc} widać przykładowe krzywe ROC dla klasyfikatorów różnej jakości.
+Krzywa ROC jest graficzną reprezentacją skuteczności modelu klasyfikacyjnego. Jest ona skonstruowana poprzez wykreślenie stosunku $TPR$ do $FPR$ dla różnych progów rozgraniczających klasy. Na rysunku \ref{img:roc} widać przykładowe krzywe ROC dla klasyfikatorów różnej jakości.
 
 
 %source: https://towardsdatascience.com/understanding-auc-roc-curve-68b2303cc9c5
@@ -350,7 +339,7 @@ Krzywa ROC jest graficzną reprezentacją skuteczności modelu klasyfikacyjnego.
 \subfigure[Krzywa ROC dla modelu idealnego]{%
 \includegraphics[scale=0.55]{img/roc_3.png}}%
 \caption{Przykładowe krzywe ROC \cite{roccurves} }% (źródło: https://towardsdatascience.com/understanding-auc-roc-curve-68b2303cc9c5).}
-\label{roc}
+\label{img:roc}
 \end{figure}
 
 
@@ -358,8 +347,6 @@ Porównanie różnych klasyfikatorów za pomocą krzywej ROC odbywa się poprzez
 
 
 \subsubsection{Częściowy indeks Gini} %TODO bibliografia
-
-%TODO dodać wykres z indeksem GINI
 
 Częściowy indeks Gini jest innym sposobem na analizę jakości modelu predykcyjnego za pomocą krzywej ROC. Otrzymuje się go poprzez wyliczenie pola powierzchni pomiędzy krzywą ROC dla modelu predykcyjnego, a krzywą ROC dla modelu losowego, w stosunku do pola powierzchni między krzywą ROC modelu idealnego, a krzywą ROC modelu losowego. Dla modelu losowego wynosi 0, zaś dla modelu idealnego wartość indeksu wynosi 1. W ten sposób otrzymana wartość indeksu Gini może być interpretowana jako procent idealności modelu.
 
@@ -403,24 +390,24 @@ W zagadnieniu predykcji giełdowych sprowadzonym do klasyfikacji, można posłu�
 
 \subsection{Uczenie modeli - specyfika szeregów czasowych}
 
-Każdy proces uczenia modeli sztucznej inteligencji zwieńczony jest analizą jakości. Zazwyczaj taką analizę przeprowadza się poprzez wydzielenie pewnej części zbioru danych i oznaczenia jej jako zbioru testowego. Reszta zbioru danych zwana jest zbiorem treningowym (rysunek \ref{train_test_split}). Taki podział wszystkich próbek pozwala na używanie części treningowej do nauki modelu, zaś części testowej do jego oceny. Ocena modelu na podstawie próbek, któych model nie widział podczas procesu uczenia daje wiarygodne wyniki.
+Każdy proces uczenia modeli sztucznej inteligencji zwieńczony jest analizą jakości. Zazwyczaj taką analizę przeprowadza się poprzez wydzielenie pewnej części zbioru danych i oznaczenia jej jako zbioru testowego. Reszta zbioru danych zwana jest zbiorem treningowym (rysunek \ref{img:train_test_split}). Taki podział wszystkich próbek pozwala na używanie części treningowej do nauki modelu, zaś części testowej do jego oceny. Ocena modelu na podstawie próbek, któych model nie widział podczas procesu uczenia daje wiarygodne wyniki.
 
 \begin{figure}[H]
 \centering 
 \includegraphics[scale=0.5]{img/train_test_split.png}
 \caption{Podział danych na zbiór treningowy i testowy \cite{train_test_split}}
-\label{train_test_split}
+\label{img:train_test_split}
 \end{figure}
 
 Ten model podziału jest najbardziej powszechny pośród zagadnień klasyfikacyjnych ze względu na swoją prostotę i odporność na zjawisko przeuczenia (ang. overfitting). Dane giełdowe jako szeregi czasowe posiadają dodatkową cechę - umiejscowienie próbek na osi czasu. Wykorzystanie faktu, iż kolejne próbki danych pojawiają się stopniowo wraz z upływem czasu, pozwala na udoskonalenie metody doboru danych do uczenia się. Uczenie i ocena metodą kroczącą (ang. walk forward) polega na stopniowym powiększaniu zbioru danych treningowych o kolejne próbki ze zbioru testowego podczas procesu oceny jakości. 
 
-\textit{Przykład:} podczas oceny jakości model przewiduje cenę za pomocą próbki z dnia $t$ mając do uprzedniej nauki wszystkie próbki od $t_0$ do $t-1$. Po tej predykcji próbka z dnia $t$ zostaje wcielona do zbioru uczącego. Model może, ale nie musi, zostać ponownie poddany procesowi uczenia przed przystąpieniem do oceny jakości dla predykcji kolejnej próbki $t+1$. Proces ten zobrazowany jest na rysunku \ref{train_test_split_time_series}. Na niebiesko oznaczono próbki zbioru treningowego, na czerwono zaś próbkę zbioru testowego podlegającą ocenie.
+\textit{Przykład:} podczas oceny jakości model przewiduje cenę za pomocą próbki z dnia $t$ mając do uprzedniej nauki wszystkie próbki od $t_0$ do $t-1$. Po tej predykcji próbka z dnia $t$ zostaje wcielona do zbioru uczącego. Model może, ale nie musi, zostać ponownie poddany procesowi uczenia przed przystąpieniem do oceny jakości dla predykcji kolejnej próbki $t+1$. Proces ten zobrazowany jest na rysunku \ref{img:train_test_split_time_series}. Na niebiesko oznaczono próbki zbioru treningowego, na czerwono zaś próbkę zbioru testowego podlegającą ocenie.
 
 \begin{figure}[H]
 \centering 
 \includegraphics[scale=0.75]{img/train_test_split_time_series.png}
 \caption{Podział danych na zbiór treningowy i testowy metodą kroczącą \cite{train_test_split_time_series}}
-\label{train_test_split_time_series}
+\label{img:train_test_split_time_series}
 \end{figure}
 
 Wykorzystanie metody kroczącej do podziału zbioru danych pozwala zmaksymalizować ilość informacji przekazanych do modelu podczas procesu uczenia, a tym samym poprawia końcowe wyniki klasyfikacji. 
@@ -452,7 +439,7 @@ Analiza fundamentalna ze względu na swoją długoterminową naturę (raporty fi
 
 \bigskip
 
-Wszystkie dane wejściowe, wraz z opisami, zaprezentowane są w tabeli \ref{data_columns_table}. Wszystkie dane mają charakter dzienny. Najnowsze informacje pochodzą z dnia \textit{t}, zaś przewidywaną ceną jest cena z dnia \textit{t+1}.
+Wszystkie dane wejściowe, wraz z opisami, zaprezentowane są w tabeli \ref{tab:data_columns_table}. Wszystkie dane mają charakter dzienny. Najnowsze informacje pochodzą z dnia \textit{t}, zaś przewidywaną ceną jest cena z dnia \textit{t+1}.
 
 \begin{longtable}[c]{| m{0.5cm} m{5cm} m{10cm}|} 
 
@@ -463,12 +450,12 @@ Wszystkie dane wejściowe, wraz z opisami, zaprezentowane są w tabeli \ref{data
 \midrule
 
 \caption{Wybrane cechy i ich opis}
-\label{data_columns_table}
+\label{tab:data_columns_table}
 \endfoot
 
 \bottomrule
 \caption{Wybrane cechy i ich opis}
-\label{data_columns_table}
+\label{tab:data_columns_table}
 \endlastfoot
 
 
@@ -550,58 +537,56 @@ Na rysunku \ref{img:non_stationary_adjusted_close} zauważyć można zjawisko ni
 \label{img:non_stationary_adjusted_close}
 \end{figure}
 
-Zjawisko niestacjonarności szeregów czasowych negatywnie wpływa na wykorzystywanie ich do uczenia maszynowego. Wszystkie zmienne, których dotyczy ten problem trzeba odpowiednio dostosować przed użyciem do uczenia modeli. Najbardziej powszechną metodą radzenia sobie z niestacjonarnością jest różnicowanie (ang. \textbf{differencing}). Jest to prosta metoda polegająca na wyliczeniu różnicy pomiędzy kolejnymi elementami w szeregu. W ten sposób zmienna $x_t$ jest zastąpiona przez $x'_t=x_t-x_{t-1}$. Wynik takiego przetworzenia dla ceny zamknięcia spółki \textit{Alphabet Inc} widoczny jest na rysunku \ref{stationary_adjusted_close}.
+Zjawisko niestacjonarności szeregów czasowych negatywnie wpływa na wykorzystywanie ich do uczenia maszynowego. Wszystkie zmienne, których dotyczy ten problem trzeba odpowiednio dostosować przed użyciem do uczenia modeli. Najbardziej powszechną metodą radzenia sobie z niestacjonarnością jest różnicowanie (ang. \textbf{differencing}). Jest to prosta metoda polegająca na wyliczeniu różnicy pomiędzy kolejnymi elementami w szeregu. W ten sposób zmienna $x_t$ jest zastąpiona przez $x'_t=x_t-x_{t-1}$. Wynik takiego przetworzenia dla ceny zamknięcia spółki \textit{Alphabet Inc} widoczny jest na rysunku \ref{img:stationary_adjusted_close}.
 
 \begin{figure}[H]
 \centering 
 \includegraphics[scale=0.9]{img/adjusted_close_stationary.pdf}
 \caption{Wykres cen akcji spółki \textit{Alphabet Inc} po przetworzeniu (opracowanie własne)}
-\label{stationary_adjusted_close}
+\label{img:stationary_adjusted_close}
 \end{figure}
 
 \subsubsection{Stworzenie etykiet}
 
-W procesie nadzorowanego uczenia maszynowego poza danymi wejściowymi potrzeba również etykiet, tj. zbioru pożądanych odpowiedzi. W przypadku regresyjnej predykcji cen zamknięcia w dniu $t$ etykietą jest cena zamknięcia z dnia $t+1$. Etykietę dla każdego wiersza danych wejściowych można więc uzyskać poprzez dodanie kolumny ceny zamknięcia przesuniętej o jeden dzień wstecz (zilustrowane na rysunku \ref{regression_label_creation}). 
+W procesie nadzorowanego uczenia maszynowego poza danymi wejściowymi potrzeba również etykiet, tj. zbioru pożądanych odpowiedzi. W przypadku regresyjnej predykcji cen zamknięcia w dniu $t$ etykietą jest cena zamknięcia z dnia $t+1$. Etykietę dla każdego wiersza danych wejściowych można więc uzyskać poprzez dodanie kolumny ceny zamknięcia przesuniętej o jeden dzień wstecz (zilustrowane na rysunku \ref{img:regression_label_creation}). 
 
 \begin{figure}[H]
 \centering 
 \includegraphics[scale=0.9]{img/label_creation.png}
 \caption{Przykładowe dane dla spółki \textit{Alphabet Inc}}
-\label{regression_label_creation}
+\label{img:regression_label_creation}
 \end{figure}
 
-W celu osiągnięcia etykiet do klasyfikacji potrzeba wykonać dodatkowe kroki. Korzystając z nowej kolumny można obliczyć różnicę pomiędzy $C_t$, a $C_{t+1}$ . Wyznaczenie etykiety trendu do klasyfikacji binarnej sprowadza się do wyliczenia funkcji $sgn(C_{t+1}-C_{t})$ (rysunek \ref{binary_label_creation}). 
+W celu osiągnięcia etykiet do klasyfikacji potrzeba wykonać dodatkowe kroki. Korzystając z nowej kolumny można obliczyć różnicę pomiędzy $C_t$, a $C_{t+1}$ . Wyznaczenie etykiety trendu do klasyfikacji binarnej sprowadza się do wyliczenia funkcji $sgn(C_{t+1}-C_{t})$ (rysunek \ref{img:binary_label_creation}). 
 
 \begin{figure}[H]
 \centering 
 \includegraphics[scale=0.9]{img/label_creation2.png}
 \caption{Przykładowe dane dla spółki \textit{Alphabet Inc}}
-\label{binary_label_creation}
+\label{img:binary_label_creation}
 \end{figure}
 
- W przypadku klasyfikacji podzielonej na 3 klasy wyznaczenie etykiety sprowadza się do obliczenia procentowej różnicy pomiędzy cenami zamknięcia - $100*(C_{t+1}-C_t)/C_t$. Tak wyliczoną różnicę procentową można wykorzystać do przypisania etykiecie wartości $-1, 0, 1$ w zależności od wybranego progu opłacalności. Przykładowe obliczenia zostały zilustrowane na rysunku \ref{classification_label_creation}.
+ W przypadku klasyfikacji podzielonej na 3 klasy wyznaczenie etykiety sprowadza się do obliczenia procentowej różnicy pomiędzy cenami zamknięcia - $100*(C_{t+1}-C_t)/C_t$. Tak wyliczoną różnicę procentową można wykorzystać do przypisania etykiecie wartości $-1, 0, 1$ w zależności od wybranego progu opłacalności. Przykładowe obliczenia zostały zilustrowane na rysunku \ref{img:classification_label_creation}.
 
 \begin{figure}[H]
 \centering 
 \includegraphics[scale=0.9]{img/label_creation3.png}
 \caption{Przykładowe dane dla spółki \textit{Alphabet Inc}}
-\label{classification_label_creation}
+\label{img:classification_label_creation}
 \end{figure}
-
-% TODO \subsubsection{EDA}
 
 \subsubsection{Redukcja danych wejściowych}
 
-Redukcja rozmiaru danych wejściowych jest zagadnieniem pozwalającym na poradzenie sobie ze zbyt dużą liczbą danych wejściowych. Jeżeli dwie zmienne są ze sobą mocno skorelowane, wówczas jedną z nich można odrzucić bez utraty zawartych w niej informacji. Macierz korelacji par zmiennych wejściowych przedstawiona jest na rysunku \ref{correlation}. Analizując macierz korelacji zauważyć można że duża część zmiennych jest ze sobą mocno skorelowana (wartości bliskie $1$ oznaczają wysoką korelację, 0 brak korelacji, zaś $-1$ negatywną korelację).
+Redukcja rozmiaru danych wejściowych jest zagadnieniem pozwalającym na poradzenie sobie ze zbyt dużą liczbą danych wejściowych. Jeżeli dwie zmienne są ze sobą mocno skorelowane, wówczas jedną z nich można odrzucić bez utraty zawartych w niej informacji. Macierz korelacji par zmiennych wejściowych przedstawiona jest na rysunku \ref{img:correlation}. Analizując macierz korelacji zauważyć można że duża część zmiennych jest ze sobą mocno skorelowana (wartości bliskie $1$ oznaczają wysoką korelację, 0 brak korelacji, zaś $-1$ negatywną korelację).
 
 \begin{figure}[H]
 \centering 
 \includegraphics[scale=0.6]{img/corr_matrix.pdf}
 \caption{Macierz korelacji par zmiennych}
-\label{correlation}
+\label{img:correlation}
 \end{figure}
 
-Dla par zmiennych o najwyższej korelacji można usunąć jedną ze zmiennych, ponieważ powiela ona informacje już zawarte w drugiej zmiennej.  W tabeli \ref{ccorr_table} zostały wylistowane pary zmiennych o najwyższej korelacji. Ze zbioru wejściowego usunięte zostały zmienne z kolumny \textit{Zmienna 2}.
+Dla par zmiennych o najwyższej korelacji można usunąć jedną ze zmiennych, ponieważ powiela ona informacje już zawarte w drugiej zmiennej.  W tabeli \ref{tab:ccorr_table} zostały wylistowane pary zmiennych o najwyższej korelacji. Ze zbioru wejściowego usunięte zostały zmienne z kolumny \textit{Zmienna 2}.
 
 
 \begin{table}[H]
@@ -624,43 +609,43 @@ RSI-5 & RSI-10 &  0.964811 \\
  \hline
 \end{tabular}
 \caption{Tabela najbardziej skorelowanych par zmiennych}
-\label{ccorr_table1}
+\label{tab:ccorr_table1}
 \end{table}
 
 
-Po odrzuceniu najmocniej skorelowanych danych można skorzystać z jednej z metod redukcji wymiaru zadania wejściowego jaką jest \textbf{analiza głównych składowych} (ang. principal component analysis). Jest to statystyczna metoda analizy czynnikowej, która modyfikuje układ współrzędnych w taki sposób aby maksymalizować wariancję kolejncyh zmiennych. Dzięki temu tworzona jest nowa przestrzeń obserwacji, w której najwięcej zmienności przedstawiają początkowe czynniki. Metode ta opiera się o macierz korelacji lub macierz kowariancji stworzonej z danych wejściowych. Rozmiar wejścia redukowany jest poprzez wybranie czynników, które reprezentują największą część wariancji w zbiorze danych. Stosunek liczby wybranych zmiennych do proocenta całkowitej wariancji zbioru danych przedstawiony jest na rysunku \ref{pca_variance}. Zawarcie $90\%$ wariancji wymaga użycia 8 składowych,  $95\%$ wariancji wymaga użycia 12 składowych, $99\%$ wariancji wymaga użycia 19 składowych. Wybranie wartości $99\%$ wariancji pozwala ograniczyć rozmiar wejściowego wektora o ponad połowę bez utraty informacji w nim zawartych.
+Po odrzuceniu najmocniej skorelowanych danych można skorzystać z jednej z metod redukcji wymiaru zadania wejściowego jaką jest \textbf{analiza głównych składowych} (ang. principal component analysis). Jest to statystyczna metoda analizy czynnikowej, która modyfikuje układ współrzędnych w taki sposób aby maksymalizować wariancję kolejncyh zmiennych. Dzięki temu tworzona jest nowa przestrzeń obserwacji, w której najwięcej zmienności przedstawiają początkowe czynniki. Metode ta opiera się o macierz korelacji lub macierz kowariancji stworzonej z danych wejściowych. Rozmiar wejścia redukowany jest poprzez wybranie czynników, które reprezentują największą część wariancji w zbiorze danych. Stosunek liczby wybranych zmiennych do proocenta całkowitej wariancji zbioru danych przedstawiony jest na rysunku \ref{img:pca_variance}. Zawarcie $90\%$ wariancji wymaga użycia 8 składowych,  $95\%$ wariancji wymaga użycia 12 składowych, $99\%$ wariancji wymaga użycia 19 składowych. Wybranie wartości $99\%$ wariancji pozwala ograniczyć rozmiar wejściowego wektora o ponad połowę bez utraty informacji w nim zawartych.
 
 \begin{figure}[H]
 \centering 
 \includegraphics[scale=0.9]{img/pca_variance.pdf}
 \caption{Liczba składowych, a całkowita wariancja zbioru}
-\label{pca_variance}
+\label{img:pca_variance}
 \end{figure}
 
 \newpage
 
 \section{Wybrane algorytmy do prognozowania}
 
-%Todo wstęp tutaj
+Istnieje wiele algorytmów mogących posłużyć do zagadnień klasyfikacji lub regresji. W tym rozdziale omówione zostały klasyfikatory, które później zostały użyte do predykcji na danych giełdowych.
 
 \subsection{SVM \cite{svm}}
 
-Maszyny wektorów podpierających (ang. support-vector machines) są zbiorem klasyfikatorów mających na celu wyznaczenie hiperpłaszczyzn rozdzielających klasy z zachowaniem maksymalnego marginesu rozdzielającego (rysunek \ref{wiki_svm}). W podstawowej wersji klasyfikatory SVM potrafią sktuecznie klasyfikować problemy separowalne liniowo.
+Maszyny wektorów podpierających (ang. support-vector machines) są zbiorem klasyfikatorów mających na celu wyznaczenie hiperpłaszczyzn rozdzielających klasy z zachowaniem maksymalnego marginesu rozdzielającego (rysunek \ref{img:wiki_svm}). W podstawowej wersji klasyfikatory SVM potrafią sktuecznie klasyfikować problemy separowalne liniowo.
 
 
 \begin{figure}[H]
 \centering \includegraphics[scale=0.9]{img/svm.png}
 \caption{Hiperpłaszczyzna rozdzielająca zbiór z maksymalnym marginesem \cite{wikisvm}}
-\label{wiki_svm}
+\label{img:wiki_svm}
 \end{figure}
 
-W celu używania maszyn wektorów nośnych do klasyfikacji problemów nieliniowych stosuje się przekształcanie przestrzeni zadania za pomocą funkcji jądrowych. Wprowadzają one dodatkowe wymiary do zadania, w których znalezienie hiperpłaszczyzny rozdzielającej klasy może okazać się prostsze (rysunek \ref{wiki_svm2}). Do najpopularniejszych funkcji jądrowych zalicza się funkcje: liniową (zachowującą wymiar zadania w niezmienionym stanie), wielomianową, radialną czy też sigmoidalną.
+W celu używania maszyn wektorów nośnych do klasyfikacji problemów nieliniowych stosuje się przekształcanie przestrzeni zadania za pomocą funkcji jądrowych. Wprowadzają one dodatkowe wymiary do zadania, w których znalezienie hiperpłaszczyzny rozdzielającej klasy może okazać się prostsze (rysunek \ref{img:wiki_svm2}). Do najpopularniejszych funkcji jądrowych zalicza się funkcje: liniową (zachowującą wymiar zadania w niezmienionym stanie), wielomianową, radialną czy też sigmoidalną.
 
 
 \begin{figure}[H]
 \centering \includegraphics[scale=0.2]{img/svm2.png}
 \caption{Ten sam problem zaprezentowany w dwóch oraz trzech wymiarach \cite{wikisvm}}
-\label{wiki_svm2}
+\label{img:wiki_svm2}
 \end{figure}
 
 
@@ -690,80 +675,48 @@ Przy wykorzystywaniu sieci neuronowych głównym problemem, z którym zmagają s
 
 \subsubsection{Sieci typu MLP \cite{mlp}}
 
-Jednym z najprostszych przykładów sieci neuronowych jest perceptron wielowarstwowy (ang. multilayer perceptron). Taka sieć składa się z warstwy wejściowej, z dowolnej ilości warstw ukrytych oraz z warstwy wyjściowej. W tym rodzaju sieci neuronowych, sygnał wyjściowy dowolnego neuronu jest traktowany jako sygnał wejściowy każdego z neuronów z kolejnej warstwy (rysunek \ref{neural-net}). 
+Jednym z najprostszych przykładów sieci neuronowych jest perceptron wielowarstwowy (ang. multilayer perceptron). Taka sieć składa się z warstwy wejściowej, z dowolnej ilości warstw ukrytych oraz z warstwy wyjściowej. W tym rodzaju sieci neuronowych, sygnał wyjściowy dowolnego neuronu jest traktowany jako sygnał wejściowy każdego z neuronów z kolejnej warstwy (rysunek \ref{img:neural-net}). 
 
 \bigskip
 
 \begin{figure}[H]
 \centering \includegraphics[scale=0.7]{img/nn.png}
 \caption{Schemat sieci neuronowej typu MLP \cite{mlpnn}}
-\label{neural-net}
+\label{img:neural-net}
 \end{figure}
 
 Najprostszą implementacja sieci do predykcji danych giełdowych jest sieć przyjmująca na wejściu wektor informacji o akcjach spółki z jednego dnia, zwracająca na wyjściu przewidywaną wartość ceny akcji następnego dnia. Perceptron wielowarstwowy można również zaprojektować tak, aby na wyjściu zwracał wynik klasyfikacji, czyli procentowy wynik przypisania danych wejściowych do każdej z możliwych klas. W tej pracy badane były sieci neuronowe klasyfikujące dane wejściowe według trzech klas: spadek wartości poniżej pewnego progu, utrzymanie wartości w ramach tego progu oraz wzrost wartości powyżej tego progu. 
 
-
-% \subsubsection{Sieci rekurencyjne}
-
-% W przeciwieństwie do sieci MLP, sieci rekurencyjne posiadają sprzężenia zwrotne sygnału wychodzącego z neuronów. Dzięki wtórnemu sygnałowi sieci te posiadają pewną pamięć przepływających sygnałów. Wpływem sygnału wtórnego na końcowy wynik można sterować za pomocą wag na połączeniach między odpowiednimi neuronami.
-
-% \subsubsection{Sieć typu LSTM \cite{lstm}}
-
-% Sieci LSTM (ang. Long Short Term Memory) są specjalnym rodzajem sieci rekurencyjnych, będących w stanie zapamiętywać długoterminowe zależności. Jak widać na rysunku \ref{lstm-net} sieć typu LSTM jest postaci łańcucha komórek. Każda komórka jest odpowiedzialna za zestawienie i przetworzenie sygnału wejściowego $x_t$ z sygnałem wychodzącym z poprzedniego modułu.
-
-% \begin{figure}[H]
-% \centering \includegraphics[scale=0.22]{img/lstm.png}
-% \caption{Schemat sieci neuronowej typu LSTM \cite{lstm-scheme}}
-% \label{lstm-net}
-% \end{figure}
-
-% Głównym elementem każdej komórki jest sygnał $c_{t-1}$ zmieniający się w $c_{t}$, który jest jej stanem. Pierwszym krokiem przy zmianie stanu komórki jest $F_t$ z funkcją sigmoidalną,tak zwana forget gate layer.  Odpowiada ona za zdecydowanie, jaka część sygnału zostanie odrzucona. Kolejnym elementem jest $i_t$, \textit{input gate layer}, która decyduje o tym jakie dane wejściowe zostaną użyte do zmiany stanu komórki. Ostatecznie warstwa $O_t$, \textit{output layer}, decyduje o tym jaka część sygnału powinna przejść do następnej komórki.
-
-% \bigskip
-
-% W ostatnich latach sieci tego rodzaju znajdują szerokie zastosowanie w takich dziedzinach jak rozpoznawanie mowy, tłumaczenia czy też opisywanie obrazów. Sieci LSTM mogą również być użyteczne w pracy z szeregami czasowymi, gdzie możliwe są zależności danych w czasie, tak jak na przykład na 
-% giełdzie. 
-
-%\subsection{Metody zespołowe}
-
-%Metody zespołowe (ang. ensemble methods) polegają na tworzeniu wielu klasyfikatorów o małej złożoności, które w odosobnieniu nie dają zadowalających wyników (często są niewiele lepsze od klasyfikatora losowego), a następnie łączenie ich w komitety. Wyniki komitetów mogą być interpretowane na wiele sposobów np. poprzez głosowanie gdzie każdy członek komitetu oddaje swój głos na konkretny wynik klasyfikacji. Okazuje się że w praktyce stosowanie tej metody często daje bardzo konkurencyjne wyniki w stosunku do stosowania pojedynczych złożonych modeli klasyfikacyjnych bądź regresyjnych.
-
 \subsection{Random forest \cite{randforest}}
 
-Las losowy (ang. \textit{random forest}) jest modelem opartym o drzewa decyzyjne służącym do klasyfikacji lub regresji. Drzewa decyzyjne są graficzną metodą wspomagania procesu decyzyjnego. W przypadku zagadnień uczenia maszynowego drzewa decyzyje najprościej zobrazować na przykładzie problemu klasyfikacji binarnej. Na rysnku \ref{wiki_dec_tree} przedstawione jest drzewo decyzyjne dla problemu predykcji losu pasażerów statku Titanic. Drzewo to oparte jest o trzy cechy: płeć, wiek oraz liczbę rodzeństwa oraz współmałżonków (\textit{sibsp}). 
+Las losowy (ang. \textit{random forest}) jest modelem opartym o drzewa decyzyjne służącym do klasyfikacji lub regresji. Drzewa decyzyjne są graficzną metodą wspomagania procesu decyzyjnego. W przypadku zagadnień uczenia maszynowego drzewa decyzyje najprościej zobrazować na przykładzie problemu klasyfikacji binarnej. Na rysunku \ref{img:wiki_dec_tree} przedstawione jest drzewo decyzyjne dla problemu predykcji losu pasażerów statku Titanic. Drzewo to oparte jest o trzy cechy: płeć, wiek oraz liczbę rodzeństwa oraz współmałżonków (\textit{sibsp}). 
 
 \begin{figure}[H]
 \centering \includegraphics[scale=0.6]{img/decision_tree.png}
 \caption{Drzewo decyzyjne dla problemu klasyfikacji losu pasażerów statku Titanic \cite{wikidecisiontree}}
-\label{wiki_dec_tree}
+\label{img:wiki_dec_tree}
 \end{figure}
 
 Dla złożonych zagadnień predykcji takich jak przewidywanie trendu giełdy, drzewa decyzyjne okazują się zbyt prostym modelem. Las losowy jest rozwinięciem koncepcji drzew decyzyjnych w zakresie metod zespołowych. Głównym założeniem jest stworzenie wielu drzew decyzyjnych i opieranie końcowego wyniku na podstawie poszczególnych wyników każdego z drzew. W celu wprowadzenia różnorodności podczas konstrukcji węzłów drzew, losowane są cechy spośród których będą dobrane cechy decyzyjne w danym węźle. Metoda ta zazwyczaj daje dużo lepsze efekty niż pojedyncze drzewa decyzyjne, oraz często pomaga w ograniczaniu zjawiska przeuczania (ang. overfitting).  
 
 \subsection{Light GBM \cite{lgbm}}
 
-\textit{Light GBM} jest algorytmem z rodziny \textit{gradient boosting decision trees}. Algorytmy te oparte są o zespół drzew decyzyjnych. W przeciwieństwie do metody \textit{lasu losowego} konstrukcja kolejnych drzew jest wykonywana w sposób sekwencyjny, oraz zależny od wyników poprzednich drzew. Dzięki takiemu zabiegowi, zespół drzew dąży do ulepszenia swoich wyników jako całości. Algorytm \textit{light GBM} przewyższa inne algorytmy ze swojej klasy takie jak \textit{XGBoost} dzięki innemu podejściu do tworzenia drzew. Podczas gdy większość algorytmów powiększa drzewa decyzyjne wgłąb (\textit{level-wise}  rysunek \ref{level-wise}), \textit{light GBM} powiększa drzewa decyzyjne ze względu na liście (\textit{leaf-wise} rysunek \ref{leaf-wise}). Ten zabieg wraz z innymi optymalizacjami sprawia, że algorytm ten osiąga porównywalne wyniki do innych algorytmów ze swojej klasy, przy dużym skrócenia czasu uczenia się. 
+\textit{Light GBM} jest algorytmem z rodziny \textit{gradient boosting decision trees}. Algorytmy te oparte są o zespół drzew decyzyjnych. W przeciwieństwie do metody \textit{lasu losowego} konstrukcja kolejnych drzew jest wykonywana w sposób sekwencyjny, oraz zależny od wyników poprzednich drzew. Dzięki takiemu zabiegowi, zespół drzew dąży do ulepszenia swoich wyników jako całości. Algorytm \textit{light GBM} przewyższa inne algorytmy ze swojej klasy takie jak \textit{XGBoost} dzięki innemu podejściu do tworzenia drzew. Podczas gdy większość algorytmów powiększa drzewa decyzyjne wgłąb (\textit{level-wise}  rysunek \ref{img:level-wise}), \textit{light GBM} powiększa drzewa decyzyjne ze względu na liście (\textit{leaf-wise} rysunek \ref{img:leaf-wise}). Ten zabieg wraz z innymi optymalizacjami sprawia, że algorytm ten osiąga porównywalne wyniki do innych algorytmów ze swojej klasy, przy dużym skrócenia czasu uczenia się. 
 
 
 \begin{figure}[H]%
 \centering
 \subfigure[Konstrukcja drzewa algorytmu \textit{light GBM}]{%
-\label{level-wise}
+\label{img:level-wise}
 \includegraphics[scale=0.46]{img/lgbm-level-wise.png}}%
 \qquad
 \subfigure[Konstrukcja drzewa algorytmu \textit{light GBM}]{%
-\label{leaf-wise}
+\label{img:leaf-wise}
 \includegraphics[scale=0.46]{img/lgbm-leaf-wise.png}}%
 \caption{Porównanie konstrukcji drzew algorytmów z rodziny \textit{gradient boosting decision trees}}
-\label{level-leaf-wise}
+\label{img:level-leaf-wise}
 \end{figure}
 
-
-
-
-
-
-%TODO \subsection{Wykorzystanie wykrywania sentymentu do poprawienia predykcji}
 
 \subsection{Wnioski i uwagi}
 
@@ -1006,16 +959,16 @@ Na wykresach \ref{img:nn_pca_binary_vs_accuracy} została przedstawiona dokładn
 \begin{figure}[H]%
 \centering
 \subfigure[Brak PCA]{%
-\includegraphics[scale=0.4685]{img/results/nn/nn_pca_none_binary_acc_googl.pdf}}%
+\includegraphics[scale=0.4685]{img/nn_pca_none_binary_acc_googl.pdf}}%
 \qquad
 \subfigure[PCA wariancja 0.999]{%
-\includegraphics[scale=0.4685]{img/results/nn/nn_pca_0999_binary_acc_googl.pdf}}%
+\includegraphics[scale=0.4685]{img/nn_pca_0999_binary_acc_googl.pdf}}%
 \qquad
 \subfigure[PCA wariancja 0.99]{%
-\includegraphics[scale=0.4685]{img/results/nn/nn_pca_099_binary_acc_googl.pdf}}%
+\includegraphics[scale=0.4685]{img/nn_pca_099_binary_acc_googl.pdf}}%
 \qquad
 \subfigure[PCA wariancja 0.97]{%
-\includegraphics[scale=0.4685]{img/results/nn/nn_pca_097_binary_acc_googl.pdf}}%
+\includegraphics[scale=0.4685]{img/nn_pca_097_binary_acc_googl.pdf}}%
 
 \caption{Wykresy zależności dokładności od redukcji danych metodą PCA dla klasyfikacji binarnej (opracowanie własne)}
 \label{img:nn_pca_binary_vs_accuracy}
@@ -1461,21 +1414,20 @@ Najlepszy wynik udało się osiągnąć dla spółki \textit{INTC} $\sim 81.2\%$
 Dodatkowo przeprowadzona została analiza klasyfikacji konkretnych klas. Na wykresie \ref{img:nn_layers_discrete} zostały przedstawione krzywe ROC dla 3 klas, wraz z ich mikro-średnią, dla sieci neuronowej o jednej warstwie ukrytej z 10 neuronami. Analizując wykres łatwo zauważyć dysproporcję pomiędzy AUC poszczególnych klas. Model ma największą trudność z przewidywaniem klasy utrzymania ceny, która ma aż o $0.14$ AUC mniej niż pozostałe klasy. Taka rozbieżność może być problematyczna na etapie używania nauczonego modelu do predykcji. Im większa rozbieżność między AUC poszczególnych klas tym gorzej. Może się bowiem okazać iż dwa modele o porównywalnej mierze AUC będą uzyskiwały rozbieżne wyniki w grze na giełdzie. Mogłoby to wynikać z faktu iż model w ogóle nie zwraca w swoich przewidywaniach jednej z klas, zaś pozostałe estymuje bardzo dobrze. Na przykład model nie wskazujący nigdy klasy spadku, nie dawałby sygnału do sprzedaży akcji, a to całkowicie wyklucza jego praktyczne użycie. 
 
 \begin{figure}[H]
-\centering \includegraphics[scale=0.8]{img/results/nn/nn_layers_10_discrete_roc-googl.pdf}
+\centering \includegraphics[scale=0.8]{img/nn_layers_10_discrete_roc-googl.pdf}
 \caption{Wykres ROC sieci neuronowej o jednej warstwie neuronowej z 10 neuronami dla klasyfikacji na 3 klasy spółki \textit{GOOGL} (opracowanie własne)}
 \label{img:nn_layers_discrete}
 \end{figure}
 
 \section{Wspomaganie decyzji giełdowych}
 
-\section{Projekt aplikacji}
+
 
 \section{Podsumowanie}
 
-
-\newpage
-
 \section{Bibliografia}
+
+
 \begin{thebibliography}{9}
   
  \bibitem{nyse}
@@ -1581,15 +1533,6 @@ Strona główna Alpha Vantage
 	Artificial neural network, \url{http://www.saedsayad.com/artificial_neural_network_bkp.htm} 
 	Data dostępu: 04.03.2019
 
-\bibitem{lstm}
-	Fischer, and Krauss, 
-  \textit{Deep Learning with Long Short-term Memory Networks for Financial Market Predictions.}
-  European Journal of Operational Research 270.2 (2018): 654-69. Web.
-
-\bibitem{lstm-scheme}
-	Recurrent neural network, \url{https://en.wikipedia.org/wiki/Recurrent_neural_network} 
-	Data dostępu: 04.03.2019
-
 \bibitem{randforest}
 	Breiman, L, 
   \textit{Random forests}
@@ -1621,10 +1564,10 @@ Guolin Ke, Qi Meng, Thomas Finley, Taifeng Wang,Wei Chen, Weidong Ma, Qiwei Ye, 
 
 \end{thebibliography}
 
-\section{Wykaz rysunków}
+\section{Dodatek: opis aplikacji}
 
-\section{Wykaz tabel}
-
-\section{Charakterystyka aplikacji}
+\listoffigures
+ 
+\listoftables
 
 \end{document}
