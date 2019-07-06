@@ -70,11 +70,11 @@ def preprocess(df, benchmark_params: BenchmarkParams):
                 train_start_idx = 0
             else:
                 train_start_idx = int(max(0, train_end_idx - train_window_size))
-            test_start_idx = int(train_end_idx + 1)
+            test_start_idx = int(train_end_idx)
             test_end_idx = int(train_end_idx + test_window_size)
 
-            x_train = x[train_start_idx:train_end_idx + 1]
-            y_train = encoded_y[train_start_idx:train_end_idx + 1]
+            x_train = x[train_start_idx:train_end_idx]
+            y_train = encoded_y[train_start_idx:train_end_idx]
             x_test = x[test_start_idx:test_end_idx + 1]
             y_test = encoded_y[test_start_idx:test_end_idx + 1]
 
@@ -111,7 +111,7 @@ def standardize_and_pca(preprocessing_params, x_train, x_test):
         scale = StandardScaler().fit(x_train)
         x_train = scale.transform(x_train)
         x_test = scale.transform(x_test)
-    if preprocessing_params.pca is not None and not preprocessing_params.walk_forward_testing:
+    if preprocessing_params.pca is not None:
         pca = PCA(preprocessing_params.pca).fit(x_train)
         x_train = pca.transform(x_train)
         x_test = pca.transform(x_test)

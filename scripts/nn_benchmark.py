@@ -30,25 +30,14 @@ class NnBenchmark(Benchmark):
         bench_params = self.bench_params
         return benchmark_nn_model.create_seq_model(bench_params)
 
-    def get_walk_forward_epochs(self, iteration):
-        bench_params = self.bench_params
-        if iteration == 0:
-            epochs = bench_params.epochs
-        else:
-            epochs = bench_params.walk_forward_retrain_epochs
-        if bench_params.walk_forward_learn_from_scratch:
-            epochs = bench_params.epochs
-        return epochs
-
     def evaluate_predict(self, model, x_test, y_test):
         ls, acc = model.evaluate(x_test, y_test, verbose=0)
         y_test_prediction = model.predict(x_test)
         return acc, ls, y_test_prediction
 
-    def fit_model(self, model, callbacks, x_train, y_train, x_test, y_test, epochs=None):
+    def fit_model(self, model, callbacks, x_train, y_train, x_test, y_test):
         bench_params = self.bench_params
-        if epochs is None:
-            epochs = bench_params.epochs
+        epochs = bench_params.epochs
         return model, model.fit(x_train, y_train, validation_data=(x_test, y_test),
                          epochs=epochs, batch_size=bench_params.batch_size,
                          callbacks=callbacks, verbose=0)

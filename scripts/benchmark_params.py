@@ -51,7 +51,6 @@ class BenchmarkParams:
         self.difference_non_stationary = True
         self.walk_forward_testing = False
         self.max_train_window_size = None
-        self.walk_forward_learn_from_scratch = True
         self.iterations = 3
         self.one_hot_encode_labels = True
         self.feature_names = []
@@ -72,8 +71,6 @@ class BenchmarkParams:
             self.max_train_window_size = params_dict['max_train_window_size']
         if 'walk_forward_test_window_size' in params_dict:
             self.walk_forward_test_window_size = params_dict['walk_forward_test_window_size']
-        if 'walk_forward_learn_from_scratch' in params_dict:
-            self.walk_forward_learn_from_scratch = params_dict['walk_forward_learn_from_scratch']
 
     def jsonable(self):
         return self.__dict__
@@ -90,14 +87,13 @@ class NnBenchmarkParams(BenchmarkParams):
             self.output_activation = 'sigmoid'
             self.loss = 'binary_crossentropy'
             self.metric = 'binary_accuracy'
-            self.walk_forward_test_window_size = 360
         else:
             self.output_neurons = 3
-            self.layers = []
+            self.layers = [10]
             self.output_activation = 'softmax'
             self.loss = 'categorical_crossentropy'
             self.metric = 'categorical_accuracy'
-            self.walk_forward_test_window_size = None
+        self.walk_forward_test_window_size = 22
 
         self.regularizer = 0.0025
         self.activation = 'relu'
@@ -107,7 +103,7 @@ class NnBenchmarkParams(BenchmarkParams):
         self.batch_size = 10
         self.early_stopping_patience = 40
         self.early_stopping_min_delta = 0.005
-        self.walk_forward_retrain_epochs = 5
+        self.walk_forward_testing = True
 
     def update_from_dictionary(self, params_dict):
         super().update_from_dictionary(params_dict)
@@ -131,9 +127,6 @@ class NnBenchmarkParams(BenchmarkParams):
             self.epochs = params_dict['epochs']
         if 'batch_size' in params_dict:
             self.batch_size = params_dict['batch_size']
-        if 'walk_forward_retrain_epochs' in params_dict:
-            self.walk_forward_retrain_epochs = params_dict['walk_forward_retrain_epochs']
-
 
 class SVMBenchmarkParams(BenchmarkParams):
 
@@ -146,6 +139,7 @@ class SVMBenchmarkParams(BenchmarkParams):
             self.pca = None
             self.c = 25
         self.walk_forward_test_window_size = 360
+        self.walk_forward_testing = True
         self.kernel = 'linear'
         self.degree = 3
         self.gamma = 0.005
@@ -195,7 +189,8 @@ class LightGBMBenchmarkParams(BenchmarkParams):
         self.feature_fraction = 1
         self.min_sum_hessian_in_leaf = 1e-3
         self.min_data_in_leaf = 20
-        self.walk_forward_test_window_size = None
+        self.walk_forward_test_window_size = 360
+        self.walk_forward_testing = True
 
     def update_from_dictionary(self, params_dict):
         super().update_from_dictionary(params_dict)
@@ -243,6 +238,7 @@ class RandomForestBenchmarkParams(BenchmarkParams):
         self.warm_start  = False
         self.n_jobs = -1
         self.walk_forward_test_window_size = None
+        self.walk_forward_testing = False
 
     def update_from_dictionary(self, params_dict):
         super().update_from_dictionary(params_dict)

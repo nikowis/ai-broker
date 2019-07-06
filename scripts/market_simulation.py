@@ -23,6 +23,7 @@ CSV_BUY_AND_HOLD_BALANCE = 'buy_and_hold_balance'
 CSV_SELL_COL = 'sell'
 CSV_BUY_COL = 'buy'
 CSV_DATE_COL = 'date'
+CSV_PRICE_COL = 'price'
 CSV_TRAIN_TIME_COL = 'train_time'
 
 SYMBOLS = ['GOOGL', 'MSFT', 'AAPL', 'CSCO', 'INTC', 'FB', 'PEP', 'QCOM', 'AMZN', 'AMGN']
@@ -56,6 +57,8 @@ class MarketSimulation:
         print('Market simulation finished in {0}.'.format(round(time.time() - benchmark_time, 2)))
 
     def run(self):
+        accuracies = []
+        balances = []
         for symbol_it in range(0, len(self.symbols)):
             single_company_benchmark_time = time.time()
             self.bench_params.curr_sym = self.symbols[symbol_it]
@@ -74,40 +77,39 @@ class MarketSimulation:
             test_size = test_df_len / len(df)
             self.bench_params.test_size = test_size
             x, y, x_train, x_test, y_train, y_test = benchmark_data_preprocessing.preprocess(df, self.bench_params)
-            if test_df_len != len(y_test):
-                print(
-                    'Unexpected test set length for company {0}, expected {1} actually {2}'.format(
-                        self.bench_params.curr_sym
-                        , test_df_len,
-                        len(y_test)))
-                continue
+
             if self.bench_params.walk_forward_testing:
                 self.bench_params.input_size = x_train[0].shape[1]
             else:
                 self.bench_params.input_size = x_train.shape[1]
 
-            self.run_single_company(x_train, y_train, test_df, x_test, y_test)
+            acc = self.run_single_company(x_train, y_train, test_df, x_test, y_test)
+            accuracies.append(acc)
+            balances.append(self.current_balance)
             benchmark_file_helper.save_results(self.details_results_df, self.bench_params, self.bench_params.curr_sym)
 
             result_dict = {CSV_TICKER: self.bench_params.curr_sym, CSV_BUDGET: self.budget,
                            CSV_BALANCE: self.current_balance, CSV_BUY_AND_HOLD_BALANCE: self.buy_and_hold_balance,
                            CSV_TRAIN_TIME_COL: round(time.time() - single_company_benchmark_time, 2)}
             self.results_df = self.results_df.append(result_dict, ignore_index=True)
+        print('Overall accuracy {0} and balance {1}'.format(round(np.mean(accuracies), 4), round(np.mean(balances), 4)))
 
     def run_single_company(self, x_train, y_train, test_df, x_test, y_test):
-        model = self.create_and_train_model(x_train, y_train, x_test, y_test)
         predictions = []
         expected_y = []
-        for day in range(0, len(test_df) - 1):
-            x_day = np.array([x_test[day, :], ])
-            if self.bench_params.binary_classification or not self.bench_params.one_hot_encode_labels:
-                y_day = y_test[day]
-            else:
-                y_day = np.argmax(y_test[day], axis=None, out=None)
-            y_test_prediction = self.predict(model, x_day)
-            predictions.append(y_test_prediction)
-            expected_y.append(y_day)
-            self.manage_account(day, y_test_prediction, test_df)
+
+        if self.bench_params.walk_forward_testing:
+            walk_iterations = len(x_train)
+            for walk_it in range(0, walk_iterations):
+                walk_x_train = x_train[walk_it]
+                walk_x_test = x_test[walk_it]
+                walk_y_train = y_train[walk_it]
+                walk_y_test = y_test[walk_it]
+                offset = walk_it * self.bench_params.walk_forward_test_window_size
+                self.simulate_on_data_batch(expected_y, predictions, test_df, walk_x_train, walk_y_train,
+                                            walk_x_test, walk_y_test, days_offset=offset)
+        else:
+            self.simulate_on_data_batch(expected_y, predictions, test_df, x_train, y_train, x_test, y_test)
 
         acc = accuracy_score(predictions, expected_y)
 
@@ -128,6 +130,28 @@ class MarketSimulation:
                     , round(self.buy_and_hold_balance / self.budget * 100, 2))
             )
 
+        return acc
+
+    def simulate_on_data_batch(self, expected_y, predictions, test_df, x_train, y_train, x_test, y_test,
+                               days_offset=0):
+        self.bench_params.input_size = x_train.shape[1]
+        model = self.create_and_train_model(x_train, y_train, x_test, y_test)
+        if self.bench_params.walk_forward_testing:
+            end = days_offset + len(y_test)
+        else:
+            end = len(test_df) - 1
+        for day in range(days_offset, end):
+            day_index = day - days_offset
+            x_day = np.array([x_test[day_index, :], ])
+            if self.bench_params.binary_classification or not self.bench_params.one_hot_encode_labels:
+                y_day = y_test[day_index]
+            else:
+                y_day = np.argmax(y_test[day_index], axis=None, out=None)
+            y_test_prediction = self.predict(model, x_day)
+            predictions.append(y_test_prediction)
+            expected_y.append(y_day)
+            self.manage_account(day, y_test_prediction, test_df)
+
     def create_and_train_model(self, x_train, y_train, x_test, y_test):
         """Create predicting model, return model"""
         return None
@@ -138,6 +162,8 @@ class MarketSimulation:
 
     def manage_account(self, day, y_predicted_value, test_df):
         curr_date = test_df.index.values[day]
+        if day + 1 >= len(test_df):
+            return
         next_day_values = test_df.iloc[day + 1]
         next_day_open_price = next_day_values[stock_constants.OPEN_COL]
         transaction_performed = False
@@ -163,7 +189,8 @@ class MarketSimulation:
             if self.current_stock_amount > 0:
                 self.sell(next_day_open_price)
             if self.verbose:
-                print('Selling all stock at the end of learning')
+                pass
+            print('Selling all stock at the end of learning')
         elif should_buy:
             transaction_performed = True
             self.buy(next_day_open_price)
@@ -179,7 +206,8 @@ class MarketSimulation:
             estimated_buy_and_hold_balance = self.buy_and_hold_balance + next_day_open_price * self.buy_and_hold_stock_amount
 
             result_dict = {CSV_DATE_COL: curr_date, CSV_BUY_COL: should_buy, CSV_SELL_COL: should_sell,
-                           CSV_BALANCE: estimated_balance, CSV_BUY_AND_HOLD_BALANCE: estimated_buy_and_hold_balance}
+                           CSV_BALANCE: estimated_balance, CSV_BUY_AND_HOLD_BALANCE: estimated_buy_and_hold_balance,
+                           CSV_PRICE_COL: next_day_open_price}
             self.details_results_df = self.details_results_df.append(result_dict, ignore_index=True)
 
     def sell(self, price):
@@ -324,13 +352,12 @@ class SVMSimulation(MarketSimulation):
 
 
 if __name__ == '__main__':
-    bench_params = NnBenchmarkParams(True, benchmark_name='nn-market-simulation')
-    NnMarketSimulation(['GOOGL'], bench_params)
-    bench_params = NnBenchmarkParams(False, benchmark_name='nn-market-simulation')
-    NnMarketSimulation(['GOOGL'], bench_params)
-    bench_params = LightGBMBenchmarkParams(True, benchmark_name='lgbm-market-simulation')
-    LightGBMSimulation(['GOOGL'], bench_params)
-    bench_params = SVMBenchmarkParams(True, benchmark_name='svm-market-simulation')
-    SVMSimulation(['GOOGL'], bench_params)
-    bench_params = RandomForestBenchmarkParams(True, benchmark_name='rf-market-simulation')
-    RandomForestSimulation(['GOOGL'], bench_params)
+    # bench_params = NnBenchmarkParams(True, benchmark_name='nn-market-simulation-nowf')
+    # NnMarketSimulation(['GOOGL'], bench_params, verbose=True)
+    # bench_params = LightGBMBenchmarkParams(True, benchmark_name='lgbm-market-simulation')
+    # LightGBMSimulation(['GOOGL'], bench_params)
+    # bench_params = SVMBenchmarkParams(True, benchmark_name='svm-market-simulation')
+    # SVMSimulation(['GOOGL'], bench_params)
+    # bench_params = RandomForestBenchmarkParams(True, benchmark_name='rf-market-simulation')
+    # RandomForestSimulation(['GOOGL'], bench_params)
+    print('Finished all')

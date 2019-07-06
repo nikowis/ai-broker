@@ -66,10 +66,6 @@ class Benchmark:
             bench_params.curr_sym = sym
             x, y, x_train, x_test, y_train, y_test = benchmark_data_preprocessing.preprocess(df,
                                                                                              bench_params)
-            if bench_params.walk_forward_testing:
-                bench_params.input_size = x_train[0].shape[1]
-            else:
-                bench_params.input_size = x_train.shape[1]
 
             self.run_single_company(x_train, x_test, y_train, y_test)
 
@@ -81,7 +77,10 @@ class Benchmark:
 
         bench_params.curr_iter_num = 0
         minima_encountered = 0
-
+        if bench_params.walk_forward_testing:
+            bench_params.input_size = x_train[0].shape[1]
+        else:
+            bench_params.input_size = x_train.shape[1]
         while bench_params.curr_iter_num < bench_params.iterations:
 
             bench_params.curr_iter_num = bench_params.curr_iter_num + 1
@@ -188,12 +187,11 @@ class Benchmark:
                 walk_y_train = y_train[walk_it]
                 walk_y_test = y_test[walk_it]
 
-                epochs = self.get_walk_forward_epochs(walk_it)
+                bench_params.input_size = walk_x_train.shape[1]
 
-                if bench_params.walk_forward_learn_from_scratch:
-                    model = self.create_model()
+                model = self.create_model()
                 model, history = self.fit_model(model, callbacks, walk_x_train, walk_y_train, walk_x_test,
-                                                walk_y_test, epochs)
+                                                walk_y_test)
                 self.update_walk_history(history, walk_history)
 
                 acc, ls, y_test_prediction = self.evaluate_predict(model, walk_x_test, walk_y_test)
@@ -223,10 +221,6 @@ class Benchmark:
                                                                 bench_params.one_hot_encode_labels)
 
         return model, accuracy, loss, fpr, tpr, roc_auc, y_test_prediction, history
-
-    def get_walk_forward_epochs(self, iteration):
-        """Get walk forward epochs for iteration"""
-        return None
 
     def create_model(self):
         """Create predicting model, return model"""

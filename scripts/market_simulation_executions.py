@@ -1,15 +1,15 @@
 from benchmark_params import LightGBMBenchmarkParams, RandomForestBenchmarkParams, \
-    SVMBenchmarkParams
+    SVMBenchmarkParams, NnBenchmarkParams
 
 SYMBOLS = ['GOOGL', 'MSFT', 'AAPL', 'CSCO', 'INTC', 'FB', 'PEP', 'QCOM', 'AMZN', 'AMGN']
 
-from market_simulation import LightGBMSimulation, RandomForestSimulation, SVMSimulation
+from market_simulation import LightGBMSimulation, RandomForestSimulation, SVMSimulation, NnMarketSimulation
 
 if __name__ == '__main__':
-    # bench_params = NnBenchmarkParams(True, benchmark_name='nn-market-simulation-binary')
-    # NnMarketSimulation(SYMBOLS, bench_params)
-    # bench_params = NnBenchmarkParams(False, benchmark_name='nn-market-simulation-discrete')
-    # NnMarketSimulation(SYMBOLS, bench_params)
+    bench_params = NnBenchmarkParams(True, benchmark_name='nn-market-simulation-binary')
+    NnMarketSimulation(SYMBOLS, bench_params)
+    bench_params = NnBenchmarkParams(False, benchmark_name='nn-market-simulation-discrete')
+    NnMarketSimulation(SYMBOLS, bench_params)
     bench_params = LightGBMBenchmarkParams(True, benchmark_name='lgbm-market-simulation-binary')
     LightGBMSimulation(SYMBOLS, bench_params)
     bench_params = LightGBMBenchmarkParams(False, benchmark_name='lgbm-market-simulation-discrete')
