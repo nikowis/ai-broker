@@ -40,6 +40,8 @@ class MarketSimulation:
         self.budget = budget
         self.current_stock_amount = 0
         self.current_balance = self.budget
+        self.buy_and_hold_stock_amout = 0
+        self.buy_and_hold_balance = self.budget
         self.verbose = verbose
 
         benchmark_time = time.time()
@@ -52,6 +54,8 @@ class MarketSimulation:
             self.bench_params.curr_sym = self.symbols[symbol_it]
             self.current_stock_amount = 0
             self.current_balance = self.budget
+            self.buy_and_hold_stock_amout = 0
+            self.buy_and_hold_balance = self.budget
             df = self.df_list[symbol_it]
             df.dropna(inplace=True)
             test_df = df[(df.index >= self.date_simulation_start)].copy()
@@ -93,11 +97,23 @@ class MarketSimulation:
 
             acc = accuracy_score(y_day, y_test_prediction_parsed)
             accuracies.append(acc)
-        print('Achieved {0} accuracy for {1}. Finished with {2} dollars which is a {3}% of the budget.'.format(
-            round(np.mean(accuracies), 4), bench_params.curr_sym, round(self.current_balance, 2),
-            round(
-                self.current_balance / self.budget * 100,
-                2)))
+
+        if self.verbose:
+            print(
+                'Achieved {0} accuracy for {1}. Finished with {2} dollars which is a {3}% of the budget.\
+                 Buy and hold finished with {4} dollars which is a {5}% of the budget.'.format(
+                    round(np.mean(accuracies), 4), bench_params.curr_sym, round(self.current_balance, 2)
+                    , round(self.current_balance / self.budget * 100,2)
+                    , round(self.buy_and_hold_balance, 2)
+                    , round(self.buy_and_hold_balance / self.budget * 100, 2))
+            )
+        else:
+            print(
+                '{0} finished with {1}% of the budget. Buy and hold finished with {2}% of the budget.'.format(
+                    bench_params.curr_sym
+                    , round(self.current_balance / self.budget * 100, 2)
+                    , round(self.buy_and_hold_balance / self.budget * 100, 2))
+            )
 
     def create_and_train_model(self, x_train, y_train, x_test, y_test):
         """Create predicting model, return model"""
@@ -121,7 +137,16 @@ class MarketSimulation:
             sell_signal = y_predicted_value == stock_constants.FALL_VALUE
         should_buy = self.current_stock_amount == 0 and buy_signal
         should_sell = self.current_stock_amount > 0 and sell_signal
+
+        if day == 0:
+            price_plus_fee = next_day_open_price + next_day_open_price * TRANSACTION_PERCENT_FEE
+            self.buy_and_hold_stock_amout = int(self.buy_and_hold_balance / (price_plus_fee))
+            self.buy_and_hold_balance = self.buy_and_hold_balance - self.buy_and_hold_stock_amout * price_plus_fee
+
         if day == len(test_df) - 2:
+            price_minus_fee = next_day_open_price - next_day_open_price * TRANSACTION_PERCENT_FEE
+            self.buy_and_hold_balance = self.buy_and_hold_balance + self.buy_and_hold_stock_amout * price_minus_fee
+            self.buy_and_hold_stock_amout = 0
             if self.current_stock_amount > 0:
                 self.sell(next_day_open_price)
             if self.verbose:
@@ -143,7 +168,6 @@ class MarketSimulation:
     def buy(self, price):
         price_plus_fee = price + price * TRANSACTION_PERCENT_FEE
         self.current_stock_amount = int(self.current_balance / (price_plus_fee))
-
         if self.verbose:
             print('Buying {0} securities using {1} dollars ({2} each)'.format(self.current_stock_amount,
                                                                               self.current_balance,
@@ -178,6 +202,6 @@ class NnMarketSimulation(MarketSimulation):
 
 
 if __name__ == '__main__':
-    bench_params = NnBenchmarkParams(True)
+    bench_params = NnBenchmarkParams(False)
     # NnMarketSimulation(['GOOGL'], bench_params, verbose=True)
     NnMarketSimulation(SYMBOLS, bench_params)
