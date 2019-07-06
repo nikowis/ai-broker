@@ -33,29 +33,29 @@ class Benchmark:
         self.bench_params = bench_params
         benchmark_time = time.time()
         self.df_list, self.sym_list = csv_importer.import_data_from_files(symbols, bench_params.csv_files_path)
-        results_df = pd.DataFrame()
+        self.results_df = pd.DataFrame()
         benchmark_file_helper.initialize_dirs(bench_params)
         if changing_params_dict is not None:
             grid = ParameterGrid(changing_params_dict)
             for param in grid:
                 print('Parameters: {0}'.format(param))
                 bench_params.update_from_dictionary(param)
-                results_df = self.run(results_df, symbols)
+                self.run(symbols)
         else:
-            results_df = self.run(results_df, symbols)
+            self.run(symbols)
 
-        benchmark_file_helper.save_results(results_df, bench_params)
+        benchmark_file_helper.save_results(self.results_df, bench_params)
 
         if bench_params.examined_params is not None:
             split_params = bench_params.examined_params.split(',')
             for examined_param in split_params:
-                results_df[examined_param] = results_df[examined_param].astype(str)
-            mean_groupby = results_df.groupby(split_params).mean()
+                self.results_df[examined_param] = self.results_df[examined_param].astype(str)
+            mean_groupby = self.results_df.groupby(split_params).mean()
             print('Examination of {0}: {1}'.format(bench_params.examined_params, mean_groupby))
 
         print('Benchmark finished in {0}.'.format(round(time.time() - benchmark_time, 2)))
 
-    def run(self, results_df, symbols):
+    def run(self, symbols):
         bench_params = self.bench_params
         if bench_params.save_files:
             with open('{0}/config-{1}.json'.format(bench_params.save_model_path, bench_params.id), 'w') as outfile:
@@ -71,10 +71,9 @@ class Benchmark:
             else:
                 bench_params.input_size = x_train.shape[1]
 
-            results_df = self.run_single_company(x_train, x_test, y_train, y_test, results_df)
-        return results_df
+            self.run_single_company(x_train, x_test, y_train, y_test)
 
-    def run_single_company(self, x_train, x_test, y_train, y_test, results_df):
+    def run_single_company(self, x_train, x_test, y_train, y_test):
         bench_params = self.bench_params
         total_time = time.time()
         accuracies = []
@@ -116,7 +115,6 @@ class Benchmark:
                     if bench_params.verbose:
                         print('ID {0}: encountering too many local minima - breaking infinite loop'.format(
                             bench_params.id))
-                    return results_df
                 else:
                     continue
             accuracies.append(accuracy)
@@ -158,8 +156,7 @@ class Benchmark:
                 for examined_param in examined_params:
                     result_dict.update({examined_param: getattr(bench_params, examined_param, None)})
 
-            results_df = results_df.append(
-                result_dict, ignore_index=True)
+            self.results_df = self.results_df.append(result_dict, ignore_index=True)
 
         rounded_roc_auc_mean = round(np.mean(roc_auc_values), 4)
         rounded_acc_mean = round(np.mean(accuracies), 4)
@@ -174,8 +171,6 @@ class Benchmark:
         max_index = np.argmax(accuracies)
         benchmark_file_helper.copy_best_and_cleanup_files(bench_params, max_index,
                                                           round(max(accuracies), 4))
-
-        return results_df
 
     def learn_and_evaluate(self, model, callbacks, x_train, x_test,
                            y_train, y_test):

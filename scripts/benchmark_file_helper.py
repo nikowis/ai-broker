@@ -16,11 +16,10 @@ def initialize_dirs(bench_params: BenchmarkParams):
         os.makedirs(bench_params.save_partial_img_path)
 
 
-
 def get_model_path(bench_params: BenchmarkParams):
     return '{0}/weights-{1}-{2}-{3}.hdf5'.format(bench_params.save_model_path, bench_params.id,
-                                                    bench_params.curr_sym,
-                                                    bench_params.curr_iter_num)
+                                                 bench_params.curr_sym,
+                                                 bench_params.curr_iter_num)
 
 
 def copy_best_and_cleanup_files(bench_params: BenchmarkParams, max_index, rounded_acc):
@@ -54,12 +53,12 @@ def get_img_path(bench_params: BenchmarkParams):
     return '{0}-{1}-{2}'.format(bench_params.id, bench_params.curr_sym, bench_params.curr_iter_num)
 
 
-def save_results(results_df, bench_params: BenchmarkParams):
+def save_results(results_df, bench_params: BenchmarkParams, suffix=''):
     if results_df is not None and len(results_df) > 0:
-        results_df.to_csv('{0}/results-{1}.csv'.format(bench_params.benchmark_path, bench_params.benchmark_name),
-                          index=False)
+        results_df.to_csv(
+            '{0}/results-{1}{2}.csv'.format(bench_params.benchmark_path, bench_params.benchmark_name, suffix),
+            index=False)
 
 
 def get_patrial_img_path(bench_params, name):
     return '{0}-{1}-{2}-{3}'.format(bench_params.id, bench_params.curr_sym, name, bench_params.curr_iter_num)
-

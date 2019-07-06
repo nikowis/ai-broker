@@ -1,52 +1,52 @@
 import time
 
 import numpy as np
+import pandas as pd
 from keras.callbacks import EarlyStopping
 from sklearn.metrics import accuracy_score
 
 import benchmark_data_preprocessing
+import benchmark_file_helper
 import benchmark_nn_model
 import csv_importer
 import stock_constants
 from benchmark_params import BenchmarkParams, NnBenchmarkParams
 
 CSV_TICKER = 'ticker'
-CSV_ROC_AUC_COL = 'roc_auc'
-CSV_ACC_COL = 'accuracy'
-CSV_TRAIN_TIME_COL = 'train_time'
-CSV_ID_COL = 'ID'
+CSV_BALANCE = 'balance'
+CSV_BUDGET = 'budget'
+CSV_BUY_AND_HOLD_BALANCE = 'buy_and_hold_balance'
+CSV_SELL_COL = 'sell'
+CSV_BUY_COL = 'buy'
+CSV_DATE_COL = 'date'
 
-TARGET_PATH = './../target'
-# TARGET_PATH = './drive/My Drive/ai-broker/target'
-CSV_FILES_DIR = '/data'
 SYMBOLS = ['GOOGL', 'MSFT', 'AAPL', 'CSCO', 'INTC', 'FB', 'PEP', 'QCOM', 'AMZN', 'AMGN']
 
 TRANSACTION_PERCENT_FEE = 0.002
 
 
-def json_handler(Obj):
-    if hasattr(Obj, 'jsonable'):
-        return Obj.jsonable()
-    else:
-        return str(Obj)
-
-
 class MarketSimulation:
     def __init__(self, symbols, benchmark_params: BenchmarkParams, date_simulation_start='2019-01-01',
                  budget=100000, verbose=True) -> None:
+        benchmark_file_helper.initialize_dirs(bench_params)
         self.symbols = symbols
         self.bench_params = benchmark_params
         self.date_simulation_start = date_simulation_start
         self.budget = budget
         self.current_stock_amount = 0
         self.current_balance = self.budget
-        self.buy_and_hold_stock_amout = 0
+        self.buy_and_hold_stock_amount = 0
         self.buy_and_hold_balance = self.budget
         self.verbose = verbose
+        self.results_df = pd.DataFrame()
+        self.details_results_df = pd.DataFrame()
 
         benchmark_time = time.time()
-        self.df_list, self.sym_list = csv_importer.import_data_from_files(symbols, TARGET_PATH + CSV_FILES_DIR)
+        self.df_list, self.sym_list = csv_importer.import_data_from_files(symbols, bench_params.csv_files_path)
         self.run()
+
+        benchmark_file_helper.save_results(self.results_df, bench_params)
+
         print('Market simulation finished in {0}.'.format(round(time.time() - benchmark_time, 2)))
 
     def run(self):
@@ -54,8 +54,12 @@ class MarketSimulation:
             self.bench_params.curr_sym = self.symbols[symbol_it]
             self.current_stock_amount = 0
             self.current_balance = self.budget
-            self.buy_and_hold_stock_amout = 0
+            self.buy_and_hold_stock_amount = 0
             self.buy_and_hold_balance = self.budget
+            self.details_results_df = pd.DataFrame(
+                {CSV_DATE_COL: [], CSV_BUY_COL: [], CSV_SELL_COL: [], CSV_BALANCE: [], CSV_BUY_AND_HOLD_BALANCE: []})
+            self.details_results_df = self.details_results_df.set_index(CSV_DATE_COL)
+
             df = self.df_list[symbol_it]
             df.dropna(inplace=True)
             test_df = df[(df.index >= self.date_simulation_start)].copy()
@@ -75,6 +79,11 @@ class MarketSimulation:
                 self.bench_params.input_size = x_train.shape[1]
 
             self.run_single_company(x_train, y_train, test_df, x_test, y_test)
+            benchmark_file_helper.save_results(self.details_results_df, bench_params, bench_params.curr_sym)
+
+            result_dict = {CSV_TICKER: self.bench_params.curr_sym, CSV_BUDGET: self.budget,
+                           CSV_BALANCE: self.current_balance, CSV_BUY_AND_HOLD_BALANCE: self.buy_and_hold_balance}
+            self.results_df = self.results_df.append(result_dict, ignore_index=True)
 
     def run_single_company(self, x_train, y_train, test_df, x_test, y_test):
         model = self.create_and_train_model(x_train, y_train, x_test, y_test)
@@ -103,7 +112,7 @@ class MarketSimulation:
                 'Achieved {0} accuracy for {1}. Finished with {2} dollars which is a {3}% of the budget.\
                  Buy and hold finished with {4} dollars which is a {5}% of the budget.'.format(
                     round(np.mean(accuracies), 4), bench_params.curr_sym, round(self.current_balance, 2)
-                    , round(self.current_balance / self.budget * 100,2)
+                    , round(self.current_balance / self.budget * 100, 2)
                     , round(self.buy_and_hold_balance, 2)
                     , round(self.buy_and_hold_balance / self.budget * 100, 2))
             )
@@ -127,6 +136,7 @@ class MarketSimulation:
         curr_date = test_df.index.values[day]
         next_day_values = test_df.iloc[day + 1]
         next_day_open_price = next_day_values[stock_constants.OPEN_COL]
+        transaction_performed = False
         if self.bench_params.binary_classification:
             y_predicted_value = int(y_test_prediction_parsed[0][0])
             buy_signal = y_predicted_value == stock_constants.IDLE_VALUE
@@ -140,21 +150,35 @@ class MarketSimulation:
 
         if day == 0:
             price_plus_fee = next_day_open_price + next_day_open_price * TRANSACTION_PERCENT_FEE
-            self.buy_and_hold_stock_amout = int(self.buy_and_hold_balance / (price_plus_fee))
-            self.buy_and_hold_balance = self.buy_and_hold_balance - self.buy_and_hold_stock_amout * price_plus_fee
+            self.buy_and_hold_stock_amount = int(self.buy_and_hold_balance / (price_plus_fee))
+            self.buy_and_hold_balance = self.buy_and_hold_balance - self.buy_and_hold_stock_amount * price_plus_fee
 
         if day == len(test_df) - 2:
+            transaction_performed = True
             price_minus_fee = next_day_open_price - next_day_open_price * TRANSACTION_PERCENT_FEE
-            self.buy_and_hold_balance = self.buy_and_hold_balance + self.buy_and_hold_stock_amout * price_minus_fee
-            self.buy_and_hold_stock_amout = 0
+            self.buy_and_hold_balance = self.buy_and_hold_balance + self.buy_and_hold_stock_amount * price_minus_fee
+            self.buy_and_hold_stock_amount = 0
             if self.current_stock_amount > 0:
                 self.sell(next_day_open_price)
             if self.verbose:
                 print('Selling all stock at the end of learning')
         elif should_buy:
+            transaction_performed = True
             self.buy(next_day_open_price)
         elif should_sell:
+            transaction_performed = True
             self.sell(next_day_open_price)
+
+        if transaction_performed:
+            if self.current_stock_amount > 0:
+                estimated_balance = self.current_balance + next_day_open_price * self.current_stock_amount
+            else:
+                estimated_balance = self.current_balance
+            estimated_buy_and_hold_balance = self.buy_and_hold_balance + next_day_open_price * self.buy_and_hold_stock_amount
+
+            result_dict = {CSV_DATE_COL: curr_date, CSV_BUY_COL: should_buy, CSV_SELL_COL: should_sell,
+                           CSV_BALANCE: estimated_balance, CSV_BUY_AND_HOLD_BALANCE: estimated_buy_and_hold_balance}
+            self.details_results_df = self.details_results_df.append(result_dict, ignore_index=True)
 
     def sell(self, price):
         price_minus_fee = price - price * TRANSACTION_PERCENT_FEE
@@ -185,12 +209,11 @@ class NnMarketSimulation(MarketSimulation):
         bench_params = self.bench_params
         model = benchmark_nn_model.create_seq_model(bench_params)
 
-        earlyStopping = EarlyStopping(monitor='val_' + bench_params.metric,
-                                      min_delta=bench_params.early_stopping_min_delta,
-                                      # patience=2
-                                      patience=bench_params.early_stopping_patience
-                                      , verbose=0, mode='max',
-                                      restore_best_weights=True)
+        earlyStopping = EarlyStopping(monitor='val_' + bench_params.metric
+                                      , min_delta=bench_params.early_stopping_min_delta
+                                      , patience=bench_params.early_stopping_patience
+                                      , verbose=0, mode='max'
+                                      , restore_best_weights=True)
 
         model.fit(x_train, y_train, validation_data=(x_test, y_test),
                   epochs=bench_params.epochs, batch_size=bench_params.batch_size,
@@ -202,6 +225,5 @@ class NnMarketSimulation(MarketSimulation):
 
 
 if __name__ == '__main__':
-    bench_params = NnBenchmarkParams(False)
-    # NnMarketSimulation(['GOOGL'], bench_params, verbose=True)
+    bench_params = NnBenchmarkParams(True benchmark_name='nn-market-simulation')
     NnMarketSimulation(SYMBOLS, bench_params)
