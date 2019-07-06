@@ -1,16 +1,20 @@
 import time
 
+import lightgbm as lgb
 import numpy as np
 import pandas as pd
 from keras.callbacks import EarlyStopping
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
+from sklearn.svm import SVC
 
 import benchmark_data_preprocessing
 import benchmark_file_helper
 import benchmark_nn_model
 import csv_importer
 import stock_constants
-from benchmark_params import BenchmarkParams, NnBenchmarkParams
+from benchmark_params import BenchmarkParams, NnBenchmarkParams, LightGBMBenchmarkParams, RandomForestBenchmarkParams, \
+    SVMBenchmarkParams
 
 CSV_TICKER = 'ticker'
 CSV_BALANCE = 'balance'
@@ -19,6 +23,7 @@ CSV_BUY_AND_HOLD_BALANCE = 'buy_and_hold_balance'
 CSV_SELL_COL = 'sell'
 CSV_BUY_COL = 'buy'
 CSV_DATE_COL = 'date'
+CSV_TRAIN_TIME_COL = 'train_time'
 
 SYMBOLS = ['GOOGL', 'MSFT', 'AAPL', 'CSCO', 'INTC', 'FB', 'PEP', 'QCOM', 'AMZN', 'AMGN']
 
@@ -28,9 +33,10 @@ TRANSACTION_PERCENT_FEE = 0.002
 class MarketSimulation:
     def __init__(self, symbols, benchmark_params: BenchmarkParams, date_simulation_start='2019-01-01',
                  budget=100000, verbose=True) -> None:
-        benchmark_file_helper.initialize_dirs(bench_params)
-        self.symbols = symbols
         self.bench_params = benchmark_params
+        print('Begin simulation ', benchmark_params.benchmark_name)
+        benchmark_file_helper.initialize_dirs(self.bench_params)
+        self.symbols = symbols
         self.date_simulation_start = date_simulation_start
         self.budget = budget
         self.current_stock_amount = 0
@@ -42,15 +48,16 @@ class MarketSimulation:
         self.details_results_df = pd.DataFrame()
 
         benchmark_time = time.time()
-        self.df_list, self.sym_list = csv_importer.import_data_from_files(symbols, bench_params.csv_files_path)
+        self.df_list, self.sym_list = csv_importer.import_data_from_files(symbols, self.bench_params.csv_files_path)
         self.run()
 
-        benchmark_file_helper.save_results(self.results_df, bench_params)
+        benchmark_file_helper.save_results(self.results_df, self.bench_params)
 
         print('Market simulation finished in {0}.'.format(round(time.time() - benchmark_time, 2)))
 
     def run(self):
         for symbol_it in range(0, len(self.symbols)):
+            single_company_benchmark_time = time.time()
             self.bench_params.curr_sym = self.symbols[symbol_it]
             self.current_stock_amount = 0
             self.current_balance = self.budget
@@ -69,9 +76,10 @@ class MarketSimulation:
             x, y, x_train, x_test, y_train, y_test = benchmark_data_preprocessing.preprocess(df, self.bench_params)
             if test_df_len != len(y_test):
                 print(
-                    'Unexpected test set length for company {0}, expected {1} actually {2}'.format(bench_params.curr_sym
-                                                                                                   , test_df_len,
-                                                                                                   len(y_test)))
+                    'Unexpected test set length for company {0}, expected {1} actually {2}'.format(
+                        self.bench_params.curr_sym
+                        , test_df_len,
+                        len(y_test)))
                 continue
             if self.bench_params.walk_forward_testing:
                 self.bench_params.input_size = x_train[0].shape[1]
@@ -79,47 +87,43 @@ class MarketSimulation:
                 self.bench_params.input_size = x_train.shape[1]
 
             self.run_single_company(x_train, y_train, test_df, x_test, y_test)
-            benchmark_file_helper.save_results(self.details_results_df, bench_params, bench_params.curr_sym)
+            benchmark_file_helper.save_results(self.details_results_df, self.bench_params, self.bench_params.curr_sym)
 
             result_dict = {CSV_TICKER: self.bench_params.curr_sym, CSV_BUDGET: self.budget,
-                           CSV_BALANCE: self.current_balance, CSV_BUY_AND_HOLD_BALANCE: self.buy_and_hold_balance}
+                           CSV_BALANCE: self.current_balance, CSV_BUY_AND_HOLD_BALANCE: self.buy_and_hold_balance,
+                           CSV_TRAIN_TIME_COL: round(time.time() - single_company_benchmark_time, 2)}
             self.results_df = self.results_df.append(result_dict, ignore_index=True)
 
     def run_single_company(self, x_train, y_train, test_df, x_test, y_test):
         model = self.create_and_train_model(x_train, y_train, x_test, y_test)
-        accuracies = []
+        predictions = []
+        expected_y = []
         for day in range(0, len(test_df) - 1):
             x_day = np.array([x_test[day, :], ])
-            y_day = np.array([y_test[day], ])
-            y_test_prediction = self.predict(model, x_day)
-            if self.bench_params.binary_classification:
-                y_test_prediction_parsed = np.array(y_test_prediction, copy=True)
-                y_test_prediction_parsed[y_test_prediction >= 0.5] = 1
-                y_test_prediction_parsed[y_test_prediction < 0.5] = 0
+            if self.bench_params.binary_classification or not self.bench_params.one_hot_encode_labels:
+                y_day = y_test[day]
             else:
-                y_test_prediction_parsed = np.array(
-                    [np.argmax(pred, axis=None, out=None) for pred in y_test_prediction])
-                y_day = np.array(
-                    [np.argmax(pred, axis=None, out=None) for pred in y_day])
+                y_day = np.argmax(y_test[day], axis=None, out=None)
+            y_test_prediction = self.predict(model, x_day)
+            predictions.append(y_test_prediction)
+            expected_y.append(y_day)
+            self.manage_account(day, y_test_prediction, test_df)
 
-            self.manage_account(day, y_test_prediction_parsed, test_df)
-
-            acc = accuracy_score(y_day, y_test_prediction_parsed)
-            accuracies.append(acc)
+        acc = accuracy_score(predictions, expected_y)
 
         if self.verbose:
             print(
                 'Achieved {0} accuracy for {1}. Finished with {2} dollars which is a {3}% of the budget.\
                  Buy and hold finished with {4} dollars which is a {5}% of the budget.'.format(
-                    round(np.mean(accuracies), 4), bench_params.curr_sym, round(self.current_balance, 2)
+                    round(np.mean(acc), 4), self.bench_params.curr_sym, round(self.current_balance, 2)
                     , round(self.current_balance / self.budget * 100, 2)
                     , round(self.buy_and_hold_balance, 2)
                     , round(self.buy_and_hold_balance / self.budget * 100, 2))
             )
         else:
             print(
-                '{0} finished with {1}% of the budget. Buy and hold finished with {2}% of the budget.'.format(
-                    bench_params.curr_sym
+                'Achieved {0} accuracy for {1}. Finished with {2}% of the budget. Buy and hold finished with {3}% of the budget.'.format(
+                    round(np.mean(acc), 4), self.bench_params.curr_sym
                     , round(self.current_balance / self.budget * 100, 2)
                     , round(self.buy_and_hold_balance / self.budget * 100, 2))
             )
@@ -132,17 +136,15 @@ class MarketSimulation:
         """Predict value for one day"""
         return None
 
-    def manage_account(self, day, y_test_prediction_parsed, test_df):
+    def manage_account(self, day, y_predicted_value, test_df):
         curr_date = test_df.index.values[day]
         next_day_values = test_df.iloc[day + 1]
         next_day_open_price = next_day_values[stock_constants.OPEN_COL]
         transaction_performed = False
         if self.bench_params.binary_classification:
-            y_predicted_value = int(y_test_prediction_parsed[0][0])
             buy_signal = y_predicted_value == stock_constants.IDLE_VALUE
             sell_signal = y_predicted_value == stock_constants.FALL_VALUE
         else:
-            y_predicted_value = int(y_test_prediction_parsed[0])
             buy_signal = y_predicted_value == stock_constants.RISE_VALUE
             sell_signal = y_predicted_value == stock_constants.FALL_VALUE
         should_buy = self.current_stock_amount == 0 and buy_signal
@@ -221,9 +223,114 @@ class NnMarketSimulation(MarketSimulation):
         return model
 
     def predict(self, model, x_day):
-        return model.predict(x_day)
+        y_test_prediction = model.predict(x_day)
+        if self.bench_params.binary_classification:
+            y_test_prediction_parsed = np.array(y_test_prediction, copy=True)
+            y_test_prediction_parsed[y_test_prediction >= 0.5] = 1
+            y_test_prediction_parsed[y_test_prediction < 0.5] = 0
+        else:
+            y_test_prediction_parsed = np.array(
+                [np.argmax(pred, axis=None, out=None) for pred in y_test_prediction])
+        return int(y_test_prediction_parsed[0])
+
+
+class LightGBMSimulation(MarketSimulation):
+
+    def __init__(self, symbols, benchmark_params: LightGBMBenchmarkParams, date_simulation_start='2019-01-01',
+                 budget=100000, verbose=False) -> None: \
+            super().__init__(symbols, benchmark_params, date_simulation_start, budget, verbose=verbose)
+
+    def create_and_train_model(self, x_train, y_train, x_test, y_test):
+        bench_params = self.bench_params
+        params = {
+            "objective": bench_params.objective,
+            "num_class": bench_params.model_num_class,
+            "num_leaves": bench_params.num_leaves,
+            "max_depth": bench_params.max_depth,
+            "learning_rate": bench_params.learning_rate,
+            "boosting": bench_params.boosting,
+            "num_threads": 2,
+            "max_bin": bench_params.max_bin,
+            # "bagging_fraction" : bench_params.bagging_fraction,
+            # "bagging_freq" : bench_params.bagging_freq,
+            "feature_fraction": bench_params.feature_fraction,
+            "min_sum_hessian_in_leaf": bench_params.min_sum_hessian_in_leaf,
+            "min_data_in_leaf": bench_params.min_data_in_leaf,
+            "verbosity": -1
+        }
+
+        train_data = lgb.Dataset(x_train, label=y_train)
+        test_data = lgb.Dataset(x_test, label=y_test)
+        bst = lgb.train(params, train_data, valid_sets=[test_data, train_data],
+                        num_boost_round=bench_params.num_boost_round
+                        , early_stopping_rounds=20, verbose_eval=20
+                        , feature_name=bench_params.feature_names)
+        return bst
+
+    def predict(self, model, x_day):
+        y_test_prediction = model.predict(x_day, num_iteration=model.best_iteration)
+        if self.bench_params.binary_classification:
+            y_test_prediction_parsed = np.array(y_test_prediction, copy=True)
+            y_test_prediction_parsed[y_test_prediction >= 0.5] = 1
+            y_test_prediction_parsed[y_test_prediction < 0.5] = 0
+        else:
+            y_test_prediction_parsed = np.array([np.argmax(pred, axis=None, out=None) for pred in y_test_prediction])
+        return int(y_test_prediction_parsed[0])
+
+
+class RandomForestSimulation(MarketSimulation):
+
+    def __init__(self, symbols, benchmark_params: RandomForestBenchmarkParams, date_simulation_start='2019-01-01',
+                 budget=100000, verbose=False) -> None: \
+            super().__init__(symbols, benchmark_params, date_simulation_start, budget, verbose=verbose)
+
+    def create_and_train_model(self, x_train, y_train, x_test, y_test):
+        bench_params = self.bench_params
+        model = RandomForestClassifier(n_estimators=bench_params.n_estimators, criterion=bench_params.criterion
+                                       , max_depth=bench_params.max_depth,
+                                       min_samples_split=bench_params.min_samples_split
+                                       , min_samples_leaf=bench_params.min_samples_leaf
+                                       , min_weight_fraction_leaf=bench_params.min_weight_fraction_leaf
+                                       , max_features=bench_params.max_features
+                                       , max_leaf_nodes=bench_params.max_leaf_nodes
+                                       , min_impurity_decrease=bench_params.min_impurity_decrease
+                                       , bootstrap=bench_params.bootstrap
+                                       , warm_start=bench_params.warm_start
+                                       , oob_score=bench_params.oob_score)
+        model.fit(x_train, y_train)
+        return model
+
+    def predict(self, model, x_day):
+        value = model.predict(x_day)
+        return int(value[0])
+
+
+class SVMSimulation(MarketSimulation):
+
+    def __init__(self, symbols, benchmark_params: SVMBenchmarkParams, date_simulation_start='2019-01-01',
+                 budget=100000, verbose=False) -> None: \
+            super().__init__(symbols, benchmark_params, date_simulation_start, budget, verbose=verbose)
+
+    def create_and_train_model(self, x_train, y_train, x_test, y_test):
+        bench_params = self.bench_params
+        model = SVC(C=bench_params.c, kernel=bench_params.kernel, degree=bench_params.degree, gamma=bench_params.gamma,
+                    probability=True)
+        model.fit(x_train, y_train)
+        return model
+
+    def predict(self, model, x_day):
+        value = model.predict(x_day)
+        return int(value[0])
 
 
 if __name__ == '__main__':
-    bench_params = NnBenchmarkParams(True benchmark_name='nn-market-simulation')
-    NnMarketSimulation(SYMBOLS, bench_params)
+    bench_params = NnBenchmarkParams(True, benchmark_name='nn-market-simulation')
+    NnMarketSimulation(['GOOGL'], bench_params)
+    bench_params = NnBenchmarkParams(False, benchmark_name='nn-market-simulation')
+    NnMarketSimulation(['GOOGL'], bench_params)
+    bench_params = LightGBMBenchmarkParams(True, benchmark_name='lgbm-market-simulation')
+    LightGBMSimulation(['GOOGL'], bench_params)
+    bench_params = SVMBenchmarkParams(True, benchmark_name='svm-market-simulation')
+    SVMSimulation(['GOOGL'], bench_params)
+    bench_params = RandomForestBenchmarkParams(True, benchmark_name='rf-market-simulation')
+    RandomForestSimulation(['GOOGL'], bench_params)
