@@ -49,6 +49,24 @@ def analyze_final(filepath):
     return mean_groupby
 
 
+def analyze_simulation(filepath, print_buy_and_hold=False):
+    df = pd.read_csv(RESULT_PATH + filepath)
+
+    df['buy_and_hold_balance'] = df['buy_and_hold_balance'] / df['budget'] * 100
+    df['balance'] = df['balance'] / df['budget'] * 100
+    df = df.sort_values(by ='ticker')
+
+    if print_buy_and_hold:
+        print(df.round(2).to_latex(index=False, columns=['ticker', 'buy_and_hold_balance']))
+
+
+    mean_df = df.drop(['ticker', 'budget'], axis=1).mean().round(2)
+    print('Simulation {0} analyzis: avg balance {1}, avg buy and hold {2}'.format(filepath, mean_df['balance'],
+                                                                                  mean_df['buy_and_hold_balance']))
+    print(df.round(2).to_latex(index=False, columns=['ticker', 'balance']))
+
+
+
 if __name__ == '__main__':
     # analyze_csv('results-nn-pca-GOOGL-binary.csv', 'pca', True)
     # analyze_csv('results-nn-pca-GOOGL-discrete.csv', 'pca', True)
@@ -91,4 +109,14 @@ if __name__ == '__main__':
     # analyze_csv('results-rf-walk_forward_test_window_size-GOOGL-discrete.csv', 'walk_forward_test_window_size', True)
     # analyze_final("results-rf-final-binary.csv")
     # analyze_final("results-rf-final-discrete.csv")
+    # analyze_simulation("results-svm-market-simulation-binary.csv", True)
+    # analyze_simulation("results-nn-market-simulation-binary.csv")
+    # analyze_simulation("results-rf-market-simulation-binary.csv")
+    # analyze_simulation("results-lgbm-market-simulation-binary.csv")
+    #
+    # print('========================================================================================================================================================')
+    # analyze_simulation("results-svm-market-simulation-discrete.csv")
+    # analyze_simulation("results-nn-market-simulation-discrete.csv")
+    # analyze_simulation("results-rf-market-simulation-discrete.csv")
+    # analyze_simulation("results-lgbm-market-simulation-discrete.csv")
     print('Result analyzer finished.')
