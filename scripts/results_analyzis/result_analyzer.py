@@ -1,9 +1,20 @@
+import os
+
+import matplotlib.pyplot as plt
 import pandas as pd
+from matplotlib import style
+
+import csv_importer
+import stock_constants
 
 ROC_AUC_COL = 'roc_auc'
 TRAIN_TIME_COL = 'train_time'
 ACCURACY_COL = 'accuracy'
 RESULT_PATH = './../../target/results/'
+IMG_PATH = './../../target/results/simulation_imgs/'
+
+if not os.path.exists(IMG_PATH):
+    os.makedirs(IMG_PATH)
 
 
 def analyze_csv(filepath, examined_params, print_latex=False):
@@ -54,17 +65,66 @@ def analyze_simulation(filepath, print_buy_and_hold=False):
 
     df['buy_and_hold_balance'] = df['buy_and_hold_balance'] / df['budget'] * 100
     df['balance'] = df['balance'] / df['budget'] * 100
-    df = df.sort_values(by ='ticker')
+    df = df.sort_values(by='ticker')
 
     if print_buy_and_hold:
         print(df.round(2).to_latex(index=False, columns=['ticker', 'buy_and_hold_balance']))
-
 
     mean_df = df.drop(['ticker', 'budget'], axis=1).mean().round(2)
     print('Simulation {0} analyzis: avg balance {1}, avg buy and hold {2}'.format(filepath, mean_df['balance'],
                                                                                   mean_df['buy_and_hold_balance']))
     print(df.round(2).to_latex(index=False, columns=['ticker', 'balance']))
 
+
+def analyze_simulation_details(filepath, symbol, start_date, print_buy_and_hold=False):
+    df_list, _ = csv_importer.import_data_from_files([symbol], './../../target/data/')
+    df = df_list[0]
+    df = df[(df.index > start_date)]
+
+    style.use('ggplot')
+    df[stock_constants.ADJUSTED_CLOSE_COL].plot(kind='line', x_compat=True, label='Cena zamknięcia', color='black')
+    plt.title(symbol)
+    plt.ylabel('Cena zamknięcia (USD)')
+    plt.xlabel('Data')
+
+    trade_df = pd.read_csv(RESULT_PATH + filepath)
+    trade_df.set_index('date', inplace=True)
+    trade_df.index = pd.to_datetime(trade_df.index)
+
+    index_buy = None
+    index_sell = None
+    reds = 0
+    greens = 0
+    for index, row in trade_df.iterrows():
+        if row['buy'] == 1:
+            index_buy = index
+            if index_buy is not None and index_sell is not None:
+                plt.axvspan(index_sell, index_buy, alpha=0.4, color='red', label="_" * reds + "Gotówka w portfelu")
+                reds = reds + 1
+        elif row['sell'] == 1:
+            index_sell = index
+            if index_buy is not None and index_sell is not None:
+                plt.axvspan(index_buy, index_sell, alpha=0.4, color='green', label="_" * greens + "Akcje w portfelu")
+                greens = greens + 1
+
+    plt.legend()
+
+    plt.savefig('{}/{}-buy_and_sell_plot.png'.format(IMG_PATH, symbol))
+    plt.savefig('{}/{}-buy_and_sell_plot.pdf'.format(IMG_PATH, symbol), format='pdf', dpi=1000)
+    # plt.show()
+    plt.close()
+
+    style.use('ggplot')
+    trade_df['balance'] = trade_df['balance'] / 1000
+    trade_df['balance'].plot(kind='line', x_compat=True, label='Wartość portfela')
+    plt.title(symbol)
+    plt.ylabel('Wartość portfela (tys. USD)')
+    plt.xlabel('Data')
+    plt.legend()
+    plt.savefig('{}/{}-balance-plot.png'.format(IMG_PATH, symbol))
+    plt.savefig('{}/{}-balance-plot.pdf'.format(IMG_PATH, symbol), format='pdf', dpi=1000)
+    # plt.show()
+    plt.close()
 
 
 if __name__ == '__main__':
@@ -119,4 +179,7 @@ if __name__ == '__main__':
     # analyze_simulation("results-nn-market-simulation-discrete.csv")
     # analyze_simulation("results-rf-market-simulation-discrete.csv")
     # analyze_simulation("results-lgbm-market-simulation-discrete.csv")
+
+    analyze_simulation_details("results-nn-market-simulation-discreteAMGN.csv", 'AMGN', '2019-01-01')
+    analyze_simulation_details("results-svm-market-simulation-discreteGOOGL.csv", 'GOOGL', '2019-01-01')
     print('Result analyzer finished.')
