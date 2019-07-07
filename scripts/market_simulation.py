@@ -30,16 +30,19 @@ CSV_TRAIN_TIME_COL = 'train_time'
 SYMBOLS = ['GOOGL', 'MSFT', 'AAPL', 'CSCO', 'INTC', 'FB', 'PEP', 'QCOM', 'AMZN', 'AMGN']
 
 TRANSACTION_PERCENT_FEE = 0.002
+AVERAGE_SPREAD = 0.002
 
 
 class MarketSimulation:
     def __init__(self, symbols, benchmark_params: BenchmarkParams, date_simulation_start='2019-01-01',
+                 date_simulation_end='2099-01-01',
                  budget=100000, verbose=True) -> None:
         self.bench_params = benchmark_params
         print('Begin simulation ', benchmark_params.benchmark_name)
         benchmark_file_helper.initialize_dirs(self.bench_params)
         self.symbols = symbols
         self.date_simulation_start = date_simulation_start
+        self.date_simulation_end = date_simulation_end
         self.budget = budget
         self.current_stock_amount = 0
         self.current_balance = self.budget
@@ -73,7 +76,17 @@ class MarketSimulation:
 
             df = self.df_list[symbol_it]
             df.dropna(inplace=True)
+            df = df[(df.index <= self.date_simulation_end)]
             test_df = df[(df.index >= self.date_simulation_start)].copy()
+            if len(df) < 300:
+                print("{0} not enough data to perform simulation. {1} samples found between {2} and {3}.".format(
+                    self.bench_params.curr_sym, len(df), self.date_simulation_start, self.date_simulation_end))
+                continue
+            elif len(df) - len(test_df) < 200:
+                print(
+                    "{0} training set too small to perform simulation. {1} samples in training set and {2} samples in test set.".format(
+                        self.bench_params.curr_sym, len(df) - len(test_df), len(test_df)))
+                continue
             test_df_len = len(test_df)
             test_size = test_df_len / len(df)
             self.bench_params.test_size = test_size
@@ -178,13 +191,13 @@ class MarketSimulation:
         should_sell = self.current_stock_amount > 0 and sell_signal
 
         if day == 0:
-            price_plus_fee = next_day_open_price + next_day_open_price * TRANSACTION_PERCENT_FEE
+            price_plus_fee = next_day_open_price + next_day_open_price * (TRANSACTION_PERCENT_FEE + AVERAGE_SPREAD)
             self.buy_and_hold_stock_amount = int(self.buy_and_hold_balance / (price_plus_fee))
             self.buy_and_hold_balance = self.buy_and_hold_balance - self.buy_and_hold_stock_amount * price_plus_fee
 
         if day == len(test_df) - 2:
             transaction_performed = True
-            price_minus_fee = next_day_open_price - next_day_open_price * TRANSACTION_PERCENT_FEE
+            price_minus_fee = next_day_open_price - next_day_open_price * (TRANSACTION_PERCENT_FEE + AVERAGE_SPREAD)
             self.buy_and_hold_balance = self.buy_and_hold_balance + self.buy_and_hold_stock_amount * price_minus_fee
             self.buy_and_hold_stock_amount = 0
             if self.current_stock_amount > 0:
@@ -211,7 +224,7 @@ class MarketSimulation:
             self.details_results_df = self.details_results_df.append(result_dict, ignore_index=True)
 
     def sell(self, price):
-        price_minus_fee = price - price * TRANSACTION_PERCENT_FEE
+        price_minus_fee = price - price * (TRANSACTION_PERCENT_FEE + AVERAGE_SPREAD)
         self.current_balance = self.current_balance + self.current_stock_amount * price_minus_fee
         if self.verbose:
             print('Selling {0} securities for {1}$ each resulting in {2} dollars'.format(self.current_stock_amount,
@@ -220,7 +233,7 @@ class MarketSimulation:
         self.current_stock_amount = 0
 
     def buy(self, price):
-        price_plus_fee = price + price * TRANSACTION_PERCENT_FEE
+        price_plus_fee = price + price * (TRANSACTION_PERCENT_FEE + AVERAGE_SPREAD)
         self.current_stock_amount = int(self.current_balance / (price_plus_fee))
         if self.verbose:
             print('Buying {0} securities using {1} dollars ({2} each)'.format(self.current_stock_amount,
@@ -232,8 +245,10 @@ class MarketSimulation:
 class NnMarketSimulation(MarketSimulation):
 
     def __init__(self, symbols, benchmark_params: NnBenchmarkParams, date_simulation_start='2019-01-01',
+                 date_simulation_end='2099-01-01',
                  budget=100000, verbose=False) -> None: \
-            super().__init__(symbols, benchmark_params, date_simulation_start, budget, verbose=verbose)
+            super().__init__(symbols, benchmark_params, date_simulation_start, date_simulation_end, budget,
+                             verbose=verbose)
 
     def create_and_train_model(self, x_train, y_train, x_test, y_test):
         bench_params = self.bench_params
@@ -265,8 +280,10 @@ class NnMarketSimulation(MarketSimulation):
 class LightGBMSimulation(MarketSimulation):
 
     def __init__(self, symbols, benchmark_params: LightGBMBenchmarkParams, date_simulation_start='2019-01-01',
+                 date_simulation_end='2099-01-01',
                  budget=100000, verbose=False) -> None: \
-            super().__init__(symbols, benchmark_params, date_simulation_start, budget, verbose=verbose)
+            super().__init__(symbols, benchmark_params, date_simulation_start, date_simulation_end, budget,
+                             verbose=verbose)
 
     def create_and_train_model(self, x_train, y_train, x_test, y_test):
         bench_params = self.bench_params
@@ -309,8 +326,10 @@ class LightGBMSimulation(MarketSimulation):
 class RandomForestSimulation(MarketSimulation):
 
     def __init__(self, symbols, benchmark_params: RandomForestBenchmarkParams, date_simulation_start='2019-01-01',
+                 date_simulation_end='2099-01-01',
                  budget=100000, verbose=False) -> None: \
-            super().__init__(symbols, benchmark_params, date_simulation_start, budget, verbose=verbose)
+            super().__init__(symbols, benchmark_params, date_simulation_start, date_simulation_end, budget,
+                             verbose=verbose)
 
     def create_and_train_model(self, x_train, y_train, x_test, y_test):
         bench_params = self.bench_params
@@ -336,8 +355,10 @@ class RandomForestSimulation(MarketSimulation):
 class SVMSimulation(MarketSimulation):
 
     def __init__(self, symbols, benchmark_params: SVMBenchmarkParams, date_simulation_start='2019-01-01',
+                 date_simulation_end='2099-01-01',
                  budget=100000, verbose=False) -> None: \
-            super().__init__(symbols, benchmark_params, date_simulation_start, budget, verbose=verbose)
+            super().__init__(symbols, benchmark_params, date_simulation_start, date_simulation_end, budget,
+                             verbose=verbose)
 
     def create_and_train_model(self, x_train, y_train, x_test, y_test):
         bench_params = self.bench_params

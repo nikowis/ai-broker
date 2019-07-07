@@ -1,9 +1,8 @@
-from benchmark_params import LightGBMBenchmarkParams, RandomForestBenchmarkParams, \
-    SVMBenchmarkParams, NnBenchmarkParams
+from benchmark_params import SVMBenchmarkParams
 
 SYMBOLS = ['GOOGL', 'MSFT', 'AAPL', 'CSCO', 'INTC', 'FB', 'PEP', 'QCOM', 'AMZN', 'AMGN']
 
-from market_simulation import LightGBMSimulation, RandomForestSimulation, SVMSimulation, NnMarketSimulation
+from market_simulation import SVMSimulation
 
 if __name__ == '__main__':
     # bench_params = NnBenchmarkParams(True, benchmark_name='nn-market-simulation-binary')
@@ -20,7 +19,8 @@ if __name__ == '__main__':
     # RandomForestSimulation(SYMBOLS, bench_params)
     # bench_params = SVMBenchmarkParams(True, benchmark_name='svm-market-simulation-binary')
     # SVMSimulation(SYMBOLS, bench_params)
-    # bench_params = SVMBenchmarkParams(False, benchmark_name='svm-market-simulation-discrete')
-    # SVMSimulation(SYMBOLS, bench_params)
+    bench_params = SVMBenchmarkParams(False, benchmark_name='svm-market-simulation-discrete')
+    SVMSimulation(SYMBOLS, bench_params, date_simulation_start='2008-01-01', date_simulation_end='2009-01-01')
     bench_params = SVMBenchmarkParams(False, benchmark_name='svm-market-simulation-discrete-cheap-stock')
-    SVMSimulation(['SIRI', 'MYL', 'SYMC', 'KHC', 'JD', 'AMD', 'FAST', 'AAL', 'FOX', 'MU', 'CTRP'], bench_params)
+    SVMSimulation(['SIRI', 'MYL', 'SYMC', 'KHC', 'JD', 'AMD', 'FAST', 'AAL', 'MU', 'CTRP'], bench_params,
+                  date_simulation_start='2008-01-01', date_simulation_end='2009-01-01')
