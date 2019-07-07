@@ -1,3 +1,4 @@
+import random
 import time
 
 import lightgbm as lgb
@@ -189,8 +190,7 @@ class MarketSimulation:
             if self.current_stock_amount > 0:
                 self.sell(next_day_open_price)
             if self.verbose:
-                pass
-            print('Selling all stock at the end of learning')
+                print('Selling all stock at the end of learning')
         elif should_buy:
             transaction_performed = True
             self.buy(next_day_open_price)
@@ -351,13 +351,34 @@ class SVMSimulation(MarketSimulation):
         return int(value[0])
 
 
+class RandomSimulation(MarketSimulation):
+
+    def __init__(self, symbols, benchmark_params: BenchmarkParams, date_simulation_start='2019-01-01',
+                 budget=100000, verbose=False) -> None: \
+            super().__init__(symbols, benchmark_params, date_simulation_start, budget, verbose=verbose)
+
+    def create_and_train_model(self, x_train, y_train, x_test, y_test):
+        return None
+
+    def predict(self, model, x_day):
+        if self.bench_params.binary_classification:
+            value = random.randint(0, 1)
+        else:
+            value = random.randint(0, 2)
+        return value
+
+
 if __name__ == '__main__':
     # bench_params = NnBenchmarkParams(True, benchmark_name='nn-market-simulation-nowf')
     # NnMarketSimulation(['GOOGL'], bench_params, verbose=True)
     # bench_params = LightGBMBenchmarkParams(True, benchmark_name='lgbm-market-simulation')
     # LightGBMSimulation(['GOOGL'], bench_params)
-    # bench_params = SVMBenchmarkParams(True, benchmark_name='svm-market-simulation')
+    # bench_params = SVMBenchmarkParams(False, benchmark_name='svm-market-simulation')
     # SVMSimulation(['GOOGL'], bench_params)
     # bench_params = RandomForestBenchmarkParams(True, benchmark_name='rf-market-simulation')
     # RandomForestSimulation(['GOOGL'], bench_params)
+    # bench_params = BenchmarkParams(True, benchmark_name='rand-market-simulation')
+    # RandomSimulation(SYMBOLS, bench_params)
+    # bench_params = BenchmarkParams(False, benchmark_name='rand-market-simulation')
+    # RandomSimulation(SYMBOLS, bench_params)
     print('Finished all')
