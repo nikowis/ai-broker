@@ -137,11 +137,13 @@
 
 
 \begin{abstract}
-Głównym celem pracy było opracowanie oraz porównanie modeli predykcyjnych pomagających w podejmowaniu decyzji maklerowi giełdowemu. 
+
+
+Giełda jest miejscem przyciągającym rzesze inwestorów pragnących pomnożyć swój kapitał. Właściwy handel instrumentami finansowymi na giełdzie pozwala na osiąganie zysków przekraczających zyski z alternatywnych inwestycji takich jak na przykład nieruchomości. Wiąże się to oczywiście z pewnym ryzykiem. W niniejszej pracy opisano charakterystykę giełdy, dostępne dane giełdowe oraz różne podejścia do tematu przewidywania cen na giełdzie. Ponadto podjęto próbę stworzenia algorytmów do prognozowania za pomocą modeli z dziedziny uczenia maszynowego. Następnie, w celu dalszej oceny skuteczności, utworzone modele zostały wykorzystane w symulacji zautomatyzowanego handlu na giełdzie. 
 
 \bigskip
 
-	\noindent \textbf{Słowa kluczowe:} giełda, predykcja, klasyfikacja, sieci neuronowe
+	\noindent \textbf{Słowa kluczowe:} giełda, predykcja, klasyfikacja, sieci neuronowe, SVM, las losowy, Light GBM, uczenie maszynowe, wspomaganie decyzji giełdowych
 \end{abstract}
 
 \cleardoublepage
@@ -166,17 +168,22 @@ podpis promotora & \hspace*{100pt} & podpis autora
 
 \cleardoublepage
 
-\section{Modele prognozy na giełdzie oraz kryteria ich oceny}
-
-Głównym celem tej pracy było opracowanie, ocena i porównanie różnych modeli predykcji cen akcji na giełdzie papierów wartościowych.  
-
-\subsection{Charakterystyka giełdy}
+\section{Wprowadzenie}
 
 Giełda z definicji jest miejscem wymiany towarów przez sprzedawców i kupców. Giełdy można podzielić na giełdy towarowe, pieniężne lub usługowe. Wymiany na tradycyjnych giełdach przebiegają przede wszystkim podczas sesji, które są organizowane w określonych dniach i godzinach. Najpopularniejszym rodzajem giełd są giełdy pieniężne, a w szczególności giełdy papierów wartościowych. Największymi giełdami papierów wartościowych są \textit{NYSE (New York Stock Exchange)}\cite{nyse}, \textit{NASDAQ}\cite{nasdaq} oraz \textit{JPX (Japan Exchange Group)}\cite{jpx}. Na każdej z tych giełd w dniach, w których prowadzone są sesje, dochodzi do transakcji opiewających na łączną kwotę rzędu miliardów dolarów amerykańskich.
 
 \bigskip
 
- Jednym z wymienianych na giełdzie towarów są akcje różnorodnych spółek. Każda spółka, która jest obecna na giełdzie ma przypisany do siebie symbol giełdowy (\textit{ticker}). Symbol giełdowy jest skrótowym kodem do identyfikowania spółek na określonej giełdzie (przykładowe symbole: \textit{GOOGL}, \textit{MSFT}, \textit{AMZN}). Podczas każdej sesji dokonywane są transakcje milionów akcji, których cena regulowana jest przez wolny rynek. Wynikiem tego jest duża zmienność cen i nieprzewidywalność akcji. Jest ona spowodowana między innymi: spekulacjami inwestorów, upublicznianiem informacji o konkretnej spółce (np. raportów finansowych) lub wydarzeniami na arenie politycznej (np. ustawy wpływające na działalność spólek z konkretnego sektora).
+ Jednym z wymienianych na giełdzie towarów są akcje różnorodnych spółek. Każda spółka, która jest obecna na giełdzie ma przypisany do siebie symbol giełdowy (\textit{ticker}). Symbol giełdowy jest skrótowym kodem do identyfikowania spółek na określonej giełdzie (przykładowe symbole: \textit{GOOGL}, \textit{MSFT}, \textit{AMZN}). Podczas każdej sesji dokonywane są transakcje milionów akcji, których cena regulowana jest przez wolny rynek. Wynikiem tego jest duża zmienność cen i nieprzewidywalność akcji. Jest ona spowodowana między innymi: spekulacjami inwestorów, upublicznianiem informacji o konkretnej spółce (np. raportów finansowych) lub wydarzeniami na arenie politycznej (np. ustawy wpływające na działalność spólek z konkretnego sektora). Poprawne przewidywanie zmian cen giełdowych oznacza dla inwestora możliwość wypracowania zysków na kupnie i sprzedaży akcji.
+ 
+\bigskip
+
+%TODO dotychczasowe pejpery traktujące o temacie
+
+
+\section{Modele prognozy na giełdzie oraz kryteria ich oceny}
+
+Poniżej opisane zostały dane giełdowe pochodzące z wielu źródeł, zróżnicowane sposoby na predykcje cen na giełdzie oraz różnorodne kryteria oceny modeli predykcyjnych. 
 
 \subsection{Dane giełdowe}
 
@@ -227,7 +234,7 @@ Najpopularniejsze wskaźniki techniczne obejmują:
 \item{\textbf{oscylator stochastyczny}} -  wskaźnik momentum i siły trendu.
 \end{itemize}
 
-\subsubsection{Źródło danych i wybrane spółki}
+\subsubsection{Źródło danych}
 
 W pracy zostało wykorzystane darmowe źródło danych giełdowych \textit{Alpha Vantage} \cite{alphavantage}. Jest to API pozwalające na pobranie historycznych danych giełdowych dla konkretnej spółki poprzez podanie odpowiedniego symbolu giełdowego. Dostępne są zarówno podstawowe dane giełdowe jak i wskaźniki analizy technicznej. 
 
@@ -1528,18 +1535,23 @@ Faktem, który warto odnotować jest niewątpliwa wyższość klasyfikacji na 3 
 
 \section{Podsumowanie}
 
-Wyniki symulacji użycia klasyfikatorów w handlu, chociaż bardzo obiecujące prezentują uproszczony model giełdy. Przy prawdziwych transakcjach trzeba brać pod uwagę \textit{spread} ceny czyli różnicę między ceną kupna, a ceną sprzedaży danej akcji. Handlując dużą liczbą akcji, istotną rolę odgrywa podaż i popyt. Fakt iż algorytm w danym momencie sugeruje sprzedaż jakiejś liczby akcji po danej cenie, nie oznacza że znajdzie się na nie kupiec. Co za tym idzie cena sprzedaży może zostać obniżona przez konkurencyjną ofertę. Należy mieć na uwadze do jakiego stopnia opłaca się obniżać cenę przy chęci sprzedaży akcji oraz analogicznie wyznaczyć maksymalną cenę za jaką jesteśmy w stanie kupić akcje.  Dodatkowo w Polsce przy zyskach z gry na giełdzie należy pamiętać o podatku od dochodów kapitałowych (potocznie nazywany podatkiem Belki). Ze względu na symplifikację w kodzie źródłowym, wszystkie operacje zostały oparte o typy zmiennoprzecinkowe co oznacza utratę precyzji przy wykorzystywaniu ułamków, z tego powodu wszelkie wyniki w tej pracy należy traktować jako zaokrąglenia. Ta aproksymacja nie ma żadnych implikacji jeśli chodzi o meritum prezentowane w tej pracy, jednakowoż z perspektywy automatycznych systemów do gry na giełdzie takie uproszczenie jest nieakceptowalne.
+W pracy przedstawione zostały różnorodne dane mogące posłużyć do analiz cen giełdowych, oraz różne podejścia do problemu przewidywania zmian cen akcji na giełdzie. Wykonane eksperymenty klasyfikacji demonstrują możliwości predykcji zmian cen na giełdzie jedynie z wykorzystaniem podstawowych danych giełdowych oraz wskaźników analizy technicznej. Oba przedstawione problemy klasyfikacji uzyskały nad wyraz satysfakcjonujące wyniki przy użyciu różnorodnych metod uczenia maszynowego. Najlepsze wyniki uzyskał model sieci neuronowej oraz model maszyny wektorów nośnych.
 
-Dalszymi krokami które można podjąć
+\bigskip
 
-    automatyczny system połączony do API
-    
-    dalszy rozwój klasyfikatorów
-    
-    zastosowanie metod giełdowych takich jak stop loss
-    
-    ograniczanie ryzyka
-    
+Symulacje z użyciem algorytmu opartego o nauczone klasyfikatory dały doskonałe wyniki w grze na giełdzie. W większości przypadków uzyskiwany zysk znacznie przekroczył wzrost indeksu \textit{S\&P 500} oraz strategię \textit{buy and hold}. Takie rezultaty analiz daje podstawę do rozważenia użycia wbranych modeli w handlu na prawdziwym rynku papierów wartościowych. Jednakowoż wyniki symulacji użycia klasyfikatorów w handlu, pomimo bardzo obiecujących wyników, oparte zostały o uproszczony model giełdy. Przy prawdziwych transakcjach trzeba brać pod uwagę \textit{spread} ceny czyli różnicę między ceną kupna, a ceną sprzedaży danej akcji. Handlując dużą liczbą akcji, istotną rolę odgrywa podaż i popyt. Fakt iż algorytm w danym momencie sugeruje sprzedaż jakiejś liczby akcji po danej cenie, nie oznacza że znajdzie się na nie kupiec. Co za tym idzie cena sprzedaży może zostać obniżona przez konkurencyjną ofertę. Należy mieć na uwadze do jakiego stopnia opłaca się obniżać cenę przy zamiarze sprzedaży akcji oraz analogicznie wyznaczyć maksymalną cenę za jaką jesteśmy w stanie kupić akcje.  Dodatkowo w Polsce przy zyskach z gry na giełdzie trzeba pamiętać o podatku od dochodów kapitałowych (potocznie nazywany podatkiem Belki). Ze względu na symplifikację w kodzie źródłowym, wszystkie operacje zostały oparte o typy zmiennoprzecinkowe co oznacza utratę precyzji przy wykorzystywaniu ułamków, z tego powodu wszelkie wyniki w tej pracy należy traktować jako zaokrąglenia. Ta aproksymacja nie ma żadnych implikacji jeśli chodzi o meritum prezentowane w tej pracy, jednak z perspektywy automatycznych systemów do gry na giełdzie takie uproszczenie jest nieakceptowalne. Powyższe argumenty mają na celu podkreślenie iż wykorzystanie modeli z tej pracy na prawdziwej giełdzie, należy traktować zgodnie z regułą ograniczonego zaufania, analizując decyzje podejmowane przez algorytm.
+
+\bigskip
+
+Kierunki dalszych potencjalnych badań uwzględniają:
+\begin{itemize}
+	\item rozszerzenie algorytmu o klasyczne narzędzia wykorzystywane przy inwestowanie na giełdzie takie jak \textit{stop loss},
+	\item rozszerzenie algorytmu o analizę i ograniczenie ryzyka,
+	\item rozszerzenie algorytmu o dobór spółek gwarantujących jak największe zyski,
+	\item stworzenie automatycznego systemu do handlu na giełdzie połączonego z API domu maklerskiego,
+	\item dalszy rozwój i ulepszanie klasyfikatorów.
+\end{itemize}
+
 
 \section{Bibliografia}
 
@@ -1680,10 +1692,18 @@ Guolin Ke, Qi Meng, Thomas Finley, Taifeng Wang,Wei Chen, Weidong Ma, Qiwei Ye, 
 
 \end{thebibliography}
 
-\section{Dodatek: opis aplikacji}
-
 \listoffigures
  
 \listoftables
+
+\section{Dodatek: opis aplikacji}
+
+\subsection{Technologie}
+
+\subsection{Pobranie danych}
+
+\subsection{Wykonanie testów klasyfikacj}
+
+\subsection{Wykonanie testów klasyfikacj}
 
 \end{document}
