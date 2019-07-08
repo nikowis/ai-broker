@@ -137,7 +137,7 @@
 
 
 \begin{abstract}
-	Głównym celem pracy było opracowanie oraz porównanie modeli predykcyjnych pomagających w podejmowaniu decyzji maklerowi giełdowemu.
+Głównym celem pracy było opracowanie oraz porównanie modeli predykcyjnych pomagających w podejmowaniu decyzji maklerowi giełdowemu. 
 
 \bigskip
 
@@ -168,7 +168,7 @@ podpis promotora & \hspace*{100pt} & podpis autora
 
 \section{Modele prognozy na giełdzie oraz kryteria ich oceny}
 
-Celem tej pracy jest opracowanie, ocena i porównanie różnych modeli predykcji cen akcji na giełdzie papierów wartościowych.
+Głównym celem tej pracy było opracowanie, ocena i porównanie różnych modeli predykcji cen akcji na giełdzie papierów wartościowych.  
 
 \subsection{Charakterystyka giełdy}
 
@@ -1411,13 +1411,16 @@ Najlepszy wynik udało się osiągnąć dla spółki \textit{INTC} $\sim 81.2\%$
 
 \bigskip
 
-Dodatkowo przeprowadzona została analiza klasyfikacji konkretnych klas. Na wykresie \ref{img:nn_layers_discrete} zostały przedstawione krzywe ROC dla 3 klas, wraz z ich mikro-średnią, dla sieci neuronowej o jednej warstwie ukrytej z 10 neuronami. Analizując wykres łatwo zauważyć dysproporcję pomiędzy AUC poszczególnych klas. Model ma największą trudność z przewidywaniem klasy utrzymania ceny, która ma aż o $0.14$ AUC mniej niż pozostałe klasy. Taka rozbieżność może być problematyczna na etapie używania nauczonego modelu do predykcji. Im większa rozbieżność między AUC poszczególnych klas tym gorzej. Może się bowiem okazać iż dwa modele o porównywalnej mierze AUC będą uzyskiwały rozbieżne wyniki w grze na giełdzie. Mogłoby to wynikać z faktu iż model w ogóle nie zwraca w swoich przewidywaniach jednej z klas, zaś pozostałe estymuje bardzo dobrze. Na przykład model nie wskazujący nigdy klasy spadku, nie dawałby sygnału do sprzedaży akcji, a to całkowicie wyklucza jego praktyczne użycie. 
+Dodatkowo przeprowadzona została analiza klasyfikacji konkretnych klas. Na wykresie \ref{img:nn_roc_auc_discrete} zostały przedstawione krzywe ROC dla 3 klas, wraz z ich mikro-średnią, dla sieci neuronowej o jednej warstwie ukrytej z 10 neuronami. Analizując wykres łatwo zauważyć dysproporcję pomiędzy AUC poszczególnych klas. Model ma największą trudność z przewidywaniem klasy utrzymania ceny, która ma aż o $0.14$ AUC mniej niż pozostałe klasy. Taka rozbieżność może być problematyczna na etapie używania nauczonego modelu do predykcji. Im większa rozbieżność między AUC poszczególnych klas tym gorzej. Może się bowiem okazać iż dwa modele o porównywalnej mierze AUC będą uzyskiwały rozbieżne wyniki w grze na giełdzie. Mogłoby to wynikać z faktu iż model w ogóle nie zwraca w swoich przewidywaniach jednej z klas, zaś pozostałe estymuje bardzo dobrze. Na przykład model nie wskazujący nigdy klasy spadku, nie dawałby sygnału do sprzedaży akcji, a to całkowicie wyklucza jego praktyczne użycie. 
 
 \begin{figure}[H]
 \centering \includegraphics[scale=0.8]{img/nn_layers_10_discrete_roc-googl.pdf}
 \caption{Wykres ROC sieci neuronowej o jednej warstwie neuronowej z 10 neuronami dla klasyfikacji na 3 klasy spółki \textit{GOOGL} (opracowanie własne)}
-\label{img:nn_layers_discrete}
+\label{img:nn_roc_auc_discrete}
 \end{figure}
+
+
+
 \section{Wspomaganie decyzji giełdowych}
 
 Mając do wykorzystania klasyfikatory o wybranych parametrach można przystąpić do weryfikacji ich skuteczności na giełdzie. Ocena jakości odbyła się poprzez symulację uproszczonego modelu giełdy. Głównym założeniem było dokonywanie transakcji jedynie na początku sesji giełdowej tj. po cenie otwarcia. Taki scenariusz odzwierciedla wykonanie predykcji klasyfikayorem na podstawie danych z sesji giełdowej z dnia \textit{t} oraz podjęcie decyzji w najbliższym możliwym czasie tj. przy rozpoczęciu sesji w dniu \textit{t+1}. Jako zbiór treningowy dla każdej spółki wykorzystane zostały wszystkie dane od początku jej istnienia aż do 31 grudnia 2018. Symulacja giełdowa została przeprowadzona na danych od 1 stycznia 2019, aż do 6 lipca 2019. W tym okresie przeprowadzono 127 sesji giełdowych. Symulacja uwzględniała prowizję od każdej transakcji na poziomie 0.2\% jej wartości. Każda spółka była testowana osobno. Budżet dla każdej spółki wynosił \textit{100~000} dolarów.
@@ -1478,14 +1481,65 @@ QCOM & 137.18 &  \textbf{199.61} & 189.39  & 179.87 & 189.19 \\ \hline \hline
     \label{tab:comparison_simulation_discrete}
 \end{table}   
 
-W symulacjach handlu na giełdzie z pomocą klasyfikatorów widać zależność końcowych wyników od wyników dokładności jednak ta zależność nie jest bezpośrednia. Dla lasów losowych wyniki dokładności oraz wyniki gry na giełdzie były dużo gorsze od pozostałych modeli. Jednak gdy wyniki dokładności nie są zauważalnie gorsze  ciężko jednoznacznie określić jak dany model poradzi sobie na giełdzie. 
+W symulacjach handlu na giełdzie z pomocą klasyfikatorów widać zależność końcowych wyników od wyników dokładności jednak ta zależność nie jest bezpośrednia. Dla lasów losowych wyniki dokładności oraz wyniki gry na giełdzie były dużo gorsze od pozostałych modeli. Jednak gdy wyniki dokładności nie są zauważalnie gorsze ciężko jednoznacznie określić jak dany model poradzi sobie na giełdzie. 
 
 \bigskip
 
-Powyższe wyniki chociaż bardzo obiecujące prezentują uproszczony model giełdy. W kodzie źródłowym wszystkie operacje zostały oparte o typy zmiennoprzecinkowe co oznacza utratę precyzji przy wykorzystywaniu ułamków, z tego powodu wyniki należy traktować jako zaokrąglenia. Przy prawdziwych transakcjach trzeba brać pod uwagę również \textit{spread} ceny czyli różnicę między ceną kupna, a ceną sprzedaży danej akcji. Dodatkowo w Polsce przy zyskach z gry na giełdzie należy pamiętać o podatku od dochodów kapitałowych (potocznie nazywany podatkiem Belki).
+Analizę symulacji można pogłębić o wgląd w decyzje algorytmu. Rysunek \ref{img:amgn_wallet_buy_sell} przedstawia decyzje dokonywane przez algorytm używający klasyfikatora wieloklasowego w zestawieniu z rzeczywistą ceną zamknięcia z każdego dnia. Na czerwono oznaczone są okresy gdy klasyfikator przewidywał spadek lub utrzymanie ceny, a w portfelu znajdowała się gotówka. Na zielono oznaczone zostały okresy gdy klasyfikator przewidywał wzrost lub utrzymanie ceny, a w portfelu znajdowały się akcje spółki \textit{AMGN}. Łatwo dostrzec, że klasyfikator ma największą skuteczność w momentach gwałtownych spadków lub wzrostów ceny. W przypadku delikatnych zmian, algorytm zazwyczaj nie zmienia strategii co jest oczekiwanym zachowaniem wynikającym z klasyfikacji zmian ceny do klasy \textit{utrzymanie}. Takie zachowanie algorytmu pozwala na uzyskiwanie ponadprzeciętnych zysków. 
 
+\begin{figure}[H]
+\centering \includegraphics[scale=1.1]{img/AMGN-buy_and_sell_plot.pdf}
+\caption{Wykres ceny akcji spółki \textit{AMGN} w zestawieniu z portfelem zarządzany przez algorytm używający wieloklasowego klasyfikatora MLP (opracowanie własne)}
+\label{img:amgn_wallet_buy_sell}
+\end{figure}
+
+Wartość portfela w czasie została przedstawiona na rysunku \ref{img:amgn_wallet_value}. Zestawienie wartości portfela zarządzanego przez algorytm z użyciem klasyfikatora z wartością portfela strategii \textit{buy and hold} pokazuje wyższość poprawnej predykcji nad biernym udziałem w giełdzie. Gdy giełda odnotowuje spadki wartość portfela klasyfikatora utrzymuje się, zaś gdy ceny akcji rosną algorytm poprawnie inwestuje zarabiając pieniądze. Jakość klasyfikacji nie jest na poziomie 100\% wobec czego algorytm wykonuje błędne decyzje (maj 2019 na rysunku \ref{img:amgn_wallet_value}), jednak w porównaniu do poprawnych ruchów są one marginalne.
+
+\begin{figure}[H]
+\centering \includegraphics[scale=0.9]{img/AMGN-balance-plot.pdf}
+\caption{Wykres wartości portfela algorytmu handlującego akcjami spółki \textit{AMGN} używającego wieloklasowego klasyfikatora MLP (opracowanie własne)}
+\label{img:amgn_wallet_value}
+\end{figure}
+
+Faktem, który warto odnotować jest niewątpliwa wyższość klasyfikacji na 3 klasy nad klasyfikacją binarną w grze na giełdzie. Średni zysk dla handlu na podstawie klasyfikacji wieloklasowej był większy o ponad \textbf{3}\% od zysku algorytmu używającego klasyfikacji binarnej. Taka różnica wydaje się być niewielka, lecz na dłuższą metę, dzięki ponownemu inwestowaniu zyskaego kapitału, będzie ona rosła wykładniczo. W ekonomii to zjawisko nosi miano procenta składanego. Analizując przewagę predykcji wieloklasowej warto zwrócić uwagę na krzywe ROC poszczególnych klas na rysunku  \ref{img:nn_roc_auc_discrete}. Przedstawione wartości \textit{AUC} dla każdej z klas dowodzą iż ten model lepiej przewiduje spadek (\textit{AUC} 0.92) i wzrost (\textit{AUC} 0.89) ceny ponad uzgodniony próg niż klasyfikator binarny (\textit{AUC} 0.88 tabela \ref{tab:comparison_final_binary}). Ponadto klasyfikator przewidujący klasę utrzymania pozwala na bardziej powściągliwe decyzje o kupnie bądź monetyzacji akcji, a jak wiadomo każda transakcja obarczona jest kosztem prowizji domu maklerskiego. Predykcja klasy utrzymania uzyskuje znacznie gorsze wyniki (\textit{AUC} 0.75 rysunek \ref{img:nn_roc_auc_discrete}), jednak najwidoczniej nie ma to dużego znaczenia na wykorzystywanie klasyfikatorów w grze na giełdzie. Tabela \ref{tab:simulation_avg_value_vs_transactions} zestawia średnie uzyskane zyski na giełdzie poszczególnych klasyfikatorów wraz z liczbą decyzji o zamianie instrumentu finansowego w portfelu inwestycyjnym. Porównanie zysków i liczby transakcji dla konkretnych modeli nie pozwala na wysnucie jednoznacznych wniosków. Perspektywa średniej liczby transakcji dla modeli klasyfikacji binarnej i klasyfikacji wieloklasowej ukazuje ujemną korelację między zyskiem, a liczbą transakcji.
+
+ \begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|}
+    \hline
+        \textbf{Model}  & \textbf{Średni zysk} & \textbf{Średnia liczba transakcji}\\ \hline
+            SVM binarny & 141.79 & 61.4 \\ \hline
+            MLP binarny & 148.05 & 60.2 \\ \hline
+            Random forest binarny & 136.32 & 57.2 \\ \hline
+            Light GBM binarny & 141.19 & 63.2 \\ \hline 
+            \textbf{Średnia modeli binarnych} & \textbf{141.84} & \textbf{60.5} \\ \hline \hline
+            
+            SVM wieloklasowy & 148.5 & 39.6 \\ \hline
+            MLP wieloklasowy & 145.68 & 45.6 \\ \hline
+            Random forest wieloklasowy & 138.34 & 48.0 \\ \hline
+            Light GBM wieloklasowy & 147.09 & 51.5 \\ \hline
+            \textbf{Średnia modeli wieloklasowych} & \textbf{144.9} & \textbf{46.17} \\ \hline
+    \end{tabular}
+    \caption{Porównanie średniego zysku z aktywnością danego modelu na giełdzie}
+    \label{tab:simulation_avg_value_vs_transactions}
+\end{table} 
+
+ Modele klasyfikujące na 3 klasy wykonały średnio o 14 transakcji mniej niż klasyfikatory binarne (miesięcznie jest to średnio aż o 2.3 transakcji mniej). Takie zachowanie pozwoliło ograniczyć koszty prowizji domu maklerskiego, a dzięki temu zwiększyć zysk.
 
 \section{Podsumowanie}
+
+Wyniki symulacji użycia klasyfikatorów w handlu, chociaż bardzo obiecujące prezentują uproszczony model giełdy. Przy prawdziwych transakcjach trzeba brać pod uwagę \textit{spread} ceny czyli różnicę między ceną kupna, a ceną sprzedaży danej akcji. Handlując dużą liczbą akcji, istotną rolę odgrywa podaż i popyt. Fakt iż algorytm w danym momencie sugeruje sprzedaż jakiejś liczby akcji po danej cenie, nie oznacza że znajdzie się na nie kupiec. Co za tym idzie cena sprzedaży może zostać obniżona przez konkurencyjną ofertę. Należy mieć na uwadze do jakiego stopnia opłaca się obniżać cenę przy chęci sprzedaży akcji oraz analogicznie wyznaczyć maksymalną cenę za jaką jesteśmy w stanie kupić akcje.  Dodatkowo w Polsce przy zyskach z gry na giełdzie należy pamiętać o podatku od dochodów kapitałowych (potocznie nazywany podatkiem Belki). Ze względu na symplifikację w kodzie źródłowym, wszystkie operacje zostały oparte o typy zmiennoprzecinkowe co oznacza utratę precyzji przy wykorzystywaniu ułamków, z tego powodu wszelkie wyniki w tej pracy należy traktować jako zaokrąglenia. Ta aproksymacja nie ma żadnych implikacji jeśli chodzi o meritum prezentowane w tej pracy, jednakowoż z perspektywy automatycznych systemów do gry na giełdzie takie uproszczenie jest nieakceptowalne.
+
+Dalszymi krokami które można podjąć
+
+    automatyczny system połączony do API
+    
+    dalszy rozwój klasyfikatorów
+    
+    zastosowanie metod giełdowych takich jak stop loss
+    
+    ograniczanie ryzyka
+    
 
 \section{Bibliografia}
 
