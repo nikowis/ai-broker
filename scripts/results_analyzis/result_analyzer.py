@@ -1,6 +1,7 @@
 import os
 
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 from matplotlib import style
 
@@ -81,15 +82,15 @@ def analyze_simulation_details(filepath, symbol, start_date, print_buy_and_hold=
     df = df_list[0]
     df = df[(df.index > start_date)]
 
+    trade_df = pd.read_csv(RESULT_PATH + filepath)
+    trade_df.set_index('date', inplace=True)
+    trade_df.index = pd.to_datetime(trade_df.index)
+
     style.use('ggplot')
     df[stock_constants.ADJUSTED_CLOSE_COL].plot(kind='line', x_compat=True, label='Cena zamknięcia', color='black')
     plt.title(symbol)
     plt.ylabel('Cena zamknięcia (USD)')
     plt.xlabel('Data')
-
-    trade_df = pd.read_csv(RESULT_PATH + filepath)
-    trade_df.set_index('date', inplace=True)
-    trade_df.index = pd.to_datetime(trade_df.index)
 
     index_buy = None
     index_sell = None
@@ -116,7 +117,9 @@ def analyze_simulation_details(filepath, symbol, start_date, print_buy_and_hold=
 
     style.use('ggplot')
     trade_df['balance'] = trade_df['balance'] / 1000
-    trade_df['balance'].plot(kind='line', x_compat=True, label='Wartość portfela')
+    trade_df['buy_and_hold_balance'] = trade_df['buy_and_hold_balance'] / 1000
+    trade_df['balance'].plot(kind='line', x_compat=True, label='Wartość portfela klasyfikatora')
+    trade_df['buy_and_hold_balance'].plot(kind='line', x_compat=True, label='Wartość portfela buy and hold')
     plt.title(symbol)
     plt.ylabel('Wartość portfela (tys. USD)')
     plt.xlabel('Data')
@@ -125,6 +128,18 @@ def analyze_simulation_details(filepath, symbol, start_date, print_buy_and_hold=
     plt.savefig('{}/{}-balance-plot.pdf'.format(IMG_PATH, symbol), format='pdf', dpi=1000)
     # plt.show()
     plt.close()
+
+
+def average_trades(dirpaths):
+    for dirpath in dirpaths:
+        transaction_count = []
+        for filename in os.listdir(RESULT_PATH + dirpath):
+            if filename.endswith(".csv"):
+                trade_df = pd.read_csv(RESULT_PATH + dirpath + '/' + filename)
+                trade_df.set_index('date', inplace=True)
+                trade_df.index = pd.to_datetime(trade_df.index)
+                transaction_count.append(len(trade_df))
+        print('{0} average {1} transactions'.format(dirpath, np.mean(transaction_count)))
 
 
 if __name__ == '__main__':
@@ -180,6 +195,11 @@ if __name__ == '__main__':
     # analyze_simulation("results-rf-market-simulation-discrete.csv")
     # analyze_simulation("results-lgbm-market-simulation-discrete.csv")
 
-    analyze_simulation_details("results-nn-market-simulation-discreteAMGN.csv", 'AMGN', '2019-01-01')
-    analyze_simulation_details("results-svm-market-simulation-discreteGOOGL.csv", 'GOOGL', '2019-01-01')
+    # analyze_simulation_details("results-nn-market-simulation-discreteAMGN.csv", 'AMGN', '2019-01-01')
+    # analyze_simulation_details("results-svm-market-simulation-discreteGOOGL.csv", 'GOOGL', '2019-01-01')
+    # analyze_simulation_details("results-nn-market-simulation-binaryGOOGL.csv", 'GOOGL', '2019-01-01')
+    average_trades(['nn-market-simulation-binary', 'nn-market-simulation-discrete', 'lgbm-market-simulation-binary'
+                       , 'lgbm-market-simulation-discrete', 'rf-market-simulation-binary',
+                    'rf-market-simulation-discrete'
+                       , 'svm-market-simulation-binary', 'svm-market-simulation-discrete'])
     print('Result analyzer finished.')
