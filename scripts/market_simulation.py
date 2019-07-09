@@ -27,7 +27,7 @@ CSV_DATE_COL = 'date'
 CSV_PRICE_COL = 'price'
 CSV_TRAIN_TIME_COL = 'train_time'
 
-SYMBOLS = ['GOOGL', 'MSFT', 'AAPL', 'CSCO', 'INTC', 'FB', 'PEP', 'QCOM', 'AMZN', 'AMGN']
+from stock_constants import BASE_COMPANIES
 
 TRANSACTION_PERCENT_FEE = 0.002
 AVERAGE_SPREAD = 0.002
@@ -399,7 +399,7 @@ if __name__ == '__main__':
     # bench_params = RandomForestBenchmarkParams(True, benchmark_name='rf-market-simulation')
     # RandomForestSimulation(['GOOGL'], bench_params)
     # bench_params = BenchmarkParams(True, benchmark_name='rand-market-simulation')
-    # RandomSimulation(SYMBOLS, bench_params)
+    # RandomSimulation(BASE_COMPANIES, bench_params)
     # bench_params = BenchmarkParams(False, benchmark_name='rand-market-simulation')
-    # RandomSimulation(SYMBOLS, bench_params)
+    # RandomSimulation(BASE_COMPANIES, bench_params)
     print('Finished all')

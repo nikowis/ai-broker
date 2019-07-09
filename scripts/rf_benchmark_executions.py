@@ -1,8 +1,6 @@
 import benchmark_params
 from rf_benchmark import RandomForestBenchmark
-
-SYMBOLS = ['GOOGL', 'MSFT', 'AAPL', 'CSCO', 'INTC', 'FB', 'PEP', 'QCOM', 'AMZN', 'AMGN']
-
+from stock_constants import BASE_COMPANIES
 
 def rf_examine(binary_classification, examined_params, param_lists, companies=['GOOGL'], walk_forward_testing=False):
     split_params = examined_params.split(',')
@@ -40,7 +38,7 @@ def rf_final(binary):
     bench_params.plot_partial = False
     benchmark_params.verbose = True
     bench_params.walk_forward_testing = False
-    RandomForestBenchmark(SYMBOLS, bench_params)
+    RandomForestBenchmark(BASE_COMPANIES, bench_params)
 
 
 if __name__ == '__main__':

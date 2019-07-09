@@ -1,8 +1,7 @@
 import benchmark_params
 from nn_benchmark import NnBenchmark
 
-SYMBOLS = ['GOOGL', 'MSFT', 'AAPL', 'CSCO', 'INTC', 'FB', 'PEP', 'QCOM', 'AMZN', 'AMGN']
-
+from stock_constants import BASE_COMPANIES
 
 def nn_examine(binary_classification, examined_params, param_lists, companies=['GOOGL'], walk_forward_testing=False):
     split_params = examined_params.split(',')
@@ -37,12 +36,12 @@ def nn_final_binary():
     benchmark_params.verbose = True
     bench_params.walk_forward_testing = True
     bench_params.iterations = 3
-    NnBenchmark(SYMBOLS, bench_params)
+    NnBenchmark(BASE_COMPANIES, bench_params)
 
 
 def nn_final_discrete():
-    for i in range(9, len(SYMBOLS)):
-        sym = SYMBOLS[i]
+    for i in range(9, len(BASE_COMPANIES)):
+        sym = BASE_COMPANIES[i]
         benchmark_name = 'nn-final-discrete-' + str(i)
         bench_params = benchmark_params.NnBenchmarkParams(False, benchmark_name=benchmark_name)
         bench_params.plot_partial = False

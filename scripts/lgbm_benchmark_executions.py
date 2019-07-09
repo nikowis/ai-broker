@@ -1,8 +1,7 @@
 import benchmark_params
 from lgbm_benchmark import LightGBMBenchmark
 
-SYMBOLS = ['GOOGL', 'MSFT', 'AAPL', 'CSCO', 'INTC', 'FB', 'PEP', 'QCOM', 'AMZN', 'AMGN']
-
+from stock_constants import BASE_COMPANIES
 
 def lgbm_examine(binary_classification, examined_params, param_lists, companies=['GOOGL'], walk_forward_testing=False):
     split_params = examined_params.split(',')
@@ -40,7 +39,7 @@ def lgbm_final(binary):
     bench_params.plot_partial = False
     benchmark_params.verbose = True
     bench_params.walk_forward_testing = False
-    LightGBMBenchmark(SYMBOLS, bench_params)
+    LightGBMBenchmark(BASE_COMPANIES, bench_params)
 
 
 if __name__ == '__main__':

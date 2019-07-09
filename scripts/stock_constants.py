@@ -1,4 +1,6 @@
-SYMBOL = 'symbol'
+BASE_COMPANIES = ['GOOGL', 'MSFT', 'AAPL', 'CSCO', 'INTC', 'FB', 'PEP', 'QCOM', 'AMZN', 'AMGN']
+
+SYMBOL_KEY = 'symbol'
 ID = '_id'
 OPEN_COL = '1  open'
 HIGH_COL = '2  high'

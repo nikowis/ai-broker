@@ -27,8 +27,6 @@ SYMBOL_KEY = "symbol"
 API_MAX_PER_MINUTE_CALLS = 5
 API_MAX_DAILY = 400
 
-SYMBOLS = ['GOOGL', 'MSFT', 'AAPL', 'CSCO', 'INTC', 'FB', 'PEP', 'QCOM', 'AMZN', 'AMGN']
-
 SELECTED_SYM = 'GOOGL'
 
 API_KEYS = ['ULDORYWPDU2S2E6X', 'yM2zzAs6_DxdeT86rtZY', 'TX1OLY36K73S9MS9', 'I7RUE3LA4PSXDJU6', '41KVI2PCCMZ09Y69']
@@ -46,14 +44,14 @@ class Importer:
 
     def json_to_df(self, json):
         json.pop(const.ID, None)
-        json.pop(const.SYMBOL, None)
+        json.pop(const.SYMBOL_KEY, None)
         df = pd.DataFrame.from_dict(json, orient=const.INDEX)
         df = df.astype(float)
         return df
 
     def df_to_json(self, df, ticker):
         json = df.to_dict(const.INDEX)
-        json[const.SYMBOL] = ticker
+        json[const.SYMBOL_KEY] = ticker
         return json
 
     def import_one(self, sym):
@@ -101,7 +99,7 @@ class Importer:
 
     def import_all_technical_indicators(self, tickers):
         for ticker in tickers:
-            json = stock_collection(self.db, False).find_one({const.SYMBOL: ticker})
+            json = stock_collection(self.db, False).find_one({const.SYMBOL_KEY: ticker})
             df = self.json_to_df(json)
             # https://journals.plos.org/plosone/article/figure?id=10.1371/journal.pone.0122385.t001
             self.import_technical_indicator(ticker, df, TI_SMA, const.SMA_5_COL, time_period=5)
@@ -160,7 +158,7 @@ class Importer:
             else:
                 df[col_name] = indicator_df[indicator]
             processed_json = self.df_to_json(df, ticker)
-            stock_collection(self.db, False).remove({const.SYMBOL: ticker})
+            stock_collection(self.db, False).remove({const.SYMBOL_KEY: ticker})
             stock_collection(self.db, False).insert(processed_json)
             self.increment_counters_sleep()
 
@@ -169,7 +167,7 @@ class Importer:
         stock_processed_collection = stock_collection(self.db, True)
 
         for stock in stock_collection_raw.find():
-            symbol = stock[const.SYMBOL]
+            symbol = stock[const.SYMBOL_KEY]
             if stock_collection(self.db, True).count({SYMBOL_KEY: symbol}) > 0:
                 print('Not processing ', symbol, ' - already processed')
             else:
@@ -220,7 +218,7 @@ class Importer:
         stock_processed_collection = stock_collection(self.db, True)
 
         for stock in stock_processed_collection.find():
-            symbol = stock[const.SYMBOL]
+            symbol = stock[const.SYMBOL_KEY]
             df = self.json_to_df(stock)
             file = path + '/' + symbol + '.csv'
             df.to_csv(file, encoding='utf-8')

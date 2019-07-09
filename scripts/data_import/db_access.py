@@ -31,13 +31,13 @@ def stock_collection(db_conn, processed=True):
 
 
 def find_by_tickers_to_dateframe_parse_to_df_list(db_conn, symbol_list, processed=True, min_date=MIN_DATE, max_date=MAX_DATE):
-    data = stock_collection(db_conn, processed).find({const.SYMBOL: {"$in": symbol_list}})
+    data = stock_collection(db_conn, processed).find({const.SYMBOL_KEY: {"$in": symbol_list}})
     df_list = []
     symbol_output_list = []
     for document in data:
-        symbol_output_list.append(document[const.SYMBOL])
+        symbol_output_list.append(document[const.SYMBOL_KEY])
         document.pop(const.ID, None)
-        document.pop(const.SYMBOL, None)
+        document.pop(const.SYMBOL_KEY, None)
         df = pd.DataFrame.from_dict(document, orient=const.INDEX)
         df = df.astype(float)
         df = df[(df.index > min_date)]
@@ -54,7 +54,7 @@ if __name__ == "__main__":
     data = raw_collection.find()
     symbol_list = []
     for document in data:
-        sym = document[const.SYMBOL]
+        sym = document[const.SYMBOL_KEY]
         symbol_list.append(sym)
 
     print(symbol_list)

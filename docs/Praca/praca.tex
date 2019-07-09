@@ -1724,12 +1724,36 @@ Guolin Ke, Qi Meng, Thomas Finley, Taifeng Wang,Wei Chen, Weidong Ma, Qiwei Ye, 
 
 \section{Dodatek: opis aplikacji}
 
-\subsection{Technologie}
 
-\subsection{Pobranie danych}
+Kod źródłowy dołączony do niniejszej pracy magisterskiej został napisany w języku \textit{Python 3.6}. Główne biblioteki użyte podczas realizacji projketu to:
+\begin{itemize}
+    \item \textit{numpy} - biblioteka do operacji na macierzach danych,
+    \item \textit{pandas} - biblioteka do analizy i przetwarzania danych,
+    \item \textit{scikit-learn} - klasyfikatory SVM oraz random forest, narzędzia służące do obróbki danych w kontekście uczenia maszynowego,
+    \item \textit{lightgbm} - implementacja algorytmu Ligh GBM,
+    \item \textit{tensorflow} - implementacja sieci neuronowych MLP,
+    \item \textit{keras} - nakładka API upraszczająca użycie biblioteki \textit{tensorflow},
+    \item \textit{matplotlib} - biblioteka do generowania wykresów.
+\end{itemize}
 
-\subsection{Wykonanie testów klasyfikacj}
+Całość programu jest przygotowana w formie aplikacji konsolowych, które na wyjściu podają komunikaty konsolowe oraz pliki wyjściowe w formacie \textit{csv}. Cała logika aplikacji można podzielić na 3 grupy odpowiadające trzem etapom tworzenia pracy.
 
-\subsection{Wykonanie testów klasyfikacj}
+\bigskip
+
+\textbf{Pobranie i wstępne przetworzenie danych}
+
+Głównym skryptem odpowiadającym za pobranie i przygotowanie danych jest skrypt z pliku \textit{api\_to\_db\_importer.py}.~Pobranie odstawowych danych giełdowych oraz danych analizy technicznej z API \textit{Alpha Vantage} \cite{alphavantage} odbywa się za pomocą skyptu \textit{alpha.py}. Po otrzynaniu danych z API dane są zapisywane do lokalnej instancji bazy danych MongoDB służącej do przechowania pobranych informacji giełdowych. Dzięki bazie danych wielokrotne uruchomienia skryptu pobierającego, komunikują się z zewnętrznym API tylko raz, zapamiętując pobrane informacje. Operacje na bazie danych wydzielone zostały do pliku \textit{db\_access.py}. Po pobraniu wszystkich potrzebnych danych skrypt tworzy nowe kolumny z informacjami na podstawie istniejących wskaźników (np. kolumna różnicy między dwoma wskaźnikami). Ostatecznie przetworzone dane o spółkach są zapisywane do bazy danych oraz do plików \textit{csv} dla wygodniejszego dostępu i przenoszenia danych. Zapis i odczyt z plików \textit{csv} odbywa się przez skrypt pomocniczy zawarty w pliku \textit{csv\_importer.py}
+
+\newpage
+
+\textbf{Testy klasyfikacji}
+
+Do testów klasyfikacji został stworzona bazowa klasa \textit{Benchmark} (plik \textit{benchmark.py}). Na wejściu przyjmuje ona listę symboli giełdowych spółek, dla których mają zostać wykonane testy oraz obiekt klasy \textit{BenchmarkParams} (plik \textit{benchmark\_params.py}) zawierający wszystkie parametry testu. Dla każdego z modeli klasyfikacyjnych powstała klasa implementująca odpowiednie metody dostosowujące klasę \textit{Benchmark} do potrzeb danego klasyfikatora. Ponadto dla każdego z modeli powstała klasa rozszerzająca klasę \textit{BenchmarkParams} o dodatkowe parametry dostępne dla danego klasyfikatora. Pliki nazwane według schematu \textit{*\_benchmark\_executions.py} zawierają przykładowe wywołania dla testów każdego z klasyfikatorów.  Przy zakończeniu testu klasyfikacji tworzony jest plik \textit{csv} zawierający informacje o dokładności, \textit{AUC} oraz czasie nauki dla każdej ze spółek.
+
+\bigskip
+
+\textbf{Symulacja giełdy}
+
+Kod symulacji giełdy został zaprojektowany w sposób analogiczny do kodu testów klasyfikacji. Bazowa klasa \textit{MarketSimulation} (plik \textit{market\_simulation.py}) zawierająca logikę symulacji giełdowej, została rozszerzona przez klasy dziedziczące o unikalne metody potrzebne do stworzenia każdego z klasyfikatorów. Klasa \textit{MarketSimulation} przyjmuje listę symboli giełdowych konkretnych spółek, oraz obiekt klasy \textit{BenchmarkParams} definiujący parametry modelu oraz uczenia. Dodatkowo konstruktor klasy symulacji przyjmuje opcjonalne parametry daty początku oraz końca symulacji, umożliwiając wykonanie symulacji na dowolnym zakresie czasowym. Plik \textit{market\_simulation\_executions.py} zawiera przykładowe wywołania dla symulacji giełdowych. Po wywołaniu zakończonym sukcesem symulacja tworzy plik \textit{csv} z informacją o otrzymanym zysku dla każdej ze spółek, dodatkowo tworzone są pliki \textit{csv} z historią transakcji dla każdej ze spółek.
 
 \end{document}
