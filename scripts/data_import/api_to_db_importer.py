@@ -8,6 +8,7 @@ import stock_constants as const
 from data_import import alpha
 from data_import.db_access import create_db_connection, stock_collection
 
+
 TI_BBANDS = 'BBANDS'
 TI_RSI = 'RSI'
 TI_STOCH = 'STOCH'
@@ -228,8 +229,8 @@ class Importer:
 
 if __name__ == "__main__":
     imp = Importer()
-    imp.import_all(['SIRI', 'MYL', 'SYMC', 'KHC', 'JD', 'AMD', 'FAST', 'AAL', 'MU', 'CTRP'])
-    imp.import_all_technical_indicators(['SIRI', 'MYL', 'SYMC', 'KHC', 'JD', 'AMD', 'FAST', 'AAL', 'MU', 'CTRP'])
+    imp.import_all(const.CHEAP_COMPANIES)
+    imp.import_all_technical_indicators(const.CHEAP_COMPANIES)
     imp.process_data()
     imp.export_to_csv_files('./../../target/data')
     # dflist, _ = csv_importer.import_data_from_files([SELECTED_SYM], './../../target/data')

@@ -1,4 +1,5 @@
 BASE_COMPANIES = ['GOOGL', 'MSFT', 'AAPL', 'CSCO', 'INTC', 'FB', 'PEP', 'QCOM', 'AMZN', 'AMGN']
+CHEAP_COMPANIES = ['SIRI', 'MYL', 'SYMC', 'KHC', 'JD', 'AMD', 'FAST', 'AAL', 'MU', 'CTRP']
 
 SYMBOL_KEY = 'symbol'
 ID = '_id'
