@@ -228,8 +228,8 @@ class Importer:
 
 if __name__ == "__main__":
     imp = Importer()
-    imp.import_all(['SIRI', 'MYL', 'SYMC', 'KHC', 'JD', 'AMD', 'FAST', 'AAL', 'MU', 'CTRP'])
-    imp.import_all_technical_indicators(['SIRI', 'MYL', 'SYMC', 'KHC', 'JD', 'AMD', 'FAST', 'AAL', 'MU', 'CTRP'])
+    imp.import_all(['GOOGL', 'INTC', 'MSFT'])
+    imp.import_all_technical_indicators(['GOOGL', 'INTC', 'MSFT'])
     imp.process_data()
     imp.export_to_csv_files('./../../target/data')
     # dflist, _ = csv_importer.import_data_from_files([SELECTED_SYM], './../../target/data')

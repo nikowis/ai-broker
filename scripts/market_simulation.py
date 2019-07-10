@@ -90,7 +90,7 @@ class MarketSimulation:
             test_df_len = len(test_df)
             test_size = test_df_len / len(df)
             self.bench_params.test_size = test_size
-            x, y, x_train, x_test, y_train, y_test = benchmark_data_preprocessing.preprocess(df, self.bench_params)
+            x, y, x_train, x_test, y_train, y_test, _, _ = benchmark_data_preprocessing.preprocess(df, self.bench_params)
 
             if self.bench_params.walk_forward_testing:
                 self.bench_params.input_size = x_train[0].shape[1]
@@ -394,8 +394,8 @@ if __name__ == '__main__':
     # NnMarketSimulation(['GOOGL'], bench_params, verbose=True)
     # bench_params = LightGBMBenchmarkParams(True, benchmark_name='lgbm-market-simulation')
     # LightGBMSimulation(['GOOGL'], bench_params)
-    # bench_params = SVMBenchmarkParams(False, benchmark_name='svm-market-simulation')
-    # SVMSimulation(['GOOGL'], bench_params)
+    bench_params = SVMBenchmarkParams(False, benchmark_name='svm-market-simulation')
+    SVMSimulation(['GOOGL'], bench_params, date_simulation_start='2019-03-31', date_simulation_end='2019-06-1')
     # bench_params = RandomForestBenchmarkParams(True, benchmark_name='rf-market-simulation')
     # RandomForestSimulation(['GOOGL'], bench_params)
     # bench_params = BenchmarkParams(True, benchmark_name='rand-market-simulation')
