@@ -64,7 +64,7 @@ class Benchmark:
             df = self.df_list[symbol_it]
             sym = self.sym_list[symbol_it]
             bench_params.curr_sym = sym
-            x, y, x_train, x_test, y_train, y_test = benchmark_data_preprocessing.preprocess(df,
+            x, y, x_train, x_test, y_train, y_test, _, _ = benchmark_data_preprocessing.preprocess(df,
                                                                                              bench_params)
 
             self.run_single_company(x_train, x_test, y_train, y_test)

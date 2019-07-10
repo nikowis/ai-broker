@@ -22,21 +22,9 @@ SELECTED_SYM = 'GOOGL'
 
 def preprocess(df, benchmark_params: BenchmarkParams):
     df_copy = df.copy()
-    if benchmark_params.difference_non_stationary:
-        df_copy[const.ADJUSTED_CLOSE_COL] = df_copy[const.ADJUSTED_CLOSE_COL].diff()
-        df_copy[const.OPEN_COL] = df_copy[const.OPEN_COL].diff()
-        df_copy[const.CLOSE_COL] = df_copy[const.CLOSE_COL].diff()
-        df_copy[const.HIGH_COL] = df_copy[const.HIGH_COL].diff()
-        df_copy[const.LOW_COL] = df_copy[const.LOW_COL].diff()
-        df_copy[const.SMA_5_COL] = df_copy[const.SMA_5_COL].diff()
-        df_copy[const.SMA_10_COL] = df_copy[const.SMA_10_COL].diff()
-        df_copy[const.SMA_20_COL] = df_copy[const.SMA_20_COL].diff()
-
+    df_without_corelated_features = manage_and_drop_helper_df_columns(df_copy, benchmark_params.difference_non_stationary)
+    df_without_corelated_features.dropna(inplace=True)
     df_copy.dropna(inplace=True)
-    df_without_helper_cols = df_copy.drop(HELPER_COLS, axis=1)
-
-    df_without_corelated_features = df_without_helper_cols.drop(CORRELATED_COLS, axis=1)
-
     if benchmark_params.binary_classification:
         y = np.array(df_copy[const.LABEL_BINARY_COL])
     else:
@@ -78,7 +66,7 @@ def preprocess(df, benchmark_params: BenchmarkParams):
             x_test = x[test_start_idx:test_end_idx + 1]
             y_test = encoded_y[test_start_idx:test_end_idx + 1]
 
-            x_train, x_test = standardize_and_pca(benchmark_params, x_train, x_test)
+            x_train, x_test, std_scaler, pca_transformer = standardize_and_pca(benchmark_params, x_train, x_test)
 
             x_trains_list.append(x_train)
             y_trains_list.append(y_train)
@@ -89,9 +77,15 @@ def preprocess(df, benchmark_params: BenchmarkParams):
         x_test = x_tests_list
         y_test = y_tests_list
     else:
-        x_train, x_test, y_train, y_test = model_selection.train_test_split(x, encoded_y,
+        if benchmark_params.test_size != 0:
+            x_train, x_test, y_train, y_test = model_selection.train_test_split(x, encoded_y,
                                                                             test_size=benchmark_params.test_size,
                                                                             shuffle=False)
+        else:
+            x_train = x
+            y_train = encoded_y
+            x_test = None
+            y_test = None
         if benchmark_params.max_train_window_size is not None and benchmark_params.max_train_window_size < \
                 x_train.shape[0]:
             row_count = x_train.shape[0]
@@ -101,21 +95,40 @@ def preprocess(df, benchmark_params: BenchmarkParams):
             else:
                 y_train = y_train[row_count - benchmark_params.max_train_window_size:, :]
 
-        x_train, x_test = standardize_and_pca(benchmark_params, x_train, x_test)
+        x_train, x_test, std_scaler, pca_transformer = standardize_and_pca(benchmark_params, x_train, x_test)
 
-    return x, y, x_train, x_test, y_train, y_test
+    return x, y, x_train, x_test, y_train, y_test, std_scaler, pca_transformer
+
+
+def manage_and_drop_helper_df_columns(df, difference_non_stationary=True):
+    if difference_non_stationary:
+        df[const.ADJUSTED_CLOSE_COL] = df[const.ADJUSTED_CLOSE_COL].diff()
+        df[const.OPEN_COL] = df[const.OPEN_COL].diff()
+        df[const.CLOSE_COL] = df[const.CLOSE_COL].diff()
+        df[const.HIGH_COL] = df[const.HIGH_COL].diff()
+        df[const.LOW_COL] = df[const.LOW_COL].diff()
+        df[const.SMA_5_COL] = df[const.SMA_5_COL].diff()
+        df[const.SMA_10_COL] = df[const.SMA_10_COL].diff()
+        df[const.SMA_20_COL] = df[const.SMA_20_COL].diff()
+    df_without_helper_cols = df.drop(HELPER_COLS, axis=1)
+    df_without_corelated_features = df_without_helper_cols.drop(CORRELATED_COLS, axis=1)
+    return df_without_corelated_features
 
 
 def standardize_and_pca(preprocessing_params, x_train, x_test):
+    std_scaler = None
+    pca_transformer = None
     if preprocessing_params.standardize:
-        scale = StandardScaler().fit(x_train)
-        x_train = scale.transform(x_train)
-        x_test = scale.transform(x_test)
+        std_scaler = StandardScaler().fit(x_train)
+        x_train = std_scaler.transform(x_train)
+        if x_test is not None:
+            x_test = std_scaler.transform(x_test)
     if preprocessing_params.pca is not None:
-        pca = PCA(preprocessing_params.pca).fit(x_train)
-        x_train = pca.transform(x_train)
-        x_test = pca.transform(x_test)
-    return x_train, x_test
+        pca_transformer = PCA(preprocessing_params.pca).fit(x_train)
+        x_train = pca_transformer.transform(x_train)
+        if x_test is not None:
+            x_test = pca_transformer.transform(x_test)
+    return x_train, x_test, std_scaler, pca_transformer
 
 
 if __name__ == '__main__':
