@@ -23,14 +23,13 @@ TI_ADX = 'ADX'  # absolute price oscillator
 TI_CCI = 'CCI'  # absolute price oscillator
 TI_AD = 'AD'  # absolute price oscillator
 
-SYMBOL_KEY = "symbol"
-
 API_MAX_PER_MINUTE_CALLS = 5
 API_MAX_DAILY = 400
 
 SELECTED_SYM = 'GOOGL'
 
-API_KEYS = ['yM2zzAs6_DxdeT86rtZY', 'TX1OLY36K73S9MS9', 'I7RUE3LA4PSXDJU6', '41KVI2PCCMZ09Y69', 'ULDORYWPDU2S2E6X']
+API_KEYS = ['GZRMKKHORLBU3I8R']
+# API_KEYS = ['W3IA0MGKNFNBHXTJ', 'TX1OLY36K73S9MS9', '41KVI2PCCMZ09Y69', 'I7RUE3LA4PSXDJU6', 'yM2zzAs6_DxdeT86rtZY',  'ULDORYWPDU2S2E6X']
 
 
 class Importer:
@@ -46,20 +45,26 @@ class Importer:
     def json_to_df(self, json):
         json.pop(const.ID, None)
         json.pop(const.SYMBOL_KEY, None)
+        json.pop(const.IMPORT_COMPLETED_KEY, None)
         df = pd.DataFrame.from_dict(json, orient=const.INDEX)
         df = df.astype(float)
         return df
 
-    def df_to_json(self, df, ticker):
+    def df_to_json(self, df, ticker, completed = False):
         json = df.to_dict(const.INDEX)
         json[const.SYMBOL_KEY] = ticker
+        json[const.IMPORT_COMPLETED_KEY] = completed
         return json
 
-    def import_one(self, sym):
-        if stock_collection(self.db, False).count({SYMBOL_KEY: sym}) > 0:
+    def import_one(self, sym, reimport = False):
+        if not reimport and stock_collection(self.db, False).count({const.SYMBOL_KEY: sym}) > 0:
             print('Found object with symbol ', sym)
         else:
-            print('Didnt find object with symbol ', sym)
+            if reimport:
+                print('Removing for reimport ', sym)
+                stock_collection(self.db, False).remove({const.SYMBOL_KEY: sym})
+            else:
+                print('Didnt find object with symbol ', sym)
             raw_json = self.api.data_raw(sym).json(object_pairs_hook=self.remove_dots)
             keys = list(raw_json.keys())
             if len(keys) < 2:
@@ -68,7 +73,9 @@ class Importer:
                 return
             time_series_key = keys[1]
             time_series = raw_json[time_series_key]
-            time_series[SYMBOL_KEY] = sym
+            time_series[const.SYMBOL_KEY] = sym
+            time_series[const.IMPORT_COMPLETED_KEY] = False
+
             stock_collection(self.db, False).insert(time_series)
             self.increment_counters_sleep()
 
@@ -94,9 +101,9 @@ class Importer:
             result[key] = value
         return result
 
-    def import_all(self, symbols):
+    def import_all(self, symbols, reimport = False):
         for sym in symbols:
-            self.import_one(sym)
+            self.import_one(sym, reimport)
 
     def import_all_technical_indicators(self, tickers):
         for ticker in tickers:
@@ -126,6 +133,10 @@ class Importer:
             self.import_technical_indicator(ticker, df, TI_AD, const.AD_COL)
             self.import_technical_indicator(ticker, df, TI_BBANDS, const.BBANDS_10_RLB_COL, time_period=10)
             self.import_technical_indicator(ticker, df, TI_BBANDS, const.BBANDS_20_RLB_COL, time_period=20)
+
+            processed_json = self.df_to_json(df, ticker, True)
+            stock_collection(self.db, False).remove({const.SYMBOL_KEY: ticker})
+            stock_collection(self.db, False).insert(processed_json)
 
     def import_technical_indicator(self, ticker, df, indicator, col_name, time_period=None):
         if col_name not in df.columns:
@@ -163,14 +174,17 @@ class Importer:
             stock_collection(self.db, False).insert(processed_json)
             self.increment_counters_sleep()
 
-    def process_data(self):
+    def process_data(self, reimport=False):
         stock_collection_raw = stock_collection(self.db, False)
         stock_processed_collection = stock_collection(self.db, True)
 
-        for stock in stock_collection_raw.find():
+        for stock in stock_collection_raw.find({const.IMPORT_COMPLETED_KEY: True}):
             symbol = stock[const.SYMBOL_KEY]
-            if stock_collection(self.db, True).count({SYMBOL_KEY: symbol}) > 0:
-                print('Not processing ', symbol, ' - already processed')
+            if stock_collection(self.db, True).count({const.SYMBOL_KEY: symbol}) > 0:
+                if reimport:
+                    stock_collection(self.db, True).remove({const.SYMBOL_KEY: symbol})
+                else:
+                    print('Not processing ', symbol, ' - already processed')
             else:
                 df = self.json_to_df(stock)
                 df[const.LABEL_COL] = df[const.ADJUSTED_CLOSE_COL].shift(-const.FORECAST_DAYS)
@@ -209,7 +223,7 @@ class Importer:
                 df[const.PRICE_BBANDS_UP_20_COL] = (df[const.ADJUSTED_CLOSE_COL] - df[const.BBANDS_20_RUB_COL]) / df[
                     const.BBANDS_20_RUB_COL]
 
-                processed_dict = self.df_to_json(df, symbol)
+                processed_dict = self.df_to_json(df, symbol, True)
                 stock_processed_collection.insert(processed_dict)
                 print('Processed ', symbol)
 

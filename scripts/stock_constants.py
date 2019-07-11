@@ -10,6 +10,7 @@ NASDAQ_100 = ["ATVI", "ADBE", "AMD", "ALXN", "ALGN", "GOOG", "GOOGL", "AMZN", "A
               "ULTA", "UAL", "VRSN", "VRSK", "VRTX", "WBA", "WDC", "WLTW", "WDAY", "WYNN", "XEL", "XLNX"]
 
 SYMBOL_KEY = 'symbol'
+IMPORT_COMPLETED_KEY = 'import_completed'
 ID = '_id'
 OPEN_COL = '1  open'
 HIGH_COL = '2  high'
