@@ -308,7 +308,7 @@ class LightGBMSimulation(MarketSimulation):
         test_data = lgb.Dataset(x_test, label=y_test)
         bst = lgb.train(params, train_data, valid_sets=[test_data, train_data],
                         num_boost_round=bench_params.num_boost_round
-                        , early_stopping_rounds=20, verbose_eval=20
+                        , early_stopping_rounds=20, verbose_eval=False
                         , feature_name=bench_params.feature_names)
         return bst
 
@@ -394,8 +394,13 @@ if __name__ == '__main__':
     # NnMarketSimulation(['GOOGL'], bench_params, verbose=True)
     # bench_params = LightGBMBenchmarkParams(True, benchmark_name='lgbm-market-simulation')
     # LightGBMSimulation(['GOOGL'], bench_params)
+    bench_params = NnBenchmarkParams(False, benchmark_name='nn-market-simulation-nowf')
+    bench_params.walk_forward_testing=False
+    NnMarketSimulation(['GOOGL', 'MSFT', 'SIRI', 'MYL', 'SYMC', 'KHC'], bench_params, date_simulation_start='2019-01-01', date_simulation_end='2019-07-01')
+    bench_params = LightGBMBenchmarkParams(False, benchmark_name='lgbm-market-simulation')
+    LightGBMSimulation(['GOOGL', 'MSFT', 'SIRI', 'MYL', 'SYMC', 'KHC'], bench_params, date_simulation_start='2019-01-01', date_simulation_end='2019-07-01')
     bench_params = SVMBenchmarkParams(False, benchmark_name='svm-market-simulation')
-    SVMSimulation(['GOOGL'], bench_params, date_simulation_start='2019-03-31', date_simulation_end='2019-06-1')
+    SVMSimulation(['GOOGL', 'MSFT', 'SIRI', 'MYL', 'SYMC', 'KHC'], bench_params, date_simulation_start='2019-01-01', date_simulation_end='2019-07-01')
     # bench_params = RandomForestBenchmarkParams(True, benchmark_name='rf-market-simulation')
     # RandomForestSimulation(['GOOGL'], bench_params)
     # bench_params = BenchmarkParams(True, benchmark_name='rand-market-simulation')

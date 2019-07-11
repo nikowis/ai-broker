@@ -56,7 +56,7 @@ class LightGBMBenchmark(Benchmark):
         train_data = lgb.Dataset(x_train, label=y_train)
         test_data = lgb.Dataset(x_test, label=y_test)
         bst = lgb.train(params, train_data, valid_sets=[test_data, train_data], num_boost_round=bench_params.num_boost_round
-                        , early_stopping_rounds=20, verbose_eval=20
+                        , early_stopping_rounds=20, verbose_eval=False
                         , feature_name=bench_params.feature_names)
                         #, evals_result=evaluating_history)
 

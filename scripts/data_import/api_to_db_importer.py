@@ -4,6 +4,7 @@ import time
 import numpy as np
 import pandas as pd
 
+import stock_constants
 import stock_constants as const
 from data_import import alpha
 from data_import.db_access import create_db_connection, stock_collection
@@ -228,8 +229,8 @@ class Importer:
 
 if __name__ == "__main__":
     imp = Importer()
-    imp.import_all(['GOOGL', 'INTC', 'MSFT'])
-    imp.import_all_technical_indicators(['GOOGL', 'INTC', 'MSFT'])
+    imp.import_all(stock_constants.CHEAP_COMPANIES)
+    imp.import_all_technical_indicators(stock_constants.CHEAP_COMPANIES)
     imp.process_data()
     imp.export_to_csv_files('./../../target/data')
     # dflist, _ = csv_importer.import_data_from_files([SELECTED_SYM], './../../target/data')
