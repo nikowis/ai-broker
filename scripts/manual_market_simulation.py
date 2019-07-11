@@ -28,7 +28,7 @@ FEE = 0.004
 class ManualMarketSimulation:
     def __init__(self, symbols, binary_classification, simulation_name, date_simulation_start='2019-01-01',
                  date_simulation_end='2099-01-01',
-                 budget=100000, verbose=True) -> None:
+                 budget=100000, verbose=False) -> None:
         self.bench_params = BenchmarkParams(binary_classification, benchmark_name=simulation_name)
         print('Begin manual simulation', self.bench_params.benchmark_name)
         benchmark_file_helper.initialize_dirs(self.bench_params)
@@ -98,7 +98,7 @@ class ManualMarketSimulation:
                     x_day = pca_transformer.transform(x_day)
 
                 svm_prediction, lgbm_prediction, nn_prediction = self.predict(x_day)
-                if self.bench_params.verbose:
+                if self.verbose:
                     print("Predicting {0} sample {1}. Prediction: {2} {3} {4}".format(self.bench_params.curr_sym,
                                                                                       day_date,
                                                                                       svm_prediction, lgbm_prediction,
@@ -109,8 +109,11 @@ class ManualMarketSimulation:
                                CSV_LGBM_PREDICTION_COL: lgbm_prediction}
                 self.results_df = self.results_df.append(result_dict, ignore_index=True)
             benchmark_file_helper.save_results(self.results_df, self.bench_params, self.bench_params.curr_sym)
-
-            self.analyze_results()
+            self.results_df.set_index('date', inplace=True)
+            self.results_df.index = pd.to_datetime(self.results_df.index)
+            self.analyze_results(CSV_SVM_PREDICTION_COL)
+            self.analyze_results(CSV_LGBM_PREDICTION_COL)
+            self.analyze_results(CSV_NN_PREDICTION_COL)
 
     def create_svm(self, x_train, y_train):
         svm_bench_params = SVMBenchmarkParams(self.bench_params.binary_classification)
@@ -170,16 +173,14 @@ class ManualMarketSimulation:
         value_nn = [np.argmax(pred, axis=None, out=None) for pred in self.nn.predict(x_day)][0]
         return value_svm, value_lgbm, value_nn
 
-    def analyze_results(self):
-        verbose = self.bench_params.verbose
+    def analyze_results(self, prediction_column):
         cur_money = BUDGET
         buy_and_hold_money = BUDGET
         cur_securities = 0
         buy_and_hold_securities = 0
 
         df = self.results_df
-        df.set_index('date', inplace=True)
-        df.index = pd.to_datetime(df.index)
+
         company = df.iloc[0][CSV_TICKER]
 
         today_action = 1
@@ -188,7 +189,7 @@ class ManualMarketSimulation:
 
             day_date = pd.to_datetime(df.index.values[day_ix])
             today = df.iloc[day_ix]
-            prediction = today[CSV_SVM_PREDICTION_COL]
+            prediction = today[prediction_column]
 
             today_buy_price = today[CSV_TODAY_OPEN_COL] * (1 + FEE)
             today_sell_price = today[CSV_TODAY_OPEN_COL] * (1 - FEE)
@@ -210,7 +211,7 @@ class ManualMarketSimulation:
                 prediction_str = 'buy'
             else:
                 prediction_str = 'hold'
-            if verbose:
+            if self.verbose:
                 print(
                     '{0} wallet {1} securities and {2} dollars action for tommorow {3}. Buy and hold worth {4}.'.format(
                         day_date.date(), cur_securities,
@@ -223,7 +224,7 @@ class ManualMarketSimulation:
         if cur_securities > 0:
             cur_money = cur_money + cur_securities * today_sell_price
 
-        print('{0}  finished  with {1}% of the budget. Buy and hold finished with {2}% of the budget.'.format(company,
+        print('Prediction col {0}. {1} finished with {2}% of the budget. Buy and hold finished with {3}% of the budget.'.format(prediction_column, company,
                                                                                                               round(
                                                                                                                   cur_money / BUDGET * 100,
                                                                                                                   2),
@@ -231,8 +232,7 @@ class ManualMarketSimulation:
                                                                                                                   buy_and_hold_money / BUDGET * 100,
                                                                                                                   2)))
 
-
 if __name__ == '__main__':
-    ManualMarketSimulation(['GOOGL', 'MSFT', 'SIRI', 'MYL', 'SYMC', 'KHC'], False, 'manual-multi-market-simulation',
+    ManualMarketSimulation(stock_constants.BASE_COMPANIES+stock_constants.CHEAP_COMPANIES, False, 'manual--market-simulation',
                            date_simulation_start='2019-01-01', date_simulation_end='2019-07-01')
     print('Finished all')

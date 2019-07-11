@@ -30,7 +30,7 @@ API_MAX_DAILY = 400
 
 SELECTED_SYM = 'GOOGL'
 
-API_KEYS = ['ULDORYWPDU2S2E6X', 'yM2zzAs6_DxdeT86rtZY', 'TX1OLY36K73S9MS9', 'I7RUE3LA4PSXDJU6', '41KVI2PCCMZ09Y69']
+API_KEYS = ['yM2zzAs6_DxdeT86rtZY', 'TX1OLY36K73S9MS9', 'I7RUE3LA4PSXDJU6', '41KVI2PCCMZ09Y69', 'ULDORYWPDU2S2E6X']
 
 
 class Importer:
@@ -229,8 +229,8 @@ class Importer:
 
 if __name__ == "__main__":
     imp = Importer()
-    imp.import_all(stock_constants.CHEAP_COMPANIES)
-    imp.import_all_technical_indicators(stock_constants.CHEAP_COMPANIES)
+    imp.import_all(stock_constants.NASDAQ_100)
+    imp.import_all_technical_indicators(stock_constants.NASDAQ_100)
     imp.process_data()
     imp.export_to_csv_files('./../../target/data')
     # dflist, _ = csv_importer.import_data_from_files([SELECTED_SYM], './../../target/data')

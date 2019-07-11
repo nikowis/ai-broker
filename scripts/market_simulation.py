@@ -27,10 +27,8 @@ CSV_DATE_COL = 'date'
 CSV_PRICE_COL = 'price'
 CSV_TRAIN_TIME_COL = 'train_time'
 
-from stock_constants import BASE_COMPANIES
-
-TRANSACTION_PERCENT_FEE = 0.002
-AVERAGE_SPREAD = 0.002
+TRANSACTION_PERCENT_FEE = 0.003
+AVERAGE_SPREAD = 0.003
 
 
 class MarketSimulation:
@@ -90,7 +88,8 @@ class MarketSimulation:
             test_df_len = len(test_df)
             test_size = test_df_len / len(df)
             self.bench_params.test_size = test_size
-            x, y, x_train, x_test, y_train, y_test, _, _ = benchmark_data_preprocessing.preprocess(df, self.bench_params)
+            x, y, x_train, x_test, y_train, y_test, _, _ = benchmark_data_preprocessing.preprocess(df,
+                                                                                                   self.bench_params)
 
             if self.bench_params.walk_forward_testing:
                 self.bench_params.input_size = x_train[0].shape[1]
@@ -390,21 +389,11 @@ class RandomSimulation(MarketSimulation):
 
 
 if __name__ == '__main__':
-    # bench_params = NnBenchmarkParams(True, benchmark_name='nn-market-simulation-nowf')
-    # NnMarketSimulation(['GOOGL'], bench_params, verbose=True)
-    # bench_params = LightGBMBenchmarkParams(True, benchmark_name='lgbm-market-simulation')
-    # LightGBMSimulation(['GOOGL'], bench_params)
-    bench_params = NnBenchmarkParams(False, benchmark_name='nn-market-simulation-nowf')
-    bench_params.walk_forward_testing=False
-    NnMarketSimulation(['GOOGL', 'MSFT', 'SIRI', 'MYL', 'SYMC', 'KHC'], bench_params, date_simulation_start='2019-01-01', date_simulation_end='2019-07-01')
-    bench_params = LightGBMBenchmarkParams(False, benchmark_name='lgbm-market-simulation')
-    LightGBMSimulation(['GOOGL', 'MSFT', 'SIRI', 'MYL', 'SYMC', 'KHC'], bench_params, date_simulation_start='2019-01-01', date_simulation_end='2019-07-01')
+    bench_params = NnBenchmarkParams(False, benchmark_name='nn-market-simulation')
+    bench_params.walk_forward_testing = True
+    NnMarketSimulation(['AAL', 'CTRP', 'INTC'], bench_params,
+                       date_simulation_start='2018-01-01', date_simulation_end='2019-07-01')
     bench_params = SVMBenchmarkParams(False, benchmark_name='svm-market-simulation')
-    SVMSimulation(['GOOGL', 'MSFT', 'SIRI', 'MYL', 'SYMC', 'KHC'], bench_params, date_simulation_start='2019-01-01', date_simulation_end='2019-07-01')
-    # bench_params = RandomForestBenchmarkParams(True, benchmark_name='rf-market-simulation')
-    # RandomForestSimulation(['GOOGL'], bench_params)
-    # bench_params = BenchmarkParams(True, benchmark_name='rand-market-simulation')
-    # RandomSimulation(BASE_COMPANIES, bench_params)
-    # bench_params = BenchmarkParams(False, benchmark_name='rand-market-simulation')
-    # RandomSimulation(BASE_COMPANIES, bench_params)
+    SVMSimulation(['AAL', 'CTRP', 'INTC'], bench_params,
+                  date_simulation_start='2018-01-01', date_simulation_end='2019-07-01')
     print('Finished all')
