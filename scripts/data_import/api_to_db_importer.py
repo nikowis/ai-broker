@@ -177,7 +177,7 @@ class Importer:
     def process_data(self, reimport=False):
         stock_collection_raw = stock_collection(self.db, False)
         stock_processed_collection = stock_collection(self.db, True)
-
+        process = True
         for stock in stock_collection_raw.find({const.IMPORT_COMPLETED_KEY: True}):
             symbol = stock[const.SYMBOL_KEY]
             if stock_collection(self.db, True).count({const.SYMBOL_KEY: symbol}) > 0:
@@ -185,7 +185,8 @@ class Importer:
                     stock_collection(self.db, True).remove({const.SYMBOL_KEY: symbol})
                 else:
                     print('Not processing ', symbol, ' - already processed')
-            else:
+                    process = False
+            if process:
                 df = self.json_to_df(stock)
                 df[const.LABEL_COL] = df[const.ADJUSTED_CLOSE_COL].shift(-const.FORECAST_DAYS)
                 df[const.DAILY_PCT_CHANGE_COL] = (df[const.LABEL_COL] - df[const.ADJUSTED_CLOSE_COL]) / df[
@@ -207,8 +208,8 @@ class Importer:
                 df[const.RSI_DIFF_COL] = df[const.RSI_10_COL] - df[const.RSI_5_COL]
                 df[const.ADX_DIFF_COL] = df[const.ADX_10_COL] - df[const.ADX_5_COL]
                 df[const.CCI_DIFF_COL] = df[const.CCI_10_COL] - df[const.CCI_5_COL]
-                df[const.STOCH_D_DIFF_COL] = df[const.STOCH_D_COL] - df[const.STOCH_D_COL].shift(-1)
-                df[const.STOCH_K_DIFF_COL] = df[const.STOCH_K_COL] - df[const.STOCH_K_COL].shift(-1)
+                df[const.STOCH_D_DIFF_COL] = df[const.STOCH_D_COL].diff()
+                df[const.STOCH_K_DIFF_COL] = df[const.STOCH_K_COL].diff()
                 df[const.DISPARITY_5_COL] = 100 * df[const.ADJUSTED_CLOSE_COL] / df[const.SMA_5_COL]
                 df[const.DISPARITY_10_COL] = 100 * df[const.ADJUSTED_CLOSE_COL] / df[const.SMA_10_COL]
                 df[const.DISPARITY_20_COL] = 100 * df[const.ADJUSTED_CLOSE_COL] / df[const.SMA_20_COL]

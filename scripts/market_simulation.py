@@ -27,8 +27,8 @@ CSV_DATE_COL = 'date'
 CSV_PRICE_COL = 'price'
 CSV_TRAIN_TIME_COL = 'train_time'
 
-TRANSACTION_PERCENT_FEE = 0.003
-AVERAGE_SPREAD = 0.003
+TRANSACTION_PERCENT_FEE = 0.002
+AVERAGE_SPREAD = 0.000
 
 
 class MarketSimulation:
@@ -389,11 +389,16 @@ class RandomSimulation(MarketSimulation):
 
 
 if __name__ == '__main__':
+    bench_params = NnBenchmarkParams(True, benchmark_name='nn-market-simulation-binary')
+    NnMarketSimulation(['GOOGL', 'MSFT', 'AAPL', 'CSCO', 'INTC'], bench_params,
+                       date_simulation_start='2019-01-01', date_simulation_end='2019-07-01')
+    bench_params = SVMBenchmarkParams(True, benchmark_name='svm-market-simulation-binary')
+    SVMSimulation(['GOOGL', 'MSFT', 'AAPL', 'CSCO', 'INTC'], bench_params,
+                  date_simulation_start='2019-01-01', date_simulation_end='2019-07-01')
     bench_params = NnBenchmarkParams(False, benchmark_name='nn-market-simulation')
-    bench_params.walk_forward_testing = True
-    NnMarketSimulation(['AAL', 'CTRP', 'INTC'], bench_params,
-                       date_simulation_start='2018-01-01', date_simulation_end='2019-07-01')
+    NnMarketSimulation(['GOOGL', 'MSFT', 'AAPL', 'CSCO', 'INTC'], bench_params,
+                       date_simulation_start='2019-01-01', date_simulation_end='2019-07-01')
     bench_params = SVMBenchmarkParams(False, benchmark_name='svm-market-simulation')
-    SVMSimulation(['AAL', 'CTRP', 'INTC'], bench_params,
-                  date_simulation_start='2018-01-01', date_simulation_end='2019-07-01')
+    SVMSimulation(['GOOGL', 'MSFT', 'AAPL', 'CSCO', 'INTC'], bench_params,
+                  date_simulation_start='2019-01-01', date_simulation_end='2019-07-01')
     print('Finished all')
