@@ -45,35 +45,26 @@ def svm_final(binary):
 if __name__ == '__main__':
     # svm_examine(True, 'kernel', [['linear', 'poly', 'rbf', 'sigmoid']])
     # svm_examine(False, 'kernel', [['linear', 'poly', 'rbf', 'sigmoid']])
-    # svm_examine(True, 'pca',
-    #             [[None, 0.9999, 0.999, 0.99, 0.98, 0.95]])
-    # svm_examine(False, 'pca',
-    #             [[None, 0.9999, 0.999, 0.99, 0.98, 0.95]])
+
+    # svm_examine(True, 'pca', [[None, 0.9999, 0.999, 0.99, 0.98, 0.97, 0.95, 0.90, 0.85, 0.8]])
+    # svm_examine(False, 'pca', [[None, 0.9999, 0.999, 0.99, 0.98, 0.97, 0.95, 0.90, 0.85, 0.8]])
     # svm_examine(True, 'c', [[100, 50, 25, 10, 5, 1, 0.5, 0.1, 0.01, 0.005]])
     # svm_examine(False, 'c', [[100, 50, 25, 10, 5, 1, 0.5, 0.1, 0.01, 0.005]])
-    # svm_examine(True, 'c,gamma,kernel',
-    #             [[25, 10, 5, 1, 0.5, 0.1, 0.01, 0.005], [10, 1, 0.5, 0.1, 0.01, 0.001],
-    #              ['rbf']])
-    # svm_examine(False, 'c,gamma,kernel',
-    #             [[25, 10, 5, 1, 0.5, 0.1, 0.01, 0.005], [10, 1, 0.5, 0.1, 0.01, 0.001],
-    #              ['rbf']])
+    # svm_examine(True, 'gamma', [[0.01, 0.005, 0.002, 0.001, 0.0005, 0.0002, 0.0001]])
+    # svm_examine(False, 'gamma', [[0.01, 0.005, 0.002, 0.001, 0.0005, 0.0002, 0.0001]])
+    # svm_examine(True, 'epsilon', [[10, 1, 0.5, 0.1, 0.01, 0.001]])
+    # svm_examine(False, 'epsilon', [[10, 1, 0.5, 0.1, 0.01, 0.001]])
     # svm_examine(True, 'walk_forward_test_window_size', [[360, 180, 90, 45, 22]],
     #             walk_forward_testing=True)
     # svm_examine(False, 'walk_forward_test_window_size', [[360, 180, 90, 45, 22]],
     #             walk_forward_testing=True)
-
-    # svm_examine(True, 'walk_forward_test_window_size,c', [[360, 180], [1]],
+    # svm_examine(True, 'max_train_window_size',
+    #             [[None, 2000, 1500, 1000, 500, 250, 100]],
     #             walk_forward_testing=True)
-    # svm_examine(False, 'walk_forward_test_window_size,c', [[360, 180], [1]],
-    #             walk_forward_testing=True)
-
-    # svm_examine(True, 'walk_forward_test_window_size,max_train_window_size',
-    #             [[90, 45], [2500, 2000, 1500, 1000]],
-    #             walk_forward_testing=True)
-    # svm_examine(False, 'walk_forward_test_window_size,max_train_window_size',
-    #             [[90, 45], [2500, 2000, 1500, 1000]],
+    # svm_examine(False, 'max_train_window_size',
+    #             [[None, 2000, 1500, 1000, 500, 250, 100]],
     #             walk_forward_testing=True)
     #
-    svm_final(True)
-    svm_final(False)
+    # svm_final(True)
+    # svm_final(False)
     print('Benchmark executions finished.')

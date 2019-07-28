@@ -23,8 +23,7 @@ SELECTED_SYM = 'GOOGL'
 def preprocess(df, benchmark_params: BenchmarkParams):
     df_copy = df.copy()
     df_without_corelated_features = manage_and_drop_helper_df_columns(df_copy, benchmark_params.difference_non_stationary)
-    df_without_corelated_features.dropna(inplace=True)
-    df_copy.dropna(inplace=True)
+
     if benchmark_params.binary_classification:
         y = np.array(df_copy[const.LABEL_BINARY_COL])
     else:
@@ -110,6 +109,7 @@ def manage_and_drop_helper_df_columns(df, difference_non_stationary=True):
         df[const.SMA_5_COL] = df[const.SMA_5_COL].diff()
         df[const.SMA_10_COL] = df[const.SMA_10_COL].diff()
         df[const.SMA_20_COL] = df[const.SMA_20_COL].diff()
+    df.dropna(inplace=True)
     df_without_helper_cols = df.drop(HELPER_COLS, axis=1)
     df_without_corelated_features = df_without_helper_cols.drop(CORRELATED_COLS, axis=1)
     return df_without_corelated_features

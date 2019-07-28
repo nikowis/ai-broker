@@ -102,8 +102,8 @@ class Benchmark:
             else:
                 roc_auc_value = roc_auc[stock_constants.MICRO_ROC_KEY]
 
-            if (bench_params.binary_classification and roc_auc_value < 0.5) or (
-                    (not bench_params.binary_classification) and roc_auc_value < 0.5):
+            if (bench_params.binary_classification and roc_auc_value < 0.1) or (
+                    (not bench_params.binary_classification) and roc_auc_value < 0.1):
                 if bench_params.verbose:
                     print('ID {0} iteration {1} encountered local minimum (auc {2}) retrying iteration...'.format(
                         bench_params.id, bench_params.curr_iter_num, round(roc_auc_value, 4)))

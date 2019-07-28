@@ -788,74 +788,102 @@ Kolejnym parametrem rozpatrywanym przy każdym modelu jest \textbf{rozmiar zbior
 
 \subsection{SVM}
 
-Początkowo do testów SVM wykorzystane zostały domyślne parametry z biblioteki \textit{sklearn} \cite{bib:sklearnsvm}. Analizę optymalizacji maszyn wektorów nośnych należy zacząć od wyboru odpowiedniej funkcji jądra. Tabele \ref{tab:svm_kernel_binary} oraz \ref{tab:svm_kernel_discrete} przedstawiają wyniki klasyfikacji w zależności od wybranej funkcji jądra. W obu przypadkach najlepsza okazała się funkcja liniowa osiągając $\sim 84\%$ dokładności dla klasyfikacji binarnej oraz $\sim 67\%$  dokładności w klasyfikacji na 3 klasy. Jak widać najgorsze wyniki w obu przypadakch osiąga funkcja wielomianowa (\textit{poly}).  W dalszych eksperymentach wykorzystywana była funkcja liniowa.
+Początkowo do testów SVM wykorzystane zostały domyślne parametry z biblioteki \textit{sklearn} \cite{bib:sklearnsvm}. Analizę optymalizacji maszyn wektorów nośnych należy zacząć od wyboru odpowiedniej funkcji jądra. Tabele \ref{tab:svm_kernel_binary} oraz \ref{tab:svm_kernel_discrete} przedstawiają wyniki klasyfikacji w zależności od wybranej funkcji jądra. W obu przypadkach klasyfikacji maszyny wektorów nośnych dają wyniki zbliżone do klasyfikacji metodą losową. W klasyfikacji binarnej najlepszy wynik uzyskała funkcja wielomianowa (ang. \textit{poly}). Jednak warto zauważyć iż dla tej funkcji metryka AUC jest bliska 0.5, podczas gdy SVM z funkcją rbf uzyskał AUC na poziomie 0.514.
 
 \begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|}
     \hline
         \textbf{Funkcja jądra} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
-linear  &  \textbf{0.848980} &  \textbf{0.849554} &    2.351031 \\ \hline
-poly    &  0.530612 &  0.634002 &    2.357999 \\ \hline
-rbf     &  0.805442 &  0.808863 &    \textbf{2.145996} \\ \hline
-sigmoid &  0.789116 &  0.792252 &    2.246001 \\ \hline
+linear  &  0.514132 &  0.500202 &    4.120035 \\ \hline
+poly    &  \textbf{0.530283} &  0.501429 &    2.902045 \\ \hline
+rbf     &  0.518170 &  \textbf{0.504402} &    3.482025 \\ \hline
+sigmoid &  0.515478 &  0.504246 &    3.676025 \\ \hline
     \end{tabular}
     \caption{SVM: wyniki klasyfikacji binarnej w zależności od wykorzystanej funkcji jądrowej}
     \label{tab:svm_kernel_binary}
 \end{table}
 
+ Na rysunku \ref{img:svm_kernel_histograms_poly} przedstawiony został histogram predykcji dla funkcji wielomianowej, zaś na rysunku \ref{img:svm_kernel_histograms_rbf} histogram predykcji dla funkcji rbf. SVM z funkcją wielomianową osiąga lepszy wynik dokładności ponieważ w większości przypadków zwraca tę samą klasę. Taka obserwacja powtarza się za każdym razem gdy wynik miary AUC jest równy lub bliski 0.5. Z tego względu pomimo gorszej dokładności, funkcja \textit{rbf} okazała się lepsza.
+
+
+\begin{figure}[H]%
+\centering
+\subfigure[Histogram predykcji dla jądra \textit{poly}]{%
+\includegraphics[scale=0.46]{img/svm_poly_hist.pdf}
+\label{img:svm_kernel_histograms_poly}}%
+\qquad
+\subfigure[Histogram predykcji dla jądra \textit{rbf}]{%
+\includegraphics[scale=0.46]{img/svm_rbf_hist.pdf}
+\label{img:svm_kernel_histograms_rbf}}%
+
+\caption{Wykresy przedstawiające histogram predykcji dla poszczególnych klas w zależności od jądra (opracowanie własne)}
+\label{img:svm_kernel_histograms}
+\end{figure}
+
+Dla klasyfikacji na 3 klasy najlepszy wynik dokładności daje \textit{liniowa} funkcja jądra, jednak lepsza względem miary AUC jest ponownie funkcja \textit{rbf}. W kolejnych testach dla obu klasyfikacji była wykorzystywana funkcja jądra \textit{rbf}.
+
 \begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|}
     \hline
         \textbf{Funkcja jądra} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
-linear  &  \textbf{0.673469} &  \textbf{0.848302} &    2.806034 \\ \hline
-poly    &  0.378231 &  0.594664 &    \textbf{2.571024} \\ \hline
-rbf     &  0.609524 &  0.838035 &    2.763033 \\ \hline
-sigmoid &  0.589116 &  0.811750 &    2.918002 \\ \hline
+linear  &  \textbf{0.383580} &  0.530851 &   10.743992 \\ \hline
+poly    &  0.379542 &  0.517911 &    3.436018 \\ \hline
+rbf     &  0.371467 &  \textbf{0.536517} &    4.302981 \\ \hline
+sigmoid &  0.363392 &  0.518139 &    4.008035 \\ \hline
     \end{tabular}
     \caption{SVM: wyniki klasyfikacji na 3 klasy w zależności od wykorzystanej funkcji jądrowej}
     \label{tab:svm_kernel_discrete}
 \end{table}
 
 
-Kolejnym testem jest porównanie wyników klasyfikacji w zależności od użycia metody PCA. Pomimo znikomej różnicy w wariancji danych znaczne ograniczanie rozmiaru wektora wejściowego nie okazało się korzystne pod względem uzyskanych wyników. W tabelach \ref{tab:svm_pca_binary} oraz \ref{tab:svm_pca_discrete} zostały przedstawione wyniki klasyfikacji w zależności od zachowanej wariancji przy użyciu metody PCA. Do klasyfikacji binarnej została wybrana wariancja $0.9999$, zaś do klasyfikacji 3 klasy nie została użyta metoda PCA.
-
+Kolejnym testem było porównanie wyników klasyfikacji w zależności od użycia metody PCA. W tabelach \ref{tab:svm_pca_binary} oraz \ref{tab:svm_pca_discrete} zostały przedstawione wyniki klasyfikacji w zależności od zachowanej wariancji danych przy użyciu metody PCA. Do klasyfikacji binarnej została wybrana wariancja $0.999$, zaś do klasyfikacji 3 klasy nie została użyta metoda PCA. W obu przypadkach różnice wynikające z użycia tej metody są marginalne.
 
 \begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|}
     \hline
         \textbf{PCA} & \textbf{Dokładność} &  \textbf{AUC} &  \textbf{Czas (s)} \\ \hline
-0.95               &  0.687075 &  0.683055 &    3.364004 \\ \hline
-0.98               &  0.741497 &  0.735061 &    2.588999 \\ \hline
-0.99               &  0.789116 &  0.792865 &    \textbf{2.532526} \\ \hline
-0.999             &  \textbf{0.850340} &  0.846990 &    2.603002 \\ \hline
-0.9999             &  0.848980 &  0.\textbf{0.849554} &    2.563003 \\ \hline
-Brak                &  0.844898 &  0.842308 &    2.942107 \\ \hline
+0.8                &  0.524899 &  0.497434 &    1.402048 \\ \hline
+0.85               &  0.527591 &  0.496481 &    1.552432 \\ \hline
+0.9                &  \textbf{0.534320} &  0.496668 &    1.660337 \\ \hline
+0.95               &  0.518170 &  0.500580 &    2.294639 \\ \hline
+0.97               &  0.519515 &  0.506320 &    2.853679 \\ \hline
+0.98               &  0.520861 &  0.502179 &    3.790034 \\ \hline
+0.99               &  0.514132 &  0.500845 &    2.595666 \\ \hline
+0.999 				&  0.518170 &  \textbf{0.508287} &    2.823455 \\ \hline
+0.9999             &  0.518170 &  0.499701 &    2.962357 \\ \hline
+Brak                &  0.518170 &  0.501021 &    3.428985 \\ \hline
     \end{tabular}
     \caption{SVM: wyniki klasyfikacji binarnej w zależności od wybranej wartości wariancji w metodzie PCA}
     \label{tab:svm_pca_binary}
 \end{table}
 
+Dla klasyfikacji wieloklasowej widoczny jest proporcjonalny spadek miary AUC przy zmniejszaniu użytej wariancji w metodzie PCA. Wynika to ze zmniejszania liczby danych wejściowych, co zmniejsza ilość informacji przekazywanych do modelu.
+
 \begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|}
     \hline
         \textbf{PCA} & \textbf{Dokładność} &  \textbf{AUC} &  \textbf{Czas (s)} \\ \hline
-0.95               &  0.510204 &  0.705873 &    3.740000 \\ \hline
-0.98               &  0.579592 &  0.788663 &    \textbf{3.095082} \\ \hline
-0.99               &  0.653061 &  0.832938 &    3.428001 \\ \hline
-0.999              &  0.673469 &  0.848779 &    3.283513 \\ \hline
-0.9999             &  0.673469 &  0.848351 &    3.398995 \\ \hline
-Brak               &  \textbf{0.681633} &  \textbf{0.851243} &    4.757034 \\ \hline
+0.8                &  0.379542 &  0.514385 &    1.982013 \\ \hline
+0.85               &  0.378197 &  0.524374 &    2.111366 \\ \hline
+0.9                &  0.382234 &  0.522026 &    2.248027 \\ \hline
+0.95               &  0.379542 &  0.526517 &    2.530379 \\ \hline
+0.97               &  \textbf{0.383580} &  0.531114 &    2.652357 \\ \hline
+0.98               &  0.379542 &  0.534494 &    2.765672 \\ \hline
+0.99               &  0.378197 &  0.535341 &    2.966672 \\ \hline
+0.999			   &  0.370121 &  0.535625 &    3.547385 \\ \hline
+0.9999             &  0.371467 &  0.536259 &    4.062329 \\ \hline
+Brak                &  0.371467 &  \textbf{0.537476} &    4.936680 \\ \hline
     \end{tabular}
     \caption{SVM: wyniki klasyfikacji na 3 klasy w zależności od wybranej wartości wariancji w metodzie PCA}
     \label{tab:svm_pca_discrete}
 \end{table}
 
 
-Następnym optymalizowanym parametrem był parametr kary \textit{C}. Wpływa on na wielkość marginesu separacji hiperpłaszczyzny od danych. Im większa wartość \textit{C} tym mniejszy margines. Domyślną wartością \textit{C} jest 1. Niestety manipulacja tym parametrem pozwoliła jedynie na poprawę dokładności rzędu $0.003$ dla obu przypadków klasyfikacji (tabela \ref{tab:svm_c_binary} oraz \ref{tab:svm_c_discrete}). Wraz ze zwiększaniem \textit{C} zauważalny jest znaczny wzrost czasu uczenia modelu. Najlepszą wartością \textit{C} dla klasyfikacji binarnej okazało się 10, zaś dla klasyfikacji na 3 klasy wybrana została wartość 25. 
+Następnym optymalizowanym parametrem był parametr kary \textit{C}. Wpływa on na wielkość marginesu separacji hiperpłaszczyzny od danych. Im większa wartość \textit{C} tym mniejszy margines. Domyślną wartością \textit{C} jest 1. Niestety manipulacja tym parametrem również nie pozwoliła na poprawę wyników (tabela \ref{tab:svm_c_binary} oraz \ref{tab:svm_c_discrete}). Najlepszą wartością \textit{C} dla klasyfikacji binarnej okazała się wartość domyślna 1, zaś dla klasyfikacji na 3 klasy wybrana została wartość 10. 
 
 
 \begin{table}[H]
@@ -863,16 +891,17 @@ Następnym optymalizowanym parametrem był parametr kary \textit{C}. Wpływa on 
     \begin{tabular}{|c|c|c|c|}
     \hline
         \textbf{C} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
-0.005 &  0.813605 &  0.811315 &    1.714988 \\ \hline
-0.01  &  0.827211 &  0.821739 &    1.886997 \\ \hline
-0.1   &  0.846259 &  0.846656 &    \textbf{1.653000} \\ \hline
-0.5   &  0.848980 &  0.849554 &    1.900010 \\ \hline
-1.0   &  0.848980 &  0.849554 &    2.626542 \\ \hline
-5.0   &  0.850340 &  \textbf{0.849889} &    6.406000 \\ \hline
-10.0  &  \textbf{0.851701} &  0.849721 &   10.317813 \\ \hline
-25.0  &  0.848980 &  0.846656 &   20.054430 \\ \hline
-50.0  &  0.85034 &  0.848439 &   44.470990 \\ \hline
-100.0  &  0.85034 &  0.845541 &   65.944478 \\ \hline
+0.005 &  0.528937 &  0.500000 &    2.808055 \\ \hline
+0.01  &  0.528937 &  0.500685 &    2.804866 \\ \hline
+0.1   &  \textbf{0.528937} &  0.500000 &    2.768114 \\ \hline
+0.5   &  0.520861 &  0.500000 &    2.731033 \\ \hline
+1.0   &  0.518170 &  \textbf{0.506115} &    2.789680 \\ \hline
+5.0   &  0.497981 &  0.499756 &    2.813997 \\ \hline
+10.0  &  0.493943 &  0.490091 &    2.746713 \\ \hline
+25.0  &  0.487214 &  0.489592 &    3.164728 \\ \hline
+50.0  &  0.492598 &  0.494963 &    3.536671 \\ \hline
+100.0 &  0.502019 &  0.501905 &    4.065111 \\ \hline
+
     \end{tabular}
     \caption{SVM: wyniki klasyfikacji binarnej w zależności wykorzystanego parametru C}
     \label{tab:svm_c_binary}
@@ -884,36 +913,36 @@ Następnym optymalizowanym parametrem był parametr kary \textit{C}. Wpływa on 
     \begin{tabular}{|c|c|c|c|}
     \hline
         \textbf{C} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
-0.005 &  0.598639 &  0.834132 &    2.763999 \\ \hline
-0.01  &  0.638095 &  0.849006 &    2.746000 \\ \hline
-0.1   &  0.676190 &  0.858078 &    \textbf{2.491998} \\ \hline
-0.5   &  0.677551 &  0.850738 &    2.952996 \\ \hline
-1.0   &  0.681633 &  0.851362 &    3.779023 \\ \hline
-5.0   &  0.681633 &  0.852015 &    9.155009 \\ \hline
-10.0  &  0.680272 &  0.853454 &   16.950008 \\ \hline
-25.0  &  \textbf{0.685714} &  \textbf{0.853973} &   33.401029 \\ \hline
-50.0  & 0.682993  &  0.853559 &  71.039315  \\ \hline
-100.0  &  0.685714 &  0.853622 &  124.964237 \\ \hline
+0.005 &  0.378197 &  0.530304 &    3.846018 \\ \hline
+0.01  &  0.378197 &  0.533718 &    3.948358 \\ \hline
+0.1   &  0.378197 &  0.531298 &    4.161030 \\ \hline
+0.5   &  0.380888 &  0.534350 &    4.173678 \\ \hline
+1.0   &  0.371467 &  0.536236 &    4.281026 \\ \hline
+5.0   &  0.352624 &  0.536422 &    4.293353 \\ \hline
+10.0  &  0.374159 &  \textbf{0.539444} &    4.433025 \\ \hline
+25.0  &  \textbf{0.380888} &  0.538117 &    5.024735 \\ \hline
+50.0  &  0.355316 &  0.536604 &    5.575662 \\ \hline
+100.0 &  0.351279 &  0.536096 &    6.036690 \\ \hline
     \end{tabular}
     \caption{SVM: wyniki klasyfikacji na 3 klasy w zależności wykorzystanego parametru C}
     \label{tab:svm_c_discrete}
 \end{table}
 
 
-Na koniec wykonane zostały testy dokładności w zależności od rozmiaru zbioru testowego w kontekście uczenia SVM metodą kroczącą. Z wyników w tabelach \ref{tab:svm_walk_forward_binary} oraz \ref{tab:svm_walk_forward_discrete} można zauważyć iż ta optymalizacja nie polepszyła znacznie wyników. Poprawa w przypadku użycia zbioru testowego o 360 próbkach wyniosła $\sim 1.5\%$ dla obu rodzajów klasyfikacji.
-
+Na koniec wykonane zostały testy dokładności w zależności od rozmiaru zbioru testowego w kontekście uczenia SVM metodą kroczącą. Z wyników w tabelach \ref{tab:svm_walk_forward_binary} oraz \ref{tab:svm_walk_forward_discrete} można zauważyć iż ta optymalizacja dała najlepszą poprawę wyników. W przypadku użycia zbioru testowego o 360 próbkach dokładność klasyfikacji wzrosła aż o 4\%, a dla klasyfikacji wieloklasowej 2.5\%. Biorąc pod uwagę również miarę AUC dla klasyfikacji binarnej został wybrany zbiór testowy o 45 prókach, zaś dla klasyfikacji na 3 klasy wybrana została liczba 90 próbek.
 
 \begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|}
     \hline
         \textbf{Rozmiar zbioru testowego} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
-max                        &  0.851701 &  \textbf{0.849721} &   \textbf{10.317813} \\ \hline
-360                         &  \textbf{0.865079} &  0.843043 &   38.907647 \\ \hline
-180                        &  0.860159 &  0.841592 &   68.341332 \\ \hline
-90                          &  0.852557 &  0.844671 &  115.171602 \\ \hline
-45                          &  0.844164 &  0.843217 &  230.034670 \\ \hline
-22                          &  0.841243 &  0.840482 &  430.545312 \\ \hline
+max                        &   0.518170 &  0.506115 &    2.789680 \\ \hline
+360.0                         &  \textbf{0.558112} &  0.505209 &    9.710351 \\ \hline
+180.0                         &  0.549219 &  0.502204 &   16.300354 \\ \hline
+90.0                          &  0.529118 &  0.502368 &   27.596030 \\ \hline
+45.0                          &  0.529412 &  \textbf{0.512139} &   51.312350 \\ \hline
+22.0                          &  0.520310 &  0.507897 &  104.139698 \\ \hline
+
     \end{tabular}
     \caption{SVM: wyniki klasyfikacji binarnej w zależności od rozmiaru zbioru testowego}
     \label{tab:svm_walk_forward_binary}
@@ -926,19 +955,17 @@ max                        &  0.851701 &  \textbf{0.849721} &   \textbf{10.31781
     \begin{tabular}{|c|c|c|c|}
     \hline
         \textbf{Rozmiar zbioru testowego} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
-max                        &  0.685714 &  0.853973 &   \textbf{33.401029} \\ \hline
-360.0                         &  \textbf{0.699206} &  0.866392 &   112.669902 \\ \hline
-180.0                         &  0.688413 &  0.862114 &   183.599683 \\ \hline
-90.0                          &  0.691711 &  0.865704 &   332.625968 \\ \hline
-45.0                          &  0.685154 &  0.866440 &   649.421637 \\ \hline
-22.0                          &  0.683155 &  \textbf{0.868147} &  1618.037420 \\ \hline
+max                       &  0.374159 &  0.539444 &    4.433025 \\ \hline
+360.0                         &  0.402264 &  0.535808 &   17.586026 \\ \hline
+180.0                         &  \textbf{0.402834} &  0.550035 &   26.971038 \\ \hline
+90.0                          &  0.385252 &  \textbf{0.550752} &   47.326667 \\ \hline
+45.0                          &  0.377238 &  0.547582 &   89.569035 \\ \hline
+22.0                          &  0.389424 &  0.546290 &  183.732708 \\ \hline
     \end{tabular}
     \caption{SVM: wyniki klasyfikacji na 3 klasy w zależności od rozmiaru zbioru testowego}
     \label{tab:svm_walk_forward_discrete}
 \end{table}
     
-W końcowych testach dla obu rodzajów klasyfikacji został użyty zbiór testowy o 360 próbkach.
-
 \subsection{Sieci neuronowe}
 
 Sieci neuronowe posiadają wiele parametrów, których zmiana może znacznie wpłynąć jakość klasyfikacji. Pierwszym analizowanym parametrem, jest parametr wariancji przy redukcji rozmiaru problemu metodą PCA. Wyniki testów klasyfikacji binarnej dla różnych progów wariancji, zostały przedstawione w tabeli \ref{tab:nn_pca_binary}.  Najlepszy wynik $\sim 85\%$ został uzyskany przy braku przetworzenia danych metodą PCA, jednak  wykorzystując PCA z wariancją 0.9999 lub 0.999 uzyskany został bardzo podobny wynik.

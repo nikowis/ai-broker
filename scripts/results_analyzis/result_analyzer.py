@@ -160,10 +160,8 @@ if __name__ == '__main__':
     # analyze_csv('results-svm-c-GOOGL-discrete.csv', 'c', True)
     # analyze_csv('results-svm-c-kernel-GOOGL-binary.csv', 'c', True)
     # analyze_csv('results-svm-c-kernel-GOOGL-discrete.csv', 'c', True)
-    # analyze_csv('results-svm-walk_forward_test_window_size-GOOGL-binary.csv', 'walk_forward_test_window_size', True)
-    # analyze_csv('results-svm-walk_forward_test_window_size-GOOGL-discrete.csv', 'walk_forward_test_window_size', True)
-    # analyze_csv('results-svm-walk_forward_test_window_size-GOOGL-binary.csv', 'walk_forward_test_window_size', True)
-    # analyze_csv('results-svm-walk_forward_test_window_size-GOOGL-discrete.csv', 'walk_forward_test_window_size', True)
+    analyze_csv('results-svm-walk_forward_test_window_size-GOOGL-binary.csv', 'walk_forward_test_window_size', True)
+    analyze_csv('results-svm-walk_forward_test_window_size-GOOGL-discrete.csv', 'walk_forward_test_window_size', True)
     # analyze_final('results-svm-final-binary.csv')
     # analyze_final('results-svm-final-discrete.csv')
     # analyze_csv('results-lgbm-pca-GOOGL-binary.csv', 'pca', True)
@@ -198,8 +196,7 @@ if __name__ == '__main__':
     # analyze_simulation_details("results-nn-market-simulation-discreteAMGN.csv", 'AMGN', '2019-01-01')
     # analyze_simulation_details("results-svm-market-simulation-discreteGOOGL.csv", 'GOOGL', '2019-01-01')
     # analyze_simulation_details("results-nn-market-simulation-binaryGOOGL.csv", 'GOOGL', '2019-01-01')
-    average_trades(['nn-market-simulation-binary', 'nn-market-simulation-discrete', 'lgbm-market-simulation-binary'
-                       , 'lgbm-market-simulation-discrete', 'rf-market-simulation-binary',
-                    'rf-market-simulation-discrete'
-                       , 'svm-market-simulation-binary', 'svm-market-simulation-discrete'])
+    # average_trades(['nn-market-simulation-binary', 'nn-market-simulation-discrete', 'lgbm-market-simulation-binary'
+    #                    , 'lgbm-market-simulation-discrete', 'rf-market-simulation-binary', 'rf-market-simulation-discrete'
+    #                    , 'svm-market-simulation-binary', 'svm-market-simulation-discrete'])
     print('Result analyzer finished.')

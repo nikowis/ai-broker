@@ -128,26 +128,31 @@ class NnBenchmarkParams(BenchmarkParams):
         if 'batch_size' in params_dict:
             self.batch_size = params_dict['batch_size']
 
+
 class SVMBenchmarkParams(BenchmarkParams):
 
     def __init__(self, binary_classification, examined_param=None, benchmark_name=str(uuid.uuid4())) -> None:
         super().__init__(binary_classification, examined_param, benchmark_name)
+
+        self.walk_forward_testing=True
+        # self.max_train_window_size = 1000
         if binary_classification:
-            self.pca = 0.9999
-            self.c = 10
+            self.pca = 0.999
+            self.c = 1
+            self.walk_forward_test_window_size = 360
         else:
             self.pca = None
-            self.c = 25
-        self.walk_forward_test_window_size = 360
-        self.walk_forward_testing = True
-        self.kernel = 'linear'
+            self.c = 10
+            self.walk_forward_test_window_size = 180
+
+        self.walk_forward_testing = False
+        self.kernel = 'rbf'
         self.degree = 3
         self.gamma = 0.005
         self.epsilon = 0.1
         self.one_hot_encode_labels = False
         self.save_model = False
-        self.iterations = 1
-
+        self.iterations = 3
 
     def update_from_dictionary(self, params_dict):
         super().update_from_dictionary(params_dict)
@@ -235,7 +240,7 @@ class RandomForestBenchmarkParams(BenchmarkParams):
         self.min_impurity_decrease = 0
         self.bootstrap = True
         self.oob_score = False
-        self.warm_start  = False
+        self.warm_start = False
         self.n_jobs = -1
         self.walk_forward_test_window_size = None
         self.walk_forward_testing = False

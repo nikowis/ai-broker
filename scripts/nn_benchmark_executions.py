@@ -52,21 +52,21 @@ def nn_final_discrete():
 
 
 if __name__ == '__main__':
-    # nn_examine(True, 'pca', [[None, 0.9999, 0.999, 0.99, 0.98, 0.97]])
-    nn_examine(False, 'pca', [[None, 0.9999, 0.999, 0.99, 0.98, 0.97]])
-    # nn_examine(True, 'regularizer', [[None, 0.005, 0.01, 0.02]])
-    # nn_examine(False, 'regularizer', [[None, 0.005, 0.01, 0.02]])
-    # nn_examine(True, 'layers', [[[], [2], [3], [4], [5], [6], [7], [8], [9], [10], [2, 2], [3, 3], [4, 4], [5, 5],
-    #                              [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]]])
+    nn_examine(True, 'pca', [[None, 0.99, 0.95, 0.90, 0.85, 0.8, 0.75, 0.7, 0.65, 0.6, 0.55, 0.5]])
+    nn_examine(False, 'pca', [[None, 0.99, 0.95, 0.90, 0.85, 0.8, 0.75, 0.7, 0.65, 0.6, 0.55, 0.5]])
+    nn_examine(True, 'regularizer', [[None, 0.005, 0.01, 0.02]])
+    nn_examine(False, 'regularizer', [[None, 0.005, 0.01, 0.02]])
+    nn_examine(True, 'layers', [[[], [2], [3], [4], [5], [6], [7], [8], [9], [10], [2, 2], [3, 3], [4, 4], [5, 5],
+                                 [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]]])
 
-    # nn_examine(True, 'batch_size', [[1, 5, 10, 20, 40]])
-    # nn_examine(False, 'batch_size', [[1, 5, 10, 20, 40]])
-    # nn_examine(False, 'max_train_window_size', [[None, 2400, 2000, 1500, 1000]])
-    # nn_examine(True, 'max_train_window_size', [[None, 2400, 2000, 1500, 1000]])
-    # nn_examine(True, 'walk_forward_test_window_size', [[360, 180, 90, 45, 22]],
-    #            walk_forward_testing=True)
-    # nn_examine(False, 'walk_forward_test_window_size', [[360, 180, 90, 45, 22]],
-    #            walk_forward_testing=True)
+    nn_examine(True, 'batch_size', [[1, 5, 10, 20, 40]])
+    nn_examine(False, 'batch_size', [[1, 5, 10, 20, 40]])
+    nn_examine(False, 'max_train_window_size', [[None, 2400, 2000, 1500, 1000]])
+    nn_examine(True, 'max_train_window_size', [[None, 2400, 2000, 1500, 1000]])
+    nn_examine(True, 'walk_forward_test_window_size', [[360, 180, 90, 45, 22]],
+               walk_forward_testing=True)
+    nn_examine(False, 'walk_forward_test_window_size', [[360, 180, 90, 45, 22]],
+               walk_forward_testing=True)
     # nn_final_binary()
     # nn_final_discrete()
     print('Benchmark executions finished.')

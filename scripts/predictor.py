@@ -39,7 +39,6 @@ if __name__ == '__main__':
     df_list, sym_list = csv_importer.import_data_from_files(SYMBOLS, CSV_FILES_PATH)
 
     for symbol_it in range(0, len(SYMBOLS)):
-        break;
         df = df_list[symbol_it]
         sym = sym_list[symbol_it]
         bench_params.curr_sym = sym
