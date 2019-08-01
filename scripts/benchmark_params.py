@@ -83,19 +83,23 @@ class NnBenchmarkParams(BenchmarkParams):
 
         if binary_classification:
             self.output_neurons = 1
-            self.layers = []
+            self.layers = [10]
+            self.pca=None
             self.output_activation = 'sigmoid'
             self.loss = 'binary_crossentropy'
             self.metric = 'binary_accuracy'
+            self.regularizer = 0.005
         else:
             self.output_neurons = 3
-            self.layers = [10]
+            self.pca = None
+            self.layers = [9]
             self.output_activation = 'softmax'
             self.loss = 'categorical_crossentropy'
             self.metric = 'categorical_accuracy'
-        self.walk_forward_test_window_size = 22
+            self.regularizer = 0.01
 
-        self.regularizer = 0.0025
+        self.walk_forward_test_window_size = 5
+
         self.activation = 'relu'
         self.optimizer = 'adam'
         self.use_bias = True
