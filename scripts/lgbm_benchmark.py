@@ -41,7 +41,7 @@ class LightGBMBenchmark(Benchmark):
             "max_depth": bench_params.max_depth,
             "learning_rate": bench_params.learning_rate,
             "boosting": bench_params.boosting,
-            "num_threads": 3,
+            "num_threads": 4,
             "max_bin": bench_params.max_bin,
             # "bagging_fraction" : bench_params.bagging_fraction,
             # "bagging_freq" : bench_params.bagging_freq,

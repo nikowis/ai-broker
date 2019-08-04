@@ -1433,16 +1433,16 @@ Końcowe wyniki \textbf{klasyfikacji binarnej} dla każdego z klasyfikatorów zo
     \begin{tabular}{|c|c|c|c|c|}
     \hline
         \textbf{Spółka} & \textbf{SVM} &  \textbf{MLP}  &  \textbf{Random forest}  &  \textbf{Light GBM} \\ \hline
-AAPL   &  0.807656 & \textbf{0.823688}  & 0.740741 & 0.811402\\ \hline
-AMGN   &  0.799253 &  \textbf{0.826799} &0.772487 &  0.819947 \\ \hline
-AMZN   &  0.773109 & 0.811963 & 0.634609 & \textbf{0.820503} \\ \hline
-CSCO   &  0.815126 &  \textbf{0.819011} & 0.814815 &  0.811429 \\ \hline
-FB     &  0.825215 & \textbf{0.836207} & 0.714422 & 0.801724 \\ \hline
-GOOGL  &  0.851701 &  \textbf{0.885767} & 0.787302 & 0.859524 \\ \hline
-INTC   &  0.829132 & \textbf{0.837402}  & 0.791783 & 0.829101 \\ \hline
-MSFT   &  0.800187 &   \textbf{0.826206} & 0.767818 &  0.798307\\ \hline
-PEP    &  0.827586 & \textbf{0.843401}  & 0.765455 & 0.830135 \\ \hline
-QCOM   &  0.835668 &  \textbf{0.836926} & 0.808901 & 0.815132 \\ \hline \hline
+AAPL   &  0.807656 & \textbf{0.694728}  & 0.740741 & 0.811402\\ \hline
+AMGN   &  0.799253 &  \textbf{0.712868} &0.772487 &  0.819947 \\ \hline
+AMZN   &  0.773109 & 0.712868 & 0.634609 & \textbf{0.820503} \\ \hline
+CSCO   &  0.815126 &  \textbf{0.705782} & 0.814815 &  0.811429 \\ \hline
+FB     &  0.825215 & \textbf{0.697206} & 0.714422 & 0.801724 \\ \hline
+GOOGL  &  0.851701 &  \textbf{0.741422} & 0.787302 & 0.859524 \\ \hline
+INTC   &  0.829132 & \textbf{0.689059}  & 0.791783 & 0.829101 \\ \hline
+MSFT   &  0.800187 &   \textbf{0.738379} & 0.767818 &  0.798307\\ \hline
+PEP    &  0.827586 & \textbf{0.722222}  & 0.765455 & 0.830135 \\ \hline
+QCOM   &  0.835668 &  \textbf{0.706916} & 0.808901 & 0.815132 \\ \hline \hline
 \textbf{Średnia dokładność} &  0.816463 & \textbf{0.834737} & 0.759833 & 0.81972 \\  \hline  
 \textbf{Średnia AUC} &  0.815958 & \textbf{0.904259} & 0.761041 & 0.901649 \\  \hline
     \end{tabular}
@@ -1474,21 +1474,22 @@ Dla \textbf{klasyfikacji na 3 klasy} zostały wykonane analogiczne testy dla 10 
 \item Light GBM: $\sim 66.4\%$ dokładności oraz $\sim 0.83$ AUC.
 \end{itemize}  
 
+
  \begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|c|}
     \hline
         \textbf{Spółka} & \textbf{SVM} &  \textbf{MLP}  &  \textbf{Random forest}  &  \textbf{Light GBM} \\ \hline
-AAPL   &  0.667600 & \textbf{0.779353}  & 0.607221 & 0.650688 \\ \hline
-AMGN   &  0.687208 &  \textbf{0.793533} & 0.610644 &  0.649841 \\ \hline
-AMZN   &  0.616246 & \textbf{0.758636} & 0.510115  & 0.660079 \\ \hline
-CSCO   &  0.676004 &  \textbf{0.776217} & 0.619359 &  0.632989 \\ \hline
-FB     &  0.624642 & \textbf{0.740004} & 0.543457 & 0.678161 \\ \hline
-GOOGL  &  0.685714 &  \textbf{0.789327} & 0.589116 & 0.729233 \\ \hline
-INTC   &  0.719888 & \textbf{0.812174}  & 0.641768 & 0.668836 \\ \hline
-MSFT   &  0.680672 &   \textbf{0.785449} & 0.604108 &  0.636958 \\ \hline
-PEP    &  0.683131 & \textbf{0.807127}  & 0.610127 & 0.670854 \\ \hline
-QCOM   &  0.683473 &  \textbf{0.777542} & 0.641457 & 0.661878 \\ \hline \hline
+AAPL   &  0.667600 & \textbf{0.584751}  & 0.607221 & 0.650688 \\ \hline
+AMGN   &  0.687208 &  \textbf{0.549268} & 0.610644 &  0.649841 \\ \hline
+AMZN   &  0.616246 & \textbf{0.568027} & 0.510115  & 0.660079 \\ \hline
+CSCO   &  0.676004 &  \textbf{0.569161} & 0.619359 &  0.632989 \\ \hline
+FB     &  0.624642 & \textbf{0.542850} & 0.543457 & 0.678161 \\ \hline
+GOOGL  &  0.685714 &  \textbf{0.564951} & 0.589116 & 0.729233 \\ \hline
+INTC   &  0.719888 & \textbf{0.581633}  & 0.641768 & 0.668836 \\ \hline
+MSFT   &  0.680672 &   \textbf{0.594671} & 0.604108 &  0.636958 \\ \hline
+PEP    &  0.683131 & \textbf{0.558107}  & 0.610127 & 0.670854 \\ \hline
+QCOM   &  0.683473 &  \textbf{0.558107} & 0.641457 & 0.661878 \\ \hline \hline
 \textbf{Średnia dokładność} &  0.672458 & \textbf{0.781936} & 0.597737 & 0.663952 \\  \hline  
 \textbf{Średnia AUC} &  0.843943 & \textbf{0.874600} & 0.783574 & 0.830858 \\  \hline
     \end{tabular}

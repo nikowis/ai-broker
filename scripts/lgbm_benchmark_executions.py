@@ -36,9 +36,9 @@ def lgbm_final(binary):
     else:
         benchmark_name = benchmark_name + 'discrete'
     bench_params = benchmark_params.LightGBMBenchmarkParams(binary, benchmark_name=benchmark_name)
-    bench_params.plot_partial = False
-    benchmark_params.verbose = True
-    bench_params.walk_forward_testing = False
+    bench_params.plot_partial = True
+    benchmark_params.verbose = False
+    bench_params.walk_forward_testing = True
     LightGBMBenchmark(BASE_COMPANIES, bench_params)
 
 
@@ -49,7 +49,7 @@ if __name__ == '__main__':
     # lgbm_examine(True, 'pca', [[None, 0.9999, 0.999, 0.99, 0.98]], walk_forward_testing=True)
     # lgbm_examine(False, 'pca', [[None, 0.9999, 0.999, 0.99, 0.98]], walk_forward_testing=True)
     # lgbm_examine(True, 'feature_fraction', [[1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1]], walk_forward_testing=True)
-    lgbm_examine(False, 'feature_fraction',[[1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1]], walk_forward_testing=True)
+    # lgbm_examine(False, 'feature_fraction',[[1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1]], walk_forward_testing=True)
     # lgbm_examine(True, 'boosting', [['dart', 'gbdt', 'gbrt','goss']], walk_forward_testing=True)
     # lgbm_examine(False, 'boosting', [['dart', 'gbdt', 'gbrt','goss']], walk_forward_testing=True)
     # lgbm_examine(True, 'max_depth', [[-1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15]], walk_forward_testing=True)
@@ -73,12 +73,12 @@ if __name__ == '__main__':
     #             walk_forward_testing=True)
     # lgbm_examine(False, 'walk_forward_test_window_size', [[360, 180, 90, 45, 22, 11]],
     #             walk_forward_testing=True)
+    #
+    # lgbm_examine(True, 'walk_forward_test_window_size', [[5, 2, 1]],
+    #             walk_forward_testing=True)
+    # lgbm_examine(False, 'walk_forward_test_window_size', [[5, 2, 1]],
+    #             walk_forward_testing=True)
 
-    lgbm_examine(True, 'walk_forward_test_window_size', [[5, 2, 1]],
-                walk_forward_testing=True)
-    lgbm_examine(False, 'walk_forward_test_window_size', [[5, 2, 1]],
-                walk_forward_testing=True)
-
-    # lgbm_final(True)
-    # lgbm_final(False)
+    lgbm_final(True)
+    lgbm_final(False)
     print('Benchmark executions finished.')
