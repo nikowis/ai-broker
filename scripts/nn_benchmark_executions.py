@@ -32,14 +32,14 @@ def nn_examine(binary_classification, examined_params, param_lists, companies=['
 
 
 def nn_final_binary():
-    for i in range(1, len(BASE_COMPANIES)):
+    for i in range(8, len(BASE_COMPANIES)):
         sym = BASE_COMPANIES[i]
-        benchmark_name = 'nn-final-discrete-' + str(i)
+        benchmark_name = 'nn-final-binary-' + str(i)
         bench_params = benchmark_params.NnBenchmarkParams(True, benchmark_name=benchmark_name)
         bench_params.plot_partial = False
         benchmark_params.verbose = True
         bench_params.walk_forward_testing = True
-        bench_params.iterations = 2
+        bench_params.iterations = 1
         NnBenchmark([sym], bench_params)
 
 
@@ -51,13 +51,13 @@ def nn_final_discrete():
         bench_params.plot_partial = False
         benchmark_params.verbose = True
         bench_params.walk_forward_testing = True
-        bench_params.iterations = 2
+        bench_params.iterations = 1
         NnBenchmark([sym], bench_params)
 
 
 if __name__ == '__main__':
-    # nn_examine(True, 'pca', [[None, 0.9999, 0.999, 0.99]],walk_forward_testing=True)#, 0.98, 0.97, 0.95, 0.90, 0.85, 0.8]])
-    # nn_examine(False, 'pca', [[None, 0.9999, 0.999, 0.99]],walk_forward_testing=True)#, 0.98, 0.97, 0.95, 0.90, 0.85, 0.8]])
+    # nn_examine(True, 'pca', [[None, 0.9999, 0.999, 0.99, 0.98, 0.97, 0.95, 0.90, 0.85, 0.8]])
+    # nn_examine(False, 'pca', [[None, 0.9999, 0.999, 0.99, 0.98, 0.97, 0.95, 0.90, 0.85, 0.8]])
     # nn_examine(True, 'regularizer', [[None, 0.1, 0.05, 0.01, 0.02, 0.005, 0.0025, 0.001]])
     # nn_examine(False, 'regularizer', [[None, 0.1, 0.05, 0.01, 0.02, 0.005, 0.0025, 0.001]])
     # nn_examine(True, 'layers', [[[], [2], [3], [4], [5], [6], [7], [8], [9], [10], [2, 2], [3, 3], [4, 4], [5, 5],
@@ -78,6 +78,6 @@ if __name__ == '__main__':
     #            walk_forward_testing=True)
     # nn_examine(True, 'max_train_window_size', [[None, 2400, 2000, 1500, 1000, 500]], walk_forward_testing=True)
     # nn_examine(False, 'max_train_window_size', [[None, 2400, 2000, 1500, 1000, 500]], walk_forward_testing=True)
-    nn_final_binary()
-    # nn_final_discrete()
+    # nn_final_binary()
+    nn_final_discrete()
     print('Benchmark executions finished.')

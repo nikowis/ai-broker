@@ -1,6 +1,7 @@
 from itertools import cycle
 
 import matplotlib.pyplot as plt
+import matplotlib
 import numpy as np
 import pandas as pd
 from keras.utils import to_categorical
@@ -45,6 +46,8 @@ BINARY_ROC_LABEL = 'Krzywa ROC (obszar {0:0.2f})'
 
 
 def plot_result(y_test, y_test_prediction, bench_params: BenchmarkParams, history, fpr, tpr, roc_auc, main_title):
+    matplotlib.interactive(False)
+
     if bench_params.classes_count == 2:
         class_labels = [FALL_LABEL, RISE_LABEL]
         xticks = [0, 1]

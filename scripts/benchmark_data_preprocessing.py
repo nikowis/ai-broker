@@ -62,8 +62,8 @@ def preprocess(df, benchmark_params: BenchmarkParams):
 
             x_train = x[train_start_idx:train_end_idx]
             y_train = encoded_y[train_start_idx:train_end_idx]
-            x_test = x[test_start_idx:test_end_idx + 1]
-            y_test = encoded_y[test_start_idx:test_end_idx + 1]
+            x_test = x[test_start_idx:test_end_idx]
+            y_test = encoded_y[test_start_idx:test_end_idx]
 
             x_train, x_test, std_scaler, pca_transformer = standardize_and_pca(benchmark_params, x_train, x_test)
 

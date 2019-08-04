@@ -2,6 +2,7 @@ import benchmark_params
 from rf_benchmark import RandomForestBenchmark
 from stock_constants import BASE_COMPANIES
 
+
 def rf_examine(binary_classification, examined_params, param_lists, companies=['GOOGL'], walk_forward_testing=False):
     split_params = examined_params.split(',')
     if len(split_params) != len(param_lists):
@@ -42,36 +43,36 @@ def rf_final(binary):
 
 
 if __name__ == '__main__':
-    #
+
     # rf_examine(True, 'pca',
-    #             [[None, 0.9999, 0.999, 0.99, 0.98, 0.95]])
+    #            [[None, 0.9999, 0.999, 0.99, 0.98, 0.97, 0.95, 0.90, 0.85, 0.8]])
     # rf_examine(False, 'pca',
-    #             [[None, 0.9999, 0.999, 0.99, 0.98, 0.95]])
+    #            [[None, 0.9999, 0.999, 0.99, 0.98, 0.97, 0.95, 0.90, 0.85, 0.8]])
 
     # rf_examine(True, 'n_estimators',
-    #            [[100, 200, 300, 500, 1000, 1500, 2000, 2500, 3000]])
+    #            [[25, 50, 100, 200, 300, 500, 1000, 1500, 2000]], walk_forward_testing=True)
     # rf_examine(False, 'n_estimators',
-    #            [[100, 200, 300, 500, 1000, 1500, 2000]])
+    #            [[25, 50, 100, 200, 300, 500, 1000, 1500, 2000]], walk_forward_testing=True)
 
     # rf_examine(True, 'max_depth',
-    #            [[5, 10, 20, 30, 40, 50, None]])
+    #            [[5, 10, 20, 30, 40, 50, None]], walk_forward_testing=True)
     # rf_examine(False, 'max_depth',
-    #            [[5, 10, 20, 30, 40, 50, None]])
+    #            [[5, 10, 20, 30, 40, 50, None]], walk_forward_testing=True)
 
     # rf_examine(True, 'min_samples_leaf',
-    #            [[1, 2, 4, 6, 8]])
+    #            [[1, 2, 4, 6, 8]], walk_forward_testing=True)
     # rf_examine(False, 'min_samples_leaf',
-    #            [[1, 2, 4, 6, 8]])
+    #            [[1, 2, 4, 6, 8]], walk_forward_testing=True)
     #
     # rf_examine(True, 'min_samples_split',
-    #            [[2, 5, 10, 15, 20]])
+    #            [[2, 5, 10, 15, 20]], walk_forward_testing=True)
     # rf_examine(False, 'min_samples_split',
-    #            [[2, 5, 10, 15, 20]])
+    #            [[2, 5, 10, 15, 20]], walk_forward_testing=True)
 
     # rf_examine(True, 'max_features',
-    #            [['auto', 'sqrt', 'log2',None]])
+    #            [['auto', 'sqrt', 'log2',None]], walk_forward_testing=True)
     # rf_examine(False, 'max_features',
-    #            [['auto', 'sqrt', 'log2',None]])
+    #            [['auto', 'sqrt', 'log2',None]], walk_forward_testing=True)
     # rf_examine(True, 'bootstrap',
     #            [[False, True]])
     # rf_examine(False, 'bootstrap',
@@ -87,6 +88,6 @@ if __name__ == '__main__':
     #             walk_forward_testing=True)
 
     # rf_final(True)
-    rf_final(False)
+    # rf_final(False)
 
     print('Benchmark executions finished.')

@@ -168,10 +168,17 @@ if __name__ == '__main__':
     # analyze_csv('results-lgbm-pca-GOOGL-discrete.csv', 'pca', True)
     # analyze_csv('results-lgbm-feature_fraction-GOOGL-discrete.csv', 'feature_fraction', True)
     # analyze_csv('results-lgbm-feature_fraction-GOOGL-binary.csv', 'feature_fraction', True)
-    # analyze_csv('results-lgbm-boosting-GOOGL-binary.csv', 'boosting', True)
-    # analyze_csv('results-lgbm-boosting-GOOGL-discrete.csv', 'boosting', True)
-    # analyze_csv('results-lgbm-walk_forward_test_window_size-GOOGL-binary.csv', 'walk_forward_test_window_size', True)
-    # analyze_csv('results-lgbm-walk_forward_test_window_size-GOOGL-discrete.csv', 'walk_forward_test_window_size', True)
+
+        # analyze_csv('results-lgbm-boosting-GOOGL-binary.csv', 'boosting', True)
+        # analyze_csv('results-lgbm-boosting-GOOGL-discrete.csv', 'boosting', True)
+        #
+        # analyze_csv('results-lgbm-num_leaves-GOOGL-discrete.csv', 'num_leaves', True)
+        # analyze_csv('results-lgbm-num_leaves-GOOGL-binary.csv', 'num_leaves', True)
+
+    # analyze_csv('results-lgbm-max_bin-GOOGL-discrete.csv', 'max_bin', True)
+    # analyze_csv('results-lgbm-max_bin-GOOGL-binary.csv', 'max_bin', True)
+    analyze_csv('results-lgbm-walk_forward_test_window_size-GOOGL-binary.csv', 'walk_forward_test_window_size', True)
+    analyze_csv('results-lgbm-walk_forward_test_window_size-GOOGL-discrete.csv', 'walk_forward_test_window_size', True)
     # analyze_final("results-lgbm-final-binary.csv")
     # analyze_final("results-lgbm-final-discrete.csv")
     # analyze_csv('results-rf-pca-GOOGL-binary.csv', 'pca', True)

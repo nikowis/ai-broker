@@ -41,7 +41,7 @@ class LightGBMBenchmark(Benchmark):
             "max_depth": bench_params.max_depth,
             "learning_rate": bench_params.learning_rate,
             "boosting": bench_params.boosting,
-            "num_threads": 2,
+            "num_threads": 3,
             "max_bin": bench_params.max_bin,
             # "bagging_fraction" : bench_params.bagging_fraction,
             # "bagging_freq" : bench_params.bagging_freq,
@@ -56,8 +56,8 @@ class LightGBMBenchmark(Benchmark):
         train_data = lgb.Dataset(x_train, label=y_train)
         test_data = lgb.Dataset(x_test, label=y_test)
         bst = lgb.train(params, train_data, valid_sets=[test_data, train_data], num_boost_round=bench_params.num_boost_round
-                        , early_stopping_rounds=20, verbose_eval=False
-                        , feature_name=bench_params.feature_names)
+                        , early_stopping_rounds=20, verbose_eval=False)
+                        # , feature_name=bench_params.feature_names)
                         #, evals_result=evaluating_history)
 
         # print('Plotting metrics recorded during training...')

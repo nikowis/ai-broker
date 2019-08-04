@@ -1,7 +1,7 @@
 import benchmark_params
+from stock_constants import BASE_COMPANIES
 from svm_benchmark import SVMBenchmark
 
-from stock_constants import BASE_COMPANIES
 
 def svm_examine(binary_classification, examined_params, param_lists, companies=['GOOGL'], walk_forward_testing=False):
     split_params = examined_params.split(',')
@@ -25,6 +25,7 @@ def svm_examine(binary_classification, examined_params, param_lists, companies=[
     bench_params = benchmark_params.SVMBenchmarkParams(binary_classification, examined_param=examined_params,
                                                        benchmark_name=benchmark_name)
     bench_params.plot_partial = True
+    bench_params.iterations = 1
     bench_params.walk_forward_testing = walk_forward_testing
     SVMBenchmark(companies, bench_params, param_dict)
 
@@ -58,6 +59,10 @@ if __name__ == '__main__':
     #             walk_forward_testing=True)
     # svm_examine(False, 'walk_forward_test_window_size', [[360, 180, 90, 45, 22]],
     #             walk_forward_testing=True)
+    # svm_examine(True, 'walk_forward_test_window_size', [[11, 5, 2, 1]],
+    #             walk_forward_testing=True)
+    # svm_examine(False, 'walk_forward_test_window_size', [[11, 5, 2, 1]],
+    #             walk_forward_testing=True)
     # svm_examine(True, 'max_train_window_size',
     #             [[None, 2000, 1500, 1000, 500, 250, 100]],
     #             walk_forward_testing=True)
@@ -65,6 +70,6 @@ if __name__ == '__main__':
     #             [[None, 2000, 1500, 1000, 500, 250, 100]],
     #             walk_forward_testing=True)
     #
-    # svm_final(True)
-    # svm_final(False)
+    svm_final(True)
+    svm_final(False)
     print('Benchmark executions finished.')

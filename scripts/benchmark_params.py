@@ -84,7 +84,7 @@ class NnBenchmarkParams(BenchmarkParams):
         if binary_classification:
             self.output_neurons = 1
             self.layers = [10]
-            self.pca=None
+            self.pca = None
             self.output_activation = 'sigmoid'
             self.loss = 'binary_crossentropy'
             self.metric = 'binary_accuracy'
@@ -98,7 +98,7 @@ class NnBenchmarkParams(BenchmarkParams):
             self.metric = 'categorical_accuracy'
             self.regularizer = 0.01
 
-        self.walk_forward_test_window_size = 5
+        self.walk_forward_test_window_size = 11
 
         self.activation = 'relu'
         self.optimizer = 'adam'
@@ -138,7 +138,7 @@ class SVMBenchmarkParams(BenchmarkParams):
     def __init__(self, binary_classification, examined_param=None, benchmark_name=str(uuid.uuid4())) -> None:
         super().__init__(binary_classification, examined_param, benchmark_name)
 
-        self.walk_forward_testing=True
+        self.walk_forward_testing = True
         # self.max_train_window_size = 1000
         if binary_classification:
             self.pca = 0.999
@@ -182,23 +182,30 @@ class LightGBMBenchmarkParams(BenchmarkParams):
             self.model_num_class = 1
             self.max_depth = -1
             self.boosting = 'gbdt'
+            self.num_leaves=100
+            self.max_bin = 300
+            self.pca = 0.999
+            self.feature_fraction = 0.2
+
         else:
             self.objective = 'multiclassova'
             self.model_num_class = 3
             self.max_depth = -1
-            self.boosting = 'dart'  # gbdt, gbrt, rf, random_forest, dart, goss
+            self.boosting = 'goss'  # gbdt, gbrt, rf, random_forest, dart, goss
+            self.num_leaves = 20
+            self.max_bin = 100
+            self.pca = None
+            self.feature_fraction = 0.9
+
         self.one_hot_encode_labels = False
         self.save_model = False
         self.iterations = 1
-        self.num_leaves = 31
         self.learning_rate = 0.05
         self.num_boost_round = 300
-        self.max_bin = 255
-        self.pca = None
-        self.feature_fraction = 1
+
         self.min_sum_hessian_in_leaf = 1e-3
         self.min_data_in_leaf = 20
-        self.walk_forward_test_window_size = 360
+        self.walk_forward_test_window_size = 1
         self.walk_forward_testing = True
 
     def update_from_dictionary(self, params_dict):
@@ -230,10 +237,15 @@ class RandomForestBenchmarkParams(BenchmarkParams):
 
         self.one_hot_encode_labels = False
         self.save_model = False
-        self.iterations = 3
-        self.pca = 0.999
+        self.iterations = 2
+        if self.binary_classification:
+            self.pca = 0.9999
+        else:
+            self.pca = 0.99
 
-        self.n_estimators = 1500
+        self.pca = None
+
+        self.n_estimators = 100
         self.criterion = 'gini'
         self.max_depth = None
         self.min_samples_split = 2
@@ -246,8 +258,8 @@ class RandomForestBenchmarkParams(BenchmarkParams):
         self.oob_score = False
         self.warm_start = False
         self.n_jobs = -1
-        self.walk_forward_test_window_size = None
-        self.walk_forward_testing = False
+        self.walk_forward_test_window_size = 90
+        self.walk_forward_testing = True
 
     def update_from_dictionary(self, params_dict):
         super().update_from_dictionary(params_dict)

@@ -1061,7 +1061,7 @@ W kolejnych testach do klasyfikacji binarnej nie zostały użyte warstwy ukrytne
 
 \bigskip
 
-Kolejnym analizowanym parametrem był rozmiar zbioru testowego wykorzystywanego w każdej iteracji uczenia modelu metodą kroczącą. Tabela \ref{tab:nn_walk_forward_test_binary} przedstawia wyniki dla różnych rozmiarów zbioru testowego. Skonstruowanie modelu na nowo i ponowne nauczanie po 360 sesjach giełdy poprawiło początkowy wynik o $\sim 6\%$ jednak bez poprawy miary AUC. W kolejnych testach ucząc model od nowa co 180, 90, 45 przetestowanych próbek, otrzymywany był podobny wynik w kontekście dokładności jednak stopniowo rosła miara AUC. Najlepszy wynik dla klasyfikacji binarnej został osiągnięty przy 5 próbkach w zbiorze testowym. Dzięki tak prostemu zabiegowi dokładność modelu ulepszyła się aż o $\sim 22\%$. Niestety wraz ze zmniejszaniem zbioru testowego znacząco zwiększa się czas przeprowadzanego testu. W prawdziwych warunkach jednak nie jest problemem, gdyż ponowne stworzenie modelu każdego dnia na podstawie zbioru treningowego powiększonego o jedną próbkę trwa jedynie około 40 sekund. 
+Kolejnym analizowanym parametrem był rozmiar zbioru testowego wykorzystywanego w każdej iteracji uczenia modelu metodą kroczącą. Tabela \ref{tab:nn_walk_forward_test_binary} przedstawia wyniki dla różnych rozmiarów zbioru testowego. Skonstruowanie modelu na nowo i ponowne nauczanie po 360 sesjach giełdy poprawiło początkowy wynik o $\sim 6\%$ jednak bez poprawy miary AUC. W kolejnych testach ucząc model od nowa co 180, 90, 45 przetestowanych próbek, otrzymywany był podobny wynik w kontekście dokładności jednak stopniowo rosła miara AUC. Najlepszy wynik dla klasyfikacji binarnej został osiągnięty przy 11 próbkach w zbiorze testowym. Dzięki tak prostemu zabiegowi dokładność modelu ulepszyła się aż o $\sim 15\%$. Niestety wraz ze zmniejszaniem zbioru testowego znacząco zwiększa się czas przeprowadzanego testu. Uniemożliwiło to przetestowanie zbiorów testowych o mniejszej liczbie próbek. W prawdziwych warunkach nie jest to jednak problemem, gdyż ponowne stworzenie modelu każdego dnia na podstawie zbioru treningowego powiększonego o jedną próbkę trwa jedynie około minuty na przeciętnym laptopie. Najprawdopodobniej im częstsze są aktualizacje zbioru testowego tym lepiej.
 
 \begin{table}[H]
     \centering
@@ -1074,14 +1074,13 @@ max                           &  0.545666 &  0.532053 &   35.540564 \\  \hline
 90                         &  0.585974 &  0.550549 &   253.321093 \\  \hline
 45                         &  0.618500 &  0.577297 &   679.401087 \\  \hline
 22                          &  0.653227 &  0.594625 &  2481.258675 \\  \hline
-11                          &  0.694853 &  0.617139 &  3332.849607 \\ \hline
-5                           &  \textbf{0.764251} &  \textbf{0.687474} &  5916.358244 \\ \hline
+11                          &  \textbf{0.694853} &  \textbf{0.617139} &  3332.849607 \\ \hline
     \end{tabular}
     \caption{MLP: wyniki klasyfikacji binarnej w zależności od rozmiaru zbioru testowego}
     \label{tab:nn_walk_forward_test_binary}
 \end{table}
 
-W tabeli \ref{tab:nn_walk_forward_test_discrete} przestawione zostały analogiczne wyniki dla klasyfikacji na 3 klasy. Tutaj analogicznie do prostszego zagadnienia klasyfikacji, widać znaczną poprawę wyników przy przeuczaniu modelu raz na miesiąc lub częściej. Wynik dokładności wzrósł aż o $\sim 24\%$ dla zbioru testowego o 5 próbkach. Jak widać dane wejściowe z kolejnych dni muszą być w pewnym stopniu unikalne jeżeli regularne dodawanie ich do zbioru treningowego tak istotnie poprawia wydajność modelu.
+W tabeli \ref{tab:nn_walk_forward_test_discrete} przestawione zostały wyniki dla klasyfikacji na 3 klasy. Tutaj, analogicznie do prostszego zagadnienia klasyfikacji, widać znaczną poprawę wyników przy przeuczaniu modelu raz na miesiąc lub częściej. Wynik dokładności wzrósł aż o $\sim 18\%$ dla zbioru testowego o 11 próbkach. Jak widać dane wejściowe z kolejnych dni muszą być w pewnym stopniu unikalne jeżeli regularne dodawanie ich do zbioru treningowego tak istotnie poprawia wydajność modelu.
 
 \begin{table}[H]
     \centering
@@ -1094,30 +1093,34 @@ max                           &  0.405497 &  0.565743 &   38.663478 \\ \hline
 90                        &  0.468935 &  0.591316 &   286.016509 \\ \hline
 45                          &  0.482523 &  0.586196 &   725.585042 \\ \hline
 22                         &  0.520761 &  0.603951 &  2186.040966 \\ \hline
-11                          &  0.587010 &  0.630126 &  4452.325083 \\ \hline
-5                         &  \textbf{0.647651} &  \textbf{0.670278} &  5900.078356 \\ \hline
+11                          &  \textbf{0.587010} &  \textbf{0.630126} &  4452.325083 \\ \hline
+
     \end{tabular}
     \caption{MLP: wyniki klasyfikacji na 3 klasy w zależności od rozmiaru zbioru testowego}
     \label{tab:nn_walk_forward_test_discrete}
 \end{table}
 
-Ostatecznie dla klasyfikacji binarnej oraz klasyfikacji trójklasowej zostały użyte zbiory testowe z 5 próbkami.
+Ostatecznie dla klasyfikacji binarnej oraz klasyfikacji trójklasowej zostały użyte zbiory testowe z 11 próbkami.
 
 \subsection{Random forest}
 
-Testy lasów losowych rozpoczęte zostały od analizy przetworzenia danych metodą PCA. Najlepsze wyniki klasyfikacji zostały uzyskane przy wybraniu wariancji o wartości $0.9999$ (tabele \ref{tab:rf_pca_binary} oraz \ref{tab:rf_pca_discrete}). Dla klasyfikacji binarnej osiągnięty został wynik $\sim 78\%$, zaś dla klasyfikacji wieloklasowej  $\sim 58\%$.
+Testy lasów losowych rozpoczęte zostały od analizy przetworzenia danych metodą PCA. Najlepsze wyniki klasyfikacji binarnej zostały uzyskane przy wybraniu wariancji o wartości $0.9999$, zaś dla klasyfikacji dyskretnej najlepszy wynik został osiągnięty przy użyciu wartości $0.99$. (tabele \ref{tab:rf_pca_binary} oraz \ref{tab:rf_pca_discrete}). W przypadku obu problemów domyślne wartości parametrów w zestawieniu z różnymi wartościami wariancji nie były wystarczające aby przekroczyć dokładność klasyfikatora wybierającego zawsze najliczniejszą klasę.
 
 \begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|}
     \hline
         \textbf{PCA} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
-0.95               &  0.650340 &  0.652564 &    \textbf{1.084675} \\ \hline
-0.98               &  0.735147 &  0.734262 &    1.515345 \\ \hline
-0.99               &  0.752834 &  0.753326 &    1.626672 \\ \hline
-0.999 &  0.772789 &  0.772018 &    1.704345 \\ \hline
-0.9999             &  \textbf{0.777778} &  \textbf{0.777053} &    1.710322 \\ \hline
-Brak                &  0.753741 &  0.754849 &    2.229286 \\ \hline
+0.8                &  0.509197 &  0.507391 &    0.761020 \\ \hline
+0.85               &  0.501310 &  0.501343 &    0.968029 \\ \hline
+0.9                &  0.507402 &  0.507414 &    0.997705 \\ \hline
+0.95               &  0.505608 &  0.503373 &    0.947346 \\ \hline
+0.97               &  0.499776 &  0.500465 &    1.110348 \\ \hline
+0.98               &  0.505608 &  0.501081 &    1.115674 \\ \hline
+0.99               &  0.505608 &  0.502540 &    1.109342 \\ \hline
+0.999			   &  0.502916 &  0.500568 &    1.320368 \\ \hline
+0.9999             &  \textbf{0.512337} &  \textbf{0.509109} &    1.317005 \\ \hline
+Brak                &  0.487214 &  0.494583 &    1.646342 \\ \hline
     \end{tabular}
     \caption{Random forest: wyniki klasyfikacji binarnej w zależności od wybranej wartości wariancji w metodzie PCA}
     \label{tab:rf_pca_binary}
@@ -1127,31 +1130,37 @@ Brak                &  0.753741 &  0.754849 &    2.229286 \\ \hline
     \begin{tabular}{|c|c|c|c|}
     \hline
         \textbf{PCA} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
-0.95               &  0.487075 &  0.677503 &    \textbf{1.226344} \\ \hline
-0.98               &  0.547846 &  0.742437 &    1.437373 \\ \hline
-0.99               &  0.568254 &  0.758338 &    1.406685 \\ \hline
-0.999 &  0.570068 &  0.765132 &    1.711658 \\ \hline
-0.9999             &  \textbf{0.576417} &  \textbf{0.767606} &    1.747348 \\ \hline
-Brak                &  0.567347 &  0.768452 &    2.043028 \\ \hline
+0.8                &  0.366981 &  0.530468 &    0.785003 \\ \hline
+0.85               &  0.362046 &  0.529749 &    0.972335 \\ \hline
+0.9                &  0.359803 &  0.531703 &    1.020022 \\ \hline
+0.95               &  0.356214 &  0.534884 &    1.139678 \\ \hline
+0.97               &  0.363840 &  0.532332 &    1.161355 \\ \hline
+0.98               &  0.360700 &  0.535334 &    1.268677 \\ \hline
+0.99               &  \textbf{0.371467} &  \textbf{0.533416} &    1.220346 \\ \hline
+0.999		       &  0.353970 &  0.528446 &    1.461351 \\ \hline
+0.9999             &  0.344998 &  0.529919 &    1.463011 \\ \hline
+Brak                &  0.340063 &  0.527937 &    1.730347 \\ \hline
     \end{tabular}
     \caption{Random forest: wyniki klasyfikacji na 3 klasy w zależności od wybranej wartości wariancji w metodzie PCA}
     \label{tab:rf_pca_discrete}
 \end{table}
 
-Podstawowym parametrem przy używaniu modelu lasu losowego jest dobór odpowiedniej liczby drzew, tworzących las. W poprzednich testach ten parametr miał wartość 150. Im więcej drzew tym bardziej wydłuża się czas obliczeń, jednak zwiększa się liczba elementów biorących udział w predykcji co potencjalnie może polepszać wyniki klasyfikacji. Tabele \ref{tab:rf_estimators_binary} oraz \ref{tab:rf_estimators_discrete} przedstawiają wyniki klasyfikacji w zależności od liczby drzew w lesie. Niestety dobór większej liczby drzew tylko nieznacznie poprawia otrzymywane wyniki, jednocześnie znacznie wydłużając czas obliczeń. Dla obu typów klasyfikacji najlepszy wynik uzyskał las liczący 1500 drzew.
+Podstawowym parametrem przy używaniu modelu lasu losowego jest dobór odpowiedniej liczby drzew, tworzących las. W poprzednim teście ten parametr miał wartość 100. Im więcej drzew zostaje użyte tym bardziej wydłuża się czas obliczeń, jednak zwiększa się liczba elementów biorących udział w predykcji co potencjalnie może polepszać wyniki klasyfikacji. Tabele \ref{tab:rf_estimators_binary} oraz \ref{tab:rf_estimators_discrete} przedstawiają wyniki klasyfikacji w zależności od liczby drzew w lesie. Niestety dobór większej liczby drzew tylko nieznacznie poprawia otrzymywane wyniki, jednocześnie znacznie wydłużając czas obliczeń. Dla obu typów klasyfikacji najlepszy wynik uzyskał las liczący 1000 drzew.
 
 \begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|}
     \hline
         \textbf{Liczba drzew} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
-100        &  0.779138 &  0.778948 &    \textbf{1.254666} \\ \hline
-200        &  0.781859 &  0.781289 &    2.391548 \\ \hline
-300        &  0.786395 &  0.785786 &    3.506159 \\ \hline
-500       &  0.779138 &  0.778837 &    5.656016 \\ \hline
-1000       &  0.782313 &  0.781438 &   10.835435 \\ \hline
-1500      &  \textbf{0.787755} &  \textbf{0.787179} &   16.527833 \\ \hline
-2000       &  0.782766 &  0.782144 &   21.734268 \\ \hline
+25         &  0.489064 &  0.489766 &    4.097520 \\ \hline
+50         &  0.510777 &  0.497981 &    7.935522 \\ \hline
+300        &  0.526597 &  0.509428 &   46.976032 \\ \hline
+100        &  0.519908 &  0.504696 &   15.782012 \\ \hline
+200        &  0.516855 &  0.500553 &   31.111518 \\ \hline
+500        &  0.530207 &  0.508128 &   79.370979 \\ \hline
+1000       &  \textbf{0.536895} &  \textbf{0.513701} &  167.971013 \\ \hline
+1500       &  0.530844 &  0.510723 &  235.584647 \\ \hline
+2000       &  0.524128 &  0.503414 &  386.938110 \\ \hline
     \end{tabular}
     \caption{Random forest: wyniki klasyfikacji binarnej w zależności od liczby utworzonych drzew}
     \label{tab:rf_estimators_binary}
@@ -1162,47 +1171,52 @@ Podstawowym parametrem przy używaniu modelu lasu losowego jest dobór odpowiedn
     \begin{tabular}{|c|c|c|c|}
     \hline
         \textbf{Liczba drzew} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
-100        &  0.553851 &  0.763649 &    \textbf{1.228010} \\ \hline
-200        &  0.574150 &  0.767209 &    2.428561 \\ \hline
-300        &  0.574150 &  0.768572 &    3.478281 \\ \hline
-500        &  0.585395 &  0.774938 &    5.866535 \\ \hline
-1000       &  0.584127 &  0.775766 &   11.639547 \\ \hline
-1500       &  \textbf{0.585988} &  \textbf{0.778329} &   15.834652 \\ \hline
-2000      &  0.585441 &  0.776137 &   20.285341 \\ \hline
+25         &  0.375962 &  0.544072 &    4.654499 \\ \hline
+50         &  0.351224 &  0.527772 &    8.893512 \\ \hline
+100       &  0.388278 &  0.544457 &   17.790018 \\ \hline
+200        &  0.385810 &  0.551537 &   38.911032 \\ \hline
+300        &  0.385863 &  0.554436 &   52.376497 \\ \hline
+500        &  0.384005 &  0.549873 &   95.120014 \\ \hline
+1000       &  0.380289 &  \textbf{0.555435} &  209.299582 \\ \hline
+1500       &  0.384536 &  0.552294 &  309.298568 \\ \hline
+2000      &  \textbf{0.393720} &  0.550339 &  368.229640 \\ \hline
     \end{tabular}
     \caption{Random forest: wyniki klasyfikacji na 3 klasy w zależności od liczby utworzonych drzew}
     \label{tab:rf_estimators_discrete}
 \end{table}
 
-Ostatnim przeanalizowanym parametrem podobnie jak dla poprzednich modeli jest rozmiar zbioru testowego dla uczenia metodą kroczącą. W przeciwieństwie do poprzednich modeli metoda lasu losowego nie wykazuje poprawy podczas iteracyjnej ewaluacji modelu (tabele \ref{tab:rf_walk_forward_binary} oraz \ref{tab:rf_walk_forward_discrete}). Najlepsze wyniki są uzyskane przy jednokrotnym uczeniu oraz ewaluacji modelu, co oznacza że lasy losowe nie są w stanie przyswoić nowych informacji ponad te zawarte w podstawowym zbiorze treningowym. Wobec tego dla tego modelu nie była stosowana ewaluacja metodą kroczącą.
+Ostatnim przeanalizowanym parametrem podobnie jak dla poprzednich modeli jest rozmiar zbioru testowego dla uczenia metodą kroczącą. W przeciwieństwie do modelu sieci neuronowych metoda lasu losowego nie wykazuje poprawy podczas iteracyjnej ewaluacji modelu (tabele \ref{tab:rf_walk_forward_binary} oraz \ref{tab:rf_walk_forward_discrete}). Dla klasyfikacji binarnej najlepsze wyniki są uzyskane przy jednokrotnym nauczeniu oraz ewaluacji modelu, co oznacza że lasy losowe nie są w stanie przyswoić nowych informacji ponad te zawarte w podstawowym zbiorze treningowym.
 
 \begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|}
     \hline
         \textbf{Rozmiar zbioru testowego} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
-max                         &  \textbf{0.787755} &  \textbf{0.787179} &  \textbf{16.527833} \\ \hline
-360                         &  0.753131 &  0.759844 &   65.553659 \\ \hline        
-180                         &  0.749894 &  0.756907 &  105.710007 \\ \hline
-90                          &  0.755908 &  0.758301 &  180.461685 \\ \hline
-45                          &  0.753906 &  0.754997 &  336.741707 \\ \hline
-22                          &  0.751783 &  0.755511 &  716.216814 \\ \hline
+max                         & \textbf{0.536895} &  \textbf{0.513701} &  167.971013 \\ \hline
+360                         &  0.516033 &  0.508988 &    5.581545 \\ \hline
+180                         &  0.528705 &  0.500111 &    9.069501 \\ \hline
+90                          &  0.529092 &  0.512414 &   18.859000 \\ \hline
+45                          &  0.519182 &  0.515216 &   35.510000 \\ \hline
+22                          &  0.510982 &  0.507777 &   70.693982 \\ \hline
+
     \end{tabular}
     \caption{Random forest: wyniki klasyfikacji binarnej w zależności od rozmiaru zbioru testowego}
     \label{tab:rf_walk_forward_binary}
 \end{table}
 
+Dla problemu klasyfikacji wieloklasowej wynik poprawił się nieznacznie przy użyciu zbioru testowego o 180 próbkach, jednak taka poprawa może być związana z  niedeterminizmem nauczania lasów losowych.
+
 \begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|}
     \hline
         \textbf{Rozmiar zbioru testowego} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
-max                         &  \textbf{0.585988} &  0.778329 &  \textbf{15.834652} \\ \hline
-360                         &  0.556173 &  0.779862 &   67.133358 \\ \hline
-180                         &  0.570370 &  0.786893 &  121.863561 \\ \hline
-90                         &  0.569959 &  \textbf{0.788930} &  223.579185 \\ \hline
-45                          &  0.574946 &  0.787879 &  443.906251 \\ \hline
-22                          &  0.573864 &  0.787886 &  834.891297 \\ \hline
+max                         &   0.380289 &  0.555435 &  209.299582 \\ \hline
+360                         &  0.368983 &  0.530595 &    6.315498 \\ \hline
+180                         &  \textbf{0.391857} &  \textbf{0.559301} &   10.532493 \\ \hline
+90                          &  0.385810 &  0.553763 &   18.632999 \\ \hline
+45                          &  0.382353 &  0.551812 &   34.919000 \\ \hline
+22                          &  0.369377 &  0.545302 &   67.158500 \\ \hline
     \end{tabular}
     \caption{Random forest: wyniki klasyfikacji na 3 klasy w zależności od rozmiaru zbioru testowego}
     \label{tab:rf_walk_forward_discrete}
@@ -1210,18 +1224,23 @@ max                         &  \textbf{0.585988} &  0.778329 &  \textbf{15.83465
 
 \subsection{Light GBM}
 
-Podobnie jak w przypadku poprzednich modeli dla Light GBM analizowana była zależność jakości klasyfikacji od redukcji rozmiaru danych metodą PCA. Wyniki tej analizy zostały przedstawione w tabelach \ref{tab:lgbm_pca_binary} oraz \ref{tab:lgbm_pca_discrete}. W odróżnieniu od innych klasyfikatorów używanie PCA nawet z zachowaniem największej wartości wariancji powoduje znaczny spadek jakości klasyfikacji. Dzieje się tak zarówno dla klasyfikacji binarnej jak i klasyfikacji wieloklasowej, aczkolwiek dla tej drugiej jest to duż obardziej widoczne. Bez użycia PCA osiągane są  wyniki dokładności $\sim 82\%$ dla klasyfikacji binarnej oraz $\sim 64\%$ dla klasyfikacji na 3 klasy.
+Podobnie jak w przypadku poprzednich modeli dla Light GBM analizowana była zależność jakości klasyfikacji od redukcji rozmiaru danych metodą PCA. Wyniki tej analizy zostały przedstawione w tabelach \ref{tab:lgbm_pca_binary} oraz \ref{tab:lgbm_pca_discrete}. Dla klasyfikacji binarnej najlepszy wynik został uzyskany przy wybraniu wartości wariancji $0.9999$, zaś dla klasyfikacji na 3 klasy wybrana została wartość $0.999$.	
 
 \begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|}
     \hline
         \textbf{PCA} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
-0.9                &  0.617687 &  0.658673 &    \textbf{0.112996} \\ \hline
-0.99               &  0.760544 &  0.845203 &    0.355000 \\ \hline
-0.999    &  0.791837 &  0.877228 &    0.765001 \\ \hline
-0.9999             &  0.802721 &  0.879168 &    0.903005 \\ \hline
-Brak                &  \textbf{0.824490} &  \textbf{0.910806} &    0.632995 \\ \hline
+0.8                &  0.533666 &  0.496954 &    0.050999 \\ \hline
+0.85               &  0.527591 &  0.481774 &    0.056999 \\ \hline
+0.9                &  0.515478 &  0.507728 &    0.076001 \\ \hline
+0.95               &  0.527591 &  0.475249 &    0.085999 \\ \hline
+0.97               &  0.532974 &  0.522090 &    0.094999 \\ \hline
+0.98               &  0.514132 &  0.526354 &    0.124001 \\ \hline
+0.99               &  0.526245 &  0.522392 &    0.134996 \\ \hline
+0.999			   &  0.518170 &  0.532937 &    0.174997 \\ \hline
+0.9999             &  \textbf{0.534320} &  \textbf{0.534631} &    0.199997 \\ \hline
+Brak                &  0.528937 &  0.479128 &    0.176996 \\ \hline
     \end{tabular}
     \caption{Light GBM: wyniki klasyfikacji binarnej w zależności od wybranej wartości wariancji w metodzie PCA}
     \label{tab:lgbm_pca_binary}
@@ -1232,32 +1251,38 @@ Brak                &  \textbf{0.824490} &  \textbf{0.910806} &    0.632995 \\ \
     \begin{tabular}{|c|c|c|c|}
     \hline
         \textbf{PCA} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
-0.9                &  0.438095 &  0.587427 &    \textbf{0.247017} \\  \hline
-0.99               &  0.570068 &  0.757724 &    0.899004 \\ \hline
-0.999 &  0.579592 &  0.765829 &    1.133001 \\ \hline
-0.9999             &  0.571429 &  0.765824 &    1.166996 \\ \hline
-Brak                &  \textbf{0.646259} &  \textbf{0.820201} &    1.241000 \\ \hline
+0.8                &  0.358008 &  0.536740 &    3.360000 \\ \hline
+0.85               &  0.351279 &  0.519820 &    3.989996 \\ \hline
+0.9                &  0.348587 &  0.530616 &    4.280000 \\ \hline
+0.95               &  0.339166 &  0.521876 &    4.782035 \\ \hline
+0.97               &  0.341857 &  0.523877 &    5.265002 \\ \hline
+0.98               &  0.351279 &  0.534347 &    5.498029 \\ \hline
+0.99               &  0.343203 &  0.537076 &    5.899996 \\ \hline
+0.999			   &  \textbf{0.360700} &   \textbf{0.537781} &    7.377026 \\ \hline
+0.9999             &  0.351279 &  0.532163 &    7.542000 \\ \hline
+Brak                &  0.348587 &  0.513556 &    7.982000 \\ \hline
     \end{tabular}
     \caption{Light GBM: wyniki klasyfikacji na 3 klasy w zależności od wybranej wartości wariancji w metodzie PCA}
     \label{tab:lgbm_pca_discrete}
 \end{table}
 
-Kolejnym parametrem, który może zostać wykorzystany do optymalizacji modelu Light GBM jest procent cech wykorzystanych do utworzenia każdego z drzew. Na przykład jeżeli ustawimy ten parametr na $0.5$ każde drzewo będzie utworzone biorąc pod uwagę tylko połowę kolumn z wektora wejściowego. Cechy są wybierane losowo w momencie tworzenia kolejnego drzewa z lasu. Domyślnie ten parametr został ustawiony na $0.8$. Wyniki tego eksperymentu przedstawione są w tabelach \ref{tab:lgbm_feature_fraction_binary} oraz \ref{tab:lgbm_feature_fraction_discrete}. W przypadku obu klasyfikacji najbardziej korzystne wyniki daje wykorzystanie całego wektora danych przy tworzeniu każdego z drzew. Zmiana tego parametru pozwoliła na poprawienie miary dokładności o $\sim 1\%$ w obu przypadkach klasyfikacji.
+Kolejnym parametrem, który został wykorzystany do optymalizacji modelu Light GBM jest procent cech wykorzystanych do utworzenia każdego z drzew. Na przykład jeżeli ustawimy ten parametr na $0.5$ każde drzewo będzie utworzone biorąc pod uwagę tylko połowę kolumn z wektora wejściowego. Cechy są wybierane losowo w momencie tworzenia kolejnego drzewa z lasu. Wyniki tego eksperymentu przedstawione są w tabelach \ref{tab:lgbm_feature_fraction_binary} oraz \ref{tab:lgbm_feature_fraction_discrete}. W przypadku obu klasyfikacji najbardziej korzystne wyniki daje 40\% całego wektora danych przy tworzeniu każdego z drzew. Zmiana tego parametru pozwoliła na poprawienie miary AUC w szczególności dla problemu klasyfikacji na 3 klasy.
 
 \begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|}
     \hline
-        \textbf{Procent cech} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
-20              &  0.745578 &  0.832768 &    0.661063 \\ \hline
-30              &  0.785034 &  0.884036 &    \textbf{0.391003} \\ \hline
-40              &  0.806803 &  0.889521 &    0.710010 \\ \hline
-50             &  0.809524 &  0.897808 &    1.246994 \\ \hline
-60              &  0.821769 &  0.910041 &    1.367518 \\ \hline
-70              &  0.813605 &  0.905641 &    5.311466 \\ \hline
-80              &  0.824490 &  0.910806 &    1.581059 \\ \hline
-90              &  0.813605 &  0.910754 &    2.108266 \\ \hline
-100              &  \textbf{0.831293} &  \textbf{0.911758} &    1.717000 \\ \hline
+        \textbf{Procent cech (\%)} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
+10              &  0.527591 &  0.516379 &    0.079981 \\
+20              &  0.527591 &  0.453973 &    0.051998 \\
+30              &  0.520861 &  0.492021 &    0.106998 \\
+40              &  \textbf{0.532974} &  \textbf{0.524115} &    0.103000 \\
+50              &  0.530283 &  0.489753 &    0.136001 \\
+60              &  0.528937 &  0.506194 &    0.133999 \\
+70              &  0.519515 &  0.466358 &    0.167000 \\
+80              &  0.524899 &  0.485616 &    0.239999 \\
+90              &  0.520861 &  0.509935 &    0.222998 \\
+100              &  0.518170 &  0.522937 &    0.354000 \\ \hline
     \end{tabular}
     \caption{Light GBM: wyniki klasyfikacji binarnej w zależności od procenta cech wykorzystanych do tworzenia pojedynczego drzewa}
     \label{tab:lgbm_feature_fraction_binary}
@@ -1267,32 +1292,33 @@ Kolejnym parametrem, który może zostać wykorzystany do optymalizacji modelu L
     \centering
     \begin{tabular}{|c|c|c|c|}
     \hline
-        \textbf{Procent cech} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
-20          &  0.541497 &  0.698834 &    \textbf{0.589999} \\ \hline
-30              &  0.606803 &  0.775659 &    1.528000 \\ \hline
-40              &  0.602721 &  0.780493 &    0.855000 \\ \hline
-50              &  0.625850 &  0.796584 &    1.453674 \\ \hline
-60              &  0.648980 &  0.821857 &    3.013062 \\ \hline
-70              &  0.640816 &  0.819061 &    2.339054 \\ \hline
-80              &  0.646259 &  0.820201 &    3.221801 \\ \hline
-90              &  0.648980 &  0.821506 &    2.187508 \\ \hline
-100              &  \textbf{0.654422} &  \textbf{0.831571} &    1.666998 \\ \hline
+        \textbf{Procent cech (\%)} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
+10              &  0.353970 &  0.524868 &    4.424998 \\
+20              &  0.362046 &  0.530661 &    4.206039 \\
+30              &  0.366083 &  0.537645 &    5.727013 \\
+40              &  0.379542 &  \textbf{0.545501} &    6.142997 \\
+50              &  0.367429 &  0.538036 &    6.631509 \\
+60              &  \textbf{0.386272} &  0.533570 &    7.849054 \\
+70              &  0.371467 &  0.544252 &    8.437996 \\
+80              &  0.376851 &  0.531958 &   10.309524 \\
+90             &  0.368775 &  0.538629 &   10.570999 \\
+100              &  0.360700 &  0.537781 &    9.501997 \\ \hline
     \end{tabular}
     \caption{Light GBM: wyniki klasyfikacji na 3 klasy w zależności od procenta cech wykorzystanych do tworzenia pojedynczego drzewa}
     \label{tab:lgbm_feature_fraction_discrete}
 \end{table}
 
-Metoda Light GBM daje możliwość wyboru używanej metody \textit{boostingu}. Domyślnym algorytmem jest \textit{boosting} drzew decyzyjnych (\textit{gbdt}). W tabelach \ref{tab:lgbm_boosting_binary} oraz \ref{tab:lgbm_boosting_discrete} zostały przedstawione wyniki użycia różnych metod \textit{boostingu}. Jak widać dla klasyfikacji binarnej domyślny parametr \textit{gbdt} okazuje się najlepszym. Dla klasyfikacji wieloklasowej lepszy wynik daje metoda \textit{dart} \cite{lightbgm:dart}, poprawiając wynik dokładności o $\sim 1\%$.
+Metoda Light GBM daje możliwość wyboru używanej metody \textit{boostingu}. Domyślnym algorytmem jest \textit{boosting} drzew decyzyjnych (\textit{gbdt}). W tabelach \ref{tab:lgbm_boosting_binary} oraz \ref{tab:lgbm_boosting_discrete} zostały przedstawione wyniki użycia różnych metod \textit{boostingu}. Jak widać dla klasyfikacji binarnej domyślny parametr \textit{gbdt} okazuje się najlepszym. Dla klasyfikacji wieloklasowej lepszy wynik daje metoda \textit{goss}, poprawiając wynik dokładności o $\sim 1\%$.
 
 \begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|}
     \hline
         \textbf{Boosting} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
-dart     &  0.817687 &  0.906808 &    2.796990 \\ \hline
-gbdt     &  \textbf{0.834014} &  \textbf{0.911832} &    \textbf{1.173999} \\ \hline
-gbrt     &  0.834014 &  0.911832 &    1.244001 \\ \hline
-goss     &  0.797279 &  0.902891 &    0.748003 \\ \hline
+dart     &  0.493943 &  0.493348 &    2.089002 \\ \hline
+gbdt     &  \textbf{0.532974} &  \textbf{0.524115} &    0.106003 \\ \hline
+gbrt     &  \textbf{0.532974} &  \textbf{0.524115} &    0.116003 \\ \hline
+goss     &  0.502264 &  0.513801 &    0.160999 \\ \hline
     \end{tabular}
     \caption{Light GBM: wyniki klasyfikacji binarnej w zależności od wybranego rodzaju boostingu}
     \label{tab:lgbm_boosting_binary}
@@ -1303,50 +1329,100 @@ goss     &  0.797279 &  0.902891 &    0.748003 \\ \hline
     \begin{tabular}{|c|c|c|c|}
     \hline
         \textbf{Boosting} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
-dart     &  \textbf{0.663946} &  \textbf{0.835296} &    7.743999 \\ \hline
-gbdt     &  0.654422 &  0.831571 &    1.947000 \\ \hline
-gbrt     &  0.654422 &  0.831571 &    1.154999 \\ \hline
-goss     &  0.646259 &  0.810499 &    \textbf{1.321007} \\ \hline
+dart     &  0.379542 &  0.536733 &    7.363997 \\ \hline
+gbdt     &  0.370121 &  0.532499 &    0.469003 \\ \hline
+gbrt     &  0.370121 &  0.532499 &    0.405001 \\ \hline
+goss     &  \textbf{0.386083} &  \textbf{0.545501} &    0.642004 \\ \hline
     \end{tabular}
     \caption{Light GBM: wyniki klasyfikacji na 3 klasy w zależności od wybranego rodzaju boostingu}
     \label{tab:lgbm_boosting_discrete}
 \end{table}
 
-Ostatnim badanym parametrem jest rozmiar zbioru testowego wykorzystanego podczas uczenia metodą kroczącą. Wyniki badania zostały przedstawione w tabelach \ref{tab:lgbm_walk_forward_binary} oraz \ref{tab:lgbm_walk_forward_discrete}. Dla modelu Light GBM widać znaczną poprawę w klasyfikacji przy używaniu zbioru testowego o 360 próbkach. Dla klasyfikacji binarnej nastąpiła poprawa dokładności o $\sim 3\%$, zaś dla klasyfikacji na 3 klasy wynik poprawił się aż o $\sim 6\%$. Dalsze zmniejszanie zbioru testowego pogarszało wyniki wbrew oczekiwaniom.
+Następnym optymalizowanym parametrem była maksymalna liczba w każdym z drzew wygenerowanych przez algorytm. Domyślną wartością jest liczba 31 liści na drzewo. Wyniki tego eksperymentu zostały przedstawione w tabelach \ref{tab:lgbm_num_leaves_binary} oraz \ref{tab:lgbm_num_leaves_discrete}. Dla klasyfikacj binarnej należało zwiększyć liczbę liści do 100, zaś dla klasyfikacji na 3 klasy domyślną wartość trzeba było zmniejszyć do 20 liści na drzewo. 
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+        \textbf{Liczba liści} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
+5        &  0.528937 &  0.532366 &    0.047833 \\ \hline
+10       &  0.527591 &  0.524326 &    0.072111 \\ \hline
+20       &  0.532974 &  0.531425 &    0.074405 \\ \hline
+30       &  \textbf{0.532974} &  0.521301 &    0.083468 \\ \hline
+50       &  0.510094 &  0.511029 &    0.149726 \\ \hline
+60       &  0.512786 &  0.511014 &    0.152193 \\ \hline
+70       &  0.527591 &  0.513144 &    0.166835 \\ \hline
+80       &  0.518170 &  0.524326 &    0.183499 \\ \hline
+90       &  0.528937 &  0.530051 &    0.209766 \\ \hline
+100      &  0.527591 &  \textbf{0.533090} &    0.195496 \\ \hline
+    \end{tabular}
+    \caption{Light GBM: wyniki klasyfikacji binarnej w zależności od maksymalnej liczby liści w pojedynczym drzewie}
+    \label{tab:lgbm_num_leaves_binary}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+        \textbf{Liczba liści} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
+5        &  0.367429 &  0.532798 &    0.199490 \\ \hline
+10       &  0.370121 &  0.524657 &    0.264794 \\ \hline
+20       &  \textbf{0.373121} &  \textbf{0.535442} &    0.441423 \\ \hline
+30       &  0.356662 &  0.530182 &    0.449705 \\ \hline
+50       &  0.353970 &  0.534866 &    0.503601 \\ \hline
+60       &  0.364738 &  0.526885 &    0.374543 \\ \hline
+70       &  0.367429 &  0.525644 &    0.407347 \\ \hline
+80       &  0.371467 &  0.526985 &    0.448030 \\ \hline
+90       &  0.345895 &  0.530006 &    0.642411 \\ \hline
+100      &  0.364738 &  0.523292 &    0.482326 \\ \hline
+
+    \end{tabular}
+    \caption{Light GBM: wyniki klasyfikacji binarnej w zależności od maksymalnej liczby liści w pojedynczym drzewie}
+    \label{tab:lgbm_num_leaves_discrete}
+\end{table}
+
+Ostatnim badanym parametrem jest rozmiar zbioru testowego wykorzystanego podczas uczenia metodą kroczącą. Wyniki badania zostały przedstawione w tabelach \ref{tab:lgbm_walk_forward_binary} oraz \ref{tab:lgbm_walk_forward_discrete}. Dla modelu Light GBM widać znaczną poprawę w klasyfikacji przy używaniu zbioru testowego o jak najmniejszej liczbie próbek. W przypadku tworzenia na nowo modelu po każdej sesji giełdowej, dla klasyfikacji binarnej ten model osiąga dokładność na poziomie $\sim 82.5\%$, zaś dla klasyfikacji na 3 klasy dokładność była na poziomie $\sim 63.3\%$. Dalsze zmniejszanie zbioru testowego pogarszało wyniki wbrew oczekiwaniom.
 
 \begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|}
     \hline
         \textbf{Rozmiar zbioru testowego} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
-max    &  0.834014 &  0.911832 &  \textbf{1.173999} \\ \hline
-360                         &  \textbf{0.867857} &  0.915407 &   1.874000 \\ \hline
-180                         &  0.855714 &  \textbf{0.918232} &    5.498513 \\ \hline
-90                         &  0.837743 &  0.915601 &    6.347999 \\ \hline
-45                          &  0.837628 &  0.914706 &   11.757001 \\ \hline
-22                          &  0.847594 &  0.921981 &   23.754002 \\ \hline
+max   						  & 0.535666 &  0.533299 &  0.406716 \\ \hline
+360                         &  0.552885 &  0.535815 &    1.437676 \\ \hline
+180                        &  0.566788 &  0.584807 &    2.990968 \\ \hline
+90                         &  0.565748 &  0.576246 &    4.564312 \\ \hline
+45                         &  0.572890 &  0.589065 &   11.184603 \\ \hline
+22                          &  0.567098 &  0.608441 &   19.594985 \\ \hline
+11                          &  0.587010 &  0.655322 &   36.808001 \\ \hline
+5                           &  0.656376 &  0.735940 &   29.527999 \\ \hline
+2                           &  0.732527 &  0.867772 &   80.699034 \\ \hline
+1                           &  \textbf{0.825034} &  \textbf{0.959651} &  152.520538 \\ \hline
+
     \end{tabular}
     \caption{Light GBM: wyniki klasyfikacji binarnej w zależności od rozmiaru zbioru testowego}
     \label{tab:lgbm_walk_forward_binary}
 \end{table}
 
-
 \begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|}
     \hline
         \textbf{Rozmiar zbioru testowego} & \textbf{Dokładność} & \textbf{AUC} & \textbf{Czas (s)} \\ \hline
-max   						 &  0.663946 &  0.835296 &  \textbf{7.743999} \\ \hline
-360                         &  \textbf{0.727381} &  0.831340 &   26.352005 \\ \hline
-180                         &  0.700317 &  \textbf{0.832342} &   45.234971 \\ \hline
-90                          &  0.680423 &  0.833708 &   75.542997 \\ \hline
-45                          &  0.681793 &  0.837955 &  137.898603 \\ \hline
-22                          &  0.665441 &  0.834180 &  398.519057 \\ \hline
+max   						 &  0.386272 &  0.545294 &    0.239276 \\ \hline
+360                         &  0.402173 &  0.544229 &    0.992623 \\ \hline
+180                         &  0.410171 &  0.561560 &    1.336995 \\ \hline
+90                         &  0.410787 &  0.565290 &    2.079703 \\ \hline
+45                          &  0.407928 &  0.570754 &    3.960998 \\ \hline
+22                          &  0.406048 &  0.579615 &    8.925999 \\ \hline
+11                          &  0.419118 &  0.603412 &   17.156001 \\ \hline
+5                           &  0.465772 &  0.657281 &   46.353997 \\ \hline
+2                           &  0.536290 &  0.713070 &  108.588001 \\ \hline
+1                           &  \textbf{0.632690} &  \textbf{0.812767} &  218.438081 \\ \hline
     \end{tabular}
     \caption{Light GBM: wyniki klasyfikacji na 3 klasy w zależności od rozmiaru zbioru testowego}
     \label{tab:lgbm_walk_forward_discrete}
 \end{table}
-
 
 \subsection{Podsumowanie i wnioski}
 
