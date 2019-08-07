@@ -202,7 +202,7 @@ if __name__ == '__main__':
     # analyze_simulation("results-svm-market-simulation-discrete.csv")
     # analyze_simulation("results-rf-market-simulation-discrete.csv")
     # analyze_simulation("results-lgbm-market-simulation-discrete.csv")
-    # analyze_simulation("results-nn-market-simulation-discrete-walk-forward-2-it.csv")
+    analyze_simulation("results-nn-market-simulation-discrete-walk-forward-2.csv")
 
 
     # analyze_simulation_details("results-nn-market-simulation-binary-walk-forward-2-it-9AMGN.csv", 'AMGN', '2019-01-01')
@@ -210,8 +210,9 @@ if __name__ == '__main__':
     # analyze_simulation_details("results-nn-market-simulation-binary-walk-forward-2-it-0GOOGL.csv", 'GOOGL', '2019-01-01')
     # analyze_simulation_details("results-svm-market-simulation-discreteGOOGL.csv", 'GOOGL', '2019-01-01')
     # analyze_simulation_details("results-nn-market-simulation-binaryGOOGL.csv", 'GOOGL', '2019-01-01')
-    average_trades(['nn-market-simulation-binary-walk-forward-2'#, 'nn-market-simulation-discrete-walk-forward-2'
-                       , 'lgbm-market-simulation-binary'
-                       , 'lgbm-market-simulation-discrete', 'rf-market-simulation-binary', 'rf-market-simulation-discrete'
-                       , 'svm-market-simulation-binary', 'svm-market-simulation-discrete'])
+    # average_trades(['nn-market-simulation-binary-walk-forward-2', 'nn-market-simulation-discrete-walk-forward-2'
+    #                    , 'lgbm-market-simulation-binary'
+    #                    , 'lgbm-market-simulation-discrete', 'rf-market-simulation-binary', 'rf-market-simulation-discrete'
+    #                    , 'svm-market-simulation-binary', 'svm-market-simulation-discrete'])
+    average_trades(['nn-market-simulation-discrete-walk-forward-2'])
     print('Result analyzer finished.')

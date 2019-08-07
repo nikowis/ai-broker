@@ -593,7 +593,7 @@ Redukcja rozmiaru danych wejściowych jest zagadnieniem pozwalającym na poradze
 \label{img:correlation}
 \end{figure}
 
-Dla par zmiennych o najwyższej korelacji można usunąć jedną ze zmiennych, ponieważ powiela ona informacje już zawarte w drugiej zmiennej.  W tabeli \ref{tab:ccorr_table} zostały wylistowane pary zmiennych o najwyższej korelacji. Ze zbioru wejściowego usunięte zostały zmienne z kolumny \textit{Zmienna 2}.
+Dla par zmiennych o najwyższej korelacji można usunąć jedną ze zmiennych, ponieważ powiela ona informacje już zawarte w drugiej zmiennej.  W tabeli \ref{tab:ccorr_table1} zostały wylistowane pary zmiennych o najwyższej korelacji. Ze zbioru wejściowego usunięte zostały zmienne z kolumny \textit{Zmienna 2}.
 
 
 \begin{table}[H]
@@ -662,7 +662,7 @@ Sieci neuronowe są zbiorem modeli matematycznych służących do realizacji obl
 
 \bigskip
 
-Podstawowym elementem sieci neuronowej jest neuron, który na wejściu przyjmuje dane wejściowe, przetwarza i zwraca pojedynczy sygnał wyjściowy. Przetwarzanie sygnału przez neuron z polega zazwyczaj na zsumowaniu sygnałów dochodzących do niego, a następnie obliczenie wartości funkcji aktywacji. Uzyskana wartość z funkcji aktywacji jest przekazywana jako wyjście z neuronu (rysunek \ref{neural-net}). Funkcje aktywacji mogą wprowadzić element nieliniowy do modelu dzięki czemu sieci neuronowe mogą posłużyć do klasyfikacji zbiorów, które nie są separowalne liniowo. Dodatkowo połączenia między neuronami posiadają przypisaną wagę mającą bezpośredni wpływ na wartość sygnału przechodzącego między nimi.
+Podstawowym elementem sieci neuronowej jest neuron, który na wejściu przyjmuje dane wejściowe, przetwarza i zwraca pojedynczy sygnał wyjściowy. Przetwarzanie sygnału przez neuron z polega zazwyczaj na zsumowaniu sygnałów dochodzących do niego, a następnie obliczenie wartości funkcji aktywacji. Uzyskana wartość z funkcji aktywacji jest przekazywana jako wyjście z neuronu (rysunek \ref{img:neural-net}). Funkcje aktywacji mogą wprowadzić element nieliniowy do modelu dzięki czemu sieci neuronowe mogą posłużyć do klasyfikacji zbiorów, które nie są separowalne liniowo. Dodatkowo połączenia między neuronami posiadają przypisaną wagę mającą bezpośredni wpływ na wartość sygnału przechodzącego między nimi.
 
 \bigskip
 
@@ -1561,21 +1561,23 @@ Analogiczne wyniki dla klasyfikatorów wieloklasowych zostały opisane w tabeli 
 
 Dla tego rodzaju klasyfikacji wyniki symulacji giełdy różnią się od wyników dokładności (tabela \ref{tab:comparison_final_discrete}). Model SVM okazał się lepszy w handlu od sieci neuronowej pomimo różnicy w szacowaniu dokładności aż o 11\%.  W przypadku SVM, lasu losowego oraz metody Light GBM średni wynik, w stosunku do symulacji dla klasyfikacji binarnej, poprawił się o kilka procent. Gorszy wynik wykazał jedynie model sieci neuronowej jednak dał on mimo wszystko bardzo satysfakcjonujący zysk.
 
+
+
  \begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|c|c|}
     \hline
         \textbf{Spółka}  & \textbf{Buy and hold} & \textbf{SVM} &  \textbf{MLP}  &  \textbf{Random forest}  &  \textbf{Light GBM} \\ \hline
-AAPL & 140.61 & 121.30  &   & 111.01 & 145.94 \\ \hline
+AAPL & 140.61 & 121.30  & \textbf{145.69}  & 111.01 & 145.94 \\ \hline
 AMGN & 97.23 & 99.48  &  & 85.47 &  103.97 \\ \hline
 AMZN & 126.58 &  109.94 &  & 117.90 & \textbf{127.84} \\ \hline
 CSCO & \textbf{131.31} & 111.07  &   & 101.92 & 122.74  \\ \hline
-FB   & 143.52 &  128.23 &  & 124.79 & 151.15 \\ \hline
-GOOGL & 105.97 &  94.98 &   & 92.11 & 110.52 \\ \hline
-INTC & 103.98 & 90.43  &   & 83.59 & \textbf{111.78} \\ \hline
-MSFT &  136.12 & 121.94  &    & 122.13 & \textbf{136.33} \\ \hline
-PEP  & \textbf{121.60} &  121.13 &  & 117.00 & 119.90 \\ \hline
-QCOM & 137.18 &  123.95 &   & 95.67 & 151.21 \\ \hline \hline
+FB   & 143.52 &  128.23 & \textbf{152.81} & 124.79 & 151.15 \\ \hline
+GOOGL & 105.97 &  94.98 &  \textbf{123.36} & 92.11 & 110.52 \\ \hline
+INTC & 103.98 & 90.43  & \textbf{111.78}  & 83.59 & \textbf{111.78} \\ \hline
+MSFT &  136.12 & 121.94  &  135.68  & 122.13 & \textbf{136.33} \\ \hline
+PEP  & 121.60 &  121.13 & \textbf{126.09} & 117.00 & 119.90 \\ \hline
+QCOM & 137.18 &  123.95 &  \textbf{170.69} & 95.67 & 151.21 \\ \hline \hline
 \textbf{Średni zysk} & 124.41 & 112.24 & & 105.16 & 128.14 \\  \hline  
 \textbf{Średnia dokładność} &  - & 42.4\% &  &  36.4\% & 58.2\% \\  \hline  
     \end{tabular}
@@ -1783,12 +1785,6 @@ Strona główna Alpha Vantage
 	Breiman, L, 
   \textit{Random forests}
 	MACHINE LEARNING  Volume: 45   Issue: 1   Pages: 5-32   Published: OCT 2001
-
-
-\bibitem{wikidecisiontree}
-	Decision tree learning, \url{https://www.wikiwand.com/en/Decision_tree_learning} 
-	Data dostępu: 06.04.2019
-
 
 \bibitem{lgbm}
 Guolin Ke, Qi Meng, Thomas Finley, Taifeng Wang,Wei Chen, Weidong Ma, Qiwei Ye, Tie-Yan Liu

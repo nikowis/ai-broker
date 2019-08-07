@@ -13,7 +13,7 @@ if __name__ == '__main__':
     #     bench_params.walk_forward_test_window_size=2
     #     NnMarketSimulation([BASE_COMPANIES[i]], bench_params)
     #     print(datetime.datetime.now())
-    for i in range(6, len(BASE_COMPANIES)):
+    for i in range(3, 4):
         bench_params = NnBenchmarkParams(False, benchmark_name='nn-market-simulation-discrete-walk-forward-2-it-' + str(i))
         bench_params.walk_forward_test_window_size=2
         NnMarketSimulation([BASE_COMPANIES[i]], bench_params)
