@@ -71,10 +71,10 @@ def analyze_simulation(filepath, print_buy_and_hold=False):
     if print_buy_and_hold:
         print(df.round(2).to_latex(index=False, columns=['ticker', 'buy_and_hold_balance']))
 
-    mean_df = df.drop(['ticker', 'budget'], axis=1).mean().round(2)
-    print('Simulation {0} analyzis: avg balance {1}, avg buy and hold {2}'.format(filepath, mean_df['balance'],
-                                                                                  mean_df['buy_and_hold_balance']))
-    print(df.round(2).to_latex(index=False, columns=['ticker', 'balance']))
+    mean_df = df.drop(['ticker', 'budget'], axis=1).mean().round(4)
+    print('Simulation {0} analyzis: avg balance {1}, avg buy and hold {2}, avg accuracy {3}'.format(filepath, mean_df['balance'],
+                                                                                  mean_df['buy_and_hold_balance'], mean_df['accuracy']))
+    print(df.round(2).to_latex(index=False, columns=['ticker', 'balance', 'accuracy']))
 
 
 def analyze_simulation_details(filepath, symbol, start_date, print_buy_and_hold=False):
@@ -150,8 +150,8 @@ if __name__ == '__main__':
     # analyze_csv('results-nn-max_train_window_size-GOOGL-discrete.csv', 'max_train_window_size', True)
     # analyze_csv('results-nn-walk_forward_test_window_size-GOOGL-binary.csv', 'walk_forward_test_window_size', True)
     # analyze_csv('results-nn-walk_forward_test_window_size-GOOGL-discrete.csv', 'walk_forward_test_window_size', True)
-    analyze_final("results-nn-final-binary.csv")
-    analyze_final("results-nn-final-discrete.csv")
+    # analyze_final("results-nn-final-binary.csv")
+    # analyze_final("results-nn-final-discrete.csv")
     # analyze_csv('results-svm-pca-GOOGL-binary.csv', 'pca', True)
     # analyze_csv('results-svm-pca-GOOGL-discrete.csv', 'pca', True)
     # analyze_csv('results-svm-kernel-GOOGL-binary.csv', 'kernel', True)
@@ -181,6 +181,9 @@ if __name__ == '__main__':
     # analyze_csv('results-lgbm-walk_forward_test_window_size-GOOGL-discrete.csv', 'walk_forward_test_window_size', True)
     # analyze_final("results-lgbm-final-binary.csv")
     # analyze_final("results-lgbm-final-discrete.csv")
+    # analyze_final("results-lgbm-final-binary-walk-11.csv")
+    # analyze_final("results-lgbm-final-discrete-walk-11.csv")
+
     # analyze_csv('results-rf-pca-GOOGL-binary.csv', 'pca', True)
     # analyze_csv('results-rf-pca-GOOGL-discrete.csv', 'pca', True)
     # analyze_csv('results-rf-n_estimators-GOOGL-binary.csv', 'n_estimators', True)
@@ -189,21 +192,26 @@ if __name__ == '__main__':
     # analyze_csv('results-rf-walk_forward_test_window_size-GOOGL-discrete.csv', 'walk_forward_test_window_size', True)
     # analyze_final("results-rf-final-binary.csv")
     # analyze_final("results-rf-final-discrete.csv")
-    # analyze_simulation("results-svm-market-simulation-binary.csv", True)
-    # analyze_simulation("results-nn-market-simulation-binary.csv")
+    # print('========================================================================================================================================================')
+    #
+    # analyze_simulation("results-svm-market-simulation-binary.csv")
     # analyze_simulation("results-rf-market-simulation-binary.csv")
     # analyze_simulation("results-lgbm-market-simulation-binary.csv")
+    # analyze_simulation("results-nn-market-simulation-binary-walk-forward-2-it.csv")
     #
-    # print('========================================================================================================================================================')
     # analyze_simulation("results-svm-market-simulation-discrete.csv")
-    # analyze_simulation("results-nn-market-simulation-discrete.csv")
     # analyze_simulation("results-rf-market-simulation-discrete.csv")
     # analyze_simulation("results-lgbm-market-simulation-discrete.csv")
+    # analyze_simulation("results-nn-market-simulation-discrete-walk-forward-2-it.csv")
 
-    # analyze_simulation_details("results-nn-market-simulation-discreteAMGN.csv", 'AMGN', '2019-01-01')
+
+    # analyze_simulation_details("results-nn-market-simulation-binary-walk-forward-2-it-9AMGN.csv", 'AMGN', '2019-01-01')
+    # analyze_simulation_details("results-nn-market-simulation-binary-walk-forward-2-it-5FB.csv", 'FB', '2019-01-01')
+    # analyze_simulation_details("results-nn-market-simulation-binary-walk-forward-2-it-0GOOGL.csv", 'GOOGL', '2019-01-01')
     # analyze_simulation_details("results-svm-market-simulation-discreteGOOGL.csv", 'GOOGL', '2019-01-01')
     # analyze_simulation_details("results-nn-market-simulation-binaryGOOGL.csv", 'GOOGL', '2019-01-01')
-    # average_trades(['nn-market-simulation-binary', 'nn-market-simulation-discrete', 'lgbm-market-simulation-binary'
-    #                    , 'lgbm-market-simulation-discrete', 'rf-market-simulation-binary', 'rf-market-simulation-discrete'
-    #                    , 'svm-market-simulation-binary', 'svm-market-simulation-discrete'])
+    average_trades(['nn-market-simulation-binary-walk-forward-2'#, 'nn-market-simulation-discrete-walk-forward-2'
+                       , 'lgbm-market-simulation-binary'
+                       , 'lgbm-market-simulation-discrete', 'rf-market-simulation-binary', 'rf-market-simulation-discrete'
+                       , 'svm-market-simulation-binary', 'svm-market-simulation-discrete'])
     print('Result analyzer finished.')

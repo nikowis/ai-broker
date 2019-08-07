@@ -82,10 +82,10 @@ if __name__ == '__main__':
     # rf_examine(False, 'warm_start',
     #            [[False, True]])
 
-    # rf_examine(True, 'walk_forward_test_window_size', [[360, 180, 90, 45, 22]],
-    #             walk_forward_testing=True)
-    # rf_examine(False, 'walk_forward_test_window_size', [[360, 180, 90, 45, 22]],
-    #             walk_forward_testing=True)
+    rf_examine(True, 'walk_forward_test_window_size', [[22, 11, 5]],
+                walk_forward_testing=True)
+    rf_examine(False, 'walk_forward_test_window_size', [[22, 11, 5]],
+                walk_forward_testing=True)
 
     # rf_final(True)
     # rf_final(False)

@@ -760,7 +760,7 @@ Wszystkie eksperymenty dla każdego zestawu parametrów zostały przeprowadzone 
 
 \bigskip
 
-Parametrem rozpatrywanym z osobna przy każdym z modeli jest użycie metody \textbf{PCA} do wstępnego przetworzenia danych. W tabeli \ref{tab:pca_component_number} przedstawiona została liczba zmiennych w zależności od wybranej wariancji przy reudukowaniu rozmiaru wektora wejściowego. Jak widać zmniejszenie wariancji o jedną tysięczną pozwala na ograniczenie rozmiaru wejściowych problemów o $\frac{1}{4}$, a zmniejszenie o jedną setną redukuje rozmiar aż o połowę. Nie można jednak z góry, bez testów, przesądzić jak ograniczanie rozmiaru zadania wpłynie na końcowe wyniki. 
+Parametrem rozpatrywanym z osobna przy każdym z modeli jest użycie metody \textit{PCA} do wstępnego przetworzenia danych. W tabeli \ref{tab:pca_component_number} przedstawiona została liczba zmiennych w zależności od wybranej wariancji przy reudukowaniu rozmiaru wektora wejściowego. Jak widać zmniejszenie wariancji o jedną tysięczną pozwala na ograniczenie rozmiaru wejściowych problemów o $\frac{1}{4}$, a zmniejszenie o jedną setną redukuje rozmiar aż o połowę. Nie można jednak z góry, bez testów, przesądzić jak ograniczanie rozmiaru zadania wpłynie na końcowe wyniki. 
 
 
 \begin{table}[H]
@@ -1433,29 +1433,32 @@ Końcowe wyniki \textbf{klasyfikacji binarnej} dla każdego z klasyfikatorów zo
     \begin{tabular}{|c|c|c|c|c|}
     \hline
         \textbf{Spółka} & \textbf{SVM} &  \textbf{MLP}  &  \textbf{Random forest}  &  \textbf{Light GBM} \\ \hline
-AAPL   &  0.807656 & \textbf{0.694728}  & 0.740741 & 0.811402\\ \hline
-AMGN   &  0.799253 &  \textbf{0.712868} &0.772487 &  0.819947 \\ \hline
-AMZN   &  0.773109 & 0.712868 & 0.634609 & \textbf{0.820503} \\ \hline
-CSCO   &  0.815126 &  \textbf{0.705782} & 0.814815 &  0.811429 \\ \hline
-FB     &  0.825215 & \textbf{0.697206} & 0.714422 & 0.801724 \\ \hline
-GOOGL  &  0.851701 &  \textbf{0.741422} & 0.787302 & 0.859524 \\ \hline
-INTC   &  0.829132 & \textbf{0.689059}  & 0.791783 & 0.829101 \\ \hline
-MSFT   &  0.800187 &   \textbf{0.738379} & 0.767818 &  0.798307\\ \hline
-PEP    &  0.827586 & \textbf{0.722222}  & 0.765455 & 0.830135 \\ \hline
-QCOM   &  0.835668 &  \textbf{0.706916} & 0.808901 & 0.815132 \\ \hline \hline
-\textbf{Średnia dokładność} &  0.816463 & \textbf{0.834737} & 0.759833 & 0.81972 \\  \hline  
-\textbf{Średnia AUC} &  0.815958 & \textbf{0.904259} & 0.761041 & 0.901649 \\  \hline
+AAPL   &  0.530176 & 0.694728  & 0.517177 & \textbf{0.753717}\\ \hline
+AMGN   &  0.509749 &  0.712868 & 0.506500 &  \textbf{0.829926} \\ \hline
+AMZN   &  0.494893 & 0.712868 & 0.634609 & \textbf{0.817844} \\ \hline
+CSCO   &  0.549675 &  0.705782 & 0.494429 &  \textbf{0.762082} \\ \hline
+FB     &  0.519515 & 0.697206 & 0.556657 & \textbf{0.789773} \\ \hline
+GOOGL  &  0.519515 &  0.741422 & 0.496635 & \textbf{0.793680} \\ \hline
+INTC   &  0.537175 & 0.689059  & 0.470260 & \textbf{0.793680} \\ \hline
+MSFT   &  0.546468 & 0.738379 & 0.475372 &  \textbf{0.851301}\\ \hline
+PEP    &  0.528319 & 0.722222  & 0.495822 & \textbf{0.837361} \\ \hline
+QCOM   &  0.522748 &  0.706916 & 0.512999 & \textbf{0.836431} \\ \hline \hline
+\textbf{Średnia dokładność} &  0.525713 & 0.712145 & 0.501703 & \textbf{0.809715} \\  \hline  
+\textbf{Średnia AUC} &  0.508806 & 0.651943 & 0.509316 & \textbf{0.951182} \\  \hline
     \end{tabular}
     \caption{Końcowe wyniki dokładności dla klasyfikacji binarnej różnych spółek}
     \label{tab:comparison_final_binary}
 \end{table}   
 
-Najlepszy średni wynik uzyskał model sieci neuronowej z dokładnością $\sim 83.4\%$ oraz AUC $\sim 0.904$ . Drugi najlepszy wynik osiągnął model Light GBM z  $\sim 82\%$ dokładności i $\sim 0.902$ AUC. Model SVM uzyskał zbliżoną do dwóch poprzednich modeli dokładność $\sim 81.6\%$ jednak ze znacznie gorszym polem pod krzywą ROC $\sim 0.816$. Najgorszym modelem okazał się las losowy uzyskując jedyne $\sim 76\%$ dokładności oraz $\sim 0.76$ AUC.
+Najlepszy średni wynik uzyskał model Light GBM ze średnią dokładnością $\sim 80.1\%$ oraz AUC $\sim 0.951$ . Drugi najlepszy wynik osiągnął model sieci neuronowej z  $\sim 71\%$ dokładności i $\sim 0.652$ AUC. Modele SVM oraz random forest osiągneły wyniki zbliżone do losowej predykcji.
 
 \bigskip
 
-Model sieci neuronowej okazał się najlepszy dla niemal wszystkich spółek.  Jedynym wyjątkiem okazała się spółka Amazon.com Inc. (\textit{AMZN}) gdzie lepszy wynik został osiągnięty przez model Light GBM. Na rysunku \ref{img:amzn_googl_adjusted_comparison} zostało przedstawione porównanie zmian ceny zamknięcia spółki \textit{AMZN} ze spółką \textit{GOOGL}, dla której został uzyskany najlepszy wynik $\sim 88.5\%$ dokładności. To porównanie pozwala dostrzec dynamiczny wzrost ceny spółki \textit{AMZN} począwszy od 2015 roku. Zauważyć można również spadek ceny \textit{AMZN} o prawie 35\% pod koniec 2018 roku, podczas gdy ten sam okres dla spółki \textit{GOOGL} przyniosł spadek rzędu 20\%. Oba te czynniki wskazują na wysoką wariancję ceny spółki \textit{AMZN} co jest sprzężone z większą losowością ruchów cen akcji, a to utrudnia przewidywanie ceny. Można przypuszczać, iż model Light GBM uzyskał lepszy wynik dla klasyfikacji binarnej ze względu na większą odporność na dużą wariancję danych. 
+Model Light GBM okazał się najlepszy dla wszystkich spółek. Należy jednak wziąć pod uwagę iż model sieci neuronowej był trenowany co 11 sesji giełdowych, podczas gdy model Light GBM był uczony na nowo po każdej sesji giełdowej. Wynikało to z ograniczeń technicznych. W powyższych eksperymentach zostało wykazane silne powiązanie pomiędzy powiększaniem zbioru treningowego o najnowsze próbki z danymi, a końcową jakością modelu. Wykonanie testów dla modelu Light GBM trenowanego co 11 sesji daje średni wynik $\sim 61.5\%$ dokładności oraz $\sim 0.669$ AUC. W związku z tym należy mieć na uwadze iż model sieci neuronowej ma jeszcze dużo potencjału na poprawę. Przy używaniu modelu sieci neuronowej w praktyce ograniczenia techniczne nie występują ze względu na krótki czas pojedynczego uczenia modelu.
 
+\bigskip
+
+Dla modelu random forest można zauważyć pewną anomalię dla spółki \textit{AMZN}. Wynik $\sim 63.5\%$ dokładności widocznie odstaje od pozostałych predykcji tego modelu. Na rysunku \ref{img:amzn_googl_adjusted_comparison} zostało przedstawione porównanie zmian ceny zamknięcia spółki \textit{AMZN} ze spółką \textit{GOOGL}, dla której został uzyskany wynik $\sim 49.7\%$ dokładności. Dla spółki \textit{AMZN} widać dynamiczny wzrost ceny począwszy od 2015 roku. Model lasu losowego prawdopodobnie jest w stanie dokładniej przewidywać spółki o dynamicznym wzroście.
 
 \begin{figure}[H]
 \centering \includegraphics[scale=1]{img/AMZN_GOOGL_close_comparison.pdf}
@@ -1463,69 +1466,47 @@ Model sieci neuronowej okazał się najlepszy dla niemal wszystkich spółek.  J
 \label{img:amzn_googl_adjusted_comparison}
 \end{figure}
 
-
-
 \bigskip
 
-Dla \textbf{klasyfikacji na 3 klasy} zostały wykonane analogiczne testy dla 10 spółek. Wyniki zostały przedstawione w tabeli \ref{tab:comparison_final_discrete}. Tutaj bez wyjątku, najlepsze wyniki dla każdej spółki uzyskała sieć neuronowa ze średnim wynikiem dokładności $\sim 78.2\%$ oraz $\sim 0.875$ AUC. Pozostałe klasyfikatory otrzymały wyniki: 
-\begin{itemize}
-\item SVM: $\sim 67.2\%$ dokładności oraz $\sim 0.844$ AUC,
-\item random forest: $\sim 59.8\%$ dokładności oraz $\sim 0.784$ AUC,
-\item Light GBM: $\sim 66.4\%$ dokładności oraz $\sim 0.83$ AUC.
-\end{itemize}  
+Dla \textbf{klasyfikacji na 3 klasy} zostały wykonane analogiczne testy dla 10 spółek. Wyniki zostały przedstawione w tabeli \ref{tab:comparison_final_discrete}. Podobnie jak dla poprzedniego problemu modele \textit{SVM} oraz \textit{random forest} nie wykazały dużo lepszej dokładności od losowego predyktora. Ponownie najlepszy okazał się model \textit{Light GBM} z dokładnością na poziomie $\sim 59.3\%$ oraz AUC $\sim 0.786$. Niewiele gorszy wynik dokładności osiągnął model sieci neuronowej $\sim 56.8\%$, jednak uzyskał on znacznie niższy wynik miary AUC $\sim 0.633$.
 
-
- \begin{table}[H]
+\begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|c|}
     \hline
         \textbf{Spółka} & \textbf{SVM} &  \textbf{MLP}  &  \textbf{Random forest}  &  \textbf{Light GBM} \\ \hline
-AAPL   &  0.667600 & \textbf{0.584751}  & 0.607221 & 0.650688 \\ \hline
-AMGN   &  0.687208 &  \textbf{0.549268} & 0.610644 &  0.649841 \\ \hline
-AMZN   &  0.616246 & \textbf{0.568027} & 0.510115  & 0.660079 \\ \hline
-CSCO   &  0.676004 &  \textbf{0.569161} & 0.619359 &  0.632989 \\ \hline
-FB     &  0.624642 & \textbf{0.542850} & 0.543457 & 0.678161 \\ \hline
-GOOGL  &  0.685714 &  \textbf{0.564951} & 0.589116 & 0.729233 \\ \hline
-INTC   &  0.719888 & \textbf{0.581633}  & 0.641768 & 0.668836 \\ \hline
-MSFT   &  0.680672 &   \textbf{0.594671} & 0.604108 &  0.636958 \\ \hline
-PEP    &  0.683131 & \textbf{0.558107}  & 0.610127 & 0.670854 \\ \hline
-QCOM   &  0.683473 &  \textbf{0.558107} & 0.641457 & 0.661878 \\ \hline \hline
-\textbf{Średnia dokładność} &  0.672458 & \textbf{0.781936} & 0.597737 & 0.663952 \\  \hline  
-\textbf{Średnia AUC} &  0.843943 & \textbf{0.874600} & 0.783574 & 0.830858 \\  \hline
+AAPL   &  0.354689 & 0.584751  & 0.358867 & \textbf{0.587361} \\ \hline
+AMGN   &  0.369545 &  0.549268 & 0.352832 &  \textbf{0.553903} \\ \hline
+AMZN   &  0.364903 & \textbf{0.568027} & 0.367224  & 0.562268 \\ \hline
+CSCO   &  0.354689 &  0.569161 & 0.347261 &  \textbf{0.601301} \\ \hline
+FB     &  0.382436 & 0.542850 & 0.371105 & \textbf{0.596591} \\ \hline
+GOOGL  &  0.375505 &  0.564951 & 0.374159 & \textbf{0.616420} \\ \hline
+INTC   &  0.354089 & 0.581633  & 0.345725 & \textbf{0.599442} \\ \hline
+MSFT   &  0.358736 &   0.594671 & 0.351766 &  \textbf{0.635688} \\ \hline
+PEP    &  0.390901 & 0.558107  & 0.340297 & \textbf{0.631970} \\ \hline
+QCOM   &  0.378830 &  \textbf{0.558107} & 0.350511 & 0.546468 \\ \hline \hline
+\textbf{Średnia dokładność} &  0.368432 & 0.567975 & 0.355975 & \textbf{0.593141} \\  \hline  
+\textbf{Średnia AUC} &  0.549218 & 0.632774 & 0.538469 & \textbf{0.785912} \\  \hline
     \end{tabular}
     \caption{Końcowe wyniki dokładności dla klasyfikacji na 3 klasy różnych spółek}
     \label{tab:comparison_final_discrete}
 \end{table}   
 
-Najlepszy wynik udało się osiągnąć dla spółki \textit{INTC} $\sim 81.2\%$, zaś najgorszy dla spółki \textit{FB}  $\sim 74\%$. Słaby wynik dla spółki \textit{FB} może być spowodowany kilkoma czynnikami. Po pierwsze spółka zapoczątkowała swoją obecność na giełdzie stosunkowo niedawno, w 2012 roku, a jej historia ukazuje dynamiczne zmiany ceny (rysunek \ref{img:fb_adj_close}). Po drugie na rysunku \ref{img:fb_hist} przedstawiony został histogram liczby próbek w każdej z klas, na którym widać mocną dysproporcję między klasami. Klasa utrzymania ceny jest najmniej liczna wobec czego najciężej będzie ją przewidzieć. Powyższe czynniki mogą mieć negatywny wpływ na przewidywanie ruchów giełdowych.
-
-
-\begin{figure}[H]%
-\centering
-\subfigure[Wykres ceny zamknięcia]{%
-\includegraphics[scale=0.46]{img/FB_adj_close.pdf}
-\label{img:fb_adj_close}}%
-\qquad
-\subfigure[Histogram liczby próbek w każdej klasie zbioru danych]{%
-\includegraphics[scale=0.46]{img/FB_discrete_hist.pdf}
-\label{img:fb_hist}}%
-
-\caption{Wykresy przedstawiające dane dotyczące spółki \textit{FB} (opracowanie własne)}
-\label{img:fb_data_description}
-\end{figure}
-
+Pomimo gorszych warunków testu dla modelu sieci neuronowej (nowe próbki w zbiorze treningowym co 11 sesji giełdowych), uzyskał on lepszy wynik od modelu \textit{Light GBM} dla 2 spółek. Dodatkowo średnie wyniki tych dwóch modeli są dużo bardziej zbliżone. Dla klasyfikacji binarnej różnica w dokładności tych modeli wyniosła $\sim 9\%$, zaś dla klasyfikacji na 3 klasy różnica wyniosła jedynie $\sim 2.5\%$. 
 
 \bigskip
 
-Dodatkowo przeprowadzona została analiza klasyfikacji konkretnych klas. Na wykresie \ref{img:nn_roc_auc_discrete} zostały przedstawione krzywe ROC dla 3 klas, wraz z ich mikro-średnią, dla sieci neuronowej o jednej warstwie ukrytej z 10 neuronami. Analizując wykres łatwo zauważyć dysproporcję pomiędzy AUC poszczególnych klas. Model ma największą trudność z przewidywaniem klasy utrzymania ceny, która ma aż o $0.14$ AUC mniej niż pozostałe klasy. Taka rozbieżność może być problematyczna na etapie używania nauczonego modelu do predykcji. Im większa rozbieżność między AUC poszczególnych klas tym gorzej. Może się bowiem okazać iż dwa modele o porównywalnej mierze AUC będą uzyskiwały rozbieżne wyniki w grze na giełdzie. Mogłoby to wynikać z faktu iż model w ogóle nie zwraca w swoich przewidywaniach jednej z klas, zaś pozostałe estymuje bardzo dobrze. Na przykład model nie wskazujący nigdy klasy spadku, nie dawałby sygnału do sprzedaży akcji, a to całkowicie wyklucza jego praktyczne użycie. 
+Klasyfikacja wieloklasowa jest jednak zauważalnie cięższym zagadnieniem od klasyfikacji binarnej gdyż różnica w średnich wynikach dokładności wyniosła ponad $\sim 20\%$. Ta dysproporcja wydaje się być naturalna, ponieważ w przeciwieństwie do klasyfikacji binarnej podział na klasy nie wynika bezpośrednio z różnic cen na giełdzie. Trzecia klasa została wprowadzona w sposób sztuczny na podstawie progu opartego o marżę pobieraną od transakcji giełdowych, nie zaś na podstawie danych naturalnie występujących pośród danych giełdy. Takie działanie bez wątpienia powiększyło złożoność zagadnienia predykcji.
+
+\bigskip
+
+Dodatkowo dla problemu wieloklasowego przeprowadzona została analiza jakości klasyfikacji konkretnych klas. Na wykresie \ref{img:lgbm_roc_amzn} zostały przedstawione krzywe ROC dla 3 klas, wraz z ich mikro-średnią, dla modelu \textit{Light GBM}. Analizując wykres łatwo zauważyć dysproporcję pomiędzy AUC poszczególnych klas. Model dla tej spółki zaskakująco dobrze radzi sobie z predykcją klasy \textit{utrzymanie}. Wynik AUC dla tej klasy jest aż o $0.14$ większy od pozostałych klas. Taka postać rzeczy nie jest jednak regułą. Dla różnych spółek miary AUC dla poszczególnych klas mogą być bardzo zróżnicowane. Taka rozbieżność może być problematyczna na etapie używania nauczonego modelu do predykcji. Im większa rozbieżność między AUC poszczególnych klas tym gorzej. Może się bowiem okazać iż dwa modele o porównywalnej mierze AUC będą uzyskiwały rozbieżne wyniki w grze na giełdzie. Hipotetycznie dany model mógłby w ogóle nie przypisywać wejściowych próbek do jednej z klas, zaś pozostałe klasy estymować z wysokim prawdopodobieństwem. Na przykład model nie wskazujący nigdy klasy spadku, nie dawałby sygnału do sprzedaży akcji. To całkowicie wyklucza jego praktyczne użycie.
 
 \begin{figure}[H]
-\centering \includegraphics[scale=0.8]{img/nn_layers_10_discrete_roc-googl.pdf}
-\caption{Wykres ROC sieci neuronowej o jednej warstwie neuronowej z 10 neuronami dla klasyfikacji na 3 klasy spółki \textit{GOOGL} (opracowanie własne)}
-\label{img:nn_roc_auc_discrete}
+\centering \includegraphics[scale=0.8]{img/AMZN_roc_lgbm.pdf}
+\caption{Wykres ROC predykcji modelu \textit{Light GBM} dla klasyfikacji na 3 klasy spółki \textit{AMZN} (opracowanie własne)}
+\label{img:lgbm_roc_amzn}
 \end{figure}
-
-
 
 \section{Wspomaganie decyzji giełdowych}
 
@@ -1537,61 +1518,76 @@ Algorytm dokonujący transakcji opiera się na analizie kolejnych sesji giełdow
 
 \bigskip
 
-Do porównania uzyskanych wyników zastosowana była technika \textit{buy and hold}, która polega na kupieniu akcji odpowiednich spółek i pozostanie biernym na wahania rynku do czasu spieniężenia akcji.  Ta metoda jest preferowaną formą inwestowania analityków fundamentalnych, którzy często twierdzą iż niemożliwym jest wypracowanie ponadprzeciętnych zysków w oparciu o analizę techniczną i predykcję trendów. Innym wskaźnikiem stosowanym do oceniania wyników aktywnego grania na giełdzie jest indeks giełdowy, który jest odwzorowaniem średniej zmiany wartości dla konkretnej grupy spółek. Inwestowanie w fundusze inwestycyjne oparte o indeksy giełdowe często jest uznawane za wygodną alternatywę do handlu na konkretnych akcjach, gdyż odzwierciedla szeroki rynek i nie wymaga dogłębnej analizy spółek.  Odpowiednim indeksem giełdowym do wybranych w tej pracy spółek jest \textit{S\&P 500} zawierającym 500 przedsiębiorstw o największej kapitalizacji notowanych na giełdach \textit{NYSE} oraz \textit{NASDAQ}. W okresie od 1 stycznia 2019 do 6 lipca 2019 indeks \textit{S\&P 500} zanotował wzrost o \textbf{18.45}\%.
+Do porównania uzyskanych wyników zastosowana była technika \textit{buy and hold}, która polega na kupieniu akcji odpowiednich spółek i pozostanie biernym na wahania rynku do czasu spieniężenia akcji.  Ta metoda jest preferowaną formą inwestowania analityków fundamentalnych, którzy często twierdzą iż niemożliwym jest wypracowanie ponadprzeciętnych zysków w oparciu o analizę techniczną i predykcję trendów. Innym wskaźnikiem stosowanym do oceny wyników aktywnego grania na giełdzie jest indeks giełdowy, który jest odwzorowaniem średniej zmiany wartości dla konkretnej grupy spółek. Inwestowanie w fundusze inwestycyjne oparte o indeksy giełdowe często jest uznawane za wygodną alternatywę do handlu na konkretnych akcjach, gdyż odzwierciedla szeroki rynek i nie wymaga dogłębnej analizy spółek.  Odpowiednim indeksem giełdowym do wybranych w tej pracy spółek jest \textit{S\&P 500} zawierającym 500 przedsiębiorstw o największej kapitalizacji notowanych na giełdach \textit{NYSE} oraz \textit{NASDAQ}. W okresie od 1 stycznia 2019 do 6 lipca 2019 indeks \textit{S\&P 500} zanotował wzrost o \textbf{18.45}\%.
 
 \bigskip
 
-Wyniki dla metody \textit{buy and hold} oraz klasyfikatorów binarnych zostały opisane w tabeli \ref{tab:comparison_simulation_binary}. Jak widać wyniki są pewnym odzwierciedleniem porównania modeli pod względem dokładności klasyfikacji (tabela \ref{tab:comparison_final_binary}). Najlepszy średni wynik na poziomie \textbf{148}\% uzsykał model sieci neuronowej, troche gorsze wyniki uzyskał model SVM oraz Light GBM około 141\%, zaś najgorszy wynik wypracował las losowy 136\%. Niezależnie od wybranego modelu średnio udało się uzyskać dużo lepsze wyniki od strategii \textit{buy and hold} (124\%) czy też indeksu giełdowego (118\%). Strategia \textit{buy and hold} dla niektórych modeli i spółek okazała się lepsza, jednak nie była to zazwyczaj duża różnica. Największą korzyść z wykorzystywania klasyfikatorów do handlu na giełdzie widać przy spółkach, które uzyskały najgorsze wyniki przy strategii \textit{buy and hold}. Dla spółki \textit{AMGN} odniesiona została strata na poziomie 3\% kapitału, jednak wykorzystanie dowolnego modelu pozwala na ograniczenie ryzyka i wypracowanie zadowalającego zysku. W żadnym przypadku użycia klasyfikatorów nie została odnotowana strata kapitału, co jest bardzo istotnym czynnikiem przy szacowaniu ryzyka wynikającego z automatyzacji handlu.
+Wyniki dla metody \textit{buy and hold} oraz klasyfikatorów binarnych zostały opisane w tabeli \ref{tab:comparison_simulation_binary}. Dzięki mniejszej liczbie próbek przy tej analizie model sieci neuronowych był uczony na nowo co dwie sesje giełdowe. Metoda \textit{buy and hold} pozwoliła na wypracowanie zysku na poziomie 124.41\% kapitału początkowego. Jak widać wyniki dla poszczególnych modeli są odzwierciedleniem porównania ich pod względem dokładności klasyfikacji (tabela \ref{tab:comparison_final_binary}). Najlepszy średni wynik na poziomie \textbf{140.01}\% kapitału początkowego uzsykał model sieci neuronowej, niewiele gorszy okazał się model \textit{Light GBM} z wynikiem około 131\%. Dla modelu SVM wynik 120\% jest odstępstwem od oczekiwań w porównaniu do dokładności tego modelu. Ta średnia wartość wydaje się być zawyżona przez wynik dla spółki \textit{QCOM}. Dla pozostałych spółek model SVM jest zauważalnie gorszy od biernego uczestnictwa w giełdzie. Najgorszy wynik około 107\% otrzymał model lasu losowego. Dla tego modelu również widać anomalię w przypadku spółki \textit{QCOM}. Analiza wykresu ceny zamknięcia tej spółki (rysunek \ref{img:qcom_adj_close}) pozwala dostrzec gwałtowne wahanie ceny w połowie kwietnia 2019. Przy takich dynamicznych zmianach nawet modele losowe mogą przypadkowo uzyskać wysoki zysk przy odpowiednich decyzjach. Na dłuższą metę takie anomalie są jednak amortyzowane, a modele z niską dokładnością dają dużo gorsze wyniki.
 
  \begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|c|c|}
     \hline
         \textbf{Spółka}  & \textbf{Buy and hold} & \textbf{SVM} &  \textbf{MLP}  &  \textbf{Random forest}  &  \textbf{Light GBM} \\ \hline
-AAPL & 140.61 & 148.31  &  \textbf{153.67} & 136.91 & 143.21\\ \hline
-AMGN & 97.23 &  125.81 & \textbf{133.44}  & 119.42 &  127.09 \\ \hline
-AMZN & 126.58 &  139.00 & \textbf{147.15} & 115.36 & 135.98 \\ \hline
-CSCO & 131.31 & 149.18  & 144.76  & \textbf{154.39} &  143.15 \\ \hline
-FB   & 143.52 & 164.96  & \textbf{177.34} & 149.97 & 159.19 \\ \hline
-GOOGL & 105.97 &  133.85 &  140.69 & 120.45 & \textbf{141.03} \\ \hline
-INTC & 103.98 & 124.35  & 130.99  & \textbf{138.33} & 131.97 \\ \hline
-MSFT &  136.12 & \textbf{147.06}  &  144.46  & 141.61 & 133.76 \\ \hline
-PEP  & 121.60 &  118.67 &  \textbf{123.37} & 117.12 & 118.67 \\ \hline
-QCOM & 137.18 &  166.75 &  \textbf{184.64} & 169.69 & 177.81  \\ \hline \hline
-\textbf{Średni zysk} & 124.41 & 141.79 & \textbf{148.05} &  136.32 & 141.19 \\  \hline  
+AAPL & 140.61 & 134.64  &  \textbf{143.02} & 100.23 & 137.64\\ \hline
+AMGN & 97.23 &  91.93 & \textbf{121.91}  & 80.65 &  108.10 \\ \hline
+AMZN & 126.58 &  120.51 & \textbf{145.56} & 113.13 & 129.36 \\ \hline
+CSCO & 131.31 & 130.74  & 136.77  & 106.17 &  \textbf{139.56} \\ \hline
+FB   & 143.52 & 142.41  & \textbf{179.30} & 125.21 & 156.43 \\ \hline
+GOOGL & 105.97 &  94.58 &  \textbf{136.29} & 103.45 & 132.08 \\ \hline
+INTC & 103.98 & 102.05  & 115.59  & 86.82 & \textbf{119.19} \\ \hline
+MSFT &  136.12 & 111.70  &  133.97  & 108.04 & \textbf{140.00} \\ \hline
+PEP  & 121.60 &  114.14 &  \textbf{122.26} & 94.63 & 119.30 \\ \hline
+QCOM & 137.18 &  158.54 &  \textbf{165.43} & 157.12 & 135.70  \\ \hline \hline
+\textbf{Średni zysk} & 124.41 & 120.12 & \textbf{140.01} &  107.55 & 131.74 \\  \hline 
+\textbf{Średnia dokładność} &  - & 55.4\% & \textbf{84.2\%} &  52.8\% & 79.4\% \\  \hline   
     \end{tabular}
     \caption{Uzyskany zysk wyrażony w procentach początkowego budżetu (100 oznacza budżet wejściowy), wyniki symulacji dla klasyfikacji binarnej.}
     \label{tab:comparison_simulation_binary}
 \end{table}   
 
-Analogiczne wyniki dla metody \textit{buy and hold} oraz klasyfikatorów wieloklasowych zostały opisane w tabeli \ref{tab:comparison_simulation_discrete}. Dla tego rodzaju klasyfikacji wyniki symulacji giełdy różnią się od wyników dokładności (tabela \ref{tab:comparison_final_discrete}). Model SVM okazał się lepszy w handlu od sieci neuronowej pomimo różnicy w szacowaniu dokładności aż o 11\%.  W przypadku SVM, lasu losowego oraz metody Light GBM średni wynik, w stosunku do symulacji dla klasyfikacji binarnej, poprawił się o kilka procent. Gorszy wynik wykazał jedynie model sieci neuronowej jednak dał on mimo wszystko bardzo satysfakcjonujący zysk.
+Model sieci neuronowej oraz model \textit{Light GBM} uzyskały dużo lepsze wyniki od strategii \textit{buy and hold} (124\%) czy też indeksu giełdowego (118\%). Model sieci neuronowej nie uzyskał najlepszych wyników dla wszystkich spółek, jednak różnica na korzyść modelu \textit{Light GBM} nie była znaczna, a końcowy wynik dla sieci neuronowej jest aż o $\sim 8\%$ lepszy. Największą korzyść z wykorzystywania klasyfikatorów do handlu na giełdzie widać przy spółkach, które uzyskały najgorsze wyniki przy strategii \textit{buy and hold}. Dla spółki \textit{AMGN} odniesiona została strata na poziomie 3\% kapitału, jednak wykorzystanie modelu sieci neuronowej pozwala na ograniczenie ryzyka i wypracowanie zadowalającego zysku. Wynika to z faktu, iż główną zaletą aktywnego handlu na giełdzie jest spieniężanie akcji przed spadkiem ceny. Jeżeli dla danej spółki cena w głównej mierze rośnie, aktywne zarządzanie portfelem inwestycyjnym nie będzie w stanie znacznie poprawić zysku wynikającego z biernego posiadania akcji.
+
+\begin{figure}[H]
+\centering \includegraphics[scale=1]{img/QCOM_adj_close.pdf}
+\caption{Wykres ceny zamknięcia spółki \textit{QCOM} (opracowanie własne)}
+\label{img:qcom_adj_close}
+\end{figure}
+
+
+
+Analogiczne wyniki dla klasyfikatorów wieloklasowych zostały opisane w tabeli \ref{tab:comparison_simulation_discrete}. Podobnie jak w poprzednim teście zgodnie z oczekiwaniami najgorsze wyniki zostały uzyskane przez modele o najgorszej dokładności. Porównując model \textit{SVM} oraz \textit{random forest} zauważalny jest proporcjonalny wzrost zysku do wzrostu dokładności. Dla modelu \textit{Light GBM} uzyskany zysk jest niewiele gorszy do zysku tego modelu wykorzystującego klasyfikację binarną. Różnica kapitału końcowego wynosi jedynie $\sim 3.5\%$ podczas gdy różnica dokładności jest na poziomie $\sim 21\%$.
+
+
+Dla tego rodzaju klasyfikacji wyniki symulacji giełdy różnią się od wyników dokładności (tabela \ref{tab:comparison_final_discrete}). Model SVM okazał się lepszy w handlu od sieci neuronowej pomimo różnicy w szacowaniu dokładności aż o 11\%.  W przypadku SVM, lasu losowego oraz metody Light GBM średni wynik, w stosunku do symulacji dla klasyfikacji binarnej, poprawił się o kilka procent. Gorszy wynik wykazał jedynie model sieci neuronowej jednak dał on mimo wszystko bardzo satysfakcjonujący zysk.
 
  \begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|c|c|}
     \hline
         \textbf{Spółka}  & \textbf{Buy and hold} & \textbf{SVM} &  \textbf{MLP}  &  \textbf{Random forest}  &  \textbf{Light GBM} \\ \hline
-AAPL & 140.61 & 148.26  & \textbf{151.58}  & 139.66 & 140.42 \\ \hline
-AMGN & 97.23 & 124.28  &  \textbf{137.08} & 121.94 &  131.88 \\ \hline
-AMZN & 126.58 &  143.37 & 131.96 & 122.90 & \textbf{148.86} \\ \hline
-CSCO & 131.31 & 152.57  & \textbf{163.61}  & 159.67 & 148.83  \\ \hline
-FB   & 143.52 &  169.41 & 153.14 & 144.98 & \textbf{185.99} \\ \hline
-GOOGL & 105.97 &  \textbf{136.04} & 130.46  & 121.23 & 134.14 \\ \hline
-INTC & 103.98 & 136.13  & \textbf{137.33}  & 126.85 & 131.09 \\ \hline
-MSFT &  136.12 & \textbf{151.86}  &  140.73  & 147.55 & 136.44 \\ \hline
-PEP  & 121.60 &  123.50 & 121.51  & 118.71 & \textbf{124.08} \\ \hline
-QCOM & 137.18 &  \textbf{199.61} & 189.39  & 179.87 & 189.19 \\ \hline \hline
-\textbf{Średni zysk} & 124.41 & \textbf{148.5} & 145.68 & 138.34 & 147.09 \\  \hline  
+AAPL & 140.61 & 121.30  &   & 111.01 & 145.94 \\ \hline
+AMGN & 97.23 & 99.48  &  & 85.47 &  103.97 \\ \hline
+AMZN & 126.58 &  109.94 &  & 117.90 & \textbf{127.84} \\ \hline
+CSCO & \textbf{131.31} & 111.07  &   & 101.92 & 122.74  \\ \hline
+FB   & 143.52 &  128.23 &  & 124.79 & 151.15 \\ \hline
+GOOGL & 105.97 &  94.98 &   & 92.11 & 110.52 \\ \hline
+INTC & 103.98 & 90.43  &   & 83.59 & \textbf{111.78} \\ \hline
+MSFT &  136.12 & 121.94  &    & 122.13 & \textbf{136.33} \\ \hline
+PEP  & \textbf{121.60} &  121.13 &  & 117.00 & 119.90 \\ \hline
+QCOM & 137.18 &  123.95 &   & 95.67 & 151.21 \\ \hline \hline
+\textbf{Średni zysk} & 124.41 & 112.24 & & 105.16 & 128.14 \\  \hline  
+\textbf{Średnia dokładność} &  - & 42.4\% &  &  36.4\% & 58.2\% \\  \hline  
     \end{tabular}
     \caption{Uzyskany zysk wyrażony w procentach początkowego budżetu (100 oznacza budżet wejściowy), wyniki symulacji dla klasyfikacji na 3 klasy.}
     \label{tab:comparison_simulation_discrete}
 \end{table}   
 
-W symulacjach handlu na giełdzie z pomocą klasyfikatorów widać zależność końcowych wyników od wyników dokładności jednak ta zależność nie jest bezpośrednia. Dla lasów losowych wyniki dokładności oraz wyniki gry na giełdzie były dużo gorsze od pozostałych modeli. Jednak gdy wyniki dokładności nie są zauważalnie gorsze ciężko jednoznacznie określić jak dany model poradzi sobie na giełdzie. 
+W symulacjach handlu na giełdzie z pomocą klasyfikatorów widać zależność końcowych wyników od wyników dokładności. Model sieci neuronowej oraz model \textit{Light GBM} uzyskały zadowalające wyniki dokładności i znacznie przewyższyły zysk z biernej inwestycji w wybrane akcje dla każdej z testowanych spółek. Model SVM oraz model lasu losowego nie potrafiły skutecznie przewidywać trendów giełdowych, a co za tym idzie uzyskały dużo gorsze wyniki od strategii \textit{buy and hold}. Dla przeprowadzonych testów, rozszerzenie problemu predykcji trendu o dodatkową trzecią klasę znacznie zwiększyło złożoność problemu, co można stwierdzić na podstawie uzyskanych wyników dokładności. Pomimo tego modele klasyfikujące na 3 klasy wykazywały zyski zbliżone do modeli klasyfikujących binarnie.
 
 \bigskip
 
-Analizę symulacji można pogłębić o wgląd w decyzje algorytmu. Rysunek \ref{img:amgn_wallet_buy_sell} przedstawia decyzje dokonywane przez algorytm używający klasyfikatora wieloklasowego w zestawieniu z rzeczywistą ceną zamknięcia z każdego dnia. Na czerwono oznaczone są okresy gdy klasyfikator przewidywał spadek lub utrzymanie ceny, a w portfelu znajdowała się gotówka. Na zielono oznaczone zostały okresy gdy klasyfikator przewidywał wzrost lub utrzymanie ceny, a w portfelu znajdowały się akcje spółki \textit{AMGN}. Łatwo dostrzec, że klasyfikator ma największą skuteczność w momentach gwałtownych spadków lub wzrostów ceny. W przypadku delikatnych zmian, algorytm zazwyczaj nie zmienia strategii co jest oczekiwanym zachowaniem wynikającym z klasyfikacji zmian ceny do klasy \textit{utrzymanie}. Takie zachowanie algorytmu pozwala na uzyskiwanie ponadprzeciętnych zysków. 
+Analizę symulacji można pogłębić o wgląd w decyzje algorytmu. Rysunek \ref{img:amgn_wallet_buy_sell} przedstawia decyzje dokonywane przez algorytm używający klasyfikatora binarnego w zestawieniu z rzeczywistą ceną zamknięcia z każdego dnia. Na czerwono oznaczone są okresy gdy klasyfikator przewidywał spadek lub utrzymanie ceny, a w portfelu znajdowała się gotówka. Na zielono oznaczone zostały okresy gdy klasyfikator przewidywał wzrost lub utrzymanie ceny, a w portfelu znajdowały się akcje spółki \textit{AMGN}. Łatwo dostrzec, że klasyfikator ma największą skuteczność w momentach gwałtownych spadków lub wzrostów ceny. W przypadku delikatnych zmian, algorytm zazwyczaj nie zmienia strategii co jest pożądanym zachowaniem pozwalającym na uniknięcie częstych opłat transakcyjnych domu maklerskiego. Model nie jest jednak perfekcyjny i nie zawsze jest w stanie odpowiednio przewidzieć zmiany ceny. Widać to w szczególności w okresie końca maja 2019, gdy nastąpił znaczny spadku ceny, zaś model nie dał sygnału do sprzedaży akcji co spowodowało utratę części kapitału.
 
 \begin{figure}[H]
 \centering \includegraphics[scale=1.1]{img/AMGN-buy_and_sell_plot.pdf}
@@ -1599,7 +1595,7 @@ Analizę symulacji można pogłębić o wgląd w decyzje algorytmu. Rysunek \ref
 \label{img:amgn_wallet_buy_sell}
 \end{figure}
 
-Wartość portfela w czasie została przedstawiona na rysunku \ref{img:amgn_wallet_value}. Zestawienie wartości portfela zarządzanego przez algorytm z użyciem klasyfikatora z wartością portfela strategii \textit{buy and hold} pokazuje wyższość poprawnej predykcji nad biernym udziałem w giełdzie. Gdy giełda odnotowuje spadki wartość portfela klasyfikatora utrzymuje się, zaś gdy ceny akcji rosną algorytm poprawnie inwestuje zarabiając pieniądze. Jakość klasyfikacji nie jest na poziomie 100\% wobec czego algorytm wykonuje błędne decyzje (maj 2019 na rysunku \ref{img:amgn_wallet_value}), jednak w porównaniu do poprawnych ruchów są one marginalne.
+Wartość portfela w czasie została przedstawiona na rysunku \ref{img:amgn_wallet_value}. Zestawienie wartości portfela zarządzanego przez algorytm z użyciem klasyfikatora z wartością portfela strategii \textit{buy and hold} pokazuje wyższość poprawnej predykcji nad biernym udziałem w giełdzie. Podczas gdy giełda odnotowuje spadki klasyfikator spienięża akcje zachowując środki, zaś gdy ceny akcji rosną algorytm poprawnie inwestuje zarabiając na wzroście ceny. W wykresach wartości obu portfeli widać znaczne podobieństwo jednak straty dla portfela zarządzanego przez algorytm z klasyfikatorem są znacznie mniejsze. Pozwala to reinwestować większość kapitału i z czasem różnica pomiędzy wartością obu portfeli co raz bardziej rośnie.
 
 \begin{figure}[H]
 \centering \includegraphics[scale=0.9]{img/AMGN-balance-plot.pdf}
@@ -1607,24 +1603,23 @@ Wartość portfela w czasie została przedstawiona na rysunku \ref{img:amgn_wall
 \label{img:amgn_wallet_value}
 \end{figure}
 
-Faktem, który warto odnotować jest niewątpliwa wyższość klasyfikacji na 3 klasy nad klasyfikacją binarną w grze na giełdzie. Średni zysk dla handlu na podstawie klasyfikacji wieloklasowej był większy o ponad \textbf{3}\% od zysku algorytmu używającego klasyfikacji binarnej. Taka różnica wydaje się być niewielka, lecz na dłuższą metę, dzięki ponownemu inwestowaniu zyskaego kapitału, będzie ona rosła wykładniczo. W ekonomii to zjawisko nosi miano procenta składanego. Analizując przewagę predykcji wieloklasowej warto zwrócić uwagę na krzywe ROC poszczególnych klas na rysunku  \ref{img:nn_roc_auc_discrete}. Przedstawione wartości \textit{AUC} dla każdej z klas dowodzą iż ten model lepiej przewiduje spadek (\textit{AUC} 0.92) i wzrost (\textit{AUC} 0.89) ceny ponad uzgodniony próg niż klasyfikator binarny (\textit{AUC} 0.88 tabela \ref{tab:comparison_final_binary}). Ponadto klasyfikator przewidujący klasę utrzymania pozwala na bardziej powściągliwe decyzje o kupnie bądź monetyzacji akcji, a jak wiadomo każda transakcja obarczona jest kosztem prowizji domu maklerskiego. Predykcja klasy utrzymania uzyskuje znacznie gorsze wyniki (\textit{AUC} 0.75 rysunek \ref{img:nn_roc_auc_discrete}), jednak najwidoczniej nie ma to dużego znaczenia na wykorzystywanie klasyfikatorów w grze na giełdzie. Tabela \ref{tab:simulation_avg_value_vs_transactions} zestawia średnie uzyskane zyski na giełdzie poszczególnych klasyfikatorów wraz z liczbą decyzji o zamianie instrumentu finansowego w portfelu inwestycyjnym. Porównanie zysków i liczby transakcji dla konkretnych modeli nie pozwala na wysnucie jednoznacznych wniosków. Perspektywa średniej liczby transakcji dla modeli klasyfikacji binarnej i klasyfikacji wieloklasowej ukazuje ujemną korelację między zyskiem, a liczbą transakcji.
+Warto dogłębniej zastanowić się nad użytecznością klasyfikacji na 3 klasy. Co prawda średni zysk dla handlu na podstawie klasyfikacji binarnej był o kilka punktów procentowych wyższy, jednak wprowadzenie trzeciej klasy do podstawowego problemu niesie za sobą inny zysk.
+
+
+%Faktem, który warto odnotować jest niewątpliwa wyższość klasyfikacji na 3 klasy nad klasyfikacją binarną w grze na giełdzie. Średni zysk dla handlu na podstawie klasyfikacji wieloklasowej był większy o ponad \textbf{3}\% od zysku algorytmu używającego klasyfikacji binarnej. Taka różnica wydaje się być niewielka, lecz na dłuższą metę, dzięki ponownemu inwestowaniu zyskaego kapitału, będzie ona rosła wykładniczo. W ekonomii to zjawisko nosi miano procenta składanego. Analizując przewagę predykcji wieloklasowej warto zwrócić uwagę na krzywe ROC poszczególnych klas na rysunku  \ref{img:nn_roc_auc_discrete}. Przedstawione wartości \textit{AUC} dla każdej z klas dowodzą iż ten model lepiej przewiduje spadek (\textit{AUC} 0.92) i wzrost (\textit{AUC} 0.89) ceny ponad uzgodniony próg niż klasyfikator binarny (\textit{AUC} 0.88 tabela \ref{tab:comparison_final_binary}). Ponadto klasyfikator przewidujący klasę utrzymania pozwala na bardziej powściągliwe decyzje o kupnie bądź monetyzacji akcji, a jak wiadomo każda transakcja obarczona jest kosztem prowizji domu maklerskiego. Predykcja klasy utrzymania uzyskuje znacznie gorsze wyniki (\textit{AUC} 0.75 rysunek \ref{img:nn_roc_auc_discrete}), jednak najwidoczniej nie ma to dużego znaczenia na wykorzystywanie klasyfikatorów w grze na giełdzie. Tabela \ref{tab:simulation_avg_value_vs_transactions} zestawia średnie uzyskane zyski na giełdzie poszczególnych klasyfikatorów wraz z liczbą decyzji o zamianie instrumentu finansowego w portfelu inwestycyjnym. Porównanie zysków i liczby transakcji dla konkretnych modeli nie pozwala na wysnucie jednoznacznych wniosków. Perspektywa średniej liczby transakcji dla modeli klasyfikacji binarnej i klasyfikacji wieloklasowej ukazuje ujemną korelację między zyskiem, a liczbą transakcji.
 
  \begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|}
     \hline
         \textbf{Model}  & \textbf{Średni zysk} & \textbf{Średnia liczba transakcji}\\ \hline
-            SVM binarny & 141.79 & 61.4 \\ \hline
-            MLP binarny & 148.05 & 60.2 \\ \hline
-            Random forest binarny & 136.32 & 57.2 \\ \hline
-            Light GBM binarny & 141.19 & 63.2 \\ \hline 
-            \textbf{Średnia modeli binarnych} & \textbf{141.84} & \textbf{60.5} \\ \hline \hline
+            MLP binarny & 140.01 & 51.0 \\ \hline
+            Light GBM binarny & 131.74 & 44.7 \\ \hline 
+            \textbf{Średnia modeli binarnych} & \textbf{135.9} & \textbf{47.8} \\ \hline \hline
             
-            SVM wieloklasowy & 148.5 & 39.6 \\ \hline
-            MLP wieloklasowy & 145.68 & 45.6 \\ \hline
-            Random forest wieloklasowy & 138.34 & 48.0 \\ \hline
-            Light GBM wieloklasowy & 147.09 & 51.5 \\ \hline
-            \textbf{Średnia modeli wieloklasowych} & \textbf{144.9} & \textbf{46.17} \\ \hline
+            MLP wieloklasowy & ? & ? \\ \hline
+            Light GBM wieloklasowy & 128.14 & 23.3 \\ \hline
+            \textbf{Średnia modeli wieloklasowych} & \textbf{?} & \textbf{?} \\ \hline
     \end{tabular}
     \caption{Porównanie średniego zysku z aktywnością danego modelu na giełdzie}
     \label{tab:simulation_avg_value_vs_transactions}

@@ -64,7 +64,7 @@ def plot_company_summary(df, symbol):
     plt.close()
 
 def compare_adj_one_plot():
-    symbols = ['GOOGL', 'AMZN']
+    symbols = ['AAPL', 'MSFT']
     df_list, _ = csv_importer.import_data_from_files(symbols, CSV_FILES_PATH)
 
     balanced_syms = []
@@ -72,7 +72,7 @@ def compare_adj_one_plot():
     for i in range(0, len(symbols)):
         sym = symbols[i]
         df = df_list[i]
-        MIN_DATE = '1990-01-01'
+        MIN_DATE = '2016-01-01'
         MAX_DATE = '2020-10-29'
         df = df[(df.index > MIN_DATE)]
         df = df[(df.index < MAX_DATE)]
@@ -89,7 +89,7 @@ def compare_adj_one_plot():
     plt.close()
 
 def plot_close_line_and_label_histograms():
-    symbols = ['GOOGL', 'INTC', 'FB']
+    symbols = ['QCOM']
     df_list, _ = csv_importer.import_data_from_files(symbols, CSV_FILES_PATH)
 
     balanced_syms = []
@@ -97,7 +97,7 @@ def plot_close_line_and_label_histograms():
     for i in range(0, len(symbols)):
         sym = symbols[i]
         df = df_list[i]
-        MIN_DATE = '2010-01-01'
+        MIN_DATE = '2019-01-01'
         MAX_DATE = '2020-10-29'
         df = df[(df.index > MIN_DATE)]
         df = df[(df.index < MAX_DATE)]
@@ -148,5 +148,5 @@ def plot_close_line_and_label_histograms():
 
 if __name__ == '__main__':
     plot_close_line_and_label_histograms()
-    compare_adj_one_plot()
+    # compare_adj_one_plot()
     print('FINISHED')

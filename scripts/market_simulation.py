@@ -18,6 +18,7 @@ from benchmark_params import BenchmarkParams, NnBenchmarkParams, LightGBMBenchma
     SVMBenchmarkParams
 
 CSV_TICKER = 'ticker'
+CSV_ACCURACY = 'accuracy'
 CSV_BALANCE = 'balance'
 CSV_BUDGET = 'budget'
 CSV_BUY_AND_HOLD_BALANCE = 'buy_and_hold_balance'
@@ -102,7 +103,7 @@ class MarketSimulation:
             benchmark_file_helper.save_results(self.details_results_df, self.bench_params, self.bench_params.curr_sym)
 
             result_dict = {CSV_TICKER: self.bench_params.curr_sym, CSV_BUDGET: self.budget,
-                           CSV_BALANCE: self.current_balance, CSV_BUY_AND_HOLD_BALANCE: self.buy_and_hold_balance,
+                           CSV_BALANCE: self.current_balance, CSV_BUY_AND_HOLD_BALANCE: self.buy_and_hold_balance, CSV_ACCURACY: acc,
                            CSV_TRAIN_TIME_COL: round(time.time() - single_company_benchmark_time, 2)}
             self.results_df = self.results_df.append(result_dict, ignore_index=True)
         print('Overall accuracy {0} and balance {1}'.format(round(np.mean(accuracies), 4), round(np.mean(balances), 4)))
@@ -307,8 +308,7 @@ class LightGBMSimulation(MarketSimulation):
         test_data = lgb.Dataset(x_test, label=y_test)
         bst = lgb.train(params, train_data, valid_sets=[test_data, train_data],
                         num_boost_round=bench_params.num_boost_round
-                        , early_stopping_rounds=20, verbose_eval=False
-                        , feature_name=bench_params.feature_names)
+                        , early_stopping_rounds=20, verbose_eval=False)
         return bst
 
     def predict(self, model, x_day):
