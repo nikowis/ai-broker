@@ -1555,13 +1555,7 @@ Model sieci neuronowej oraz model \textit{Light GBM} uzyskały dużo lepsze wyni
 \end{figure}
 
 
-
-Analogiczne wyniki dla klasyfikatorów wieloklasowych zostały opisane w tabeli \ref{tab:comparison_simulation_discrete}. Podobnie jak w poprzednim teście zgodnie z oczekiwaniami najgorsze wyniki zostały uzyskane przez modele o najgorszej dokładności. Porównując model \textit{SVM} oraz \textit{random forest} zauważalny jest proporcjonalny wzrost zysku do wzrostu dokładności. Dla modelu \textit{Light GBM} uzyskany zysk jest niewiele gorszy do zysku tego modelu wykorzystującego klasyfikację binarną. Różnica kapitału końcowego wynosi jedynie $\sim 3.5\%$ podczas gdy różnica dokładności jest na poziomie $\sim 21\%$.
-
-
-Dla tego rodzaju klasyfikacji wyniki symulacji giełdy różnią się od wyników dokładności (tabela \ref{tab:comparison_final_discrete}). Model SVM okazał się lepszy w handlu od sieci neuronowej pomimo różnicy w szacowaniu dokładności aż o 11\%.  W przypadku SVM, lasu losowego oraz metody Light GBM średni wynik, w stosunku do symulacji dla klasyfikacji binarnej, poprawił się o kilka procent. Gorszy wynik wykazał jedynie model sieci neuronowej jednak dał on mimo wszystko bardzo satysfakcjonujący zysk.
-
-
+Analogiczne wyniki dla klasyfikatorów wieloklasowych zostały opisane w tabeli \ref{tab:comparison_simulation_discrete}. Podobnie jak w poprzednim teście zgodnie z oczekiwaniami najgorsze wyniki zostały uzyskane przez modele o najgorszej dokładności. Porównując model \textit{SVM} oraz \textit{random forest} zauważalny jest proporcjonalny wzrost zysku do wzrostu dokładności. Dla modelu \textit{Light GBM} uzyskany zysk jest niewiele gorszy do zysku tego modelu wykorzystującego klasyfikację binarną. Różnica kapitału końcowego wynosi jedynie $\sim 3.5\%$ podczas gdy różnica dokładności jest na poziomie $\sim 21\%$. Najlepszy wynik został uzsykany dla modelu sieci neuronowej, która wykazała wzrost kapitału do 138.03 \% co jest jedynie o $\sim 2\%$ gorszym wynikiem względem algorytmu opartego o klasyfikację binarną.
 
  \begin{table}[H]
     \centering
@@ -1569,27 +1563,27 @@ Dla tego rodzaju klasyfikacji wyniki symulacji giełdy różnią się od wynikó
     \hline
         \textbf{Spółka}  & \textbf{Buy and hold} & \textbf{SVM} &  \textbf{MLP}  &  \textbf{Random forest}  &  \textbf{Light GBM} \\ \hline
 AAPL & 140.61 & 121.30  & \textbf{145.69}  & 111.01 & 145.94 \\ \hline
-AMGN & 97.23 & 99.48  &  & 85.47 &  103.97 \\ \hline
-AMZN & 126.58 &  109.94 &  & 117.90 & \textbf{127.84} \\ \hline
-CSCO & \textbf{131.31} & 111.07  &   & 101.92 & 122.74  \\ \hline
+AMGN & 97.23 & 99.48  & \textbf{140.57} & 85.47 &  103.97 \\ \hline
+AMZN & 126.58 &  109.94 & \textbf{136.23} & 117.90 & 127.84 \\ \hline
+CSCO & 131.31 & 111.07  & \textbf{137.37}  & 101.92 & 122.74  \\ \hline
 FB   & 143.52 &  128.23 & \textbf{152.81} & 124.79 & 151.15 \\ \hline
 GOOGL & 105.97 &  94.98 &  \textbf{123.36} & 92.11 & 110.52 \\ \hline
 INTC & 103.98 & 90.43  & \textbf{111.78}  & 83.59 & \textbf{111.78} \\ \hline
 MSFT &  136.12 & 121.94  &  135.68  & 122.13 & \textbf{136.33} \\ \hline
 PEP  & 121.60 &  121.13 & \textbf{126.09} & 117.00 & 119.90 \\ \hline
 QCOM & 137.18 &  123.95 &  \textbf{170.69} & 95.67 & 151.21 \\ \hline \hline
-\textbf{Średni zysk} & 124.41 & 112.24 & & 105.16 & 128.14 \\  \hline  
-\textbf{Średnia dokładność} &  - & 42.4\% &  &  36.4\% & 58.2\% \\  \hline  
+\textbf{Średni zysk} & 124.41 & 112.24 & 138.03 & 105.16 & 128.14 \\  \hline  
+\textbf{Średnia dokładność} &  - & 42.4\% & 75.1\% &  36.4\% & 58.2\% \\  \hline  
     \end{tabular}
     \caption{Uzyskany zysk wyrażony w procentach początkowego budżetu (100 oznacza budżet wejściowy), wyniki symulacji dla klasyfikacji na 3 klasy.}
     \label{tab:comparison_simulation_discrete}
 \end{table}   
 
-W symulacjach handlu na giełdzie z pomocą klasyfikatorów widać zależność końcowych wyników od wyników dokładności. Model sieci neuronowej oraz model \textit{Light GBM} uzyskały zadowalające wyniki dokładności i znacznie przewyższyły zysk z biernej inwestycji w wybrane akcje dla każdej z testowanych spółek. Model SVM oraz model lasu losowego nie potrafiły skutecznie przewidywać trendów giełdowych, a co za tym idzie uzyskały dużo gorsze wyniki od strategii \textit{buy and hold}. Dla przeprowadzonych testów, rozszerzenie problemu predykcji trendu o dodatkową trzecią klasę znacznie zwiększyło złożoność problemu, co można stwierdzić na podstawie uzyskanych wyników dokładności. Pomimo tego modele klasyfikujące na 3 klasy wykazywały zyski zbliżone do modeli klasyfikujących binarnie.
+W symulacjach handlu na giełdzie z pomocą klasyfikatorów widoczna jest zależność końcowych wyników od wyników dokładności. Model sieci neuronowej oraz model \textit{Light GBM} uzyskały zadowalające wyniki dokładności i znacznie przewyższyły zysk z biernej inwestycji w wybrane akcje dla każdej z testowanych spółek. Model SVM oraz model lasu losowego nie potrafiły skutecznie przewidywać trendów giełdowych, a co za tym idzie uzyskały dużo gorsze wyniki od strategii \textit{buy and hold}. Dla przeprowadzonych testów, rozszerzenie problemu predykcji trendu o dodatkową trzecią klasę znacznie zwiększyło złożoność problemu, co można stwierdzić na podstawie uzyskanych wyników dokładności. Pomimo tego modele klasyfikujące na 3 klasy wykazywały zyski zbliżone do modeli klasyfikujących binarnie.
 
 \bigskip
 
-Analizę symulacji można pogłębić o wgląd w decyzje algorytmu. Rysunek \ref{img:amgn_wallet_buy_sell} przedstawia decyzje dokonywane przez algorytm używający klasyfikatora binarnego w zestawieniu z rzeczywistą ceną zamknięcia z każdego dnia. Na czerwono oznaczone są okresy gdy klasyfikator przewidywał spadek lub utrzymanie ceny, a w portfelu znajdowała się gotówka. Na zielono oznaczone zostały okresy gdy klasyfikator przewidywał wzrost lub utrzymanie ceny, a w portfelu znajdowały się akcje spółki \textit{AMGN}. Łatwo dostrzec, że klasyfikator ma największą skuteczność w momentach gwałtownych spadków lub wzrostów ceny. W przypadku delikatnych zmian, algorytm zazwyczaj nie zmienia strategii co jest pożądanym zachowaniem pozwalającym na uniknięcie częstych opłat transakcyjnych domu maklerskiego. Model nie jest jednak perfekcyjny i nie zawsze jest w stanie odpowiednio przewidzieć zmiany ceny. Widać to w szczególności w okresie końca maja 2019, gdy nastąpił znaczny spadku ceny, zaś model nie dał sygnału do sprzedaży akcji co spowodowało utratę części kapitału.
+Analizę symulacji można pogłębić o wgląd w decyzje algorytmu. Rysunek \ref{img:amgn_wallet_buy_sell} przedstawia decyzje dokonywane przez algorytm używający klasyfikatora binarnego w zestawieniu z rzeczywistą ceną zamknięcia z każdego dnia. Na czerwono oznaczone są okresy gdy klasyfikator przewidywał spadek lub utrzymanie ceny, a w portfelu znajdowała się gotówka. Na zielono oznaczone zostały okresy gdy klasyfikator przewidywał wzrost lub utrzymanie ceny, a w portfelu znajdowały się akcje spółki \textit{AMGN}. Łatwo dostrzec, że klasyfikator ma największą dokładność w momentach gwałtownych spadków lub wzrostów ceny. W przypadku delikatnych zmian, algorytm zazwyczaj nie zmienia strategii co jest pożądanym zachowaniem pozwalającym na uniknięcie częstych opłat transakcyjnych dla domu maklerskiego. Model nie jest jednak perfekcyjny i nie zawsze jest w stanie odpowiednio przewidzieć zmiany ceny. Widać to w szczególności w okresie końca maja 2019, gdy nastąpił znaczny spadku ceny, zaś model nie dał sygnału do sprzedaży akcji co spowodowało utratę części kapitału.
 
 \begin{figure}[H]
 \centering \includegraphics[scale=1.1]{img/AMGN-buy_and_sell_plot.pdf}
@@ -1597,7 +1591,7 @@ Analizę symulacji można pogłębić o wgląd w decyzje algorytmu. Rysunek \ref
 \label{img:amgn_wallet_buy_sell}
 \end{figure}
 
-Wartość portfela w czasie została przedstawiona na rysunku \ref{img:amgn_wallet_value}. Zestawienie wartości portfela zarządzanego przez algorytm z użyciem klasyfikatora z wartością portfela strategii \textit{buy and hold} pokazuje wyższość poprawnej predykcji nad biernym udziałem w giełdzie. Podczas gdy giełda odnotowuje spadki klasyfikator spienięża akcje zachowując środki, zaś gdy ceny akcji rosną algorytm poprawnie inwestuje zarabiając na wzroście ceny. W wykresach wartości obu portfeli widać znaczne podobieństwo jednak straty dla portfela zarządzanego przez algorytm z klasyfikatorem są znacznie mniejsze. Pozwala to reinwestować większość kapitału i z czasem różnica pomiędzy wartością obu portfeli co raz bardziej rośnie.
+Na rysunku \ref{img:amgn_wallet_value} została przedstawiona wartość portfela algorytmu w zestawieniu z wartością portfela biernej inwestycji. To zestawienie pokazuje wyższość poprawnej predykcji nad biernym udziałem w giełdzie. Podczas gdy giełda odnotowuje spadki klasyfikator spienięża akcje zachowując środki, zaś gdy ceny akcji rosną algorytm poprawnie inwestuje zarabiając na wzroście ceny. W wykresach wartości obu portfeli widać znaczne podobieństwo jednak straty dla portfela zarządzanego przez algorytm z klasyfikatorem są znacznie mniejsze. Pozwala to reinwestować większość kapitału i z czasem różnica pomiędzy wartością obu portfeli coraz bardziej rośnie.
 
 \begin{figure}[H]
 \centering \includegraphics[scale=0.9]{img/AMGN-balance-plot.pdf}
@@ -1605,10 +1599,11 @@ Wartość portfela w czasie została przedstawiona na rysunku \ref{img:amgn_wall
 \label{img:amgn_wallet_value}
 \end{figure}
 
-Warto dogłębniej zastanowić się nad użytecznością klasyfikacji na 3 klasy. Co prawda średni zysk dla handlu na podstawie klasyfikacji binarnej był o kilka punktów procentowych wyższy, jednak wprowadzenie trzeciej klasy do podstawowego problemu niesie za sobą inny zysk.
+Warto dogłębniej zastanowić się nad użytecznością klasyfikacji na 3 klasy. Co prawda średni zysk dla handlu na podstawie klasyfikacji binarnej był o kilka punktów procentowych wyższy, jednak wprowadzenie trzeciej klasy do podstawowego problemu niesie za sobą inną korzyść. W tabeli \ref{tab:simulation_avg_value_vs_transactions} przedstawione został średni zysk dla najlepszych modeli oraz średnia liczba wykonanych transakcji podczas symulacji giełdowej.
 
+%Faktem, który warto odnotować jest niewątpliwa wyższość klasyfikacji na 3 klasy nad klasyfikacją binarną w grze na giełdzie. Średni zysk dla handlu na podstawie klasyfikacji wieloklasowej był większy o ponad \textbf{3}\% od zysku algorytmu używającego klasyfikacji binarnej. Taka różnica wydaje się być niewielka, lecz na dłuższą metę, dzięki ponownemu inwestowaniu zyskaego kapitału, będzie ona rosła wykładniczo. W ekonomii to zjawisko nosi miano procenta składanego. Analizując przewagę predykcji wieloklasowej warto zwrócić uwagę na krzywe ROC poszczególnych klas na rysunku  \ref{img:nn_roc_auc_discrete}. Przedstawione wartości \textit{AUC} dla każdej z klas dowodzą iż ten model lepiej przewiduje spadek (\textit{AUC} 0.92) i wzrost (\textit{AUC} 0.89) ceny ponad uzgodniony próg niż klasyfikator binarny (\textit{AUC} 0.88 tabela \ref{tab:comparison_final_binary}).
 
-%Faktem, który warto odnotować jest niewątpliwa wyższość klasyfikacji na 3 klasy nad klasyfikacją binarną w grze na giełdzie. Średni zysk dla handlu na podstawie klasyfikacji wieloklasowej był większy o ponad \textbf{3}\% od zysku algorytmu używającego klasyfikacji binarnej. Taka różnica wydaje się być niewielka, lecz na dłuższą metę, dzięki ponownemu inwestowaniu zyskaego kapitału, będzie ona rosła wykładniczo. W ekonomii to zjawisko nosi miano procenta składanego. Analizując przewagę predykcji wieloklasowej warto zwrócić uwagę na krzywe ROC poszczególnych klas na rysunku  \ref{img:nn_roc_auc_discrete}. Przedstawione wartości \textit{AUC} dla każdej z klas dowodzą iż ten model lepiej przewiduje spadek (\textit{AUC} 0.92) i wzrost (\textit{AUC} 0.89) ceny ponad uzgodniony próg niż klasyfikator binarny (\textit{AUC} 0.88 tabela \ref{tab:comparison_final_binary}). Ponadto klasyfikator przewidujący klasę utrzymania pozwala na bardziej powściągliwe decyzje o kupnie bądź monetyzacji akcji, a jak wiadomo każda transakcja obarczona jest kosztem prowizji domu maklerskiego. Predykcja klasy utrzymania uzyskuje znacznie gorsze wyniki (\textit{AUC} 0.75 rysunek \ref{img:nn_roc_auc_discrete}), jednak najwidoczniej nie ma to dużego znaczenia na wykorzystywanie klasyfikatorów w grze na giełdzie. Tabela \ref{tab:simulation_avg_value_vs_transactions} zestawia średnie uzyskane zyski na giełdzie poszczególnych klasyfikatorów wraz z liczbą decyzji o zamianie instrumentu finansowego w portfelu inwestycyjnym. Porównanie zysków i liczby transakcji dla konkretnych modeli nie pozwala na wysnucie jednoznacznych wniosków. Perspektywa średniej liczby transakcji dla modeli klasyfikacji binarnej i klasyfikacji wieloklasowej ukazuje ujemną korelację między zyskiem, a liczbą transakcji.
+Ponadto klasyfikator przewidujący klasę utrzymania pozwala na bardziej powściągliwe decyzje o kupnie bądź monetyzacji akcji, a jak wiadomo każda transakcja obarczona jest kosztem prowizji domu maklerskiego. Predykcja klasy utrzymania uzyskuje znacznie gorsze wyniki (\textit{AUC} 0.75 rysunek \ref{img:nn_roc_auc_discrete}), jednak najwidoczniej nie ma to dużego znaczenia na wykorzystywanie klasyfikatorów w grze na giełdzie. Tabela \ref{tab:simulation_avg_value_vs_transactions} zestawia średnie uzyskane zyski na giełdzie poszczególnych klasyfikatorów wraz z liczbą decyzji o zamianie instrumentu finansowego w portfelu inwestycyjnym. Porównanie zysków i liczby transakcji dla konkretnych modeli nie pozwala na wysnucie jednoznacznych wniosków. Perspektywa średniej liczby transakcji dla modeli klasyfikacji binarnej i klasyfikacji wieloklasowej ukazuje ujemną korelację między zyskiem, a liczbą transakcji.
 
  \begin{table}[H]
     \centering
@@ -1619,16 +1614,16 @@ Warto dogłębniej zastanowić się nad użytecznością klasyfikacji na 3 klasy
             Light GBM binarny & 131.74 & 44.7 \\ \hline 
             \textbf{Średnia modeli binarnych} & \textbf{135.9} & \textbf{47.8} \\ \hline \hline
             
-            MLP wieloklasowy & ? & ? \\ \hline
+            MLP wieloklasowy & 138.03 & 39.2 \\ \hline
             Light GBM wieloklasowy & 128.14 & 23.3 \\ \hline
-            \textbf{Średnia modeli wieloklasowych} & \textbf{?} & \textbf{?} \\ \hline
+            \textbf{Średnia modeli wieloklasowych} & \textbf{133.1} & \textbf{31.2} \\ \hline
     \end{tabular}
     \caption{Porównanie średniego zysku z aktywnością danego modelu na giełdzie}
     \label{tab:simulation_avg_value_vs_transactions}
 \end{table} 
 
- Modele klasyfikujące na 3 klasy wykonały średnio o 14 transakcji mniej niż klasyfikatory binarne (miesięcznie jest to średnio aż o 2.3 transakcji mniej). Takie zachowanie pozwoliło ograniczyć koszty prowizji domu maklerskiego, a dzięki temu zwiększyć zysk.
-
+ Modele klasyfikujące na 3 klasy wykonały średnio o 16 transakcji mniej niż klasyfikatory binarne (miesięcznie jest to średnio aż o 2.6 transakcji mniej). Wynika to z dodatkowej klasy, która pozwala na pozostanie biernym danego dnia giełdowego. Ta różnica w liczbie transakcji jest bardzo istotna w przypadku gdyby prowizje od każdej z transakcji były wyższe od założonej wartości 0.2\%. Przyjęta wartość jest jedną z najniższych prowizji na polskim rynku. Wyższe prowizje występują w szczególności gdy transakcje nie przekraczają jakiejś określonej kwoty (zazwyczaj jest to kilka tysięcy dolarów). W takim przypadku mniejsza liczba transakcji w dużo większym stopniu wpływa na końcowy wynik, a modele klasyfikacji na 3 klasy wykorzystują swój potencjał i okazują się lepsze od klasyfikatorów binarnych. Pomimo że różnica uzyskiwana przy omijaniu opłat transakcyjnych wydaje się być niewielka, na dłuższą metę, dzięki ponownemu inwestowaniu zyskaego kapitału, będzie ona rosła wykładniczo. W ekonomii to zjawisko nosi miano procenta składanego.
+ 
 \section{Podsumowanie}
 
 W pracy przedstawione zostały różnorodne dane mogące posłużyć do analiz cen giełdowych, oraz różne podejścia do problemu przewidywania zmian cen akcji na giełdzie. Wykonane eksperymenty klasyfikacji demonstrują możliwości predykcji zmian cen na giełdzie jedynie z wykorzystaniem podstawowych danych giełdowych oraz wskaźników analizy technicznej. Oba przedstawione problemy klasyfikacji uzyskały nad wyraz satysfakcjonujące wyniki przy użyciu różnorodnych metod uczenia maszynowego. Najlepsze wyniki uzyskał model sieci neuronowej oraz model maszyny wektorów nośnych.
