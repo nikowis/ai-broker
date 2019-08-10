@@ -142,6 +142,8 @@
 
 Giełda jest miejscem przyciągającym rzesze inwestorów pragnących pomnożyć swój kapitał. Właściwy handel instrumentami finansowymi na giełdzie pozwala na osiąganie zysków przekraczających zyski z alternatywnych inwestycji takich jak na przykład nieruchomości. Wiąże się to oczywiście z pewnym ryzykiem. W niniejszej pracy opisano charakterystykę giełdy, dostępne dane giełdowe oraz różne podejścia do tematu przewidywania cen na giełdzie. Ponadto podjęto próbę stworzenia algorytmów do prognozowania za pomocą modeli z dziedziny uczenia maszynowego. Następnie, w celu dalszej oceny skuteczności, utworzone modele zostały wykorzystane w symulacji zautomatyzowanego handlu na giełdzie. 
 
+%TODO dodać opis jakie metody były wykorzystywane + jak zostało to ocenione
+
 \bigskip
 
 	\noindent \textbf{Słowa kluczowe:} giełda, predykcja, klasyfikacja, sieci neuronowe, SVM, las losowy, Light GBM, uczenie maszynowe, wspomaganie decyzji giełdowych
@@ -225,6 +227,8 @@ Najsłynniejszym analitykiem technicznym świata jest \textit{Warren Buffet} pre
 \subsubsection{Analiza techniczna \cite{technicalanalysis}}
 
 Analiza techniczna jest zbiorem technik mających na celu wspomaganie inwestora w podejmowaniu decyzji na podstawie historycznych danych giełdowych. Analiza ta bada zachowania rynku oraz poszukuje trendów np. poprzez analizę kształtów wykresów giełdowych. Szczególnie istotne są liczne wskaźniki techniczne oraz narzędzia analizy statystycznej.
+%TODO angielskie rozwinięcia akronimów (ang. ...)
+%TODO tak samo API/NASDAQ...
 Najpopularniejsze wskaźniki techniczne obejmują:
 \begin{itemize}
 \item{\textbf{SMA}} - średnia krocząca. Jest to średnia cen z kilku ostatnich dni (np. 3, 7, 14, 30),
@@ -283,7 +287,6 @@ Ze względu na to jak przebiega obrót akcjami, binarne przewidywanie z dnia na 
 
 Dla potwierdzenia zasadności takiego modelu, należy upewnić się że dzienne wahania cen na giełdzie są wystarczające. Na rysunku \ref{img:googl_pct_change_last_30} można zaobserwować, iż zmiany w kursie często przekraczają $0,4\%$ w związku z czym transakcje przynoszące zysk można wykonywać regularnie. Ten wniosek potwierdza zasadność takiej konstrukcji modeli. W związku z większym stopniem złożoności takiej klasyfikacji, może okazać się iż dane wejściowe nie pozwalają na odseparowanie tych trzech klas. 
 
-%TODO dodać paski -0.4%   +0.4% do wykresu
 \begin{figure}[H]
 \centering \includegraphics[scale=0.9]{img/googl_pct_change_last_30}
 \caption{Dzeinna zmiana ceny akcji spółki \textit{GOOGL} z 30 dni (opracowanie własne)}
@@ -324,6 +327,9 @@ Jednym z najprostszych sposobów do oceny dokładności klasyfikatorów jest okr
 Krzywa ROC (ang. receiver operating characteristic) jest narzędziem, która opisuje dokładność klasyfikatora za pomocą oceny jego czułości i precyzji. Precyzją modelu nazywa się stosunek $\frac{TP}{TP+FP}$, zaś czułość jest oznaczona przez $\frac{TP}{TP+FN}$.
 
 \bigskip
+
+%TODO dodać numerki do wzorów (2.3.3.1, 2.3.3.2)
+%TODO nigdy nie dawać dwóch wzorów w jednej linii
 
 Zdefiniujmy wartości \textit{True Positive Rate (TPR)} oraz \textit{False\ Positive\ Rate (FPR)}:
 
@@ -430,7 +436,7 @@ Do zagadnienia predykcji cen na giełdzie można podchodzić na kilka sposobów.
 
 \newpage
 
-\section{Analiza i przetworzenie danych}
+\section{Analiza i przetwarzanie danych}
 
 Przed przystąpieniem do wyboru modeli należy zastanowić się nad danymi jakie będą służyć do ich uczenia. Wybór odpowiednich cech, analiza zebranych informacji oraz przetworzenie ich, wykracza poza zakres uczenia maszynowego tworząc własną dziedzinę zwaną inżynierią i analizą danych. Odpowiedni dobór i obróbka danych wejściowych często daje większe korzyści niż dopracowywanie modeli przewidujących i optymalizacja ich parametrów. 
 
@@ -518,7 +524,7 @@ Wszystkie dane wejściowe, wraz z opisami, zaprezentowane są w tabeli \ref{tab:
      
 \end{longtable}
 
-\subsection{Przetworzenie wstępne}
+\subsection{Przetwarzanie wstępne}
 
 Po wybraniu odpowiednich danych należy przystąpić do ich pobrania. Pobrane dane nie są jednak gotowe do wykorzystania w procesie uczenia maszynowego. Zbiory informacji, w szczególności te pobrane z internetu, należy traktować zgodnie z zasadą ograniczonego zaufania. Wobec braku gwarancji jakości, dane powinny zostać zbadane pod względem integralności oraz poprawności. Spośród najczęstszych problemów wymienić można: 
 \begin{itemize}
@@ -546,6 +552,8 @@ Na rysunku \ref{img:non_stationary_adjusted_close} zauważyć można zjawisko ni
 
 Zjawisko niestacjonarności szeregów czasowych negatywnie wpływa na wykorzystywanie ich do uczenia maszynowego. Wszystkie zmienne, których dotyczy ten problem trzeba odpowiednio dostosować przed użyciem do uczenia modeli. Najbardziej powszechną metodą radzenia sobie z niestacjonarnością jest różnicowanie (ang. \textbf{differencing}). Jest to prosta metoda polegająca na wyliczeniu różnicy pomiędzy kolejnymi elementami w szeregu. W ten sposób zmienna $x_t$ jest zastąpiona przez $x'_t=x_t-x_{t-1}$. Wynik takiego przetworzenia dla ceny zamknięcia spółki \textit{Alphabet Inc} widoczny jest na rysunku \ref{img:stationary_adjusted_close}.
 
+%TODO zamienić na tabelki
+
 \begin{figure}[H]
 \centering 
 \includegraphics[scale=0.9]{img/adjusted_close_stationary.pdf}
@@ -553,7 +561,7 @@ Zjawisko niestacjonarności szeregów czasowych negatywnie wpływa na wykorzysty
 \label{img:stationary_adjusted_close}
 \end{figure}
 
-\subsubsection{Stworzenie etykiet}
+\subsubsection{Wyznaczenie etykiet}
 
 W procesie nadzorowanego uczenia maszynowego poza danymi wejściowymi potrzeba również etykiet, tj. zbioru pożądanych odpowiedzi. W przypadku regresyjnej predykcji cen zamknięcia w dniu $t$ etykietą jest cena zamknięcia z dnia $t+1$. Etykietę dla każdego wiersza danych wejściowych można więc uzyskać poprzez dodanie kolumny ceny zamknięcia przesuniętej o jeden dzień wstecz (zilustrowane na rysunku \ref{img:regression_label_creation}). 
 
@@ -589,7 +597,7 @@ Redukcja rozmiaru danych wejściowych jest zagadnieniem pozwalającym na poradze
 \begin{figure}[H]
 \centering 
 \includegraphics[scale=0.6]{img/corr_matrix.pdf}
-\caption{Macierz korelacji par zmiennych}
+\caption{Macierz korelacji par zmiennych (opracowanie własne)}
 \label{img:correlation}
 \end{figure}
 
@@ -625,7 +633,7 @@ Po odrzuceniu najmocniej skorelowanych danych można skorzystać z jednej z meto
 \begin{figure}[H]
 \centering 
 \includegraphics[scale=0.9]{img/pca_variance.pdf}
-\caption{Liczba składowych, a całkowita wariancja zbioru}
+\caption{Liczba składowych, a całkowita wariancja zbioru (opracowanie własne)}
 \label{img:pca_variance}
 \end{figure}
 
@@ -656,7 +664,7 @@ W celu używania maszyn wektorów nośnych do klasyfikacji problemów nieliniowy
 \end{figure}
 
 
-\subsection{Sieci neuronowe \cite{neural-nets}}
+\subsection{Sztuczne sieci neuronowe \cite{neural-nets}}
 
 Sieci neuronowe są zbiorem modeli matematycznych służących do realizacji obliczeń, bądź przetwarzania sygnałów. Inspirowane działaniem mózgu, swoją nazwę czerpią z upodobnienia struktury do naturalnych neuronów oraz łączących je synaps. Głównymi zastosowaniami sieci neuronowych są zadania regresji, klasyfikacji oraz generowania danych. 
 
@@ -707,6 +715,7 @@ Las losowy (ang. \textit{random forest}) jest modelem opartym o drzewa decyzyjne
 Dla złożonych zagadnień predykcji takich jak przewidywanie trendu giełdy, drzewa decyzyjne okazują się zbyt prostym modelem. Las losowy jest rozwinięciem koncepcji drzew decyzyjnych w zakresie metod zespołowych. Głównym założeniem jest stworzenie wielu drzew decyzyjnych i opieranie końcowego wyniku na podstawie poszczególnych wyników każdego z drzew. W celu wprowadzenia różnorodności podczas konstrukcji węzłów drzew, losowane są cechy spośród których będą dobrane cechy decyzyjne w danym węźle. Metoda ta zazwyczaj daje dużo lepsze efekty niż pojedyncze drzewa decyzyjne, oraz często pomaga w ograniczaniu zjawiska przeuczania (ang. overfitting).  
 
 \subsection{Light GBM \cite{lgbm}}
+%TODO rozwinąć GBM
 
 \textit{Light GBM} jest algorytmem z rodziny \textit{gradient boosting decision trees}. Algorytmy te oparte są o zespół drzew decyzyjnych. W przeciwieństwie do metody \textit{lasu losowego} konstrukcja kolejnych drzew jest wykonywana w sposób sekwencyjny, oraz zależny od wyników poprzednich drzew. Dzięki takiemu zabiegowi, zespół drzew dąży do ulepszenia swoich wyników jako całości. Algorytm \textit{light GBM} przewyższa inne algorytmy ze swojej klasy takie jak \textit{XGBoost} dzięki innemu podejściu do tworzenia drzew. Podczas gdy większość algorytmów powiększa drzewa decyzyjne wgłąb (\textit{level-wise}  rysunek \ref{img:level-wise}), \textit{light GBM} powiększa drzewa decyzyjne ze względu na liście (\textit{leaf-wise} rysunek \ref{img:leaf-wise}). Ten zabieg wraz z innymi optymalizacjami sprawia, że algorytm ten osiąga porównywalne wyniki do innych algorytmów ze swojej klasy, przy dużym skrócenia czasu uczenia się. 
 
@@ -1428,6 +1437,8 @@ max   						 &  0.386272 &  0.545294 &    0.239276 \\ \hline
 
 Końcowe wyniki \textbf{klasyfikacji binarnej} dla każdego z klasyfikatorów zostały oparte o testy przeprowadzone na 10 spółkach. Wyniki dokładności dla każdej ze spółek zostały zawarte w tabeli \ref{tab:comparison_final_binary}. Dodatkowo podane zostały uśrednione wyniki dokładności i AUC dla każdego z modeli. 
 
+%TODO rysunek z dwóch kryteriów średnia dokładność (oś x) + średnia AUC (oś y)
+
  \begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|c|}
@@ -1469,6 +1480,8 @@ Dla modelu random forest można zauważyć pewną anomalię dla spółki \textit
 \bigskip
 
 Dla \textbf{klasyfikacji na 3 klasy} zostały wykonane analogiczne testy dla 10 spółek. Wyniki zostały przedstawione w tabeli \ref{tab:comparison_final_discrete}. Podobnie jak dla poprzedniego problemu modele \textit{SVM} oraz \textit{random forest} nie wykazały dużo lepszej dokładności od losowego predyktora. Ponownie najlepszy okazał się model \textit{Light GBM} z dokładnością na poziomie $\sim 59.3\%$ oraz AUC $\sim 0.786$. Niewiele gorszy wynik dokładności osiągnął model sieci neuronowej $\sim 56.8\%$, jednak uzyskał on znacznie niższy wynik miary AUC $\sim 0.633$.
+
+%TODO rysunek z dwóch kryteriów średnia dokładność (oś x) + średnia AUC (oś y)
 
 \begin{table}[H]
     \centering
@@ -1524,6 +1537,9 @@ Do porównania uzyskanych wyników zastosowana była technika \textit{buy and ho
 
 Wyniki dla metody \textit{buy and hold} oraz klasyfikatorów binarnych zostały opisane w tabeli \ref{tab:comparison_simulation_binary}. Dzięki mniejszej liczbie próbek przy tej analizie model sieci neuronowych był uczony na nowo co dwie sesje giełdowe. Metoda \textit{buy and hold} pozwoliła na wypracowanie zysku na poziomie 124.41\% kapitału początkowego. Jak widać wyniki dla poszczególnych modeli są odzwierciedleniem porównania ich pod względem dokładności klasyfikacji (tabela \ref{tab:comparison_final_binary}). Najlepszy średni wynik na poziomie \textbf{140.01}\% kapitału początkowego uzsykał model sieci neuronowej, niewiele gorszy okazał się model \textit{Light GBM} z wynikiem około 131\%. Dla modelu SVM wynik 120\% jest odstępstwem od oczekiwań w porównaniu do dokładności tego modelu. Ta średnia wartość wydaje się być zawyżona przez wynik dla spółki \textit{QCOM}. Dla pozostałych spółek model SVM jest zauważalnie gorszy od biernego uczestnictwa w giełdzie. Najgorszy wynik około 107\% otrzymał model lasu losowego. Dla tego modelu również widać anomalię w przypadku spółki \textit{QCOM}. Analiza wykresu ceny zamknięcia tej spółki (rysunek \ref{img:qcom_adj_close}) pozwala dostrzec gwałtowne wahanie ceny w połowie kwietnia 2019. Przy takich dynamicznych zmianach nawet modele losowe mogą przypadkowo uzyskać wysoki zysk przy odpowiednich decyzjach. Na dłuższą metę takie anomalie są jednak amortyzowane, a modele z niską dokładnością dają dużo gorsze wyniki.
 
+%TODO rysunek z dwóch kryteriów średni zysk (oś x) + średnia dokładność (oś y)
+
+
  \begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|c|c|}
@@ -1557,6 +1573,9 @@ Model sieci neuronowej oraz model \textit{Light GBM} uzyskały dużo lepsze wyni
 
 Analogiczne wyniki dla klasyfikatorów wieloklasowych zostały opisane w tabeli \ref{tab:comparison_simulation_discrete}. Podobnie jak w poprzednim teście zgodnie z oczekiwaniami najgorsze wyniki zostały uzyskane przez modele o najgorszej dokładności. Porównując model \textit{SVM} oraz \textit{random forest} zauważalny jest proporcjonalny wzrost zysku do wzrostu dokładności. Dla modelu \textit{Light GBM} uzyskany zysk jest niewiele gorszy do zysku tego modelu wykorzystującego klasyfikację binarną. Różnica kapitału końcowego wynosi jedynie $\sim 3.5\%$ podczas gdy różnica dokładności jest na poziomie $\sim 21\%$. Najlepszy wynik został uzsykany dla modelu sieci neuronowej, która wykazała wzrost kapitału do 138.03 \% co jest jedynie o $\sim 2\%$ gorszym wynikiem względem algorytmu opartego o klasyfikację binarną.
 
+%TODO rysunek z dwóch kryteriów średni zysk (oś x) + średnia dokładność (oś y)
+
+
  \begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|c|c|}
@@ -1583,6 +1602,7 @@ W symulacjach handlu na giełdzie z pomocą klasyfikatorów widoczna jest zależ
 
 \bigskip
 
+
 Analizę symulacji można pogłębić o wgląd w decyzje algorytmu. Rysunek \ref{img:amgn_wallet_buy_sell} przedstawia decyzje dokonywane przez algorytm używający klasyfikatora binarnego w zestawieniu z rzeczywistą ceną zamknięcia z każdego dnia. Na czerwono oznaczone są okresy gdy klasyfikator przewidywał spadek lub utrzymanie ceny, a w portfelu znajdowała się gotówka. Na zielono oznaczone zostały okresy gdy klasyfikator przewidywał wzrost lub utrzymanie ceny, a w portfelu znajdowały się akcje spółki \textit{AMGN}. Łatwo dostrzec, że klasyfikator ma największą dokładność w momentach gwałtownych spadków lub wzrostów ceny. W przypadku delikatnych zmian, algorytm zazwyczaj nie zmienia strategii co jest pożądanym zachowaniem pozwalającym na uniknięcie częstych opłat transakcyjnych dla domu maklerskiego. Model nie jest jednak perfekcyjny i nie zawsze jest w stanie odpowiednio przewidzieć zmiany ceny. Widać to w szczególności w okresie końca maja 2019, gdy nastąpił znaczny spadku ceny, zaś model nie dał sygnału do sprzedaży akcji co spowodowało utratę części kapitału.
 
 \begin{figure}[H]
@@ -1590,6 +1610,9 @@ Analizę symulacji można pogłębić o wgląd w decyzje algorytmu. Rysunek \ref
 \caption{Wykres ceny akcji spółki \textit{AMGN} w zestawieniu z portfelem zarządzany przez algorytm używający wieloklasowego klasyfikatora MLP (opracowanie własne)}
 \label{img:amgn_wallet_buy_sell}
 \end{figure}
+
+%TODO referencja bez odniesienia 
+
 
 Na rysunku \ref{img:amgn_wallet_value} została przedstawiona wartość portfela algorytmu w zestawieniu z wartością portfela biernej inwestycji. To zestawienie pokazuje wyższość poprawnej predykcji nad biernym udziałem w giełdzie. Podczas gdy giełda odnotowuje spadki klasyfikator spienięża akcje zachowując środki, zaś gdy ceny akcji rosną algorytm poprawnie inwestuje zarabiając na wzroście ceny. W wykresach wartości obu portfeli widać znaczne podobieństwo jednak straty dla portfela zarządzanego przez algorytm z klasyfikatorem są znacznie mniejsze. Pozwala to reinwestować większość kapitału i z czasem różnica pomiędzy wartością obu portfeli coraz bardziej rośnie.
 
@@ -1604,6 +1627,8 @@ Warto dogłębniej zastanowić się nad użytecznością klasyfikacji na 3 klasy
 %Faktem, który warto odnotować jest niewątpliwa wyższość klasyfikacji na 3 klasy nad klasyfikacją binarną w grze na giełdzie. Średni zysk dla handlu na podstawie klasyfikacji wieloklasowej był większy o ponad \textbf{3}\% od zysku algorytmu używającego klasyfikacji binarnej. Taka różnica wydaje się być niewielka, lecz na dłuższą metę, dzięki ponownemu inwestowaniu zyskaego kapitału, będzie ona rosła wykładniczo. W ekonomii to zjawisko nosi miano procenta składanego. Analizując przewagę predykcji wieloklasowej warto zwrócić uwagę na krzywe ROC poszczególnych klas na rysunku  \ref{img:nn_roc_auc_discrete}. Przedstawione wartości \textit{AUC} dla każdej z klas dowodzą iż ten model lepiej przewiduje spadek (\textit{AUC} 0.92) i wzrost (\textit{AUC} 0.89) ceny ponad uzgodniony próg niż klasyfikator binarny (\textit{AUC} 0.88 tabela \ref{tab:comparison_final_binary}).
 
 Ponadto klasyfikator przewidujący klasę utrzymania pozwala na bardziej powściągliwe decyzje o kupnie bądź monetyzacji akcji, a jak wiadomo każda transakcja obarczona jest kosztem prowizji domu maklerskiego. Predykcja klasy utrzymania uzyskuje znacznie gorsze wyniki (\textit{AUC} 0.75 rysunek \ref{img:nn_roc_auc_discrete}), jednak najwidoczniej nie ma to dużego znaczenia na wykorzystywanie klasyfikatorów w grze na giełdzie. Tabela \ref{tab:simulation_avg_value_vs_transactions} zestawia średnie uzyskane zyski na giełdzie poszczególnych klasyfikatorów wraz z liczbą decyzji o zamianie instrumentu finansowego w portfelu inwestycyjnym. Porównanie zysków i liczby transakcji dla konkretnych modeli nie pozwala na wysnucie jednoznacznych wniosków. Perspektywa średniej liczby transakcji dla modeli klasyfikacji binarnej i klasyfikacji wieloklasowej ukazuje ujemną korelację między zyskiem, a liczbą transakcji.
+
+%TODO też wykresik z punktami
 
  \begin{table}[H]
     \centering
@@ -1643,6 +1668,8 @@ Kierunki dalszych potencjalnych badań uwzględniają:
 	\item dalszy rozwój i ulepszanie klasyfikatorów.
 \end{itemize}
 
+%TODO albo bibliografia albo literatura, BRAK LICZBY PRZY BIBLIO
+%TODO dostępy do wszystkich stron z biblio
 
 \section{Bibliografia}
 
@@ -1652,14 +1679,17 @@ Kierunki dalszych potencjalnych badań uwzględniają:
  \bibitem{nyse}
 Strona główna NYSE
 \\\url{https://www.nyse.com}
+\\Data dostępu: 15.02.2019
  
  \bibitem{nasdaq}
 Strona główna NASDAQ
 \\\url{https://www.nasdaq.com/}
+\\Data dostępu: 15.02.2019
 
  \bibitem{jpx}
 Strona główna JPX
 \\\url{https://www.jpx.co.jp/english/}
+\\Data dostępu: 15.02.2019
 
  \bibitem{paper_regression_radial}
 Zhiqiang Guo1, Huaiqing Wang, Jie Yang, David J. Miller,
@@ -1704,6 +1734,7 @@ Strona główna Berkeshire Hathaway
  \bibitem{alphavantage}
 Strona główna Alpha Vantage
 \\\url{https://www.alphavantage.co/}
+\\Data dostępu: 15.02.2019
 
 \bibitem{randwalk}
   Burton G. Malkiel,
@@ -1729,8 +1760,9 @@ Strona główna Alpha Vantage
   2005.
 
 \bibitem{roccurves}
-	ROC, \url{https://towardsdatascience.com/understanding-auc-roc-curve-68b2303cc9c5} 
-	Data dostępu: 15.02.2019
+	Receiver operating characteristic
+	\\\url{https://towardsdatascience.com/understanding-auc-roc-curve-68b2303cc9c5} 
+	\\Data dostępu: 15.02.2019
 
 \bibitem{hmeasure}
 	David J. Hand, 
@@ -1748,20 +1780,23 @@ Strona główna Alpha Vantage
   Monthly Weather Review, 78:1–3, 1950
 
 \bibitem{train_test_split}
- Podział danych testowych \url{https://medium.com/@rinu.gour123/train-and-test-set-in-python-machine-learning-how-to-split-58029a0d657b}
- Data dostępu: 30.05.2019
+ Podział danych testowych 
+ \\\url{https://medium.com/@rinu.gour123/train-and-test-set-in-python-machine-learning-how-to-split-58029a0d657b} 
+ \\Data dostępu: 30.05.2019
  
  
 \bibitem{train_test_split_time_series}
- Podział danych testowych metodą kroczącą \url{https://robjhyndman.com/hyndsight/tscv/}
- Data dostępu: 30.05.2019
+ Podział danych testowych metodą kroczącą 
+ \\\url{https://robjhyndman.com/hyndsight/tscv/}
+\\Data dostępu: 30.05.2019
  
 \bibitem{svm}
 	Bell, Jason, \textit{Machine Learning : Hands-On for Developers and Technical Professionals}  Indianapolis, IN, USA: John Wiley \& Sons, 2015. 139-160. Web.
 	
 \bibitem{wikisvm}
-	SVM, \url{https://en.wikipedia.org/wiki/Support-vector_machine} 
-	Data dostępu: 03.03.2019
+	Support vector machine
+	\\\url{https://en.wikipedia.org/wiki/Support-vector_machine} 
+	\\Data dostępu: 03.03.2019
 
 \bibitem{neural-nets}
 	Bell, Jason, \textit{Machine Learning : Hands-On for Developers and Technical Professionals}  Indianapolis, IN, USA: John Wiley \& Sons, 2015. 91-116. Web.
@@ -1773,8 +1808,9 @@ Strona główna Alpha Vantage
   Soft Computing, 21:597–609, 2017
 
 \bibitem{mlpnn}
-	Artificial neural network, \url{http://www.saedsayad.com/artificial_neural_network_bkp.htm} 
-	Data dostępu: 04.03.2019
+	Artificial neural network
+	\\\url{http://www.saedsayad.com/artificial_neural_network_bkp.htm} 
+	\\Data dostępu: 04.03.2019
 
 \bibitem{randforest}
 	Breiman, L, 
@@ -1787,12 +1823,14 @@ Guolin Ke, Qi Meng, Thomas Finley, Taifeng Wang,Wei Chen, Weidong Ma, Qiwei Ye, 
 	MACHINE LEARNING  Volume: 45   Issue: 1   Pages: 5-32   Published: OCT 2001
 
 \bibitem{wikidecisiontree}
-	Decision tree learning, \url{https://www.wikiwand.com/en/Decision_tree_learning} 
-	Data dostępu: 06.04.2019
+	Decision tree learning
+	\\\url{https://www.wikiwand.com/en/Decision_tree_learning} 
+	\\Data dostępu: 06.04.2019
 
 \bibitem{bib:sklearnsvm}
-	Sklearn SVM, \url{https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html#sklearn.svm.SVC}
-	Data dostępu: 23.06.2019
+	Biblioteka Sklearn implementacja SVM
+	\\\url{https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html#sklearn.svm.SVC}
+	\\Data dostępu: 23.06.2019
 
 \bibitem{lightgbm:dart}
 	K. V. Rashmi, Ran Gilad-Bachrach
@@ -1805,7 +1843,9 @@ Guolin Ke, Qi Meng, Thomas Finley, Taifeng Wang,Wei Chen, Weidong Ma, Qiwei Ye, 
  
 \listoftables
 
-%TODO wykaz symboli/skrótów/słowniczek
+
+%TODO brak numeru przy dodatku apliacji w tytule
+%TODO jakiś ciekawszy fragment kodu dodać!
 
 \section{Dodatek: opis aplikacji}
 
