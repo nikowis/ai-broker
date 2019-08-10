@@ -173,7 +173,7 @@ podpis promotora & \hspace*{100pt} & podpis autora
 
 \section{Wprowadzenie}
 
-Giełda z definicji jest miejscem wymiany towarów przez sprzedawców i kupców. Giełdy można podzielić na giełdy towarowe, pieniężne lub usługowe. Wymiany na tradycyjnych giełdach przebiegają przede wszystkim podczas sesji, które są organizowane w określonych dniach i godzinach. Najpopularniejszym rodzajem giełd są giełdy pieniężne, a w szczególności giełdy papierów wartościowych. Największymi giełdami papierów wartościowych są \textit{NYSE (New York Stock Exchange)}\cite{nyse}, \textit{NASDAQ}\cite{nasdaq} oraz \textit{JPX (Japan Exchange Group)}\cite{jpx}. Na każdej z tych giełd w dniach, w których prowadzone są sesje, dochodzi do transakcji opiewających na łączną kwotę rzędu miliardów dolarów amerykańskich.
+Giełda z definicji jest miejscem wymiany towarów przez sprzedawców i kupców. Giełdy można podzielić na giełdy towarowe, pieniężne lub usługowe. Wymiany na tradycyjnych giełdach przebiegają przede wszystkim podczas sesji, które są organizowane w określonych dniach i godzinach. Najpopularniejszym rodzajem giełd są giełdy pieniężne, a w szczególności giełdy papierów wartościowych. Największymi giełdami papierów wartościowych są \textit{NYSE (New York Stock Exchange)}\cite{nyse}, \textit{Nasdaq}\cite{nasdaq} oraz \textit{JPX (Japan Exchange Group)}\cite{jpx}. Na każdej z tych giełd w dniach, w których prowadzone są sesje, dochodzi do transakcji opiewających na łączną kwotę rzędu miliardów dolarów amerykańskich.
 
 \bigskip
 
@@ -182,6 +182,8 @@ Giełda z definicji jest miejscem wymiany towarów przez sprzedawców i kupców.
 \bigskip
 
 Temat predykcji i spekulacji giełdowych był wielokrotnie poruszany w prasie naukowej. Wielu naukowców pracowało nad predykcją dokładnej wartość ceny akcji na przykład za pomocą sieci radialnych (Guo \& Wang \& Yang \& Miller, 2015 \cite{paper_regression_radial}). Często można spotkać prace traktujące o problemie wyznaczania trendu ceny, a więc problemu klasyfikacji. Klasyfikacja trendu giełdowego za pomocą maszyn wektorów nośnych została opisana między innymi przez \textit{Kim} (2003) \cite{paper_classification_svm}. Większość prac skupia się jednak na na predykcji trendu indeksów, aniżeli konkretnych spółek (Kara \& Boyacioglu \& Baykan, 2011 \cite{paper_classification_index_istanbul}; Patel \& Shah \& Thakkar \& Kotecha, 2015 \cite{paper_classification_index_sp500}). Według najlepszej wiedzy autora tej pracy, brak jest źródeł naukowych opisujących predykcje dla konkretnych spółek giełdowych, wraz z wykorzystaniem przewidywanych wartości do wspomagania decyzji giełdowych. 
+
+\newpage
 
 \section{Modele prognozy na giełdzie oraz kryteria ich oceny}
 
@@ -210,9 +212,9 @@ Podstawowymi (dziennymi) danymi wynikającymi bezpośrednio z funkcjonowania gie
 
 Powyższe dane nie wnoszą jednak zbyt wiele informacji ponieważ są odzwierciedleniem powstałego obrotu akcji na giełdzie, a nie jego przyczyną. W związku z dużą losowością ruchów giełdowych, są niewystarczające aby skutecznie przewidzieć zmiany cen akcji. Zawodowi maklerzy do podejmowania swoich decyzji wspomagają się dodatkowo dwoma technikami: \textbf{analizą fundamentalną} oraz \textbf{analizą techniczną}.
 
-\subsubsection{Analiza fundamentalna \cite{fundamentalanalysis}}
+\subsubsection{Analiza fundamentalna}
 
-Analiza fundamentalna spółek jest analizą kondycji ekonomicznej spółek w zestawieniu z wartością ich akcji. Ten rodzaj analizy ma odpowiedzieć na pytanie czy cena akcji konkretnej spółki odpowiada jej sytuacji na rynku. Przy takim badaniu spółki brane jest pod uwagę wiele różnych czynników, takich jak:
+Analiza fundamentalna \cite{fundamentalanalysis} spółek jest analizą kondycji ekonomicznej spółek w zestawieniu z wartością ich akcji. Ten rodzaj analizy ma odpowiedzieć na pytanie czy cena akcji konkretnej spółki odpowiada jej sytuacji na rynku. Przy takim badaniu spółki brane jest pod uwagę wiele różnych czynników, takich jak:
 \begin{itemize}
 \item{analiza finansowa spółki}
 \item{analiza sektorowa}
@@ -224,23 +226,23 @@ Ten rodzaj badania spółek jest niezwykle czasochłonny i często wymaga eksper
 
 Najsłynniejszym analitykiem technicznym świata jest \textit{Warren Buffet} prezes amerykańskiego holdingu \textit{Berkshire Hathaway \cite{berkeshire}}. 
 
-\subsubsection{Analiza techniczna \cite{technicalanalysis}}
+\subsubsection{Analiza techniczna}
 
-Analiza techniczna jest zbiorem technik mających na celu wspomaganie inwestora w podejmowaniu decyzji na podstawie historycznych danych giełdowych. Analiza ta bada zachowania rynku oraz poszukuje trendów np. poprzez analizę kształtów wykresów giełdowych. Szczególnie istotne są liczne wskaźniki techniczne oraz narzędzia analizy statystycznej.
+Analiza techniczna \cite{technicalanalysis} jest zbiorem technik mających na celu wspomaganie inwestora w podejmowaniu decyzji na podstawie historycznych danych giełdowych. Analiza ta bada zachowania rynku oraz poszukuje trendów np. poprzez analizę kształtów wykresów giełdowych. Szczególnie istotne są liczne wskaźniki techniczne oraz narzędzia analizy statystycznej.
 %TODO angielskie rozwinięcia akronimów (ang. ...)
 %TODO tak samo API/NASDAQ...
 Najpopularniejsze wskaźniki techniczne obejmują:
 \begin{itemize}
-\item{\textbf{SMA}} - średnia krocząca. Jest to średnia cen z kilku ostatnich dni (np. 3, 7, 14, 30),
-\item{\textbf{EMA}} - wykładnicza średnia krocząca. Jest to wykładnicza średnia cen z kilku ostatnich dni (np. 3, 7, 14, 30),
-\item{\textbf{MACD}} -  miara zbieżności i rozbieżności średnich ruchomych,
-\item{\textbf{RSI}} -  wskaźnik siły względnej określający siłę trendu,
+\item{\textbf{SMA} (ang. Simple Moving Average)} - średnia krocząca. Jest to średnia cen z kilku ostatnich dni (np. 3, 7, 14, 30),
+\item{\textbf{EMA} (ang. Exponential Moving Average)} - wykładnicza średnia krocząca. Jest to wykładnicza średnia cen z kilku ostatnich dni (np. 3, 7, 14, 30),
+\item{\textbf{MACD} (ang. Moving Average Convergence Divergence)} -  miara zbieżności i rozbieżności średnich ruchomych,
+\item{\textbf{RSI} (ang. Relative Strength Index)} -  wskaźnik siły względnej określający siłę trendu,
 \item{\textbf{oscylator stochastyczny}} -  wskaźnik momentum i siły trendu.
 \end{itemize}
 
 \subsubsection{Źródło danych}
 
-W pracy zostało wykorzystane darmowe źródło danych giełdowych \textit{Alpha Vantage} \cite{alphavantage}. Jest to API pozwalające na pobranie historycznych danych giełdowych dla konkretnej spółki poprzez podanie odpowiedniego symbolu giełdowego. Dostępne są zarówno podstawowe dane giełdowe jak i wskaźniki analizy technicznej. 
+W pracy zostało wykorzystane darmowe źródło danych giełdowych \textit{Alpha Vantage} \cite{alphavantage}. Jest to API (ang. Application Programming Interface) pozwalające na pobranie historycznych danych giełdowych dla konkretnej spółki poprzez podanie odpowiedniego symbolu giełdowego. Dostępne są zarówno podstawowe dane giełdowe jak i wskaźniki analizy technicznej. 
 
 \bigskip
 
@@ -322,9 +324,9 @@ Graficzną reprezentację podziału klasyfikacji na powyższe kategorie nazywamy
 
 Jednym z najprostszych sposobów do oceny dokładności klasyfikatorów jest określenie procentu prawidłowych przypisań przykładu do klasy. Metoda ta potrafi dawać złudzenie zadowalających wyników, w których występują duże różnice w licznościach poszczególnych klas. Rozważmy dla takiego zadania naiwny model przypisujący do każdego postawionego przykładu klasę, której liczność jest największa. Wówczas wyniki procentowe prawidłowej klasyfikacji będą wprost proporcjonalne do różnicy w liczności klasy największej w stosunku do innych klas. W większości przypadków pomimo dobrego wyniku taki model będzie uznany za bezużyteczny. Wobec tego tę miarę jakości należy stosować wraz z innymi miarami, które nie są podatne na tego typu zaburzenia.
 
-\subsubsection{Pole AUC pod krzywą ROC \cite{roc}}
+\subsubsection{Pole AUC pod krzywą ROC}
 
-Krzywa ROC (ang. receiver operating characteristic) jest narzędziem, która opisuje dokładność klasyfikatora za pomocą oceny jego czułości i precyzji. Precyzją modelu nazywa się stosunek $\frac{TP}{TP+FP}$, zaś czułość jest oznaczona przez $\frac{TP}{TP+FN}$.
+Krzywa ROC (ang. Receiver Operating Characteristic)\cite{roc} jest narzędziem, która opisuje dokładność klasyfikatora za pomocą oceny jego czułości i precyzji. Precyzją modelu nazywa się stosunek $\frac{TP}{TP+FP}$, zaś czułość jest oznaczona przez $\frac{TP}{TP+FN}$.
 
 \bigskip
 
@@ -333,7 +335,9 @@ Krzywa ROC (ang. receiver operating characteristic) jest narzędziem, która opi
 
 Zdefiniujmy wartości \textit{True Positive Rate (TPR)} oraz \textit{False\ Positive\ Rate (FPR)}:
 
-$$ TPR = \frac{TP}{TP+FN}\ \ \ \ \ \ \ \ FPR = \frac{FP}{FP+TN} $$
+$$ TPR = \frac{TP}{TP+FN}$$
+
+$$FPR = \frac{FP}{FP+TN} $$
 
 Klasyfikatory w większości przypadków nie zwracają dokładnego wyniku przypisania przykładu do klasy. Zazwyczaj wynikiem klasyfikacji jest liczba rzeczywista z przedziału $[0, 1]$, którą można identyfikować jako prawdopodobieństwo. Można przyjąć że jeżeli klasyfikator zwróci $0$ oznacza to przypisanie do klasy A, zaś $1$ oznacza przypisanie do klasy B. Dla wartości z zakresu $(0, 1)$ przypisuje się pewną wartość progową rozgraniczającą obie klasy. Dla tego progu mniejsze od niego wartości przypisujemy do klasy A, zaś resztę do klasy B. Intuicyjnie jest to zazwyczaj połowa przedziału czyli $0.5$.
 
@@ -367,9 +371,9 @@ Częściowy indeks Gini jest innym sposobem na analizę jakości modelu predykcy
 
 Metryka F1 jest średnią harmoniczną metryk czułości i precyzji (wyrażona wzorem $F1=2*\frac{precyzja*czulosc}{precyzja+czulosc}$). Metryka ta jest dobrym narzędziem pozwalającym określić za pomocą jednej wartości jakość modelu, biorąc pod uwagę precyzję jak i czułość modelu. Osiąga ona w najlepszym przypadku wartość 1, zaś w najgorszym wartość 0. 
 
-\subsubsection{Współczynnik Briera \cite{brier}}
+\subsubsection{Współczynnik Briera}
 
-Współczynnik Briera (ang. Brier score) jest metodą oceny modeli klasyfikujących opisana wzorem:
+Współczynnik Briera (ang. Brier score)\cite{brier} jest metodą oceny modeli klasyfikujących opisana wzorem:
 
 $$	BS=\frac{1}{N} \sum_{t=1}^{N} \sum_{i=1}^{R}(f_{ti}-o_{ti})^2 $$
 
@@ -643,9 +647,9 @@ Po odrzuceniu najmocniej skorelowanych danych można skorzystać z jednej z meto
 
 Istnieje wiele algorytmów mogących posłużyć do zagadnień klasyfikacji lub regresji. W tym rozdziale omówione zostały klasyfikatory, które później zostały użyte do predykcji na danych giełdowych.
 
-\subsection{SVM \cite{svm}}
+\subsection{SVM}
 
-Maszyny wektorów podpierających (ang. support-vector machines) są zbiorem klasyfikatorów mających na celu wyznaczenie hiperpłaszczyzn rozdzielających klasy z zachowaniem maksymalnego marginesu rozdzielającego (rysunek \ref{img:wiki_svm}). W podstawowej wersji klasyfikatory SVM potrafią sktuecznie klasyfikować problemy separowalne liniowo.
+Maszyny wektorów nośnych (ang. Support-Vector Machines)\cite{svm} są zbiorem klasyfikatorów mających na celu wyznaczenie hiperpłaszczyzn rozdzielających klasy z zachowaniem maksymalnego marginesu rozdzielającego (rysunek \ref{img:wiki_svm}). W podstawowej wersji klasyfikatory SVM potrafią sktuecznie klasyfikować problemy separowalne liniowo.
 
 
 \begin{figure}[H]
@@ -664,9 +668,9 @@ W celu używania maszyn wektorów nośnych do klasyfikacji problemów nieliniowy
 \end{figure}
 
 
-\subsection{Sztuczne sieci neuronowe \cite{neural-nets}}
+\subsection{Sztuczne sieci neuronowe}
 
-Sieci neuronowe są zbiorem modeli matematycznych służących do realizacji obliczeń, bądź przetwarzania sygnałów. Inspirowane działaniem mózgu, swoją nazwę czerpią z upodobnienia struktury do naturalnych neuronów oraz łączących je synaps. Głównymi zastosowaniami sieci neuronowych są zadania regresji, klasyfikacji oraz generowania danych. 
+Sieci neuronowe \cite{neural-nets} są zbiorem modeli matematycznych służących do realizacji obliczeń, bądź przetwarzania sygnałów. Inspirowane działaniem mózgu, swoją nazwę czerpią z upodobnienia struktury do naturalnych neuronów oraz łączących je synaps. Głównymi zastosowaniami sieci neuronowych są zadania regresji, klasyfikacji oraz generowania danych. 
 
 \bigskip
 
@@ -688,9 +692,9 @@ Przy wykorzystywaniu sieci neuronowych głównym problemem, z którym zmagają s
 \end{itemize}
 
 
-\subsubsection{Sieci typu MLP \cite{mlp}}
+\subsubsection{Sieci typu MLP}
 
-Jednym z najprostszych przykładów sieci neuronowych jest perceptron wielowarstwowy (ang. multilayer perceptron). Taka sieć składa się z warstwy wejściowej, z dowolnej ilości warstw ukrytych oraz z warstwy wyjściowej. W tym rodzaju sieci neuronowych, sygnał wyjściowy dowolnego neuronu jest traktowany jako sygnał wejściowy każdego z neuronów z kolejnej warstwy (rysunek \ref{img:neural-net}). 
+Jednym z najprostszych przykładów sieci neuronowych jest perceptron wielowarstwowy (ang. multilayer perceptron) \cite{mlp}. Taka sieć składa się z warstwy wejściowej, z dowolnej ilości warstw ukrytych oraz z warstwy wyjściowej. W tym rodzaju sieci neuronowych, sygnał wyjściowy dowolnego neuronu jest traktowany jako sygnał wejściowy każdego z neuronów z kolejnej warstwy (rysunek \ref{img:neural-net}). 
 
 \bigskip
 
@@ -702,9 +706,9 @@ Jednym z najprostszych przykładów sieci neuronowych jest perceptron wielowarst
 
 Najprostszą implementacja sieci do predykcji danych giełdowych jest sieć przyjmująca na wejściu wektor informacji o akcjach spółki z jednego dnia, zwracająca na wyjściu przewidywaną wartość ceny akcji następnego dnia. Perceptron wielowarstwowy można również zaprojektować tak, aby na wyjściu zwracał wynik klasyfikacji, czyli procentowy wynik przypisania danych wejściowych do każdej z możliwych klas. W tej pracy badane były sieci neuronowe klasyfikujące dane wejściowe według trzech klas: spadek wartości poniżej pewnego progu, utrzymanie wartości w ramach tego progu oraz wzrost wartości powyżej tego progu. 
 
-\subsection{Random forest \cite{randforest}}
+\subsection{Random forest}
 
-Las losowy (ang. \textit{random forest}) jest modelem opartym o drzewa decyzyjne służącym do klasyfikacji lub regresji. Drzewa decyzyjne są graficzną metodą wspomagania procesu decyzyjnego. W przypadku zagadnień uczenia maszynowego drzewa decyzyje najprościej zobrazować na przykładzie problemu klasyfikacji binarnej. Na rysunku \ref{img:wiki_dec_tree} przedstawione jest drzewo decyzyjne dla problemu predykcji losu pasażerów statku Titanic. Drzewo to oparte jest o trzy cechy: płeć, wiek oraz liczbę rodzeństwa oraz współmałżonków (\textit{sibsp}). 
+Las losowy (ang. Random Forest)\cite{randforest} jest modelem opartym o drzewa decyzyjne służącym do klasyfikacji lub regresji. Drzewa decyzyjne są graficzną metodą wspomagania procesu decyzyjnego. W przypadku zagadnień uczenia maszynowego drzewa decyzyje najprościej zobrazować na przykładzie problemu klasyfikacji binarnej. Na rysunku \ref{img:wiki_dec_tree} przedstawione jest drzewo decyzyjne dla problemu predykcji losu pasażerów statku Titanic. Drzewo to oparte jest o trzy cechy: płeć, wiek oraz liczbę rodzeństwa oraz współmałżonków (\textit{sibsp}). 
 
 \begin{figure}[H]
 \centering \includegraphics[scale=0.6]{img/decision_tree.png}
@@ -714,10 +718,10 @@ Las losowy (ang. \textit{random forest}) jest modelem opartym o drzewa decyzyjne
 
 Dla złożonych zagadnień predykcji takich jak przewidywanie trendu giełdy, drzewa decyzyjne okazują się zbyt prostym modelem. Las losowy jest rozwinięciem koncepcji drzew decyzyjnych w zakresie metod zespołowych. Głównym założeniem jest stworzenie wielu drzew decyzyjnych i opieranie końcowego wyniku na podstawie poszczególnych wyników każdego z drzew. W celu wprowadzenia różnorodności podczas konstrukcji węzłów drzew, losowane są cechy spośród których będą dobrane cechy decyzyjne w danym węźle. Metoda ta zazwyczaj daje dużo lepsze efekty niż pojedyncze drzewa decyzyjne, oraz często pomaga w ograniczaniu zjawiska przeuczania (ang. overfitting).  
 
-\subsection{Light GBM \cite{lgbm}}
+\subsection{Light GBM}
 %TODO rozwinąć GBM
 
-\textit{Light GBM} jest algorytmem z rodziny \textit{gradient boosting decision trees}. Algorytmy te oparte są o zespół drzew decyzyjnych. W przeciwieństwie do metody \textit{lasu losowego} konstrukcja kolejnych drzew jest wykonywana w sposób sekwencyjny, oraz zależny od wyników poprzednich drzew. Dzięki takiemu zabiegowi, zespół drzew dąży do ulepszenia swoich wyników jako całości. Algorytm \textit{light GBM} przewyższa inne algorytmy ze swojej klasy takie jak \textit{XGBoost} dzięki innemu podejściu do tworzenia drzew. Podczas gdy większość algorytmów powiększa drzewa decyzyjne wgłąb (\textit{level-wise}  rysunek \ref{img:level-wise}), \textit{light GBM} powiększa drzewa decyzyjne ze względu na liście (\textit{leaf-wise} rysunek \ref{img:leaf-wise}). Ten zabieg wraz z innymi optymalizacjami sprawia, że algorytm ten osiąga porównywalne wyniki do innych algorytmów ze swojej klasy, przy dużym skrócenia czasu uczenia się. 
+\textit{Light GBM}\cite{lgbm} jest algorytmem z rodziny \textit{gradient boosting decision trees}. Algorytmy te oparte są o zespół drzew decyzyjnych. W przeciwieństwie do metody \textit{lasu losowego} konstrukcja kolejnych drzew jest wykonywana w sposób sekwencyjny, oraz zależny od wyników poprzednich drzew. Dzięki takiemu zabiegowi, zespół drzew dąży do ulepszenia swoich wyników jako całości. Algorytm \textit{light GBM} przewyższa inne algorytmy ze swojej klasy takie jak \textit{XGBoost} dzięki innemu podejściu do tworzenia drzew. Podczas gdy większość algorytmów powiększa drzewa decyzyjne wgłąb (\textit{level-wise}  rysunek \ref{img:level-wise}), \textit{light GBM} powiększa drzewa decyzyjne ze względu na liście (\textit{leaf-wise} rysunek \ref{img:leaf-wise}). Ten zabieg wraz z innymi optymalizacjami sprawia, że algorytm ten osiąga porównywalne wyniki do innych algorytmów ze swojej klasy, przy dużym skrócenia czasu uczenia się. 
 
 
 \begin{figure}[H]%
@@ -1521,6 +1525,8 @@ Dodatkowo dla problemu wieloklasowego przeprowadzona została analiza jakości k
 \label{img:lgbm_roc_amzn}
 \end{figure}
 
+\newpage
+
 \section{Wspomaganie decyzji giełdowych}
 
 Mając do wykorzystania klasyfikatory o wybranych parametrach można przystąpić do weryfikacji ich skuteczności na giełdzie. Ocena jakości odbyła się poprzez symulację uproszczonego modelu giełdy. Głównym założeniem było dokonywanie transakcji jedynie na początku sesji giełdowej tj. po cenie otwarcia. Taki scenariusz odzwierciedla wykonanie predykcji klasyfikayorem na podstawie danych z sesji giełdowej z dnia \textit{t} oraz podjęcie decyzji w najbliższym możliwym czasie tj. przy rozpoczęciu sesji w dniu \textit{t+1}. Jako zbiór treningowy dla każdej spółki wykorzystane zostały wszystkie dane od początku jej istnienia aż do 31 grudnia 2018. Symulacja giełdowa została przeprowadzona na danych od 1 stycznia 2019, aż do 6 lipca 2019. W tym okresie przeprowadzono 127 sesji giełdowych. Symulacja uwzględniała prowizję od każdej transakcji na poziomie 0.2\% jej wartości. Każda spółka była testowana osobno. Budżet dla każdej spółki wynosił \textit{100~000} dolarów.
@@ -1649,6 +1655,8 @@ Ponadto klasyfikator przewidujący klasę utrzymania pozwala na bardziej powści
 
  Modele klasyfikujące na 3 klasy wykonały średnio o 16 transakcji mniej niż klasyfikatory binarne (miesięcznie jest to średnio aż o 2.6 transakcji mniej). Wynika to z dodatkowej klasy, która pozwala na pozostanie biernym danego dnia giełdowego. Ta różnica w liczbie transakcji jest bardzo istotna w przypadku gdyby prowizje od każdej z transakcji były wyższe od założonej wartości 0.2\%. Przyjęta wartość jest jedną z najniższych prowizji na polskim rynku. Wyższe prowizje występują w szczególności gdy transakcje nie przekraczają jakiejś określonej kwoty (zazwyczaj jest to kilka tysięcy dolarów). W takim przypadku mniejsza liczba transakcji w dużo większym stopniu wpływa na końcowy wynik, a modele klasyfikacji na 3 klasy wykorzystują swój potencjał i okazują się lepsze od klasyfikatorów binarnych. Pomimo że różnica uzyskiwana przy omijaniu opłat transakcyjnych wydaje się być niewielka, na dłuższą metę, dzięki ponownemu inwestowaniu zyskaego kapitału, będzie ona rosła wykładniczo. W ekonomii to zjawisko nosi miano procenta składanego.
  
+\newpage 
+ 
 \section{Podsumowanie}
 
 W pracy przedstawione zostały różnorodne dane mogące posłużyć do analiz cen giełdowych, oraz różne podejścia do problemu przewidywania zmian cen akcji na giełdzie. Wykonane eksperymenty klasyfikacji demonstrują możliwości predykcji zmian cen na giełdzie jedynie z wykorzystaniem podstawowych danych giełdowych oraz wskaźników analizy technicznej. Oba przedstawione problemy klasyfikacji uzyskały nad wyraz satysfakcjonujące wyniki przy użyciu różnorodnych metod uczenia maszynowego. Najlepsze wyniki uzyskał model sieci neuronowej oraz model maszyny wektorów nośnych.
@@ -1671,8 +1679,7 @@ Kierunki dalszych potencjalnych badań uwzględniają:
 %TODO albo bibliografia albo literatura, BRAK LICZBY PRZY BIBLIO
 %TODO dostępy do wszystkich stron z biblio
 
-\section{Bibliografia}
-
+\newpage
 
 \begin{thebibliography}{9}
   
@@ -1839,11 +1846,15 @@ Guolin Ke, Qi Meng, Thomas Finley, Taifeng Wang,Wei Chen, Weidong Ma, Qiwei Ye, 
 
 \end{thebibliography}
 
+\newpage
+
 \listoffigures
- 
+
+\newpage 
+
 \listoftables
 
-
+\newpage
 %TODO brak numeru przy dodatku apliacji w tytule
 %TODO jakiś ciekawszy fragment kodu dodać!
 
