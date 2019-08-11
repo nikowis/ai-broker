@@ -139,14 +139,39 @@
 
 \begin{abstract}
 
+Giełda jest miejscem przyciągającym rzesze inwestorów pragnących pomnożyć swój kapitał. Właściwy handel instrumentami finansowymi na giełdzie pozwala na osiąganie zysków przekraczających zyski z alternatywnych inwestycji takich jak na przykład nieruchomości. Skuteczna inwestycja na giełdzie zazwyczaj opiera się o wybór odpowiednich spółek. Przy aktywnym zarządzaniu portfelem akcji podejmowane decyzje o sprzedaży i kupnie są ważniejsze od doboru spółek. Wiąże się to oczywiście z dużym ryzykiem i wymaga wiedzy z dziedziny ekonomii. Co jeżeli udałoby się opracować model decyzyjny, umożliwiający grę na giełdzie  bez wiedzy eksperckiej? 
 
-Giełda jest miejscem przyciągającym rzesze inwestorów pragnących pomnożyć swój kapitał. Właściwy handel instrumentami finansowymi na giełdzie pozwala na osiąganie zysków przekraczających zyski z alternatywnych inwestycji takich jak na przykład nieruchomości. Wiąże się to oczywiście z pewnym ryzykiem. W niniejszej pracy opisano charakterystykę giełdy, dostępne dane giełdowe oraz różne podejścia do tematu przewidywania cen na giełdzie. Ponadto podjęto próbę stworzenia algorytmów do prognozowania za pomocą modeli z dziedziny uczenia maszynowego. Następnie, w celu dalszej oceny skuteczności, utworzone modele zostały wykorzystane w symulacji zautomatyzowanego handlu na giełdzie. 
+\bigskip
 
-%TODO dodać opis jakie metody były wykorzystywane + jak zostało to ocenione
+Celem niniejszej pracy było stworzenie algorytmu decyzyjnego, który umożliwi skuteczne zarządzanie portfelem inwestycyjnym dowolnej osobie. W pracy opisano charakterystykę giełdy, dostępne dane giełdowe oraz różne podejścia do tematu przewidywania cen na giełdzie. Ponadto podjęto próbę stworzenia algorytmów do prognozowania za pomocą modeli z dziedziny uczenia maszynowego. Zostały wykorzystane takie modele jak: sztuczne sieci neuronowe, maszyny wektorów nośnych, lasy losowe czy też metoda \textit{Light GBM}. Do oceny i porównywania jakości modeli została wykorzystana miara dokładności oraz miara \textit{AUC}. Następnie, w celu dalszej oceny skuteczności, została wykonana symulacja zautomatyzowanego handlu na giełdzie za pomocą prostego algorytmu decyzyjnego wykorzystującego stworzone modele. 
+
 
 \bigskip
 
 	\noindent \textbf{Słowa kluczowe:} giełda, predykcja, klasyfikacja, sieci neuronowe, SVM, las losowy, Light GBM, uczenie maszynowe, wspomaganie decyzji giełdowych
+\end{abstract}
+
+\newpage
+
+
+\renewcommand{\abstractname}{Abstract}
+\begin{abstract}
+
+Thesis title: \textbf{Comparision methodology of some prediction algorithms for stock market decision making}
+
+\bigskip
+
+The stock market is attracting many inverstors willing to earn money. Trading with securities in the right way can outmatch profits made in alternative investments such as real estate. An effective stock market investment usually relies on choosing the proper companies. When actively managing one's investment portfolio (e.g. day trading) accurate decisions about buying and selling securities are far more critical than the company choice. Active trading carries a lot of risk and requires plenty of economical domain knowledge. What if a decision model could be designed, facilitating active investing without expertise?
+
+\bigskip
+
+The goal of this dissertation is to create a decision algorithm, enabling effective investmen portfolio managment for anyone. This work describes stock market features, available data and various approaches to stock price prediction. Moreover this paper attempted creating a prediction algorithm using machine learning techniques. Models such as artificial neural networks, SVM, random forests or \textit{Light GBM} were employed. Model performance was compared using accuracy and the \textit{AUC} metric. Afterwards in order to further analyze model quality a stock market automatic trading simulation was carried out. In this simulation trading was made using above models wrapped with a simple decision algorithm.
+
+	
+	\bigskip
+	
+	
+	\noindent \textbf{Keywords:} stock market, predicting, classification, neural networks, SVM, random forest, Light GBM, machine learning, supporting stock market decisions
 \end{abstract}
 
 \cleardoublepage
@@ -1860,7 +1885,6 @@ Guolin Ke, Qi Meng, Thomas Finley, Taifeng Wang,Wei Chen, Weidong Ma, Qiwei Ye, 
 \listoftables
 
 \newpage
-%TODO brak numeru przy dodatku apliacji w tytule
 %TODO jakiś ciekawszy fragment kodu dodać!
 
 \addcontentsline{toc}{section}{Dodatek: opis aplikacji}
