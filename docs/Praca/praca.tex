@@ -135,8 +135,6 @@
 \begingroup
 \fontsize{12pt}{14.4pt}\selectfont
 
-%TODO tytuł po angielsku oraz streszczenie po angielsku
-
 \begin{abstract}
 
 Giełda jest miejscem przyciągającym rzesze inwestorów pragnących pomnożyć swój kapitał. Właściwy handel instrumentami finansowymi na giełdzie pozwala na osiąganie zysków przekraczających zyski z alternatywnych inwestycji takich jak na przykład nieruchomości. Skuteczna inwestycja na giełdzie zazwyczaj opiera się o wybór odpowiednich spółek. Przy aktywnym zarządzaniu portfelem akcji podejmowane decyzje o sprzedaży i kupnie są ważniejsze od doboru spółek. Wiąże się to oczywiście z dużym ryzykiem i wymaga wiedzy z dziedziny ekonomii. Co jeżeli udałoby się opracować model decyzyjny, umożliwiający grę na giełdzie  bez wiedzy eksperckiej? 
@@ -254,8 +252,7 @@ Najsłynniejszym analitykiem technicznym świata jest \textit{Warren Buffet} pre
 \subsubsection{Analiza techniczna}
 
 Analiza techniczna \cite{technicalanalysis} jest zbiorem technik mających na celu wspomaganie inwestora w podejmowaniu decyzji na podstawie historycznych danych giełdowych. Analiza ta bada zachowania rynku oraz poszukuje trendów np. poprzez analizę kształtów wykresów giełdowych. Szczególnie istotne są liczne wskaźniki techniczne oraz narzędzia analizy statystycznej.
-%TODO angielskie rozwinięcia akronimów (ang. ...)
-%TODO tak samo API/NASDAQ...
+
 Najpopularniejsze wskaźniki techniczne obejmują:
 \begin{itemize}
 \item{\textbf{SMA} (ang. Simple Moving Average)} - średnia krocząca. Jest to średnia cen z kilku ostatnich dni (np. 3, 7, 14, 30),
@@ -355,14 +352,16 @@ Krzywa ROC (ang. Receiver Operating Characteristic)\cite{roc} jest narzędziem, 
 
 \bigskip
 
-%TODO dodać numerki do wzorów (2.3.3.1, 2.3.3.2)
-%TODO nigdy nie dawać dwóch wzorów w jednej linii
-
 Zdefiniujmy wartości \textit{True Positive Rate (TPR)} oraz \textit{False\ Positive\ Rate (FPR)}:
 
-$$ TPR = \frac{TP}{TP+FN}$$
+\numberwithin{equation}{subsubsection}
 
-$$FPR = \frac{FP}{FP+TN} $$
+\begin{equation}
+TPR = \frac{TP}{TP+FN}
+\end{equation}
+\begin{equation}
+FPR = \frac{FP}{FP+TN}
+\end{equation}
 
 Klasyfikatory w większości przypadków nie zwracają dokładnego wyniku przypisania przykładu do klasy. Zazwyczaj wynikiem klasyfikacji jest liczba rzeczywista z przedziału $[0, 1]$, którą można identyfikować jako prawdopodobieństwo. Można przyjąć że jeżeli klasyfikator zwróci $0$ oznacza to przypisanie do klasy A, zaś $1$ oznacza przypisanie do klasy B. Dla wartości z zakresu $(0, 1)$ przypisuje się pewną wartość progową rozgraniczającą obie klasy. Dla tego progu mniejsze od niego wartości przypisujemy do klasy A, zaś resztę do klasy B. Intuicyjnie jest to zazwyczaj połowa przedziału czyli $0.5$.
 
@@ -385,14 +384,9 @@ Krzywa ROC jest graficzną reprezentacją skuteczności modelu klasyfikacyjnego.
 \end{figure}
 
 
-Porównanie różnych klasyfikatorów za pomocą krzywej ROC odbywa się poprzez porównanie pola pod krzywymi. Im większe pole pod krzywą ROC dla danego klasyfikatora tym lepsza jest jego jakość. Pole pod krzywą dla modelu idealnego wynosi $1$, zaś dla modelu losowego $0.5$. Warto zauważyć że dla wartości pola poniżej 0.5  korzystnym zabiegiem jest zamiana przedziałów dla klas.
+Porównanie różnych klasyfikatorów za pomocą krzywej ROC odbywa się poprzez porównanie pola pod krzywymi czyli AUC (ang. Area Under the Curve). Im większe pole pod krzywą ROC dla danego klasyfikatora tym lepsza jest jego jakość. Pole pod krzywą dla modelu idealnego wynosi $1$, zaś dla modelu losowego $0.5$. Warto zauważyć że dla wartości pola poniżej 0.5  korzystnym zabiegiem jest zamiana przedziałów dla klas.
 
-
-\subsubsection{Częściowy indeks Gini} %TODO bibliografia
-
-Częściowy indeks Gini jest innym sposobem na analizę jakości modelu predykcyjnego za pomocą krzywej ROC. Otrzymuje się go poprzez wyliczenie pola powierzchni pomiędzy krzywą ROC dla modelu predykcyjnego, a krzywą ROC dla modelu losowego, w stosunku do pola powierzchni między krzywą ROC modelu idealnego, a krzywą ROC modelu losowego. Dla modelu losowego wynosi 0, zaś dla modelu idealnego wartość indeksu wynosi 1. W ten sposób otrzymana wartość indeksu Gini może być interpretowana jako procent idealności modelu.
-
-\subsubsection{F1} %TODO bibliografia
+\subsubsection{F1}
 
 Metryka F1 jest średnią harmoniczną metryk czułości i precyzji (wyrażona wzorem $F1=2*\frac{precyzja*czulosc}{precyzja+czulosc}$). Metryka ta jest dobrym narzędziem pozwalającym określić za pomocą jednej wartości jakość modelu, biorąc pod uwagę precyzję jak i czułość modelu. Osiąga ona w najlepszym przypadku wartość 1, zaś w najgorszym wartość 0. 
 
@@ -411,11 +405,9 @@ $$	BS=\frac{1}{N} \sum_{t=1}^{N} \sum_{i=1}^{R}(f_{ti}-o_{ti})^2 $$
 
 W związku z powyższą definicją, miara ta może zostać wykorzystana w przypadku modeli, które na swoim wyjściu zwracają prawdopodobieństwo przypisania przykładu do każdej z klas. Wobec tego nie każdy model można ocenić tą metryką. Istotnym spostrzeżeniem jest fakt iż w przeciwieństwie do innych metryk, współczynnik Briera modelu idealnego wynosi $0$, zaś im gorszy model tym większy współczynnik.
 
-
-%TODO źródło do poniższego
 \subsubsection{Statystyka Kołmogorowa-Smirnova}
 
-Statystyka Kołmogorowa-Smirnova (ang. Kolmogrow-Smirnov Test) pozwala ocenić jakość klasyfikatora binarnego na podstawie stopnia separacji rozkładu dwóch klas. Ocena dokonywana jest przez zmierzenie maksymalnej odległości między wkyresami dystrybuant rozkładu jednej i drugiej klasy. Niech $F(x)$ to dystrybuanta rozkład klasy 1, zaś $G(x)$ to dystrybuanta rozkładu klasy 2. Wówczas statystyka Kołmogorowa-Smirnova opisana jest wzorem:
+Statystyka Kołmogorowa-Smirnova (ang. Kolmogrow-Smirnov Test) \cite{kolsmirtest} pozwala ocenić jakość klasyfikatora binarnego na podstawie stopnia separacji rozkładu dwóch klas. Ocena dokonywana jest przez zmierzenie maksymalnej odległości między wkyresami dystrybuant rozkładu jednej i drugiej klasy. Niech $F(x)$ to dystrybuanta rozkład klasy 1, zaś $G(x)$ to dystrybuanta rozkładu klasy 2. Wówczas statystyka Kołmogorowa-Smirnova opisana jest wzorem:
 
 $$D_{n,m}=\sup_x|F(x)-G(x)|$$
 
@@ -562,14 +554,13 @@ Po wybraniu odpowiednich danych należy przystąpić do ich pobrania. Pobrane da
     \item dane nominalne (np. łańcuchy znaków),
     \item błędy pomiarowe.
 \end{itemize}
-%TODO podpiąć tutaj bibliografię o przetwarzaniu danych w machine learningu
+
 W celu eliminacji błędnych danych należy je usunąć lub zastąpić wybraną wartością np. średnią wartością z danej cechy. Jeśli chodzi o dane nominalne stosowana jest \textbf{binaryzacja}. Polega ona na odpowiednim przekształceniu cechy na wektor cyfr. Po wyeliminowaniu powyższych problemów dane warto przetworzyć takimi metodami jak \textbf{normalizacja} czy \textbf{standaryzacja}. Służą one do przeskalowania zakresu możliwych wartości do przedziału $[0,1]$ lub $[-1,1]$. Taki zabieg polepsza wydajność modeli uczenia maszynowego.
 
 \bigskip
 
 \subsubsection{Niestacjonarność szeregów czasowych}
 
-%TODO bibliografia niestacjonarność szeregów czasowych
 Na rysunku \ref{img:non_stationary_adjusted_close} zauważyć można zjawisko niestacjonarności. Jest to cecha związana z autokorelacją zmiennych szeregów czasowych. Oznacza to iż kolejne wyrazy szeregu zależą w jakimś stopniu od poprzednich. Dla cen akcji ta zależność jest ewidentna, cena każdego dnia jest oparta o cenę z dnia poprzedniego. 
 
 \begin{figure}[H]
@@ -1654,9 +1645,6 @@ Na rysunku \ref{img:amgn_wallet_value} została przedstawiona wartość portfela
 
 Warto dogłębniej zastanowić się nad użytecznością klasyfikacji na 3 klasy. Co prawda średni zysk dla handlu na podstawie klasyfikacji binarnej był o kilka punktów procentowych wyższy, jednak wprowadzenie trzeciej klasy do podstawowego problemu niesie za sobą inną korzyść. W tabeli \ref{tab:simulation_avg_value_vs_transactions} przedstawione został średni zysk dla najlepszych modeli oraz średnia liczba wykonanych transakcji podczas symulacji giełdowej.
 
-%Faktem, który warto odnotować jest niewątpliwa wyższość klasyfikacji na 3 klasy nad klasyfikacją binarną w grze na giełdzie. Średni zysk dla handlu na podstawie klasyfikacji wieloklasowej był większy o ponad \textbf{3}\% od zysku algorytmu używającego klasyfikacji binarnej. Taka różnica wydaje się być niewielka, lecz na dłuższą metę, dzięki ponownemu inwestowaniu zyskaego kapitału, będzie ona rosła wykładniczo. W ekonomii to zjawisko nosi miano procenta składanego. Analizując przewagę predykcji wieloklasowej warto zwrócić uwagę na krzywe ROC poszczególnych klas na rysunku  \ref{img:nn_roc_auc_discrete}. Przedstawione wartości \textit{AUC} dla każdej z klas dowodzą iż ten model lepiej przewiduje spadek (\textit{AUC} 0.92) i wzrost (\textit{AUC} 0.89) ceny ponad uzgodniony próg niż klasyfikator binarny (\textit{AUC} 0.88 tabela \ref{tab:comparison_final_binary}).
-
-Ponadto klasyfikator przewidujący klasę utrzymania pozwala na bardziej powściągliwe decyzje o kupnie bądź monetyzacji akcji, a jak wiadomo każda transakcja obarczona jest kosztem prowizji domu maklerskiego. Predykcja klasy utrzymania uzyskuje znacznie gorsze wyniki (\textit{AUC} 0.75 rysunek \ref{img:nn_roc_auc_discrete}), jednak najwidoczniej nie ma to dużego znaczenia na wykorzystywanie klasyfikatorów w grze na giełdzie. Tabela \ref{tab:simulation_avg_value_vs_transactions} zestawia średnie uzyskane zyski na giełdzie poszczególnych klasyfikatorów wraz z liczbą decyzji o zamianie instrumentu finansowego w portfelu inwestycyjnym. Porównanie zysków i liczby transakcji dla konkretnych modeli nie pozwala na wysnucie jednoznacznych wniosków. Perspektywa średniej liczby transakcji dla modeli klasyfikacji binarnej i klasyfikacji wieloklasowej ukazuje ujemną korelację między zyskiem, a liczbą transakcji.
 
 %TODO też wykresik z punktami
 
@@ -1811,6 +1799,12 @@ Strona główna Alpha Vantage
 	Glenn W. Brier, 
   \textit{Verification of Forecasts Expressed in Terms of Probability}
   Monthly Weather Review, 78:1–3, 1950
+
+\bibitem{kolsmirtest}
+	Statystyka Kołmogorowa-Smirnowa
+ \\\url{https://en.wikipedia.org/wiki/Kolmogorov%E2%80%93Smirnov_test}
+ \\Data dostępu: 30.05.2019
+
 
 \bibitem{train_test_split}
  Podział danych testowych 
