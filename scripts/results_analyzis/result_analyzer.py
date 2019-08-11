@@ -130,6 +130,27 @@ def analyze_simulation_details(filepath, symbol, start_date, print_buy_and_hold=
     plt.close()
 
 
+def plot_acc_auc_summary(name):
+    summary = pd.read_csv(RESULT_PATH + name)
+    # trade_df.set_index('date', inplace=True)
+    # trade_df.index = pd.to_datetime(trade_df.index)
+    style.use('ggplot')
+
+    for i in range(0, len(summary)):
+        row = summary.loc[i, :]
+        row['accuracy'] = row['accuracy'].astype(float)
+        row['auc'] = row['auc'].astype(float)
+        row.plot(x='accuracy', y='auc', style='.', label=row['model'])
+    plt.ylabel('AUC')
+    plt.xlabel('Dokładność')
+
+    plt.legend()
+    plt.savefig('{}/{}-summary.png'.format(IMG_PATH, name))
+    plt.savefig('{}/{}-summary.png'.format(IMG_PATH, name), format='pdf', dpi=1000)
+    plt.show()
+    plt.close()
+
+
 def average_trades(dirpaths):
     for dirpath in dirpaths:
         transaction_count = []
@@ -169,11 +190,11 @@ if __name__ == '__main__':
     # analyze_csv('results-lgbm-feature_fraction-GOOGL-discrete.csv', 'feature_fraction', True)
     # analyze_csv('results-lgbm-feature_fraction-GOOGL-binary.csv', 'feature_fraction', True)
 
-        # analyze_csv('results-lgbm-boosting-GOOGL-binary.csv', 'boosting', True)
-        # analyze_csv('results-lgbm-boosting-GOOGL-discrete.csv', 'boosting', True)
-        #
-        # analyze_csv('results-lgbm-num_leaves-GOOGL-discrete.csv', 'num_leaves', True)
-        # analyze_csv('results-lgbm-num_leaves-GOOGL-binary.csv', 'num_leaves', True)
+    # analyze_csv('results-lgbm-boosting-GOOGL-binary.csv', 'boosting', True)
+    # analyze_csv('results-lgbm-boosting-GOOGL-discrete.csv', 'boosting', True)
+    #
+    # analyze_csv('results-lgbm-num_leaves-GOOGL-discrete.csv', 'num_leaves', True)
+    # analyze_csv('results-lgbm-num_leaves-GOOGL-binary.csv', 'num_leaves', True)
 
     # analyze_csv('results-lgbm-max_bin-GOOGL-discrete.csv', 'max_bin', True)
     # analyze_csv('results-lgbm-max_bin-GOOGL-binary.csv', 'max_bin', True)
@@ -202,7 +223,7 @@ if __name__ == '__main__':
     # analyze_simulation("results-svm-market-simulation-discrete.csv")
     # analyze_simulation("results-rf-market-simulation-discrete.csv")
     # analyze_simulation("results-lgbm-market-simulation-discrete.csv")
-    analyze_simulation("results-nn-market-simulation-discrete-walk-forward-2.csv")
+    # analyze_simulation("results-nn-market-simulation-discrete-walk-forward-2.csv")
 
 
     # analyze_simulation_details("results-nn-market-simulation-binary-walk-forward-2-it-9AMGN.csv", 'AMGN', '2019-01-01')
@@ -214,5 +235,7 @@ if __name__ == '__main__':
     #                    , 'lgbm-market-simulation-binary'
     #                    , 'lgbm-market-simulation-discrete', 'rf-market-simulation-binary', 'rf-market-simulation-discrete'
     #                    , 'svm-market-simulation-binary', 'svm-market-simulation-discrete'])
-    average_trades(['nn-market-simulation-discrete-walk-forward-2'])
+
+    plot_acc_auc_summary('summary-binary.csv')
+    # plot_acc_auc_summary('summary-discrete.csv')
     print('Result analyzer finished.')
