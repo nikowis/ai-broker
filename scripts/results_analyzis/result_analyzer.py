@@ -72,8 +72,12 @@ def analyze_simulation(filepath, print_buy_and_hold=False):
         print(df.round(2).to_latex(index=False, columns=['ticker', 'buy_and_hold_balance']))
 
     mean_df = df.drop(['ticker', 'budget'], axis=1).mean().round(4)
-    print('Simulation {0} analyzis: avg balance {1}, avg buy and hold {2}, avg accuracy {3}'.format(filepath, mean_df['balance'],
-                                                                                  mean_df['buy_and_hold_balance'], mean_df['accuracy']))
+    print('Simulation {0} analyzis: avg balance {1}, avg buy and hold {2}, avg accuracy {3}'.format(filepath,
+                                                                                                    mean_df['balance'],
+                                                                                                    mean_df[
+                                                                                                        'buy_and_hold_balance'],
+                                                                                                    mean_df[
+                                                                                                        'accuracy']))
     print(df.round(2).to_latex(index=False, columns=['ticker', 'balance', 'accuracy']))
 
 
@@ -132,22 +136,61 @@ def analyze_simulation_details(filepath, symbol, start_date, print_buy_and_hold=
 
 def plot_acc_auc_summary(name):
     summary = pd.read_csv(RESULT_PATH + name)
-    # trade_df.set_index('date', inplace=True)
-    # trade_df.index = pd.to_datetime(trade_df.index)
     style.use('ggplot')
-
+    fig = plt.figure()
+    ax1 = fig.add_subplot(111)
     for i in range(0, len(summary)):
         row = summary.loc[i, :]
-        row['accuracy'] = row['accuracy'].astype(float)
-        row['auc'] = row['auc'].astype(float)
-        row.plot(x='accuracy', y='auc', style='.', label=row['model'])
+        ax1.scatter(row['accuracy'], row['auc'], s=10, c=row['c'], label=row['model'])
+
     plt.ylabel('AUC')
     plt.xlabel('Dokładność')
-
+    plt.xlim(0, 1)
+    plt.ylim(0.5, 1)
     plt.legend()
-    plt.savefig('{}/{}-summary.png'.format(IMG_PATH, name))
-    plt.savefig('{}/{}-summary.png'.format(IMG_PATH, name), format='pdf', dpi=1000)
-    plt.show()
+    plt.savefig('{}/{}-summary.png'.format(IMG_PATH, name.replace('.csv', '')))
+    plt.savefig('{}/{}-summary.pdf'.format(IMG_PATH, name.replace('.csv', '')), format='pdf', dpi=1000)
+    # plt.show()
+    plt.close()
+
+def plot_gain_freq_summary(name):
+    summary = pd.read_csv(RESULT_PATH + name)
+    style.use('ggplot')
+    fig = plt.figure()
+    ax1 = fig.add_subplot(111)
+    for i in range(0, len(summary)):
+        row = summary.loc[i, :]
+        ax1.scatter(row['freq'], row['profit'], s=10, c=row['c'], label=row['model'])
+
+    plt.ylabel('Kapitał (%)')
+    plt.xlabel('Liczba transakcji')
+    plt.xlim(20, 60)
+    plt.ylim(100, 150)
+    plt.legend()
+    plt.savefig('{}/{}-summary.png'.format(IMG_PATH, name.replace('.csv', '')))
+    plt.savefig('{}/{}-summary.pdf'.format(IMG_PATH, name.replace('.csv', '')), format='pdf', dpi=1000)
+    # plt.show()
+    plt.close()
+
+
+
+def plot_acc_gain_summary(name):
+    summary = pd.read_csv(RESULT_PATH + name)
+    style.use('ggplot')
+    fig = plt.figure()
+    ax1 = fig.add_subplot(111)
+    for i in range(0, len(summary)):
+        row = summary.loc[i, :]
+        ax1.scatter(row['accuracy'], row['profit'], s=10, c=row['c'], label=row['model'])
+
+    plt.ylabel('Kapitał (%)')
+    plt.xlabel('Dokładność')
+    plt.xlim(0, 1)
+    plt.ylim(100, 150)
+    plt.legend()
+    plt.savefig('{}/{}-summary.png'.format(IMG_PATH, name.replace('.csv', '')))
+    plt.savefig('{}/{}-summary.pdf'.format(IMG_PATH, name.replace('.csv', '')), format='pdf', dpi=1000)
+    # plt.show()
     plt.close()
 
 
@@ -225,7 +268,6 @@ if __name__ == '__main__':
     # analyze_simulation("results-lgbm-market-simulation-discrete.csv")
     # analyze_simulation("results-nn-market-simulation-discrete-walk-forward-2.csv")
 
-
     # analyze_simulation_details("results-nn-market-simulation-binary-walk-forward-2-it-9AMGN.csv", 'AMGN', '2019-01-01')
     # analyze_simulation_details("results-nn-market-simulation-binary-walk-forward-2-it-5FB.csv", 'FB', '2019-01-01')
     # analyze_simulation_details("results-nn-market-simulation-binary-walk-forward-2-it-0GOOGL.csv", 'GOOGL', '2019-01-01')
@@ -236,6 +278,9 @@ if __name__ == '__main__':
     #                    , 'lgbm-market-simulation-discrete', 'rf-market-simulation-binary', 'rf-market-simulation-discrete'
     #                    , 'svm-market-simulation-binary', 'svm-market-simulation-discrete'])
 
-    plot_acc_auc_summary('summary-binary.csv')
-    # plot_acc_auc_summary('summary-discrete.csv')
+    # plot_acc_auc_summary('summary-binary.csv')
+    plot_acc_auc_summary('summary-discrete.csv')
+    plot_acc_gain_summary('summary-binary-gain.csv')
+    plot_acc_gain_summary('summary-discrete-gain.csv')
+    plot_gain_freq_summary('summary-gain-freq.csv')
     print('Result analyzer finished.')
