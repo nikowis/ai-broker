@@ -153,6 +153,7 @@ def plot_acc_auc_summary(name):
     # plt.show()
     plt.close()
 
+
 def plot_gain_freq_summary(name):
     summary = pd.read_csv(RESULT_PATH + name)
     style.use('ggplot')
@@ -171,7 +172,6 @@ def plot_gain_freq_summary(name):
     plt.savefig('{}/{}-summary.pdf'.format(IMG_PATH, name.replace('.csv', '')), format='pdf', dpi=1000)
     # plt.show()
     plt.close()
-
 
 
 def plot_acc_gain_summary(name):
@@ -204,6 +204,73 @@ def average_trades(dirpaths):
                 trade_df.index = pd.to_datetime(trade_df.index)
                 transaction_count.append(len(trade_df))
         print('{0} average {1} transactions'.format(dirpath, np.mean(transaction_count)))
+
+
+def get_balance_with_fee(history, fee, budget=100000):
+    cur_budget = budget
+    cur_stock_amout = 0
+    for i in range(0, len(history)):
+        row = history.loc[i, :]
+        buy = bool(row['buy'])
+        price = float(row['price'])
+        if buy:
+            price_plus_fee = price + price * fee
+            cur_stock_amout = int(cur_budget / price_plus_fee)
+            cur_budget = cur_budget - cur_stock_amout * price_plus_fee
+        else:
+            price_minus_fee = price - price * fee
+            cur_budget = cur_budget + cur_stock_amout * price_minus_fee
+            cur_stock_amout = 0
+
+    return cur_budget
+
+
+# def sell(self, price):
+#     price_minus_fee = price - price * (TRANSACTION_PERCENT_FEE + AVERAGE_SPREAD)
+#     self.current_balance = self.current_balance + self.current_stock_amount * price_minus_fee
+#     if self.verbose:
+#         print('Selling {0} securities for {1}$ each resulting in {2} dollars'.format(self.current_stock_amount,
+#                                                                                      price_minus_fee,
+#                                                                                      self.current_balance))
+#     self.current_stock_amount = 0
+#
+# def buy(self, price):
+#     price_plus_fee = price + price * (TRANSACTION_PERCENT_FEE + AVERAGE_SPREAD)
+#     self.current_stock_amount = int(self.current_balance / (price_plus_fee))
+#     if self.verbose:
+#         print('Buying {0} securities using {1} dollars ({2} each)'.format(self.current_stock_amount,
+#                                                                           self.current_balance,
+#                                                                           price_plus_fee))
+#     self.current_balance = self.current_balance - self.current_stock_amount * price_plus_fee
+
+def plot_gain_depending_of_fee(name_bin, name_disc, ticker):
+    history_bin = pd.read_csv(RESULT_PATH + name_bin)
+    history_disc = pd.read_csv(RESULT_PATH + name_disc)
+    res_bin = pd.DataFrame()
+    res_disc = pd.DataFrame()
+
+    for fee in np.linspace(0, 0.01, 11):
+        balance_bin = get_balance_with_fee(history_bin, fee)
+        balance_disc = get_balance_with_fee(history_disc, fee)
+        res_bin = res_bin.append({'fee': fee*100, 'value': balance_bin/1000}, ignore_index=True)
+        res_disc = res_disc.append({'fee': fee*100, 'value': balance_disc/1000}, ignore_index=True)
+        # print("Binary balance is " + str(balance_bin) + " for fee " + str(fee))
+        # print("Discrete balance is " + str(balance_disc) + " for fee " + str(fee))
+    style.use('ggplot')
+    fig = plt.figure()
+    ax1 = fig.add_subplot(111)
+
+    res_bin.plot(kind='line', x='fee', y='value', label='Klasyfikator binarny', ax=ax1)
+    res_disc.plot(kind='line', x='fee', y='value', label='Klasyfikator wieloklasowy', ax=ax1)
+    plt.title(ticker)
+    plt.ylabel('Kapitał końcowy (%)')
+    plt.xlabel('Prowizja domu maklerskiego (%)')
+
+    plt.legend()
+    plt.savefig('{}/{}-summary.png'.format(IMG_PATH, name_bin.replace('.csv', '')))
+    plt.savefig('{}/{}-summary.pdf'.format(IMG_PATH, name_bin.replace('.csv', '')), format='pdf', dpi=1000)
+    # plt.show()
+    plt.close()
 
 
 if __name__ == '__main__':
@@ -279,8 +346,12 @@ if __name__ == '__main__':
     #                    , 'svm-market-simulation-binary', 'svm-market-simulation-discrete'])
 
     # plot_acc_auc_summary('summary-binary.csv')
-    plot_acc_auc_summary('summary-discrete.csv')
-    plot_acc_gain_summary('summary-binary-gain.csv')
-    plot_acc_gain_summary('summary-discrete-gain.csv')
-    plot_gain_freq_summary('summary-gain-freq.csv')
+    # plot_acc_auc_summary('summary-discrete.csv')
+    # plot_acc_gain_summary('summary-binary-gain.csv')
+    # plot_acc_gain_summary('summary-discrete-gain.csv')
+    # plot_gain_freq_summary('summary-gain-freq.csv')
+
+    plot_gain_depending_of_fee('results-lgbm-market-simulation-binaryFB.csv', 'results-lgbm-market-simulation-discreteFB.csv', 'FB')
+    plot_gain_depending_of_fee('results-lgbm-market-simulation-binaryAMZN.csv', 'results-lgbm-market-simulation-discreteAMZN.csv', 'AMZN')
+    plot_gain_depending_of_fee('results-lgbm-market-simulation-binaryMSFT.csv', 'results-lgbm-market-simulation-discreteMSFT.csv', 'MSFT')
     print('Result analyzer finished.')

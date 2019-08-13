@@ -1491,9 +1491,7 @@ max   						 &  0.386272 &  0.545294 &    0.239276 \\ \hline
 
 \subsection{Podsumowanie i wnioski}
 
-Końcowe wyniki \textbf{klasyfikacji binarnej} dla każdego z klasyfikatorów zostały oparte o testy przeprowadzone na 10 spółkach. Wyniki dokładności dla każdej ze spółek zostały zawarte w tabeli \ref{tab:comparison_final_binary}. Dodatkowo podane zostały uśrednione wyniki dokładności i AUC dla każdego z modeli. 
-
-%TODO rysunek z dwóch kryteriów średnia dokładność (oś x) + średnia AUC (oś y)
+Końcowe wyniki \textbf{klasyfikacji binarnej} dla każdego z klasyfikatorów zostały oparte o testy przeprowadzone na 10 spółkach. Wyniki dokładności dla każdej ze spółek zostały zawarte w tabeli \ref{tab:comparison_final_binary}, a średnie wyniki zostały przedstawione  na rysunku \ref{img:summary-binary}. Dodatkowo podane zostały uśrednione wyniki dokładności i AUC dla każdego z modeli. 
 
  \begin{table}[H]
     \centering
@@ -1519,6 +1517,12 @@ QCOM   &  0.522748 &  0.706916 & 0.512999 & \textbf{0.836431} \\ \hline \hline
 
 Najlepszy średni wynik uzyskał model Light GBM ze średnią dokładnością $\sim 80.1\%$ oraz AUC $\sim 0.951$ . Drugi najlepszy wynik osiągnął model sieci neuronowej z  $\sim 71\%$ dokładności i $\sim 0.652$ AUC. Modele SVM oraz random forest osiągneły wyniki zbliżone do losowej predykcji.
 
+\begin{figure}[H]
+\centering \includegraphics[scale=0.9]{img/summary-binary-summary.pdf}
+\caption{Porównanie średniej wydajności modeli w klasyfikacji binarnej (opracowanie własne)}
+\label{img:summary-binary}
+\end{figure}
+
 \bigskip
 
 Model Light GBM okazał się najlepszy dla wszystkich spółek. Należy jednak wziąć pod uwagę iż model sieci neuronowej był trenowany co 11 sesji giełdowych, podczas gdy model Light GBM był uczony na nowo po każdej sesji giełdowej. Wynikało to z ograniczeń technicznych. W powyższych eksperymentach zostało wykazane silne powiązanie pomiędzy powiększaniem zbioru treningowego o najnowsze próbki z danymi, a końcową jakością modelu. Wykonanie testów dla modelu Light GBM trenowanego co 11 sesji daje średni wynik $\sim 61.5\%$ dokładności oraz $\sim 0.669$ AUC. W związku z tym należy mieć na uwadze iż model sieci neuronowej ma jeszcze dużo potencjału na poprawę. Przy używaniu modelu sieci neuronowej w praktyce ograniczenia techniczne nie występują ze względu na krótki czas pojedynczego uczenia modelu.
@@ -1535,9 +1539,7 @@ Dla modelu random forest można zauważyć pewną anomalię dla spółki \textit
 
 \bigskip
 
-Dla \textbf{klasyfikacji na 3 klasy} zostały wykonane analogiczne testy dla 10 spółek. Wyniki zostały przedstawione w tabeli \ref{tab:comparison_final_discrete}. Podobnie jak dla poprzedniego problemu modele \textit{SVM} oraz \textit{random forest} nie wykazały dużo lepszej dokładności od losowego predyktora. Ponownie najlepszy okazał się model \textit{Light GBM} z dokładnością na poziomie $\sim 59.3\%$ oraz AUC $\sim 0.786$. Niewiele gorszy wynik dokładności osiągnął model sieci neuronowej $\sim 56.8\%$, jednak uzyskał on znacznie niższy wynik miary AUC $\sim 0.633$.
-
-%TODO rysunek z dwóch kryteriów średnia dokładność (oś x) + średnia AUC (oś y)
+Dla \textbf{klasyfikacji na 3 klasy} zostały wykonane analogiczne testy dla 10 spółek. Szczegółowe Wyniki zostały przedstawione w tabeli \ref{tab:comparison_final_discrete}, zaś średnia jakość modeli została przedstawiona na rysunku \ref{img:summary-discrete}. Podobnie jak dla poprzedniego problemu modele \textit{SVM} oraz \textit{random forest} nie wykazały dużo lepszej dokładności od losowego predyktora. 
 
 \begin{table}[H]
     \centering
@@ -1559,7 +1561,16 @@ QCOM   &  0.378830 &  \textbf{0.558107} & 0.350511 & 0.546468 \\ \hline \hline
     \end{tabular}
     \caption{Końcowe wyniki dokładności dla klasyfikacji na 3 klasy różnych spółek}
     \label{tab:comparison_final_discrete}
-\end{table}   
+\end{table}
+
+Ponownie najlepszy okazał się model \textit{Light GBM} z dokładnością na poziomie $\sim 59.3\%$ oraz AUC $\sim 0.786$. Niewiele gorszy wynik dokładności osiągnął model sieci neuronowej $\sim 56.8\%$, jednak uzyskał on znacznie niższy wynik miary AUC $\sim 0.633$.
+
+\begin{figure}[H]
+\centering \includegraphics[scale=0.9]{img/summary-discrete-summary.pdf}
+\caption{Porównanie średniej wydajności modeli w klasyfikacji wieloklasowej (opracowanie własne)}
+\label{img:summary-discrete}
+\end{figure}
+
 
 Pomimo gorszych warunków testu dla modelu sieci neuronowej (nowe próbki w zbiorze treningowym co 11 sesji giełdowych), uzyskał on lepszy wynik od modelu \textit{Light GBM} dla 2 spółek. Dodatkowo średnie wyniki tych dwóch modeli są dużo bardziej zbliżone. Dla klasyfikacji binarnej różnica w dokładności tych modeli wyniosła $\sim 9\%$, zaś dla klasyfikacji na 3 klasy różnica wyniosła jedynie $\sim 2.5\%$. 
 
@@ -1593,10 +1604,7 @@ Do porównania uzyskanych wyników zastosowana była technika \textit{buy and ho
 
 \bigskip
 
-Wyniki dla metody \textit{buy and hold} oraz klasyfikatorów binarnych zostały opisane w tabeli \ref{tab:comparison_simulation_binary}. Dzięki mniejszej liczbie próbek przy tej analizie model sieci neuronowych był uczony na nowo co dwie sesje giełdowe. Metoda \textit{buy and hold} pozwoliła na wypracowanie zysku na poziomie 124.41\% kapitału początkowego. Jak widać wyniki dla poszczególnych modeli są odzwierciedleniem porównania ich pod względem dokładności klasyfikacji (tabela \ref{tab:comparison_final_binary}). Najlepszy średni wynik na poziomie \textbf{140.01}\% kapitału początkowego uzsykał model sieci neuronowej, niewiele gorszy okazał się model \textit{Light GBM} z wynikiem około 131\%. Dla modelu SVM wynik 120\% jest odstępstwem od oczekiwań w porównaniu do dokładności tego modelu. Ta średnia wartość wydaje się być zawyżona przez wynik dla spółki \textit{QCOM}. Dla pozostałych spółek model SVM jest zauważalnie gorszy od biernego uczestnictwa w giełdzie. Najgorszy wynik około 107\% otrzymał model lasu losowego. Dla tego modelu również widać anomalię w przypadku spółki \textit{QCOM}. Analiza wykresu ceny zamknięcia tej spółki (rysunek \ref{img:qcom_adj_close}) pozwala dostrzec gwałtowne wahanie ceny w połowie kwietnia 2019. Przy takich dynamicznych zmianach nawet modele losowe mogą przypadkowo uzyskać wysoki zysk przy odpowiednich decyzjach. Na dłuższą metę takie anomalie są jednak amortyzowane, a modele z niską dokładnością dają dużo gorsze wyniki.
-
-%TODO rysunek z dwóch kryteriów średni zysk (oś x) + średnia dokładność (oś y)
-
+Wyniki dla metody \textit{buy and hold} oraz klasyfikatorów binarnych zostały opisane w tabeli \ref{tab:comparison_simulation_binary}. Dzięki mniejszej liczbie próbek przy tej analizie model sieci neuronowych był uczony na nowo co dwie sesje giełdowe. Metoda \textit{buy and hold} pozwoliła na wypracowanie zysku na poziomie 124.41\% kapitału początkowego. Jak widać wyniki dla poszczególnych modeli są odzwierciedleniem porównania ich pod względem dokładności klasyfikacji (tabela \ref{tab:comparison_final_binary}). 
 
  \begin{table}[H]
     \centering
@@ -1620,7 +1628,7 @@ QCOM & 137.18 &  158.54 &  \textbf{165.43} & 157.12 & 135.70  \\ \hline \hline
     \label{tab:comparison_simulation_binary}
 \end{table}   
 
-Model sieci neuronowej oraz model \textit{Light GBM} uzyskały dużo lepsze wyniki od strategii \textit{buy and hold} (124\%) czy też indeksu giełdowego (118\%). Model sieci neuronowej nie uzyskał najlepszych wyników dla wszystkich spółek, jednak różnica na korzyść modelu \textit{Light GBM} nie była znaczna, a końcowy wynik dla sieci neuronowej jest aż o $\sim 8\%$ lepszy. Największą korzyść z wykorzystywania klasyfikatorów do handlu na giełdzie widać przy spółkach, które uzyskały najgorsze wyniki przy strategii \textit{buy and hold}. Dla spółki \textit{AMGN} odniesiona została strata na poziomie 3\% kapitału, jednak wykorzystanie modelu sieci neuronowej pozwala na ograniczenie ryzyka i wypracowanie zadowalającego zysku. Wynika to z faktu, iż główną zaletą aktywnego handlu na giełdzie jest spieniężanie akcji przed spadkiem ceny. Jeżeli dla danej spółki cena w głównej mierze rośnie, aktywne zarządzanie portfelem inwestycyjnym nie będzie w stanie znacznie poprawić zysku wynikającego z biernego posiadania akcji.
+Najlepszy średni wynik na poziomie \textbf{140.01}\% kapitału początkowego uzsykał model sieci neuronowej, niewiele gorszy okazał się model \textit{Light GBM} z wynikiem około 131\%. Dla modelu SVM wynik 120\% jest odstępstwem od oczekiwań w porównaniu do dokładności tego modelu. Ta średnia wartość wydaje się być zawyżona przez wynik dla spółki \textit{QCOM}. Dla pozostałych spółek model SVM jest zauważalnie gorszy od biernego uczestnictwa w giełdzie. Najgorszy wynik około 107\% otrzymał model lasu losowego. Dla tego modelu również widać anomalię w przypadku spółki \textit{QCOM}. Analiza wykresu ceny zamknięcia tej spółki (rysunek \ref{img:qcom_adj_close}) pozwala dostrzec gwałtowne wahanie ceny w połowie kwietnia 2019. Przy takich dynamicznych zmianach nawet modele losowe mogą przypadkowo uzyskać wysoki zysk przy odpowiednich decyzjach. Na dłuższą metę takie anomalie są jednak amortyzowane, a modele z niską dokładnością dają dużo gorsze wyniki.
 
 \begin{figure}[H]
 \centering \includegraphics[scale=1]{img/QCOM_adj_close.pdf}
@@ -1628,11 +1636,15 @@ Model sieci neuronowej oraz model \textit{Light GBM} uzyskały dużo lepsze wyni
 \label{img:qcom_adj_close}
 \end{figure}
 
+Model sieci neuronowej oraz model \textit{Light GBM} uzyskały dużo lepsze wyniki od strategii \textit{buy and hold} (124\%) czy też indeksu giełdowego (118\%). Model sieci neuronowej nie uzyskał najlepszych wyników dla wszystkich spółek, jednak różnica na korzyść modelu \textit{Light GBM} nie była znaczna, a końcowy wynik dla sieci neuronowej jest aż o $\sim 8\%$ lepszy. Największą korzyść z wykorzystywania klasyfikatorów do handlu na giełdzie widać przy spółkach, które uzyskały najgorsze wyniki przy strategii \textit{buy and hold}. Dla spółki \textit{AMGN} odniesiona została strata na poziomie 3\% kapitału, jednak wykorzystanie modelu sieci neuronowej pozwala na ograniczenie ryzyka i wypracowanie zadowalającego zysku. Wynika to z faktu, iż główną zaletą aktywnego handlu na giełdzie jest spieniężanie akcji przed spadkiem ceny. Jeżeli dla danej spółki cena w głównej mierze rośnie, aktywne zarządzanie portfelem inwestycyjnym nie będzie w stanie znacznie poprawić zysku wynikającego z biernego posiadania akcji. Średni stosunek dokładności do zysku został przedstawiony na rysunku \ref{img:summary-binary-gain}. 
 
-Analogiczne wyniki dla klasyfikatorów wieloklasowych zostały opisane w tabeli \ref{tab:comparison_simulation_discrete}. Podobnie jak w poprzednim teście zgodnie z oczekiwaniami najgorsze wyniki zostały uzyskane przez modele o najgorszej dokładności. Porównując model \textit{SVM} oraz \textit{random forest} zauważalny jest proporcjonalny wzrost zysku do wzrostu dokładności. Dla modelu \textit{Light GBM} uzyskany zysk jest niewiele gorszy do zysku tego modelu wykorzystującego klasyfikację binarną. Różnica kapitału końcowego wynosi jedynie $\sim 3.5\%$ podczas gdy różnica dokładności jest na poziomie $\sim 21\%$. Najlepszy wynik został uzsykany dla modelu sieci neuronowej, która wykazała wzrost kapitału do 138.03 \% co jest jedynie o $\sim 2\%$ gorszym wynikiem względem algorytmu opartego o klasyfikację binarną.
+\begin{figure}[H]
+\centering \includegraphics[scale=0.9]{img/summary-binary-gain-summary.pdf}
+\caption{Porównanie średniego zysku modeli z klasyfikacji binarnej (opracowanie własne)}
+\label{img:summary-binary-gain}
+\end{figure}
 
-%TODO rysunek z dwóch kryteriów średni zysk (oś x) + średnia dokładność (oś y)
-
+Analogiczne wyniki dla klasyfikatorów wieloklasowych zostały opisane w tabeli \ref{tab:comparison_simulation_discrete}. Podobnie jak w poprzednim teście zgodnie z oczekiwaniami najgorsze wyniki zostały uzyskane przez modele o najgorszej dokładności. Porównując model \textit{SVM} oraz \textit{random forest} zauważalny jest proporcjonalny wzrost zysku do wzrostu dokładności. Dla modelu \textit{Light GBM} uzyskany zysk jest niewiele gorszy do zysku tego modelu wykorzystującego klasyfikację binarną. Różnica kapitału końcowego wynosi jedynie $\sim 3.5\%$ podczas gdy różnica dokładności jest na poziomie $\sim 21\%$. Najlepszy wynik został uzsykany dla modelu sieci neuronowej, która wykazała wzrost kapitału do 138.03 \% co jest jedynie o $\sim 2\%$ gorszym wynikiem względem algorytmu opartego o klasyfikację binarną. Średni stosunek dokładności do zysku został przedstawiony na rysunku \ref{img:summary-discrete-gain}. 
 
  \begin{table}[H]
     \centering
@@ -1658,6 +1670,12 @@ QCOM & 137.18 &  123.95 &  \textbf{170.69} & 95.67 & 151.21 \\ \hline \hline
 
 W symulacjach handlu na giełdzie z pomocą klasyfikatorów widoczna jest zależność końcowych wyników od wyników dokładności. Model sieci neuronowej oraz model \textit{Light GBM} uzyskały zadowalające wyniki dokładności i znacznie przewyższyły zysk z biernej inwestycji w wybrane akcje dla każdej z testowanych spółek. Model SVM oraz model lasu losowego nie potrafiły skutecznie przewidywać trendów giełdowych, a co za tym idzie uzyskały dużo gorsze wyniki od strategii \textit{buy and hold}. Dla przeprowadzonych testów, rozszerzenie problemu predykcji trendu o dodatkową trzecią klasę znacznie zwiększyło złożoność problemu, co można stwierdzić na podstawie uzyskanych wyników dokładności. Pomimo tego modele klasyfikujące na 3 klasy wykazywały zyski zbliżone do modeli klasyfikujących binarnie.
 
+\begin{figure}[H]
+\centering \includegraphics[scale=0.9]{img/summary-discrete-gain-summary.pdf}
+\caption{Porównanie średniego zysku modeli z klasyfikacji wieloklasowej (opracowanie własne)}
+\label{img:summary-discrete-gain}
+\end{figure}
+
 \bigskip
 
 
@@ -1679,9 +1697,6 @@ Na rysunku \ref{img:amgn_wallet_value} została przedstawiona wartość portfela
 
 Warto dogłębniej zastanowić się nad użytecznością klasyfikacji na 3 klasy. Co prawda średni zysk dla handlu na podstawie klasyfikacji binarnej był o kilka punktów procentowych wyższy, jednak wprowadzenie trzeciej klasy do podstawowego problemu niesie za sobą inną korzyść. W tabeli \ref{tab:simulation_avg_value_vs_transactions} przedstawione został średni zysk dla najlepszych modeli oraz średnia liczba wykonanych transakcji podczas symulacji giełdowej.
 
-
-%TODO też wykresik z punktami
-
  \begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|}
@@ -1699,7 +1714,21 @@ Warto dogłębniej zastanowić się nad użytecznością klasyfikacji na 3 klasy
     \label{tab:simulation_avg_value_vs_transactions}
 \end{table} 
 
- Modele klasyfikujące na 3 klasy wykonały średnio o 16 transakcji mniej niż klasyfikatory binarne (miesięcznie jest to średnio aż o 2.6 transakcji mniej). Wynika to z dodatkowej klasy, która pozwala na pozostanie biernym danego dnia giełdowego. Ta różnica w liczbie transakcji jest bardzo istotna w przypadku gdyby prowizje od każdej z transakcji były wyższe od założonej wartości 0.2\%. Przyjęta wartość jest jedną z najniższych prowizji na polskim rynku. Wyższe prowizje występują w szczególności gdy transakcje nie przekraczają jakiejś określonej kwoty (zazwyczaj jest to kilka tysięcy dolarów). W takim przypadku mniejsza liczba transakcji w dużo większym stopniu wpływa na końcowy wynik, a modele klasyfikacji na 3 klasy wykorzystują swój potencjał i okazują się lepsze od klasyfikatorów binarnych. Pomimo że różnica uzyskiwana przy omijaniu opłat transakcyjnych wydaje się być niewielka, na dłuższą metę, dzięki ponownemu inwestowaniu zyskaego kapitału, będzie ona rosła wykładniczo. W ekonomii to zjawisko nosi miano procenta składanego.
+ Modele klasyfikujące na 3 klasy wykonały średnio o 16 transakcji mniej niż klasyfikatory binarne (miesięcznie jest to średnio aż o 2.6 transakcji mniej). Wynika to z dodatkowej klasy, która pozwala na pozostanie biernym danego dnia giełdowego. Ta różnica w liczbie transakcji jest bardzo istotna w przypadku gdyby prowizje od każdej z transakcji były wyższe od założonej wartości 0.2\%. Przyjęta wartość jest jedną z najniższych prowizji na polskim rynku. Wyższe prowizje występują w szczególności gdy transakcje nie przekraczają jakiejś określonej kwoty (zazwyczaj jest to kilka tysięcy dolarów). W takim przypadku mniejsza liczba transakcji w dużo większym stopniu wpływa na końcowy wynik, a modele klasyfikacji na 3 klasy wykorzystują swój potencjał i okazują się lepsze od klasyfikatorów binarnych. Pomimo że różnica uzyskiwana przy omijaniu opłat transakcyjnych wydaje się być niewielka, na dłuższą metę, dzięki ponownemu inwestowaniu zyskaego kapitału, będzie ona rosła wykładniczo. W ekonomii to zjawisko nosi miano procenta składanego. Przykładowe wyliczenia porównujące zysk przy różnych wysokościach prowizji zostały na rysunkach \ref{img:profit_to_fee_amzn} oraz \ref{img:profit_to_fee_msft}. Jak widać wystarczy, że prowizja osiągnie próg \textbf{0.3\%}, a klasyfikator binarny ze względu na wyższą liczbę transakcji, okazuje się mniej rentowny od klasyfikatora wieloklasowego.
+ 
+\begin{figure}[H]%
+\centering
+\subfigure[Stosunek końcowego kapitału do prowizji domu maklerskiego dla spółki \textit{AMZN}]{%
+\includegraphics[scale=0.7]{img/results-lgbm-market-simulation-binaryAMZN-summary.pdf}
+\label{img:profit_to_fee_amzn}}%
+\qquad
+\subfigure[Stosunek końcowego kapitału do prowizji domu maklerskiego dla spółki \textit{MSFT}]{%
+\includegraphics[scale=0.7]{img/results-lgbm-market-simulation-binaryMSFT-summary.pdf}
+\label{img:profit_to_fee_msft}}%
+
+\caption{Wykresy przedstawiające stosunek końcowego kapitału w zależności od wysokości prowizji domu maklerskiego. Obliczenia wykonane dla modelu \textit{Light GBM} zarówno w konfiguracji dla klasyfikacji binarnej jak i klasyfikacji wieloklasowej. (opracowanie własne)}
+\label{img:profit_to_fee}
+\end{figure} 
  
 \newpage 
  
