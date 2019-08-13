@@ -4,6 +4,7 @@
 \usepackage{float}
 \usepackage[T1]{fontenc}
 
+\usepackage{listings}
 \usepackage{url}
 \usepackage{longtable}
 \usepackage{a4wide}
@@ -53,6 +54,8 @@
 \usepackage{fancyhdr} % header and footer settings
 \usepackage{subfigure}
 \usepackage{cleveref}
+\usepackage{xcolor}
+\usepackage{textcomp}
 
 
 \pagestyle{fancy}
@@ -79,6 +82,17 @@
 \newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
 
 
+\lstset
+{ %Formatting for code in appendix
+    language=Python,
+    basicstyle=\footnotesize,
+    numbers=left,
+    stepnumber=1,
+    showstringspaces=false,
+    tabsize=1,
+    breaklines=true,
+    breakatwhitespace=false,
+}
 
 % FONT settings
 \usepackage[T1]{fontenc}
@@ -1734,11 +1748,15 @@ Warto dogłębniej zastanowić się nad użytecznością klasyfikacji na 3 klasy
  
 \section{Podsumowanie}
 
-W pracy przedstawione zostały różnorodne dane mogące posłużyć do analiz cen giełdowych, oraz różne podejścia do problemu przewidywania zmian cen akcji na giełdzie. Wykonane eksperymenty klasyfikacji demonstrują możliwości predykcji zmian cen na giełdzie jedynie z wykorzystaniem podstawowych danych giełdowych oraz wskaźników analizy technicznej. Oba przedstawione problemy klasyfikacji uzyskały nad wyraz satysfakcjonujące wyniki przy użyciu różnorodnych metod uczenia maszynowego. Najlepsze wyniki uzyskał model sieci neuronowej oraz model maszyny wektorów nośnych.
+W pracy przedstawione zostały różnorodne dane mogące posłużyć do analiz cen giełdowych, oraz różne podejścia do problemu przewidywania zmian cen akcji na giełdzie. Wykonane eksperymenty klasyfikacji demonstrują możliwości predykcji zmian cen na giełdzie jedynie z wykorzystaniem podstawowych danych giełdowych oraz wskaźników analizy technicznej. Oba przedstawione problemy klasyfikacji uzyskały nad wyraz satysfakcjonujące wyniki przy użyciu różnorodnych metod uczenia maszynowego. Najlepsze wyniki uzyskał model sieci neuronowej oraz model \textit{Light GBM}. Dla zagadnienia klasyfikacji binarnej najlepszy wynik dokładności wyniósł $\sim 81\%$, zaś dla klasyfikacji wieloklasowej $\sim 59\%$. Jednak nie wszystkie klasyfikatory potrafią dobrze przewidywać ruchy giełdowe, maszyna wektorów nośnych oraz model lasu losowego nie były w stanie poradzić sobie z zadanym problemem. Te dwa modele dla większości spółek były w stanie jedynie przewidzieć do kilku \% więcej od liczność najliczniejszej klasy ze zbioru danych.
 
 \bigskip
 
-Symulacje z użyciem algorytmu opartego o nauczone klasyfikatory dały doskonałe wyniki w grze na giełdzie. W większości przypadków uzyskiwany zysk znacznie przekroczył wzrost indeksu \textit{S\&P 500} oraz strategię \textit{buy and hold}. Takie rezultaty analiz daje podstawę do rozważenia użycia wbranych modeli w handlu na prawdziwym rynku papierów wartościowych. Jednakowoż wyniki symulacji użycia klasyfikatorów w handlu, pomimo bardzo obiecujących wyników, oparte zostały o uproszczony model giełdy. Przy prawdziwych transakcjach trzeba brać pod uwagę \textit{spread} ceny czyli różnicę między ceną kupna, a ceną sprzedaży danej akcji. Handlując dużą liczbą akcji, istotną rolę odgrywa podaż i popyt. Fakt iż algorytm w danym momencie sugeruje sprzedaż jakiejś liczby akcji po danej cenie, nie oznacza że znajdzie się na nie kupiec. Co za tym idzie cena sprzedaży może zostać obniżona przez konkurencyjną ofertę. Należy mieć na uwadze do jakiego stopnia opłaca się obniżać cenę przy zamiarze sprzedaży akcji oraz analogicznie wyznaczyć maksymalną cenę za jaką jesteśmy w stanie kupić akcje.  Dodatkowo w Polsce przy zyskach z gry na giełdzie trzeba pamiętać o podatku od dochodów kapitałowych (potocznie nazywany podatkiem Belki). Ze względu na symplifikację w kodzie źródłowym, wszystkie operacje zostały oparte o typy zmiennoprzecinkowe co oznacza utratę precyzji przy wykorzystywaniu ułamków, z tego powodu wszelkie wyniki w tej pracy należy traktować jako zaokrąglenia. Ta aproksymacja nie ma żadnych implikacji jeśli chodzi o meritum prezentowane w tej pracy, jednak z perspektywy automatycznych systemów do gry na giełdzie takie uproszczenie jest nieakceptowalne. Powyższe argumenty mają na celu podkreślenie iż wykorzystanie modeli z tej pracy na prawdziwej giełdzie, należy traktować zgodnie z regułą ograniczonego zaufania, analizując decyzje podejmowane przez algorytm.
+Symulacje z użyciem algorytmu opartego o nauczone klasyfikatory dały doskonałe wyniki w grze na giełdzie. W przypadku sieci neuronowych oraz modelu \textit{Light GBM} uzyskiwany zysk znacznie przekroczył wzrost indeksu \textit{S\&P 500} oraz strategię \textit{buy and hold}. Maszyny wektorów nośnych oraz model lasu losowego okazały się być dużo gorsze od biernej gry na giełdzie. Udowodniona została zasadność rozszerzenia klasyfikacji trendu giełdowego o dodatkową klasę. Takie rozwiązanie pomimo uzyskania dużo gorszych wyników dokładności klasyfikacji, może dać dużo lepsze wyniki w handlu na giełdzie. Korzyść z użycia klasyfikacji na 3 klasy wzrasta proporcjonalnie do wysokości kosztu wykonania pojedynczej transakcji. 
+
+\bigskip
+
+ Uzyskane rezultaty dają podstawę do rozważenia użycia wybranych modeli w handlu na prawdziwym rynku papierów wartościowych. Wyniki symulacji użycia klasyfikatorów w handlu, pomimo bardzo obiecujących wyników, oparte zostały o uproszczony model giełdy. Przy prawdziwych transakcjach trzeba brać pod uwagę \textit{spread} ceny czyli różnicę między ceną kupna, a ceną sprzedaży danej akcji. Handlując dużą liczbą akcji, istotną rolę odgrywa podaż i popyt. Fakt iż algorytm w danym momencie sugeruje sprzedaż jakiejś liczby akcji po danej cenie, nie oznacza że znajdzie się na nie kupiec. Co za tym idzie cena sprzedaży może zostać obniżona przez konkurencyjną ofertę. Należy więc mieć na uwadze do jakiego stopnia opłaca się obniżać cenę przy zamiarze sprzedaży akcji oraz analogicznie wyznaczyć maksymalną cenę za jaką algorytm powinien kupić akcje. Ponadto, w Polsce, przy zyskach z gry na giełdzie trzeba pamiętać o podatku od dochodów kapitałowych (potocznie nazywany podatkiem Belki). Ze względu na symplifikację, w kodzie źródłowym, wszystkie operacje zostały oparte o typy zmiennoprzecinkowe co oznacza utratę precyzji przy wykorzystywaniu ułamków, z tego powodu wszelkie wyniki w tej pracy należy traktować jako zaokrąglenia. Ta aproksymacja nie ma żadnych implikacji jeśli chodzi o meritum prezentowane w tej pracy, jednak z perspektywy automatycznych systemów do gry na giełdzie takie uproszczenie jest nieakceptowalne. Powyższe argumenty mają na celu podkreślenie iż wykorzystanie modeli z tej pracy na prawdziwej giełdzie, należy traktować zgodnie z regułą ograniczonego zaufania, analizując decyzje podejmowane przez algorytm.
 
 \bigskip
 
@@ -1954,26 +1972,137 @@ Kod źródłowy dołączony do niniejszej pracy magisterskiej został napisany w
     \item \textit{lightgbm} - implementacja algorytmu Ligh GBM,
     \item \textit{tensorflow} - implementacja sieci neuronowych MLP,
     \item \textit{keras} - nakładka API upraszczająca użycie biblioteki \textit{tensorflow},
-    \item \textit{matplotlib} - biblioteka do generowania wykresów.
+    \item \textit{matplotlib} - biblioteka do generowania wykresów,
+    \item \textit{pymongo} - biblioteka do połączenia z bazą MongoDB.
 \end{itemize}
 
 Całość programu jest przygotowana w formie aplikacji konsolowych, które na wyjściu podają komunikaty konsolowe oraz pliki wyjściowe w formacie \textit{csv}. Cała logika aplikacji można podzielić na 3 grupy odpowiadające trzem etapom tworzenia pracy.
 
 \bigskip
 
-\textbf{Pobranie i wstępne przetworzenie danych}
+\subsection*{Pobranie i wstępne przetworzenie danych}
 
-Głównym skryptem odpowiadającym za pobranie i przygotowanie danych jest skrypt z pliku \textit{api\_to\_db\_importer.py}.~Pobranie odstawowych danych giełdowych oraz danych analizy technicznej z API \textit{Alpha Vantage} \cite{alphavantage} odbywa się za pomocą skyptu \textit{alpha.py}. Po otrzynaniu danych z API dane są zapisywane do lokalnej instancji bazy danych MongoDB służącej do przechowania pobranych informacji giełdowych. Dzięki bazie danych wielokrotne uruchomienia skryptu pobierającego, komunikują się z zewnętrznym API tylko raz, zapamiętując pobrane informacje. Operacje na bazie danych wydzielone zostały do pliku \textit{db\_access.py}. Po pobraniu wszystkich potrzebnych danych skrypt tworzy nowe kolumny z informacjami na podstawie istniejących wskaźników (np. kolumna różnicy między dwoma wskaźnikami). Ostatecznie przetworzone dane o spółkach są zapisywane do bazy danych oraz do plików \textit{csv} dla wygodniejszego dostępu i przenoszenia danych. Zapis i odczyt z plików \textit{csv} odbywa się przez skrypt pomocniczy zawarty w pliku \textit{csv\_importer.py}
+Głównym skryptem odpowiadającym za pobranie i przygotowanie danych jest skrypt z pliku \textit{api\_to\_db\_importer.py}.~Pobranie odstawowych danych giełdowych oraz danych analizy technicznej z API \textit{Alpha Vantage} \cite{alphavantage} (listing \ref{code:ls1} linia 2 oraz 3) odbywa się za pomocą skyptu \textit{alpha.py}. Po otrzynaniu danych z API dane są zapisywane do lokalnej instancji bazy danych MongoDB służącej do przechowania pobranych informacji giełdowych. Dzięki bazie danych wielokrotne uruchomienia skryptu pobierającego, komunikują się z zewnętrznym API tylko raz, zapamiętując pobrane informacje. Operacje na bazie danych wydzielone zostały do pliku \textit{db\_access.py}. Po pobraniu wszystkich potrzebnych danych skrypt tworzy nowe kolumny z informacjami na podstawie istniejących wskaźników (np. kolumna różnicy między dwoma wskaźnikami) ((listing \ref{code:ls1} linia 4)). Ostatecznie przetworzone dane o spółkach są zapisywane do bazy danych oraz do plików \textit{csv} dla wygodniejszego dostępu i przenoszenia danych ((listing \ref{code:ls1} linia 5)). Zapis i odczyt z plików \textit{csv} odbywa się przez skrypt pomocniczy zawarty w pliku \textit{csv\_importer.py} (listing \ref{code:ls1} linia~6).
 
-\newpage
+\begin{lstlisting}[caption={Pobranie i wstępne przetworzenie danych (plik \textit{api\_to\_db\_importer.py})}, label={code:ls1},frame=single, captionpos=b, mathescape=true]
+ imp = Importer()
+ imp.import_all(['AMZN', 'GOOGL'])
+ imp.import_all_technical_indicators(['AMZN', 'GOOGL'])
+ imp.process_data()
+ imp.export_to_csv_files('./data')
+ dflist, _ = csv_importer.import_data_from_files(['AMZN', 'GOOGL'], './data')
+\end{lstlisting}
 
-\textbf{Testy klasyfikacji}
+\subsection*{Parametry modeli i uczenia}
 
-Do testów klasyfikacji został stworzona bazowa klasa \textit{Benchmark} (plik \textit{benchmark.py}). Na wejściu przyjmuje ona listę symboli giełdowych spółek, dla których mają zostać wykonane testy oraz obiekt klasy \textit{BenchmarkParams} (plik \textit{benchmark\_params.py}) zawierający wszystkie parametry testu. Dla każdego z modeli klasyfikacyjnych powstała klasa implementująca odpowiednie metody dostosowujące klasę \textit{Benchmark} do potrzeb danego klasyfikatora. Ponadto dla każdego z modeli powstała klasa rozszerzająca klasę \textit{BenchmarkParams} o dodatkowe parametry dostępne dla danego klasyfikatora. Pliki nazwane według schematu \textit{*\_benchmark\_executions.py} zawierają przykładowe wywołania dla testów każdego z klasyfikatorów.  Przy zakończeniu testu klasyfikacji tworzony jest plik \textit{csv} zawierający informacje o dokładności, \textit{AUC} oraz czasie nauki dla każdej ze spółek.
+Ze względu na dużą wspólną część parametrów związanych z przeprowadzanymi eksperymentami niezależnie od wybranego modelu podzielone zostały one na klasy. Parametry wspólne zostały zebrane w klasie \textit{BenchmarkParams} - plik \textit{benchmark\_params.py}. W tym samym pliku zawarte są parametry dla poszczególnych modeli w formie klas dziedziczących po klasie \textit{BenchmarkParams}. Są to kolejno klasy: \textit{NnBenchmarkParams}, \textit{SVMBenchmarkParams}, \textit{LightGBMBenchmarkParams} oraz \textit{RandomForestBenchmarkParams}. W każdej z tych podklas ustawione są domyślne wartości parametrów, które są optymalnymi dla danego modelu. Obowiązkowym parametrem w konstruktorze dla każdej z powyższych klas jest flaga \textit{binary\_classification} oznaczająca czy dany test będzie oparty o klasyfikację binarną czy też wieloklasową. Podstawowe parametry z klasy \textit{BenchmarkParams} zostały przedstawione w listingu \ref{code:params}.
 
-\bigskip
 
-\textbf{Symulacja giełdy}
+\begin{lstlisting}[caption={Parametry z klasy \textit{BenchmarkParams} (plik \textit{benchmark\_params.py})}, label={code:params},frame=single, captionpos=b, mathescape=true]
+ self.benchmark_name = benchmark_name
+ self.plot_partial = False
+ self.csv_files_path = TARGET_PATH + '/data'
+ self.benchmark_path = TARGET_PATH + BENCHMARKS_DIR + self.benchmark_name_dir
+ self.save_model_path = self.benchmark_path + SAVE_MODEL_DIR
+ self.save_img_path = self.benchmark_path + SAVE_IMG_DIR
+ self.save_partial_img_path = self.save_img_path + SAVE_PARTIAL_IMG_DIR
+ self.save_files = True
+ self.save_model = True
+ self.cleanup_files = True
+ self.verbose = True
+ self.input_size = None
+ if binary_classification:
+    self.classes_count = 2
+ else:
+    self.classes_count = 3
+ self.pca = 0.9999
+ self.test_size = 0.2
+ self.standardize = True
+ self.difference_non_stationary = True
+ self.walk_forward_testing = False
+ self.max_train_window_size = None
+ self.iterations = 3
+ self.one_hot_encode_labels = True
+\end{lstlisting}
+
+\subsection*{Przygotowanie danych do nauczania}
+
+Przed uczeniem dowolnego modelu należy najpierw odpowiednio przygotować dane. Skrypt z pliku \textit{benchmark\_data\_preprocessing.py} zawiera metodę \textit{preprocess} przetwarzającą wejściowy zbiór danych na zbiory treningowe i testowe z odpowiednim rozdzieleniem cech od etykiet. W tej metodzie wykonywane są następujące kroki:
+\begin{itemize}
+\item odrzucenie nadmiarowych kolumn,
+\item podział cech i etykiet,
+\item różnicowanie (usunięcie niestacjonarności),
+\item usunięcie wierszy z błędnymi danymi,
+\item transformacja etykiet (kategoryzacja przy problemie wieloklasowym),
+\item przygotowanie osobnych zbiorów z danymi do testów metodą kroczącą (listing \ref{code:walk_forward_data}),
+\item standaryzacja cech,
+\item użycie metody \textit{PCA}.
+\end{itemize}
+
+\begin{lstlisting}[caption={Stworzenie zbiorów danych do testów metodą kroczącą (plik \textit{benchmark\_data\_preprocessing.py})}, label={code:walk_forward_data},frame=single, captionpos=b, mathescape=true]
+ x_trains_list = []
+ y_trains_list = []
+ x_tests_list = []
+ y_tests_list = []
+ test_size = benchmark_params.test_size
+ test_window_size = benchmark_params.walk_forward_test_window_size
+ train_window_size = benchmark_params.max_train_window_size
+
+ full_windows_count = int((test_size * len(x) / test_window_size))
+ for i in range(0, full_windows_count + 1):
+    train_end_idx = int((1 - test_size) * len(x) + i * test_window_size)
+    if train_window_size is None:
+        train_start_idx = 0
+    else:
+        train_start_idx = int(max(0, train_end_idx - train_window_size))
+    test_start_idx = int(train_end_idx)
+    test_end_idx = int(train_end_idx + test_window_size)
+
+    x_train = x[train_start_idx:train_end_idx]
+    y_train = encoded_y[train_start_idx:train_end_idx]
+    x_test = x[test_start_idx:test_end_idx]
+    y_test = encoded_y[test_start_idx:test_end_idx]
+
+    x_train, x_test, std_scaler, pca_transformer = standardize_and_pca(benchmark_params, x_train, x_test)
+
+    x_trains_list.append(x_train)
+    y_trains_list.append(y_train)
+    x_tests_list.append(x_test)
+    y_tests_list.append(y_test)
+ x_train = x_trains_list
+ y_train = y_trains_list
+ x_test = x_tests_list
+ y_test = y_tests_list
+\end{lstlisting}
+
+\subsection*{Testy klasyfikacji}
+
+Do testów klasyfikacji został utworzona bazowa klasa \textit{Benchmark} (plik \textit{benchmark.py}). Na wejściu przyjmuje ona listę symboli giełdowych spółek, dla których mają zostać wykonane testy oraz obiekt klasy \textit{BenchmarkParams} zawierający wszystkie parametry testu. Dla każdego z modeli klasyfikacyjnych powstała klasa implementująca odpowiednie metody dostosowujące klasę \textit{Benchmark} do potrzeb danego klasyfikatora: \textit{SVMBenchmark}, \textit{RandomForestBenchmark}, \textit{NnBenchmark} oraz \textit{LightGBMBenchmark}. Przykładowe wywołania testów z użyciem domyślnych parametrów dla problemu klasyfikacji binarnej zostały zawarte w listingach \ref{code:svm}, \ref{code:mlp}, \ref{code:rf} oraz \ref{code:lgbm}.
+
+\begin{lstlisting}[caption={Przykładowe wywołanie testu dla modelu \textit{SVM} (plik \textit{svm\_benchmark.py})}, label={code:svm},frame=single, captionpos=b, mathescape=true]
+ bench_params = SVMBenchmarkParams(True, benchmark_name='svm_first')
+ SVMBenchmark(['GOOGL'], bench_params)
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Przykładowe wywołanie testu dla modelu sieci neuronowej (plik \textit{nn\_benchmark.py})}, label={code:mlp},frame=single, captionpos=b, mathescape=true]
+ bench_params = NnBenchmarkParams(True, benchmark_name='nn_bench')
+ NnBenchmark(['GOOGL'], bench_params)
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Przykładowe wywołanie testu dla modelu lasu losowego (plik \textit{rf\_benchmark.py})}, label={code:rf},frame=single, captionpos=b, mathescape=true]
+ bench_params = RandomForestBenchmarkParams(True, benchmark_name='rf_first')
+ RandomForestBenchmark(['GOOGL'], bench_params)
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Przykładowe wywołanie testu dla modelu \textit{Light GBM} (plik \textit{lgbm\_benchmark.py})}, label={code:lgbm},frame=single, captionpos=b, mathescape=true]
+ bench_params = LightGBMBenchmarkParams(True, benchmark_name='lgbm_bench')
+ LightGBMBenchmark(['GOOGL'], bench_params)
+\end{lstlisting}
+
+ Pliki nazwane według schematu \textit{*\_benchmark\_executions.py} zawierają przykładowe wywołania testów każdego z klasyfikatorów umożliwiając badanie konkretnego parametru poprzez podanie listy jego dopuszczalnych wartości.  Przy zakończeniu testu klasyfikacji tworzony jest plik \textit{csv} zawierający informacje o dokładności, \textit{AUC} oraz czasie nauki dla każdej ze spółek.
+
+
+\subsection*{Symulacja giełdy}
 
 Kod symulacji giełdy został zaprojektowany w sposób analogiczny do kodu testów klasyfikacji. Bazowa klasa \textit{MarketSimulation} (plik \textit{market\_simulation.py}) zawierająca logikę symulacji giełdowej, została rozszerzona przez klasy dziedziczące o unikalne metody potrzebne do stworzenia każdego z klasyfikatorów. Klasa \textit{MarketSimulation} przyjmuje listę symboli giełdowych konkretnych spółek, oraz obiekt klasy \textit{BenchmarkParams} definiujący parametry modelu oraz uczenia. Dodatkowo konstruktor klasy symulacji przyjmuje opcjonalne parametry daty początku oraz końca symulacji, umożliwiając wykonanie symulacji na dowolnym zakresie czasowym. Plik \textit{market\_simulation\_executions.py} zawiera przykładowe wywołania dla symulacji giełdowych. Po wywołaniu zakończonym sukcesem symulacja tworzy plik \textit{csv} z informacją o otrzymanym zysku dla każdej ze spółek, dodatkowo tworzone są pliki \textit{csv} z historią transakcji dla każdej ze spółek.
 
