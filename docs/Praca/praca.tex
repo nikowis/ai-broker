@@ -146,6 +146,19 @@
 \endgroup
 \end{titlepage}
 
+\newpage
+
+\hfill
+\begin{table}[b]
+\centering
+\begin{tabular}[t]{ccc}
+............................................. & \hspace*{100pt} & .............................................\\
+podpis promotora & \hspace*{100pt} & podpis autora
+\end{tabular}
+\end{table}
+
+\fncymain
+
 \cleardoublepage
 
 \begingroup
@@ -179,7 +192,7 @@ The stock market is attracting many inverstors willing to earn money. Trading wi
 
 \bigskip
 
-The goal of this dissertation is to create a decision algorithm, enabling effective investmen portfolio managment for anyone. This work describes stock market features, available data and various approaches to stock price prediction. Moreover this paper attempted creating a prediction algorithm using machine learning techniques. Models such as artificial neural networks, SVM, random forests or \textit{Light GBM} were employed. Model performance was compared using accuracy and the \textit{AUC} metric. Afterwards in order to further analyze model quality a stock market automatic trading simulation was carried out. In this simulation trading was made using above models wrapped with a simple decision algorithm.
+The goal of this dissertation is to create a decision algorithm, enabling effective investmen portfolio managment for anyone. This work describes stock market features, available data and various approaches to stock price prediction. Moreover this paper attempted creating a prediction algorithm using machine learning techniques. Models such as artificial neural networks, \textit{SVM}, random forests or \textit{Light GBM} were employed. Model performance was compared using accuracy and the \textit{AUC} metric. Afterwards in order to further analyze model quality a stock market automatic trading simulation was carried out. In this simulation trading was made using above models wrapped with a simple decision algorithm.
 
 	
 	\bigskip
@@ -190,17 +203,31 @@ The goal of this dissertation is to create a decision algorithm, enabling effect
 
 \cleardoublepage
 
+\thispagestyle{empty}
 
-\hfill
-\begin{table}[b]
-\centering
-\begin{tabular}[t]{ccc}
-............................................. & \hspace*{100pt} & .............................................\\
-podpis promotora & \hspace*{100pt} & podpis autora
-\end{tabular}
-\end{table}
+\begingroup
+\fontsize{11pt}{13pt}\selectfont
 
-\fncymain
+\begin{flushright}
+Warszawa, dnia \hdashrule{3cm}{1pt}{1pt}
+\end{flushright}
+\bigskip
+
+\begin{center}
+\textbf{Oświadczenie}
+\end{center}
+
+Oświadczam, że pracę magisterską pod tytułem; „Metodyka porównania algorytmów prognozy do wspomagania decyzji giełdowych”, której promotorem jest dr hab. inż. Jerzy Balicki, profesor PW wykonałem samodzielnie, co poświadczam własnoręcznym podpisem.
+
+\bigskip
+
+\begin{flushright}
+\hdashrule{5cm}{1pt}{1pt}
+\end{flushright}
+
+
+\endgroup
+
 
 \cleardoublepage
 
@@ -507,65 +534,61 @@ Wszystkie dane wejściowe, wraz z opisami, zaprezentowane są w tabeli \ref{tab:
 \label{tab:data_columns_table}
 \endfoot
 
-%TODO ANGIELSKIE SKROTY USPOJNIC I NA KONIEC
-%TODO KROPKI PO LP
-
-
 \bottomrule
 \caption{Wybrane cechy i ich opis.}
 \label{tab:data_columns_table}
 \endlastfoot
 
 
- 1 & $C_t$ & Cena zamknięcia w dniu $t$. \\ 
- 2 & $O_t$ & Cena otwarcia w dniu $t$. \\
- 3 & $H_t$ & Najwyższa cena w dniu $t$. \\
- 4 & $L_t$ & Najniższa w dniu $t$. \\
- 5 & $V_t$ & Liczba akcji w obrocie w dniu $t$. \\
- 6 & $HL\_PCT$ & Różnica pomiędzy $H_t$ a $L_t$ wyrażona w procentach.\\
- 7 & $SMA_5$ & Średnia krocząca z 5 dni. \\
- 8 & $SMA_{10}$ & Średnia krocząca z 10 dni. \\\
-  9 & $SMA_{20}$ & Średnia krocząca z 20 dni. \\
- 10 & $SMA\_DIFF$ & $SMA_{10}-SMA_{5}$ \\
- 11 & $SMA\_DIFF2$ & $SMA_{20}-SMA_{5}$ \\
- 12 & $TR$ & (ang. True Range) różnica pomiędzy najniższą ceną, a najwyższą ceną danego dnia. \\
- 13 & $MACD$ & Wskaźnik wyliczany z różnicy dwóch wykładniczych średnich kroczących.\\
- 14 & $MACD\_SIGNAL$ & Wykładnicza średnia krocząca ze wskaźnika MACD \\
- 15 & $ROC_{5}$ & (ang. Rate of Change) Wskaźnik liczący procentową różnicę w cenie między dniem $t$ a $t-5$. \\
- 16 & $ROC_{10}$ & (ang. Rate of Change) Wskaźnik liczący procentową różnicę w cenie między $t$ a $t-10$. \\
- 17 & $ROC\_DIFF$ & $ROC_{10}-ROC_{5}$ \\
-  18 & $MOM_{5}$ & Momentum - różnica w cenie między $t$ a $t-5$.  \\
- 19 & $MOM_{10}$ & Momentum - różnica w cenie między $t$ a $t-10$. \\
- 20 & $MOM\_DIFF$ & $MOM_{10}-MOM_{5}$ \\
-  21 & $WILLR_{5}$ & \textit{Williams` \%R} - wskaźnik niedosycenia/przesycenia ceny z ostatnich 5 dni. \\
- 22 & $WILLR_{10}$ & \textit{Williams` \%R} - wskaźnik niedosycenia/przesycenia ceny z ostatnich 10 dni.  \\
- 23 & $WILLR\_DIFF$ & $WILLR_{10}-WILLR_{5}$ \\
-  24 & $APO_{5}$ & Oscylator ceny z 5 dni. \\
- 25 & $APO_{10}$ & Oscylator ceny z 10 dni.  \\
- 26 & $APO\_DIFF$ & $APO_{10}-APO_{5}$ \\
-  27 & $RSI_{5}$ & Wskaźnik siły względnej - oscylator siły trendu z 5 dni. \\
- 28 & $RSI_{10}$ & Wskaźnik siły względnej - oscylator siły trendu z 10 dni.\\
- 29 & $RSI\_DIFF$ & $RSI_{10}-RSI_{5}$ \\
-  30 & $ADX_{5}$ & Wskaźnik siły trendu z 5 dni. \\
- 31 & $ADX_{10}$ & Wskaźnik siły trendu z 10 dni. \\
- 32 & $ADX\_DIFF$ & $ADX_{10}-ADX_{5}$ \\
- 33 & $CCI_{5}$ & (ang. Commodity Channel Index) Oscylator z 5 dni. \\
- 32 & $CCI_{10}$ & (ang. Commodity Channel Index) Oscylator z 10 dni. \\
- 34 & $CCI\_DIFF$ & $CCI_{10}-CCI_{5}$ \\
- 35 & $AD$ & linia \textit{Chaikin A/D}.  \\
- 36 & $STOCH\_K$ & Oscylator stochastyczny \textit{Slow \%K}. \\
- 37 & $STOCH\_D$ & Oscylator stochastyczny \textit{Slow \%D}.\\
- 39 & $STOCH\_K\_DIFF$ & $STOCH\_K_{t}-STOCH\_K_{t-1}$ \\
- 40 & $STOCH\_D\_DIFF$ & $STOCH\_D_{t}-STOCH\_D_{t-1}$  \\
- 41 & $DISPARITY_{5}$ &  $\frac{C_t}{SMA_5}\times 100$ \\
- 42 & $DISPARITY_{10}$ & $\frac{C_t}{SMA_10}\times 100$ \\
- 43 & $DISPARITY_{20}$ & $\frac{C_t}{SMA_20}\times 100$ \\
- 44 & $BANDS\_DIFF_{10}$ & $BOLL\_UP_{10} - BOLL\_LOW_{10}$ - różnica górnej i dolnej wartości wstąg Bollingera z 10 dni.  \\
- 45 & $BANDS\_DIFF_{20}$ & $BOLL\_UP_{20} - BOLL\_LOW_{20}$ - różnica górnej i dolnej wartości wstąg Bollingera z 20 dni.  \\
-46 & $PRICE\_BANDS\_UP_{10}$ & $(C_t-BANDS\_UP_{10})\div BANDS\_UP_{10}$ - wskaźnik oparty o wstęgi Bollingera.  \\
- 47 & $PRICE\_BANDS\_LOW_{10}$ & $(C_t-BANDS\_LO_{10})\div BANDS\_LOW_{10}$ - wskaźnik oparty o wstęgi Bollingera.\\
- 48 & $PRICE\_BANDS\_UP_{20}$ & $(C_t-BANDS\_UP_{20})\div BANDS\_UP_{20}$ - wskaźnik oparty o wstęgi Bollingera.\\
- 49 & $PRICE\_BANDS\_LOW_{20}$ & $(C_t-BANDS\_LOW_{20})\div BANDS\_LOW_{20}$ - wskaźnik oparty o wstęgi Bollingera.\\
+ 1. & $C_t$ & Cena zamknięcia w dniu $t$. \\ 
+ 2. & $O_t$ & Cena otwarcia w dniu $t$. \\
+ 3. & $H_t$ & Najwyższa cena w dniu $t$. \\
+ 4. & $L_t$ & Najniższa w dniu $t$. \\
+ 5. & $V_t$ & Liczba akcji w obrocie w dniu $t$. \\
+ 6. & $HL\_PCT$ & Różnica pomiędzy $H_t$ a $L_t$ wyrażona w procentach.\\
+ 7. & $SMA_5$ & Średnia krocząca z 5 dni. \\
+ 8. & $SMA_{10}$ & Średnia krocząca z 10 dni. \\\
+  9. & $SMA_{20}$ & Średnia krocząca z 20 dni. \\
+ 10. & $SMA\_DIFF$ & $SMA_{10}-SMA_{5}$ \\
+ 11. & $SMA\_DIFF2$ & $SMA_{20}-SMA_{5}$ \\
+ 12. & $TR$ & Różnica pomiędzy najniższą ceną, a najwyższą ceną danego dnia. \\
+ 13. & $MACD$ & Wskaźnik wyliczany z różnicy dwóch wykładniczych średnich kroczących.\\
+ 14. & $MACD\_SIGNAL$ & Wykładnicza średnia krocząca ze wskaźnika MACD \\
+ 15. & $ROC_{5}$ & Wskaźnik liczący procentową różnicę w cenie między dniem $t$ a $t-5$. \\
+ 16. & $ROC_{10}$ & Wskaźnik liczący procentową różnicę w cenie między $t$ a $t-10$. \\
+ 17. & $ROC\_DIFF$ & $ROC_{10}-ROC_{5}$ \\
+  18. & $MOM_{5}$ & Momentum - różnica w cenie między $t$ a $t-5$.  \\
+ 19. & $MOM_{10}$ & Momentum - różnica w cenie między $t$ a $t-10$. \\
+ 20. & $MOM\_DIFF$ & $MOM_{10}-MOM_{5}$ \\
+  21. & $WILLR_{5}$ & \textit{Williams` \%R} - wskaźnik niedosycenia/przesycenia ceny z ostatnich 5 dni. \\
+ 22. & $WILLR_{10}$ & \textit{Williams` \%R} - wskaźnik niedosycenia/przesycenia ceny z ostatnich 10 dni.  \\
+ 23. & $WILLR\_DIFF$ & $WILLR_{10}-WILLR_{5}$ \\
+  24. & $APO_{5}$ & Oscylator ceny z 5 dni. \\
+ 25. & $APO_{10}$ & Oscylator ceny z 10 dni.  \\
+ 26. & $APO\_DIFF$ & $APO_{10}-APO_{5}$ \\
+  27. & $RSI_{5}$ & Wskaźnik siły względnej - oscylator siły trendu z 5 dni. \\
+ 28. & $RSI_{10}$ & Wskaźnik siły względnej - oscylator siły trendu z 10 dni.\\
+ 29. & $RSI\_DIFF$ & $RSI_{10}-RSI_{5}$ \\
+  30. & $ADX_{5}$ & Wskaźnik siły trendu z 5 dni. \\
+ 31. & $ADX_{10}$ & Wskaźnik siły trendu z 10 dni. \\
+ 32. & $ADX\_DIFF$ & $ADX_{10}-ADX_{5}$ \\
+ 33. & $CCI_{5}$ & Oscylator z 5 dni. \\
+ 32. & $CCI_{10}$ & Oscylator z 10 dni. \\
+ 34. & $CCI\_DIFF$ & $CCI_{10}-CCI_{5}$ \\
+ 35. & $AD$ & linia \textit{Chaikin A/D}.  \\
+ 36. & $STOCH\_K$ & Oscylator stochastyczny \textit{Slow \%K}. \\
+ 37. & $STOCH\_D$ & Oscylator stochastyczny \textit{Slow \%D}.\\
+ 39. & $STOCH\_K\_DIFF$ & $STOCH\_K_{t}-STOCH\_K_{t-1}$ \\
+ 40. & $STOCH\_D\_DIFF$ & $STOCH\_D_{t}-STOCH\_D_{t-1}$  \\
+ 41. & $DISPARITY_{5}$ &  $\frac{C_t}{SMA_5}\times 100$ \\
+ 42. & $DISPARITY_{10}$ & $\frac{C_t}{SMA_10}\times 100$ \\
+ 43. & $DISPARITY_{20}$ & $\frac{C_t}{SMA_20}\times 100$ \\
+ 44. & $BANDS\_DIFF_{10}$ & $BOLL\_UP_{10} - BOLL\_LOW_{10}$ - różnica górnej i dolnej wartości wstąg Bollingera z 10 dni.  \\
+ 45. & $BANDS\_DIFF_{20}$ & $BOLL\_UP_{20} - BOLL\_LOW_{20}$ - różnica górnej i dolnej wartości wstąg Bollingera z 20 dni.  \\
+46. & $PRICE\_BANDS\_UP_{10}$ & $(C_t-BANDS\_UP_{10})\div BANDS\_UP_{10}$ - wskaźnik oparty o wstęgi Bollingera.  \\
+ 47. & $PRICE\_BANDS\_LOW_{10}$ & $(C_t-BANDS\_LO_{10})\div BANDS\_LOW_{10}$ - wskaźnik oparty o wstęgi Bollingera.\\
+ 48. & $PRICE\_BANDS\_UP_{20}$ & $(C_t-BANDS\_UP_{20})\div BANDS\_UP_{20}$ - wskaźnik oparty o wstęgi Bollingera.\\
+ 49. & $PRICE\_BANDS\_LOW_{20}$ & $(C_t-BANDS\_LOW_{20})\div BANDS\_LOW_{20}$ - wskaźnik oparty o wstęgi Bollingera.\\
      
 \end{longtable}
 
@@ -1315,7 +1338,7 @@ max                         &   0.380289 &  0.555435 &  209.299582 \\ \hline
 
 \subsection{Light GBM}
 
-Podobnie jak w przypadku poprzednich modeli dla Light GBM, analizowana była zależność jakości klasyfikacji od redukcji rozmiaru danych metodą PCA. Wyniki tej analizy zostały przedstawione w tabelach \ref{tab:lgbm_pca_binary} oraz \ref{tab:lgbm_pca_discrete}. Dla klasyfikacji binarnej najlepszy wynik został uzyskany przy wybraniu wartości wariancji $0.9999$, zaś dla klasyfikacji na 3 klasy wybrana została wartość $0.999$.	
+Podobnie jak w przypadku poprzednich modeli dla \textit{Light GBM}, analizowana była zależność jakości klasyfikacji od redukcji rozmiaru danych metodą PCA. Wyniki tej analizy zostały przedstawione w tabelach \ref{tab:lgbm_pca_binary} oraz \ref{tab:lgbm_pca_discrete}. Dla klasyfikacji binarnej najlepszy wynik został uzyskany przy wybraniu wartości wariancji $0.9999$, zaś dla klasyfikacji na 3 klasy wybrana została wartość $0.999$.	
 
 \begin{table}[H]
     \centering
@@ -1333,7 +1356,7 @@ Podobnie jak w przypadku poprzednich modeli dla Light GBM, analizowana była zal
 0.9999             &  \textbf{0.534320} &  \textbf{0.534631} &    0.199997 \\ \hline
 Brak                &  0.528937 &  0.479128 &    0.176996 \\ \hline
     \end{tabular}
-    \caption{Light GBM: wyniki klasyfikacji binarnej w zależności od wybranej wartości wariancji w metodzie PCA.}
+    \caption{\textit{Light GBM}: wyniki klasyfikacji binarnej w zależności od wybranej wartości wariancji w metodzie PCA.}
     \label{tab:lgbm_pca_binary}
 \end{table}
 
@@ -1353,11 +1376,11 @@ Brak                &  0.528937 &  0.479128 &    0.176996 \\ \hline
 0.9999             &  0.351279 &  0.532163 &    7.542000 \\ \hline
 Brak                &  0.348587 &  0.513556 &    7.982000 \\ \hline
     \end{tabular}
-    \caption{Light GBM: wyniki klasyfikacji na 3 klasy w zależności od wybranej wartości wariancji w metodzie PCA.}
+    \caption{\textit{Light GBM}: wyniki klasyfikacji na 3 klasy w zależności od wybranej wartości wariancji w metodzie PCA.}
     \label{tab:lgbm_pca_discrete}
 \end{table}
 
-Kolejnym parametrem, który został wykorzystany do optymalizacji modelu Light GBM jest procent cech wykorzystanych do utworzenia każdego z drzew. Na przykład, jeżeli ustawimy ten parametr na $0.5$, każde drzewo będzie utworzone biorąc pod uwagę tylko połowę kolumn z wektora wejściowego. Cechy są wybierane losowo w momencie tworzenia kolejnego drzewa z lasu. Wyniki tego eksperymentu przedstawione są w tabelach \ref{tab:lgbm_feature_fraction_binary} oraz \ref{tab:lgbm_feature_fraction_discrete}. W~przypadku obu klasyfikacji najbardziej korzystne wyniki daje użycie 40\% całego wektora danych przy tworzeniu każdego z drzew. Zmiana tego parametru pozwoliła na poprawienie miary AUC w szczególności dla problemu klasyfikacji na 3 klasy.
+Kolejnym parametrem, który został wykorzystany do optymalizacji modelu \textit{Light GBM} jest procent cech wykorzystanych do utworzenia każdego z drzew. Na przykład, jeżeli ustawimy ten parametr na $0.5$, każde drzewo będzie utworzone biorąc pod uwagę tylko połowę kolumn z wektora wejściowego. Cechy są wybierane losowo w momencie tworzenia kolejnego drzewa z lasu. Wyniki tego eksperymentu przedstawione są w tabelach \ref{tab:lgbm_feature_fraction_binary} oraz \ref{tab:lgbm_feature_fraction_discrete}. W~przypadku obu klasyfikacji najbardziej korzystne wyniki daje użycie 40\% całego wektora danych przy tworzeniu każdego z drzew. Zmiana tego parametru pozwoliła na poprawienie miary AUC w szczególności dla problemu klasyfikacji na 3 klasy.
 
 \begin{table}[H]
     \centering
@@ -1375,7 +1398,7 @@ Kolejnym parametrem, który został wykorzystany do optymalizacji modelu Light G
 90              &  0.520861 &  0.509935 &    0.222998 \\
 100              &  0.518170 &  0.522937 &    0.354000 \\ \hline
     \end{tabular}
-    \caption{Light GBM: wyniki klasyfikacji binarnej w zależności od procenta cech wykorzystanych do tworzenia pojedynczego drzewa.}
+    \caption{\textit{Light GBM}: wyniki klasyfikacji binarnej w zależności od procenta cech wykorzystanych do tworzenia pojedynczego drzewa.}
     \label{tab:lgbm_feature_fraction_binary}
 \end{table}
 
@@ -1395,11 +1418,11 @@ Kolejnym parametrem, który został wykorzystany do optymalizacji modelu Light G
 90             &  0.368775 &  0.538629 &   10.570999 \\
 100              &  0.360700 &  0.537781 &    9.501997 \\ \hline
     \end{tabular}
-    \caption{Light GBM: wyniki klasyfikacji na 3 klasy w zależności od procenta cech wykorzystanych do tworzenia pojedynczego drzewa.}
+    \caption{\textit{Light GBM}: wyniki klasyfikacji na 3 klasy w zależności od procenta cech wykorzystanych do tworzenia pojedynczego drzewa.}
     \label{tab:lgbm_feature_fraction_discrete}
 \end{table}
 
-Metoda Light GBM daje możliwość wyboru używanej metody \textit{boostingu}. Domyślnym algorytmem jest \textit{boosting} drzew decyzyjnych (\textit{gbdt}). W tabelach \ref{tab:lgbm_boosting_binary} oraz \ref{tab:lgbm_boosting_discrete} zostały przedstawione wyniki użycia różnych metod \textit{boostingu}. Jak widać, dla klasyfikacji binarnej domyślny parametr \textit{gbdt} okazuje się najlepszym. Dla klasyfikacji wieloklasowej lepszy wynik daje metoda \textit{goss}, poprawiając wynik dokładności o $\sim 1\%$.
+Metoda \textit{Light GBM} daje możliwość wyboru używanej metody \textit{boostingu}. Domyślnym algorytmem jest \textit{boosting} drzew decyzyjnych (\textit{gbdt}). W tabelach \ref{tab:lgbm_boosting_binary} oraz \ref{tab:lgbm_boosting_discrete} zostały przedstawione wyniki użycia różnych metod \textit{boostingu}. Jak widać, dla klasyfikacji binarnej domyślny parametr \textit{gbdt} okazuje się najlepszym. Dla klasyfikacji wieloklasowej lepszy wynik daje metoda \textit{goss}, poprawiając wynik dokładności o $\sim 1\%$.
 
 \begin{table}[H]
     \centering
@@ -1411,7 +1434,7 @@ gbdt     &  \textbf{0.532974} &  \textbf{0.524115} &    0.106003 \\ \hline
 gbrt     &  \textbf{0.532974} &  \textbf{0.524115} &    0.116003 \\ \hline
 goss     &  0.502264 &  0.513801 &    0.160999 \\ \hline
     \end{tabular}
-    \caption{Light GBM: wyniki klasyfikacji binarnej w zależności od wybranego rodzaju boostingu.}
+    \caption{\textit{Light GBM}: wyniki klasyfikacji binarnej w zależności od wybranego rodzaju boostingu.}
     \label{tab:lgbm_boosting_binary}
 \end{table}
 
@@ -1425,7 +1448,7 @@ gbdt     &  0.370121 &  0.532499 &    0.469003 \\ \hline
 gbrt     &  0.370121 &  0.532499 &    0.405001 \\ \hline
 goss     &  \textbf{0.386083} &  \textbf{0.545501} &    0.642004 \\ \hline
     \end{tabular}
-    \caption{Light GBM: wyniki klasyfikacji na 3 klasy w zależności od wybranego rodzaju boostingu.}
+    \caption{\textit{Light GBM}: wyniki klasyfikacji na 3 klasy w zależności od wybranego rodzaju boostingu.}
     \label{tab:lgbm_boosting_discrete}
 \end{table}
 
@@ -1447,7 +1470,7 @@ Następnym optymalizowanym parametrem była maksymalna liczba w każdym z drzew 
 90       &  0.528937 &  0.530051 &    0.209766 \\ \hline
 100      &  0.527591 &  \textbf{0.533090} &    0.195496 \\ \hline
     \end{tabular}
-    \caption{Light GBM: wyniki klasyfikacji binarnej w zależności od maksymalnej liczby liści w pojedynczym drzewie.}
+    \caption{\textit{Light GBM}: wyniki klasyfikacji binarnej w zależności od maksymalnej liczby liści w pojedynczym drzewie.}
     \label{tab:lgbm_num_leaves_binary}
 \end{table}
 
@@ -1468,11 +1491,11 @@ Następnym optymalizowanym parametrem była maksymalna liczba w każdym z drzew 
 100      &  0.364738 &  0.523292 &    0.482326 \\ \hline
 
     \end{tabular}
-    \caption{Light GBM: wyniki klasyfikacji binarnej w zależności od maksymalnej liczby liści w pojedynczym drzewie.}
+    \caption{\textit{Light GBM}: wyniki klasyfikacji binarnej w zależności od maksymalnej liczby liści w pojedynczym drzewie.}
     \label{tab:lgbm_num_leaves_discrete}
 \end{table}
 
-Ostatnim badanym parametrem jest rozmiar zbioru testowego wykorzystanego podczas uczenia metodą kroczącą. Wyniki badania zostały przedstawione w tabelach \ref{tab:lgbm_walk_forward_binary} oraz \ref{tab:lgbm_walk_forward_discrete}. Dla modelu Light GBM widać znaczną poprawę w klasyfikacji przy używaniu zbioru testowego o jak najmniejszej liczbie próbek. W przypadku tworzenia na nowo modelu po każdej sesji giełdowej, dla klasyfikacji binarnej ten model osiąga dokładność na poziomie $\sim 82.5\%$, zaś dla klasyfikacji na 3 klasy dokładność była na poziomie $\sim 63.3\%$. Dalsze zmniejszanie zbioru testowego pogarszało wyniki wbrew oczekiwaniom.
+Ostatnim badanym parametrem jest rozmiar zbioru testowego wykorzystanego podczas uczenia metodą kroczącą. Wyniki badania zostały przedstawione w tabelach \ref{tab:lgbm_walk_forward_binary} oraz \ref{tab:lgbm_walk_forward_discrete}. Dla modelu \textit{Light GBM} widać znaczną poprawę w klasyfikacji przy używaniu zbioru testowego o jak najmniejszej liczbie próbek. W przypadku tworzenia na nowo modelu po każdej sesji giełdowej, dla klasyfikacji binarnej ten model osiąga dokładność na poziomie $\sim 82.5\%$, zaś dla klasyfikacji na 3 klasy dokładność była na poziomie $\sim 63.3\%$. Dalsze zmniejszanie zbioru testowego pogarszało wyniki wbrew oczekiwaniom.
 
 \begin{table}[H]
     \centering
@@ -1491,7 +1514,7 @@ max   						  & 0.535666 &  0.533299 &  0.406716 \\ \hline
 1                           &  \textbf{0.825034} &  \textbf{0.959651} &  152.520538 \\ \hline
 
     \end{tabular}
-    \caption{Light GBM: wyniki klasyfikacji binarnej w zależności od rozmiaru zbioru testowego.}
+    \caption{\textit{Light GBM}: wyniki klasyfikacji binarnej w zależności od rozmiaru zbioru testowego.}
     \label{tab:lgbm_walk_forward_binary}
 \end{table}
 
@@ -1511,7 +1534,7 @@ max   						 &  0.386272 &  0.545294 &    0.239276 \\ \hline
 2                           &  0.536290 &  0.713070 &  108.588001 \\ \hline
 1                           &  \textbf{0.632690} &  \textbf{0.812767} &  218.438081 \\ \hline
     \end{tabular}
-    \caption{Light GBM: wyniki klasyfikacji na 3 klasy w zależności od rozmiaru zbioru testowego.}
+    \caption{\textit{Light GBM}: wyniki klasyfikacji na 3 klasy w zależności od rozmiaru zbioru testowego.}
     \label{tab:lgbm_walk_forward_discrete}
 \end{table}
 
@@ -1541,7 +1564,7 @@ QCOM   &  0.522748 &  0.706916 & 0.512999 & \textbf{0.836431} \\ \hline \hline
     \label{tab:comparison_final_binary}
 \end{table}   
 
-Najlepszy średni wynik uzyskał model Light GBM ze średnią dokładnością $\sim 80.1\%$ oraz AUC $\sim 0.951$. Drugi najlepszy wynik osiągnął model sieci neuronowej z $\sim 71\%$ dokładności i $\sim 0.652$ AUC. Modele SVM oraz random forest osiągnęły wyniki zbliżone do losowej predykcji.
+Najlepszy średni wynik uzyskał model \textit{Light GBM} ze średnią dokładnością $\sim 80.1\%$ oraz AUC $\sim 0.951$. Drugi najlepszy wynik osiągnął model sieci neuronowej z $\sim 71\%$ dokładności i $\sim 0.652$ AUC. Modele SVM oraz random forest osiągnęły wyniki zbliżone do losowej predykcji.
 
 \begin{figure}[H]
 \centering \includegraphics[scale=0.9]{img/summary-binary-summary.pdf}
@@ -1551,7 +1574,7 @@ Najlepszy średni wynik uzyskał model Light GBM ze średnią dokładnością $\
 
 \bigskip
 
-Model Light GBM okazał się najlepszy dla wszystkich spółek. Należy jednak wziąć pod uwagę, że model sieci neuronowej był trenowany co 11 sesji giełdowych, podczas gdy model Light GBM uczony był na nowo po każdej sesji giełdowej. Wynikało to z ograniczeń technicznych. W powyższych eksperymentach zostało wykazane silne powiązanie pomiędzy powiększaniem zbioru treningowego o najnowsze próbki z danymi, a końcową jakością modelu. Wykonanie testów dla modelu Light GBM trenowanego co 11 sesji daje średni wynik $\sim 61.5\%$ dokładności oraz $\sim 0.669$ AUC. W związku z tym, należy mieć na uwadze, iż model sieci neuronowej ma jeszcze dużo potencjału na poprawę. Przy używaniu modelu sieci neuronowej w praktyce ograniczenia techniczne nie występują ze względu na krótki czas pojedynczego uczenia modelu.
+Model \textit{Light GBM} okazał się najlepszy dla wszystkich spółek. Należy jednak wziąć pod uwagę, że model sieci neuronowej był trenowany co 11 sesji giełdowych, podczas gdy model \textit{Light GBM} uczony był na nowo po każdej sesji giełdowej. Wynikało to z ograniczeń technicznych. W powyższych eksperymentach zostało wykazane silne powiązanie pomiędzy powiększaniem zbioru treningowego o najnowsze próbki z danymi, a końcową jakością modelu. Wykonanie testów dla modelu \textit{Light GBM} trenowanego co 11 sesji daje średni wynik $\sim 61.5\%$ dokładności oraz $\sim 0.669$ AUC. W związku z tym, należy mieć na uwadze, iż model sieci neuronowej ma jeszcze dużo potencjału na poprawę. Przy używaniu modelu sieci neuronowej w praktyce ograniczenia techniczne nie występują ze względu na krótki czas pojedynczego uczenia modelu.
 
 \bigskip
 
@@ -1729,11 +1752,11 @@ Warto dogłębniej zastanowić się nad użytecznością klasyfikacji na 3 klasy
     \hline
         \textbf{Model}  & \textbf{Średni zysk} & \textbf{Średnia liczba transakcji}\\ \hline
             MLP binarny & 140.01 & 51.0 \\ \hline
-            Light GBM binarny & 131.74 & 44.7 \\ \hline 
+            \textit{Light GBM} binarny & 131.74 & 44.7 \\ \hline 
             \textbf{Średnia modeli binarnych} & \textbf{135.9} & \textbf{47.8} \\ \hline \hline
             
             MLP wieloklasowy & 138.03 & 39.2 \\ \hline
-            Light GBM wieloklasowy & 128.14 & 23.3 \\ \hline
+            \textit{Light GBM} wieloklasowy & 128.14 & 23.3 \\ \hline
             \textbf{Średnia modeli wieloklasowych} & \textbf{133.1} & \textbf{31.2} \\ \hline
     \end{tabular}
     \caption{Porównanie średniego zysku z aktywnością danego modelu na giełdzie.}
