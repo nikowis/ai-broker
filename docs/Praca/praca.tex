@@ -446,7 +446,7 @@ W zagadnieniu predykcji giełdowych sprowadzonym do klasyfikacji, można posłu�
 
 \subsection{Uczenie modeli - specyfika szeregów czasowych}
 
-Każdy proces uczenia modeli sztucznej inteligencji zwieńczony jest analizą jakości. Zazwyczaj taką analizę przeprowadza się poprzez wydzielenie pewnej części zbioru danych i oznaczenia jej jako zbioru testowego. Reszta zbioru danych zwana jest zbiorem treningowym (rysunek \ref{img:train_test_split}). Taki podział wszystkich próbek pozwala na używanie części treningowej do nauki modelu, zaś części testowej do jego oceny. Ocena modelu na podstawie próbek, któych model nie widział podczas procesu uczenia daje wiarygodne wyniki.
+Każdy proces uczenia modeli sztucznej inteligencji zwieńczony jest analizą jakości. Zazwyczaj taką analizę przeprowadza się poprzez wydzielenie pewnej części zbioru danych i~oznaczenia jej jako zbioru testowego. Reszta zbioru danych zwana jest zbiorem treningowym (rysunek \ref{img:train_test_split}). Taki podział wszystkich próbek pozwala na używanie części treningowej do nauki modelu, zaś części testowej do jego oceny. Ocena modelu na podstawie próbek, któych model nie widział podczas procesu uczenia daje wiarygodne wyniki.
 
 \begin{figure}[H]
 \centering 
@@ -455,14 +455,14 @@ Każdy proces uczenia modeli sztucznej inteligencji zwieńczony jest analizą ja
 \label{img:train_test_split}
 \end{figure}
 
-Ten model podziału jest najbardziej powszechny pośród zagadnień klasyfikacyjnych ze względu na swoją prostotę i odporność na zjawisko przeuczenia (ang. overfitting). Dane giełdowe jako szeregi czasowe posiadają dodatkową cechę - umiejscowienie próbek na osi czasu. Wykorzystanie faktu, iż kolejne próbki danych pojawiają się stopniowo wraz z upływem czasu, pozwala na udoskonalenie metody doboru danych do uczenia się. Uczenie i ocena metodą kroczącą (ang. walk forward) polega na stopniowym powiększaniu zbioru danych treningowych o kolejne próbki ze zbioru testowego podczas procesu oceny jakości. 
+Ten model podziału jest najbardziej powszechny pośród zagadnień klasyfikacyjnych ze względu na swoją prostotę i odporność na zjawisko przeuczenia (ang. overfitting). Dane giełdowe jako szeregi czasowe posiadają dodatkową cechę - umiejscowienie próbek na osi czasu. Wykorzystanie faktu, iż kolejne próbki danych pojawiają się stopniowo wraz z~upływem czasu, pozwala na udoskonalenie metody doboru danych do uczenia się. Uczenie i~ocena metodą kroczącą (ang. walk forward) polega na stopniowym powiększaniu zbioru danych treningowych o kolejne próbki ze zbioru testowego podczas procesu oceny jakości. 
 
-\textit{Przykład:} podczas oceny jakości model przewiduje cenę za pomocą próbki z dnia $t$, mając do uprzedniej nauki wszystkie próbki od $t_0$ do $t-1$. Po tej predykcji próbka z dnia $t$ zostaje wcielona do zbioru uczącego. Model może, ale nie musi, zostać ponownie poddany procesowi uczenia przed przystąpieniem do oceny jakości dla predykcji kolejnej próbki $t+1$. Proces ten zobrazowany jest na rysunku \ref{img:train_test_split_time_series}. Na niebiesko oznaczono próbki zbioru treningowego, na czerwono zaś próbkę zbioru testowego podlegającą ocenie.
+\textit{Przykład:} podczas oceny jakości model przewiduje cenę za pomocą próbki z dnia $t$, mając do uprzedniej nauki wszystkie próbki od $t_0$ do $t-1$. Po tej predykcji próbka z~dnia $t$~zostaje wcielona do zbioru uczącego. Model może, ale nie musi, zostać ponownie poddany procesowi uczenia przed przystąpieniem do oceny jakości dla predykcji kolejnej próbki $t+1$. Proces ten zobrazowany jest na rysunku \ref{img:train_test_split_time_series}. Na niebiesko oznaczono próbki zbioru treningowego, na czerwono zaś próbkę zbioru testowego podlegającą ocenie.
 
 \begin{figure}[H]
 \centering 
 \includegraphics[scale=0.75]{img/train_test_split_time_series.png}
-\caption{Podział danych na zbiór treningowy i testowy metodą kroczącą \cite{train_test_split_time_series},}
+\caption{Podział danych na zbiór treningowy i testowy metodą kroczącą \cite{train_test_split_time_series}.}
 \label{img:train_test_split_time_series}
 \end{figure}
 
@@ -512,7 +512,7 @@ Wszystkie dane wejściowe, wraz z opisami, zaprezentowane są w tabeli \ref{tab:
 
 
 \bottomrule
-\caption{Wybrane cechy i ich opis}
+\caption{Wybrane cechy i ich opis.}
 \label{tab:data_columns_table}
 \endlastfoot
 
@@ -590,7 +590,7 @@ Na rysunku \ref{img:non_stationary_adjusted_close} zauważyć można zjawisko ni
 \begin{figure}[H]
 \centering 
 \includegraphics[scale=0.9]{img/GOOGL_adj_close.pdf}
-\caption{Wykres cen akcji spółki \textit{Alphabet Inc} (opracowanie własne)}
+\caption{Wykres cen akcji spółki \textit{Alphabet Inc} (opracowanie własne).}
 \label{img:non_stationary_adjusted_close}
 \end{figure}
 
@@ -600,7 +600,7 @@ Zjawisko niestacjonarności szeregów czasowych negatywnie wpływa na wykorzysty
 \begin{figure}[H]
 \centering 
 \includegraphics[scale=0.9]{img/adjusted_close_stationary.pdf}
-\caption{Wykres cen akcji spółki \textit{Alphabet Inc} po przetworzeniu (opracowanie własne)}
+\caption{Wykres cen akcji spółki \textit{Alphabet Inc} po przetworzeniu (opracowanie własne).}
 \label{img:stationary_adjusted_close}
 \end{figure}
 
@@ -624,7 +624,7 @@ W procesie nadzorowanego uczenia maszynowego poza danymi wejściowymi potrzeba r
             14-05-19 & 1124.86 & 1171.66 \\ \hline 
             15-05-19 & 1171.66 & ? \\ \hline 
     \end{tabular}
-    \caption{Tworzenie etykiet dla spółki \textit{Alphabet Inc} - krok 1}
+    \caption{Tworzenie etykiet dla spółki \textit{Alphabet Inc} - krok 1.}
     \label{tab:regression_label_creation}
 \end{table} 
 
@@ -647,7 +647,7 @@ W celu osiągnięcia etykiet do klasyfikacji, potrzeba wykonać dodatkowe kroki.
             14-05-19 & 1124.86 & 1171.66 & 46.8 & 1\\ \hline 
             15-05-19 & 1171.66 & ?      & ? & ? \\ \hline
     \end{tabular}
-    \caption{Tworzenie etykiet dla spółki \textit{Alphabet Inc} - krok 2}
+    \caption{Tworzenie etykiet dla spółki \textit{Alphabet Inc} - krok 2.}
     \label{tab:binary_label_creation}
 \end{table} 
 
@@ -669,7 +669,7 @@ W celu osiągnięcia etykiet do klasyfikacji, potrzeba wykonać dodatkowe kroki.
             14-05-19 & 1124.86 &  46.8 & 4.2 & 1 \\ \hline 
             15-05-19 & 1171.66 & ? & ? & ? \\ \hline
     \end{tabular}
-    \caption{Tworzenie etykiet dla spółki \textit{Alphabet Inc} - krok 3}
+    \caption{Tworzenie etykiet dla spółki \textit{Alphabet Inc} - krok 3.}
     \label{tab:classification_label_creation}
 \end{table} 
 
@@ -680,11 +680,11 @@ Redukcja rozmiaru danych wejściowych jest zagadnieniem pozwalającym na poradze
 \begin{figure}[H]
 \centering 
 \includegraphics[scale=0.6]{img/corr_matrix.pdf}
-\caption{Macierz korelacji par zmiennych (opracowanie własne)}
+\caption{Macierz korelacji par zmiennych (opracowanie własne).}
 \label{img:correlation}
 \end{figure}
 
-Dla par zmiennych o najwyższej korelacji można usunąć jedną ze zmiennych, ponieważ powiela ona informacje już zawarte w drugiej zmiennej.  W tabeli \ref{tab:ccorr_table1} zostały wylistowane pary zmiennych o najwyższej korelacji. Ze zbioru wejściowego usunięte zostały zmienne z kolumny \textit{Zmienna 2}.
+Dla par zmiennych o najwyższej korelacji można usunąć jedną ze zmiennych, ponieważ powiela ona informacje już zawarte w drugiej zmiennej.  W tabeli \ref{tab:ccorr_table1} zostały wylistowane pary zmiennych o najwyższej korelacji. Ze zbioru wejściowego usunięte zostały zmienne z~kolumny \textit{Zmienna 2}.
 
 
 \begin{table}[H]
@@ -706,7 +706,7 @@ APO-5 & APO-10 &  1.000000 \\
 RSI-5 & RSI-10 &  0.964811 \\  
  \hline
 \end{tabular}
-\caption{Tabela najbardziej skorelowanych par zmiennych}
+\caption{Tabela najbardziej skorelowanych par zmiennych.}
 \label{tab:ccorr_table1}
 \end{table}
 
@@ -716,7 +716,7 @@ Po odrzuceniu najmocniej skorelowanych danych można skorzystać z jednej z meto
 \begin{figure}[H]
 \centering 
 \includegraphics[scale=0.9]{img/pca_variance.pdf}
-\caption{Liczba składowych, a całkowita wariancja zbioru (opracowanie własne)}
+\caption{Liczba składowych, a całkowita wariancja zbioru (opracowanie własne).}
 \label{img:pca_variance}
 \end{figure}
 
@@ -724,7 +724,7 @@ Po odrzuceniu najmocniej skorelowanych danych można skorzystać z jednej z meto
 
 \section{Wybrane algorytmy do prognozowania}
 
-Istnieje wiele algorytmów mogących posłużyć do zagadnień klasyfikacji lub regresji. W tym rozdziale omówione zostały klasyfikatory, które później zostały użyte do predykcji na danych giełdowych.
+Istnieje wiele algorytmów mogących posłużyć do zagadnień klasyfikacji lub regresji. W~tym rozdziale omówione zostały klasyfikatory, które później zostały użyte do predykcji na danych giełdowych.
 
 \subsection{SVM}
 
@@ -733,7 +733,7 @@ Maszyny wektorów nośnych (ang. Support-Vector Machines)\cite{svm} są zbiorem 
 
 \begin{figure}[H]
 \centering \includegraphics[scale=0.9]{img/svm.png}
-\caption{Hiperpłaszczyzna rozdzielająca zbiór z maksymalnym marginesem \cite{wikisvm}}
+\caption{Hiperpłaszczyzna rozdzielająca zbiór z maksymalnym marginesem \cite{wikisvm}.}
 \label{img:wiki_svm}
 \end{figure}
 
@@ -742,7 +742,7 @@ W celu użycia maszyn wektorów nośnych do klasyfikacji problemów nieliniowych
 
 \begin{figure}[H]
 \centering \includegraphics[scale=0.2]{img/svm2.png}
-\caption{Ten sam problem zaprezentowany w dwóch oraz trzech wymiarach \cite{wikisvm}}
+\caption{Ten sam problem zaprezentowany w dwóch oraz trzech wymiarach \cite{wikisvm}.}
 \label{img:wiki_svm2}
 \end{figure}
 
@@ -753,11 +753,11 @@ Sieci neuronowe \cite{neural-nets} są zbiorem modeli matematycznych służącyc
 
 \bigskip
 
-Podstawowym elementem sieci neuronowej jest neuron, który na wejściu przyjmuje dane wejściowe, przetwarza i zwraca pojedynczy sygnał wyjściowy. Przetwarzanie sygnału przez neuron z polega zazwyczaj na zsumowaniu sygnałów dochodzących do niego, a następnie obliczenie wartości funkcji aktywacji. Uzyskana wartość z funkcji aktywacji jest przekazywana jako wyjście z neuronu (rysunek \ref{img:neural-net}). Funkcje aktywacji mogą wprowadzić element nieliniowy do modelu dzięki czemu sieci neuronowe mogą posłużyć do klasyfikacji zbiorów, które nie są separowalne liniowo. Dodatkowo połączenia między neuronami posiadają przypisaną wagę mającą bezpośredni wpływ na wartość sygnału przechodzącego między nimi.
+Podstawowym elementem sieci neuronowej jest neuron, który na wejściu przyjmuje dane wejściowe, przetwarza i zwraca pojedynczy sygnał wyjściowy. Przetwarzanie sygnału przez neuron z polega zazwyczaj na zsumowaniu sygnałów dochodzących do niego, a~następnie obliczenie wartości funkcji aktywacji. Uzyskana wartość z funkcji aktywacji jest przekazywana jako wyjście z neuronu (rysunek \ref{img:neural-net}). Funkcje aktywacji mogą wprowadzić element nieliniowy do modelu dzięki czemu sieci neuronowe mogą posłużyć do klasyfikacji zbiorów, które nie są separowalne liniowo. Dodatkowo połączenia między neuronami posiadają przypisaną wagę mającą bezpośredni wpływ na wartość sygnału przechodzącego między nimi.
 
 \bigskip
 
-Wiodącym schematem uczenia sieci neuronowych jest korzystanie z przykładów, z których każdy ma etykietę czyli oczekiwaną wartość wyjściową. Każdy z przykładów jest przetwarzany przez sieć neuronową. Następnie, przez zestawienie wartości wyjściowej sieci z etykietą (odpowiednią funkcją straty), wyliczyć można błąd sieci dla danego przykładu. Ostatnim krokiem jest poprawa wag w sieci neuronowej, według wybranej metody propagacji wstecznej. Problem optymalizacji sieci neuronowej sprowadzany jest do problemu optymalizacji funkcji poprzez modyfikację wag na połączeniach między neuronami. Metoda ta zaliczana jest do nauczania z nauczycielem (ang. supervised learning). Najczęściej stosowanymi metodami optymalizacji są algorytmy spadku gradientowego. 
+Wiodącym schematem uczenia sieci neuronowych jest korzystanie z przykładów, z~których każdy ma etykietę czyli oczekiwaną wartość wyjściową. Każdy z przykładów jest przetwarzany przez sieć neuronową. Następnie, przez zestawienie wartości wyjściowej sieci z~etykietą (odpowiednią funkcją straty), wyliczyć można błąd sieci dla danego przykładu. Ostatnim krokiem jest poprawa wag w sieci neuronowej, według wybranej metody propagacji wstecznej. Problem optymalizacji sieci neuronowej sprowadzany jest do problemu optymalizacji funkcji poprzez modyfikację wag na połączeniach między neuronami. Metoda ta zaliczana jest do nauczania z nauczycielem (ang. supervised learning). Najczęściej stosowanymi metodami optymalizacji są algorytmy spadku gradientowego. 
 
 \bigskip
 
@@ -773,13 +773,13 @@ Przy wykorzystywaniu sieci neuronowych głównym problemem, z którym zmagają s
 
 \subsubsection{Sieci typu MLP}
 
-Jednym z najprostszych przykładów sieci neuronowych jest perceptron wielowarstwowy (ang. multilayer perceptron) \cite{mlp}. Taka sieć składa się z warstwy wejściowej, z dowolnej ilości warstw ukrytych oraz z warstwy wyjściowej. W tym rodzaju sieci neuronowych, sygnał wyjściowy dowolnego neuronu jest traktowany jako sygnał wejściowy każdego z neuronów z kolejnej warstwy (rysunek \ref{img:neural-net}). 
+Jednym z najprostszych przykładów sieci neuronowych jest perceptron wielowarstwowy (ang. multilayer perceptron) \cite{mlp}. Taka sieć składa się z warstwy wejściowej, z dowolnej ilości warstw ukrytych oraz z warstwy wyjściowej. W tym rodzaju sieci neuronowych, sygnał wyjściowy dowolnego neuronu jest traktowany jako sygnał wejściowy każdego z~neuronów z kolejnej warstwy (rysunek \ref{img:neural-net}). 
 
 \bigskip
 
 \begin{figure}[H]
 \centering \includegraphics[scale=0.7]{img/nn.png}
-\caption{Schemat sieci neuronowej typu MLP \cite{mlpnn}}
+\caption{Schemat sieci neuronowej typu MLP \cite{mlpnn}.}
 \label{img:neural-net}
 \end{figure}
 
@@ -791,7 +791,7 @@ Las losowy (ang. Random Forest)\cite{randforest} jest modelem opartym o drzewa d
 
 \begin{figure}[H]
 \centering \includegraphics[scale=0.6]{img/decision_tree.png}
-\caption{Drzewo decyzyjne dla problemu klasyfikacji losu pasażerów statku Titanic \cite{wikidecisiontree}}
+\caption{Drzewo decyzyjne dla problemu klasyfikacji losu pasażerów statku Titanic \cite{wikidecisiontree}.}
 \label{img:wiki_dec_tree}
 \end{figure}
 
@@ -799,19 +799,19 @@ Dla złożonych zagadnień predykcji, takich jak przewidywanie trendu giełdy, d
 
 \subsection{Light GBM}
 
-\textit{Light GBM} (Light Gradient Boosting Machine)\cite{lgbm} jest algorytmem z rodziny \textit{gradient boosting decision trees}. Algorytmy te oparte są o zespół drzew decyzyjnych. W przeciwieństwie do metody \textit{lasu losowego} konstrukcja kolejnych drzew jest wykonywana w sposób sekwencyjny, oraz zależny od wyników poprzednich drzew. Dzięki takiemu zabiegowi, zespół drzew dąży do ulepszenia swoich wyników jako całości. Algorytm \textit{light GBM} przewyższa inne algorytmy ze swojej klasy takie jak \textit{XGBoost} dzięki innemu podejściu do tworzenia drzew. Podczas gdy większość algorytmów powiększa drzewa decyzyjne wgłąb (\textit{level-wise}  rysunek \ref{img:level-wise}), \textit{light GBM} powiększa drzewa decyzyjne ze względu na liście (\textit{leaf-wise} rysunek \ref{img:leaf-wise}). Ten zabieg wraz z innymi optymalizacjami sprawia, że algorytm ten osiąga porównywalne wyniki do innych algorytmów ze swojej klasy, przy dużym skrócenia czasu uczenia się. 
+\textit{Light GBM} (Light Gradient Boosting Machine)\cite{lgbm} jest algorytmem z rodziny \textit{gradient boosting decision trees}. Algorytmy te oparte są o zespół drzew decyzyjnych. W~przeciwieństwie do metody \textit{lasu losowego} konstrukcja kolejnych drzew jest wykonywana w sposób sekwencyjny, oraz zależny od wyników poprzednich drzew. Dzięki takiemu zabiegowi, zespół drzew dąży do ulepszenia swoich wyników jako całości. Algorytm \textit{light GBM} przewyższa inne algorytmy ze swojej klasy takie jak \textit{XGBoost} dzięki innemu podejściu do tworzenia drzew. Podczas gdy większość algorytmów powiększa drzewa decyzyjne wgłąb (\textit{level-wise}  rysunek \ref{img:level-wise}), \textit{light GBM} powiększa drzewa decyzyjne ze względu na liście (\textit{leaf-wise} rysunek \ref{img:leaf-wise}). Ten zabieg wraz z innymi optymalizacjami sprawia, że algorytm ten osiąga porównywalne wyniki do innych algorytmów ze swojej klasy, przy dużym skrócenia czasu uczenia się. 
 
 
 \begin{figure}[H]%
 \centering
-\subfigure[Konstrukcja drzewa algorytmu \textit{light GBM}]{%
+\subfigure[Konstrukcja drzewa algorytmu \textit{XGBoost}.]{%
 \label{img:level-wise}
 \includegraphics[scale=0.46]{img/lgbm-level-wise.png}}%
 \qquad
-\subfigure[Konstrukcja drzewa algorytmu \textit{light GBM}]{%
+\subfigure[Konstrukcja drzewa algorytmu \textit{Light GBM}.]{%
 \label{img:leaf-wise}
 \includegraphics[scale=0.46]{img/lgbm-leaf-wise.png}}%
-\caption{Porównanie konstrukcji drzew algorytmów z rodziny \textit{gradient boosting decision trees}}
+\caption{Porównanie konstrukcji drzew algorytmów z rodziny \textit{gradient boosting decision trees} \cite{dectreescompare}.}
 \label{img:level-leaf-wise}
 \end{figure}
 
@@ -824,7 +824,7 @@ Predykcja kursu cen na giełdzie jest zagadnieniem zaawansowanym pod względem t
 
 \section{Eksperymenty numeryczne}
 
-W poniższym rozdziale zostały opisane przeprowadzone eksperymenty numeryczne z wykorzystaniem różnych modeli predykcyjnych. Głównym celem tego rozdziału jest taki dobór modelu wraz z jego hiperparametrami, aby zmaksymalizować wybrane miary jakości. Podstawowym założeniem jest nauczanie modelu dla każdej ze spółek osobno (od zera), gdyż mogą one prezentować różną dynamikę i charakterystykę danych. Testy i optymalizacje były wykonywane dla pojedynczej spółki \textit{GOOGL}, ze względu na ograniczenia mocy obliczeniowej i czasu. Końcowe porównywanie jakości różnych modeli zostało wykonane na podstawie wyników 10 spośród największych spółek z giełdy \textit{NASDAQ}. Wybrane spółki wraz z ich kapitalizacją rynkową zostały przedstawione w tabeli \ref{tab:biggest_companies}.
+W poniższym rozdziale zostały opisane przeprowadzone eksperymenty numeryczne z~wykorzystaniem różnych modeli predykcyjnych. Głównym celem tego rozdziału jest taki dobór modelu wraz z jego hiperparametrami, aby zmaksymalizować wybrane miary jakości. Podstawowym założeniem jest nauczanie modelu dla każdej ze spółek osobno (od zera), gdyż mogą one prezentować różną dynamikę i charakterystykę danych. Testy i optymalizacje były wykonywane dla pojedynczej spółki \textit{GOOGL}, ze względu na ograniczenia mocy obliczeniowej i czasu. Końcowe porównywanie jakości różnych modeli zostało wykonane na podstawie wyników 10 spośród największych spółek z giełdy \textit{NASDAQ}. Wybrane spółki wraz z ich kapitalizacją rynkową zostały przedstawione w tabeli \ref{tab:biggest_companies}.
 
 
 \begin{table}[H]
@@ -843,15 +843,15 @@ W poniższym rozdziale zostały opisane przeprowadzone eksperymenty numeryczne z
         AMGN & 107.4 \\ \hline 
         QCOM & 83.54 \\ \hline 
     \end{tabular}
-    \caption{Spółki wykorzystane do oceny jakości nauczonych modeli}
+    \caption{Spółki wykorzystane do oceny jakości nauczonych modeli.}
     \label{tab:biggest_companies}
 \end{table}
 
-Wszystkie eksperymenty dla każdego zestawu parametrów zostały przeprowadzone 3 razy, a wartości dokładności i AUC zostały uśrednione. Czas uczenia jest czasem wykonania 3 iteracji testu dla danego zestawu parametrów. W rozdziale zawarto jedynie opis optymalizacji parametrów dających najciekawsze wyniki oraz te parametry, których zmiana przyniosła największą poprawę.
+Wszystkie eksperymenty dla każdego zestawu parametrów zostały przeprowadzone 3~razy, a wartości dokładności i AUC zostały uśrednione. Czas uczenia jest czasem wykonania 3 iteracji testu dla danego zestawu parametrów. W rozdziale zawarto jedynie opis optymalizacji parametrów dających najciekawsze wyniki oraz te parametry, których zmiana przyniosła największą poprawę.
 
 \bigskip
 
-Parametrem rozpatrywanym z osobna przy każdym z modeli jest użycie metody \textit{PCA} do wstępnego przetworzenia danych. W tabeli \ref{tab:pca_component_number} przedstawiona została liczba zmiennych w zależności od wybranej wariancji przy reudukowaniu rozmiaru wektora wejściowego. Jak widać, zmniejszenie wariancji o jedną tysięczną pozwala na ograniczenie rozmiaru wejściowych problemów o $\frac{1}{4}$, a zmniejszenie o jedną setną redukuje rozmiar aż o połowę. Nie można jednak z góry, bez przeprowadzenia testów, przesądzić jak ograniczanie rozmiaru zadania wpłynie na końcowe wyniki. 
+Parametrem rozpatrywanym z osobna przy każdym z modeli jest użycie metody \textit{PCA} do wstępnego przetworzenia danych. W tabeli \ref{tab:pca_component_number} przedstawiona została liczba zmiennych w~zależności od wybranej wariancji przy reudukowaniu rozmiaru wektora wejściowego. Jak widać, zmniejszenie wariancji o jedną tysięczną pozwala na ograniczenie rozmiaru wejściowych problemów o $\frac{1}{4}$, a zmniejszenie o jedną setną redukuje rozmiar aż o połowę. Nie można jednak z góry, bez przeprowadzenia testów, przesądzić jak ograniczanie rozmiaru zadania wpłynie na końcowe wyniki. 
 
 
 \begin{table}[H]
@@ -869,7 +869,7 @@ Parametrem rozpatrywanym z osobna przy każdym z modeli jest użycie metody \tex
         0.9999 & 34 \\ \hline 
         Brak & 41 \\ \hline 
     \end{tabular}
-    \caption{Wybrana wartość wariancji, a liczba zmiennych po wykonaniu PCA}
+    \caption{Wybrana wartość wariancji, a liczba zmiennych po wykonaniu PCA.}
     \label{tab:pca_component_number}
 \end{table}
 
@@ -891,7 +891,7 @@ poly    &  \textbf{0.530283} &  0.501429 &    2.902045 \\ \hline
 rbf     &  0.518170 &  \textbf{0.504402} &    3.482025 \\ \hline
 sigmoid &  0.515478 &  0.504246 &    3.676025 \\ \hline
     \end{tabular}
-    \caption{SVM: wyniki klasyfikacji binarnej w zależności od wykorzystanej funkcji jądrowej}
+    \caption{SVM: wyniki klasyfikacji binarnej w zależności od wykorzystanej funkcji jądrowej.}
     \label{tab:svm_kernel_binary}
 \end{table}
 
@@ -900,15 +900,15 @@ sigmoid &  0.515478 &  0.504246 &    3.676025 \\ \hline
 
 \begin{figure}[H]%
 \centering
-\subfigure[Histogram predykcji dla jądra \textit{poly}]{%
+\subfigure[Histogram predykcji dla jądra \textit{poly}.]{%
 \includegraphics[scale=0.46]{img/svm_poly_hist.pdf}
 \label{img:svm_kernel_histograms_poly}}%
 \qquad
-\subfigure[Histogram predykcji dla jądra \textit{rbf}]{%
+\subfigure[Histogram predykcji dla jądra \textit{rbf}.]{%
 \includegraphics[scale=0.46]{img/svm_rbf_hist.pdf}
 \label{img:svm_kernel_histograms_rbf}}%
 
-\caption{Wykresy przedstawiające histogram predykcji dla poszczególnych klas w zależności od jądra (opracowanie własne)}
+\caption{Wykresy przedstawiające histogram predykcji dla poszczególnych klas w zależności od jądra (opracowanie własne).}
 \label{img:svm_kernel_histograms}
 \end{figure}
 
@@ -924,7 +924,7 @@ poly    &  0.379542 &  0.517911 &    3.436018 \\ \hline
 rbf     &  0.371467 &  \textbf{0.536517} &    4.302981 \\ \hline
 sigmoid &  0.363392 &  0.518139 &    4.008035 \\ \hline
     \end{tabular}
-    \caption{SVM: wyniki klasyfikacji na 3 klasy w zależności od wykorzystanej funkcji jądrowej}
+    \caption{SVM: wyniki klasyfikacji na 3 klasy w zależności od wykorzystanej funkcji jądrowej.}
     \label{tab:svm_kernel_discrete}
 \end{table}
 
@@ -947,7 +947,7 @@ Kolejnym testem było porównanie wyników klasyfikacji w zależności od użyci
 0.9999             &  0.518170 &  0.499701 &    2.962357 \\ \hline
 Brak                &  0.518170 &  0.501021 &    3.428985 \\ \hline
     \end{tabular}
-    \caption{SVM: wyniki klasyfikacji binarnej w zależności od wybranej wartości wariancji w metodzie PCA}
+    \caption{SVM: wyniki klasyfikacji binarnej w zależności od wybranej wartości wariancji w metodzie PCA.}
     \label{tab:svm_pca_binary}
 \end{table}
 
@@ -969,7 +969,7 @@ Dla klasyfikacji wieloklasowej widoczny jest proporcjonalny spadek miary AUC prz
 0.9999             &  0.371467 &  0.536259 &    4.062329 \\ \hline
 Brak                &  0.371467 &  \textbf{0.537476} &    4.936680 \\ \hline
     \end{tabular}
-    \caption{SVM: wyniki klasyfikacji na 3 klasy w zależności od wybranej wartości wariancji w metodzie PCA}
+    \caption{SVM: wyniki klasyfikacji na 3 klasy w zależności od wybranej wartości wariancji w metodzie PCA.}
     \label{tab:svm_pca_discrete}
 \end{table}
 
@@ -994,7 +994,7 @@ Następnym optymalizowanym parametrem był parametr kary \textit{C}. Wpływa on 
 100.0 &  0.502019 &  0.501905 &    4.065111 \\ \hline
 
     \end{tabular}
-    \caption{SVM: wyniki klasyfikacji binarnej w zależności wykorzystanego parametru C}
+    \caption{SVM: wyniki klasyfikacji binarnej w zależności wykorzystanego parametru C.}
     \label{tab:svm_c_binary}
 \end{table}
 
@@ -1015,12 +1015,12 @@ Następnym optymalizowanym parametrem był parametr kary \textit{C}. Wpływa on 
 50.0  &  0.355316 &  0.536604 &    5.575662 \\ \hline
 100.0 &  0.351279 &  0.536096 &    6.036690 \\ \hline
     \end{tabular}
-    \caption{SVM: wyniki klasyfikacji na 3 klasy w zależności wykorzystanego parametru C}
+    \caption{SVM: wyniki klasyfikacji na 3 klasy w zależności wykorzystanego parametru C.}
     \label{tab:svm_c_discrete}
 \end{table}
 
 
-Na koniec wykonane zostały testy dokładności w zależności od rozmiaru zbioru testowego w kontekście uczenia SVM metodą kroczącą. Z wyników w tabelach \ref{tab:svm_walk_forward_binary} oraz \ref{tab:svm_walk_forward_discrete} można wywnioskować, iż ta optymalizacja dała najlepszą poprawę wyników. W przypadku użycia zbioru testowego o 360 próbkach dokładność klasyfikacji wzrosła aż o 4\%, a dla klasyfikacji wieloklasowej 2.5\%. Biorąc pod uwagę również miarę AUC dla klasyfikacji binarnej, wybrany został zbiór testowy o 45 próbkach, zaś dla klasyfikacji na 3 klasy wybrana została liczba 90 próbek.
+Na koniec wykonane zostały testy dokładności w zależności od rozmiaru zbioru testowego w kontekście uczenia SVM metodą kroczącą. Z wyników w tabelach \ref{tab:svm_walk_forward_binary} oraz \ref{tab:svm_walk_forward_discrete} można wywnioskować, iż ta optymalizacja dała najlepszą poprawę wyników. W przypadku użycia zbioru testowego o 360 próbkach dokładność klasyfikacji wzrosła aż o 4\%, a~dla klasyfikacji wieloklasowej 2.5\%. Biorąc pod uwagę również miarę AUC dla klasyfikacji binarnej, wybrany został zbiór testowy o 45 próbkach, zaś dla klasyfikacji na 3 klasy wybrana została liczba 90 próbek.
 
 
 \begin{table}[H]
@@ -1036,7 +1036,7 @@ max                        &   0.518170 &  0.506115 &    2.789680 \\ \hline
 22.0                          &  0.520310 &  0.507897 &  104.139698 \\ \hline
 
     \end{tabular}
-    \caption{SVM: wyniki klasyfikacji binarnej w zależności od rozmiaru zbioru testowego}
+    \caption{SVM: wyniki klasyfikacji binarnej w zależności od rozmiaru zbioru testowego.}
     \label{tab:svm_walk_forward_binary}
 \end{table}
 
@@ -1054,7 +1054,7 @@ max                       &  0.374159 &  0.539444 &    4.433025 \\ \hline
 45.0                          &  0.377238 &  0.547582 &   89.569035 \\ \hline
 22.0                          &  0.389424 &  0.546290 &  183.732708 \\ \hline
     \end{tabular}
-    \caption{SVM: wyniki klasyfikacji na 3 klasy w zależności od rozmiaru zbioru testowego}
+    \caption{SVM: wyniki klasyfikacji na 3 klasy w zależności od rozmiaru zbioru testowego.}
     \label{tab:svm_walk_forward_discrete}
 \end{table}
     
@@ -1081,7 +1081,7 @@ Sieci neuronowe posiadają wiele parametrów, których zmiana może znacznie wp�
 Brak               &  0.543742 &  0.524570 &   15.667901 \\ \hline
 
     \end{tabular}
-    \caption{MLP: wyniki klasyfikacji binarnej w zależności od wybranej wartości wariancji}
+    \caption{MLP: wyniki klasyfikacji binarnej w zależności od wybranej wartości wariancji.}
     \label{tab:nn_pca_binary}
 \end{table}
 
@@ -1103,7 +1103,7 @@ Takie same testy zostały przeprowadzone dla klasyfikacji na 3 klasy. Wyniki zos
 0.9999             &  0.382683 &  0.545369 &   64.853820 \\ \hline
 Brak                &  \textbf{0.392553} &  \textbf{0.548908} &   62.872527 \\ \hline
     \end{tabular}
-    \caption{MLP: wyniki klasyfikacji na 3 klasy w zależności od wybranej wartości wariancji}
+    \caption{MLP: wyniki klasyfikacji na 3 klasy w zależności od wybranej wartości wariancji.}
     \label{tab:nn_pca_discrete}
 \end{table}
 
@@ -1127,11 +1127,11 @@ Model bez warstwy ukrytej w przypadku klasyfikacji binarnej okazuje się najleps
 			& 2 & - & 0.515 &    0.51 &   0.526 &   0.514 &    0.52 &     0.5 &   0.524 &   0.518 & 0.518 \\ \cline{2 - 12} \hline
 
     \end{tabular}
-    \caption{MLP: wartości miary AUC dla różnych konfiguracji warstw ukrytych i liczby neuronów dla klasyfikacji binarnej (wyniki zaokrąglone)}
+    \caption{MLP: wartości miary AUC dla różnych konfiguracji warstw ukrytych i liczby neuronów dla klasyfikacji binarnej (wyniki zaokrąglone).}
     \label{tab:nn_layers_binary}
 \end{table}
-%TODO WTF AUC
-Analogicznie do klasyfikacji binarnej został przeprowadzony test dla klasyfikacji na 3 klasy, wyniki przedstawiono w tabeli \ref{tab:nn_layers_discrete}. Najlepszy wynik \textbf{0.858} AUC ($\sim 68\%$ dokładności) został osiągnięty przy użyciu jednej warstwy ukrytej o 10 neuronach. W odróżnieniu do klasyfikacji binarnej, warstwa wyjściowa posiada 3 neurony, a co za tym idzie, potrzebna jest bardziej skomplikowana architektura sieci do uzyskania optymalnego wyniku. Zauważyć można również, iż wykorzystanie wielu warstw ukrytych o małej liczbie neuronów znacznie pogarsza wynik, co jest spowodowane zbyt małą liczbą połączeń między kolejnymi warstwami, by zachować zależności między danymi.
+
+Analogicznie do klasyfikacji binarnej został przeprowadzony test dla klasyfikacji na 3 klasy, wyniki przedstawiono w tabeli \ref{tab:nn_layers_discrete}. Najlepszy wynik \textbf{0.565} AUC ($\sim 40\%$ dokładności) został osiągnięty przy użyciu jednej warstwy ukrytej o 9 neuronach. W odróżnieniu do klasyfikacji binarnej, warstwa wyjściowa posiada 3 neurony, a co za tym idzie, teoretycznie potrzebna jest bardziej skomplikowana architektura sieci do uzyskania optymalnego wyniku. W praktyce jednak okazało się, że architektura dla obu problemów jest bardzo podobna. Zauważyć można również, iż wykorzystanie wielu warstw ukrytych o małej liczbie neuronów znacznie pogarsza wynik, co jest spowodowane zbyt małą liczbą połączeń między kolejnymi warstwami, by zachować zależności między danymi.
 
 \begin{table}[H]
     \centering
@@ -1140,11 +1140,11 @@ Analogicznie do klasyfikacji binarnej został przeprowadzony test dla klasyfikac
          & &  \multicolumn{10}{c|}{Liczba neuronów w każdej warstwie}  \\ \hline
         \multirow{4}{*}{Warstwy} & & 0 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10  \\ \cline{2 - 12}
 			& 0 & 0.549 & - & - & - & - & - & - & - & - & - \\ \cline{2 - 12} 
-			& 1 & - & 0.534 &  0.551 &  0.536 &  0.537 &  0.538 &  0.541 &  0.551 &  \textbf{0.565} & 0.556 \\ \cline{2 - 12} 
-			& 2 & - & 0.527 &   0.543 &   0.535 &   0.548 &   0.548 &   0.544 &   0.539 &   0.542 &   0.545  \\ \cline{2 - 12} \hline
+			& 1 & - & 0.534 &  0.531 &  0.536 &  0.537 &  0.538 &  0.541 &  0.551 &  \textbf{0.565} & 0.556 \\ \cline{2 - 12} 
+			& 2 & - & 0.527 &   0.533 &   0.535 &   0.548 &   0.548 &   0.544 &   0.539 &   0.542 &   0.545  \\ \cline{2 - 12} \hline
 
     \end{tabular}
-    \caption{MLP: wartości miary AUC dla różnych konfiguracji warstw ukrytych i liczby neuronów dla klasyfikacji na 3 klasy (wyniki zaokrąglone)}
+    \caption{MLP: wartości miary AUC dla różnych konfiguracji warstw ukrytych i liczby neuronów dla klasyfikacji na 3 klasy (wyniki zaokrąglone).}
     \label{tab:nn_layers_discrete}
 \end{table}
 
@@ -1167,7 +1167,7 @@ max                           &  0.545666 &  0.532053 &   35.540564 \\  \hline
 22                          &  0.653227 &  0.594625 &  2481.258675 \\  \hline
 11                          &  \textbf{0.694853} &  \textbf{0.617139} &  3332.849607 \\ \hline
     \end{tabular}
-    \caption{MLP: wyniki klasyfikacji binarnej w zależności od rozmiaru zbioru testowego}
+    \caption{MLP: wyniki klasyfikacji binarnej w zależności od rozmiaru zbioru testowego.}
     \label{tab:nn_walk_forward_test_binary}
 \end{table}
 
@@ -1187,7 +1187,7 @@ max                           &  0.405497 &  0.565743 &   38.663478 \\ \hline
 11                          &  \textbf{0.587010} &  \textbf{0.630126} &  4452.325083 \\ \hline
 
     \end{tabular}
-    \caption{MLP: wyniki klasyfikacji na 3 klasy w zależności od rozmiaru zbioru testowego}
+    \caption{MLP: wyniki klasyfikacji na 3 klasy w zależności od rozmiaru zbioru testowego.}
     \label{tab:nn_walk_forward_test_discrete}
 \end{table}
 
@@ -1213,7 +1213,7 @@ Testy lasów losowych rozpoczęte zostały od analizy przetworzenia danych metod
 0.9999             &  \textbf{0.512337} &  \textbf{0.509109} &    1.317005 \\ \hline
 Brak                &  0.487214 &  0.494583 &    1.646342 \\ \hline
     \end{tabular}
-    \caption{Random forest: wyniki klasyfikacji binarnej w zależności od wybranej wartości wariancji w metodzie PCA}
+    \caption{Random forest: wyniki klasyfikacji binarnej w zależności od wybranej wartości wariancji w metodzie PCA.}
     \label{tab:rf_pca_binary}
 \end{table}
 \begin{table}[H]
@@ -1232,7 +1232,7 @@ Brak                &  0.487214 &  0.494583 &    1.646342 \\ \hline
 0.9999             &  0.344998 &  0.529919 &    1.463011 \\ \hline
 Brak                &  0.340063 &  0.527937 &    1.730347 \\ \hline
     \end{tabular}
-    \caption{Random forest: wyniki klasyfikacji na 3 klasy w zależności od wybranej wartości wariancji w metodzie PCA}
+    \caption{Random forest: wyniki klasyfikacji na 3 klasy w zależności od wybranej wartości wariancji w metodzie PCA.}
     \label{tab:rf_pca_discrete}
 \end{table}
 
@@ -1253,7 +1253,7 @@ Podstawowym parametrem przy używaniu modelu lasu losowego jest dobór odpowiedn
 1500       &  0.530844 &  0.510723 &  235.584647 \\ \hline
 2000       &  0.524128 &  0.503414 &  386.938110 \\ \hline
     \end{tabular}
-    \caption{Random forest: wyniki klasyfikacji binarnej w zależności od liczby utworzonych drzew}
+    \caption{Random forest: wyniki klasyfikacji binarnej w zależności od liczby utworzonych drzew.}
     \label{tab:rf_estimators_binary}
 \end{table}
 
@@ -1272,7 +1272,7 @@ Podstawowym parametrem przy używaniu modelu lasu losowego jest dobór odpowiedn
 1500       &  0.384536 &  0.552294 &  309.298568 \\ \hline
 2000      &  \textbf{0.393720} &  0.550339 &  368.229640 \\ \hline
     \end{tabular}
-    \caption{Random forest: wyniki klasyfikacji na 3 klasy w zależności od liczby utworzonych drzew}
+    \caption{Random forest: wyniki klasyfikacji na 3 klasy w zależności od liczby utworzonych drzew.}
     \label{tab:rf_estimators_discrete}
 \end{table}
 
@@ -1291,7 +1291,7 @@ max                         & \textbf{0.536895} &  \textbf{0.513701} &  167.9710
 22                          &  0.510982 &  0.507777 &   70.693982 \\ \hline
 
     \end{tabular}
-    \caption{Random forest: wyniki klasyfikacji binarnej w zależności od rozmiaru zbioru testowego}
+    \caption{Random forest: wyniki klasyfikacji binarnej w zależności od rozmiaru zbioru testowego.}
     \label{tab:rf_walk_forward_binary}
 \end{table}
 
@@ -1309,7 +1309,7 @@ max                         &   0.380289 &  0.555435 &  209.299582 \\ \hline
 45                          &  0.382353 &  0.551812 &   34.919000 \\ \hline
 22                          &  0.369377 &  0.545302 &   67.158500 \\ \hline
     \end{tabular}
-    \caption{Random forest: wyniki klasyfikacji na 3 klasy w zależności od rozmiaru zbioru testowego}
+    \caption{Random forest: wyniki klasyfikacji na 3 klasy w zależności od rozmiaru zbioru testowego.}
     \label{tab:rf_walk_forward_discrete}
 \end{table}
 
@@ -1333,7 +1333,7 @@ Podobnie jak w przypadku poprzednich modeli dla Light GBM, analizowana była zal
 0.9999             &  \textbf{0.534320} &  \textbf{0.534631} &    0.199997 \\ \hline
 Brak                &  0.528937 &  0.479128 &    0.176996 \\ \hline
     \end{tabular}
-    \caption{Light GBM: wyniki klasyfikacji binarnej w zależności od wybranej wartości wariancji w metodzie PCA}
+    \caption{Light GBM: wyniki klasyfikacji binarnej w zależności od wybranej wartości wariancji w metodzie PCA.}
     \label{tab:lgbm_pca_binary}
 \end{table}
 
@@ -1353,11 +1353,11 @@ Brak                &  0.528937 &  0.479128 &    0.176996 \\ \hline
 0.9999             &  0.351279 &  0.532163 &    7.542000 \\ \hline
 Brak                &  0.348587 &  0.513556 &    7.982000 \\ \hline
     \end{tabular}
-    \caption{Light GBM: wyniki klasyfikacji na 3 klasy w zależności od wybranej wartości wariancji w metodzie PCA}
+    \caption{Light GBM: wyniki klasyfikacji na 3 klasy w zależności od wybranej wartości wariancji w metodzie PCA.}
     \label{tab:lgbm_pca_discrete}
 \end{table}
 
-Kolejnym parametrem, który został wykorzystany do optymalizacji modelu Light GBM jest procent cech wykorzystanych do utworzenia każdego z drzew. Na przykład, jeżeli ustawimy ten parametr na $0.5$, każde drzewo będzie utworzone biorąc pod uwagę tylko połowę kolumn z wektora wejściowego. Cechy są wybierane losowo w momencie tworzenia kolejnego drzewa z lasu. Wyniki tego eksperymentu przedstawione są w tabelach \ref{tab:lgbm_feature_fraction_binary} oraz \ref{tab:lgbm_feature_fraction_discrete}. W przypadku obu klasyfikacji najbardziej korzystne wyniki daje użycie 40\% całego wektora danych przy tworzeniu każdego z drzew. Zmiana tego parametru pozwoliła na poprawienie miary AUC w szczególności dla problemu klasyfikacji na 3 klasy.
+Kolejnym parametrem, który został wykorzystany do optymalizacji modelu Light GBM jest procent cech wykorzystanych do utworzenia każdego z drzew. Na przykład, jeżeli ustawimy ten parametr na $0.5$, każde drzewo będzie utworzone biorąc pod uwagę tylko połowę kolumn z wektora wejściowego. Cechy są wybierane losowo w momencie tworzenia kolejnego drzewa z lasu. Wyniki tego eksperymentu przedstawione są w tabelach \ref{tab:lgbm_feature_fraction_binary} oraz \ref{tab:lgbm_feature_fraction_discrete}. W~przypadku obu klasyfikacji najbardziej korzystne wyniki daje użycie 40\% całego wektora danych przy tworzeniu każdego z drzew. Zmiana tego parametru pozwoliła na poprawienie miary AUC w szczególności dla problemu klasyfikacji na 3 klasy.
 
 \begin{table}[H]
     \centering
@@ -1375,7 +1375,7 @@ Kolejnym parametrem, który został wykorzystany do optymalizacji modelu Light G
 90              &  0.520861 &  0.509935 &    0.222998 \\
 100              &  0.518170 &  0.522937 &    0.354000 \\ \hline
     \end{tabular}
-    \caption{Light GBM: wyniki klasyfikacji binarnej w zależności od procenta cech wykorzystanych do tworzenia pojedynczego drzewa}
+    \caption{Light GBM: wyniki klasyfikacji binarnej w zależności od procenta cech wykorzystanych do tworzenia pojedynczego drzewa.}
     \label{tab:lgbm_feature_fraction_binary}
 \end{table}
 
@@ -1395,7 +1395,7 @@ Kolejnym parametrem, który został wykorzystany do optymalizacji modelu Light G
 90             &  0.368775 &  0.538629 &   10.570999 \\
 100              &  0.360700 &  0.537781 &    9.501997 \\ \hline
     \end{tabular}
-    \caption{Light GBM: wyniki klasyfikacji na 3 klasy w zależności od procenta cech wykorzystanych do tworzenia pojedynczego drzewa}
+    \caption{Light GBM: wyniki klasyfikacji na 3 klasy w zależności od procenta cech wykorzystanych do tworzenia pojedynczego drzewa.}
     \label{tab:lgbm_feature_fraction_discrete}
 \end{table}
 
@@ -1411,7 +1411,7 @@ gbdt     &  \textbf{0.532974} &  \textbf{0.524115} &    0.106003 \\ \hline
 gbrt     &  \textbf{0.532974} &  \textbf{0.524115} &    0.116003 \\ \hline
 goss     &  0.502264 &  0.513801 &    0.160999 \\ \hline
     \end{tabular}
-    \caption{Light GBM: wyniki klasyfikacji binarnej w zależności od wybranego rodzaju boostingu}
+    \caption{Light GBM: wyniki klasyfikacji binarnej w zależności od wybranego rodzaju boostingu.}
     \label{tab:lgbm_boosting_binary}
 \end{table}
 
@@ -1425,7 +1425,7 @@ gbdt     &  0.370121 &  0.532499 &    0.469003 \\ \hline
 gbrt     &  0.370121 &  0.532499 &    0.405001 \\ \hline
 goss     &  \textbf{0.386083} &  \textbf{0.545501} &    0.642004 \\ \hline
     \end{tabular}
-    \caption{Light GBM: wyniki klasyfikacji na 3 klasy w zależności od wybranego rodzaju boostingu}
+    \caption{Light GBM: wyniki klasyfikacji na 3 klasy w zależności od wybranego rodzaju boostingu.}
     \label{tab:lgbm_boosting_discrete}
 \end{table}
 
@@ -1447,7 +1447,7 @@ Następnym optymalizowanym parametrem była maksymalna liczba w każdym z drzew 
 90       &  0.528937 &  0.530051 &    0.209766 \\ \hline
 100      &  0.527591 &  \textbf{0.533090} &    0.195496 \\ \hline
     \end{tabular}
-    \caption{Light GBM: wyniki klasyfikacji binarnej w zależności od maksymalnej liczby liści w pojedynczym drzewie}
+    \caption{Light GBM: wyniki klasyfikacji binarnej w zależności od maksymalnej liczby liści w pojedynczym drzewie.}
     \label{tab:lgbm_num_leaves_binary}
 \end{table}
 
@@ -1468,7 +1468,7 @@ Następnym optymalizowanym parametrem była maksymalna liczba w każdym z drzew 
 100      &  0.364738 &  0.523292 &    0.482326 \\ \hline
 
     \end{tabular}
-    \caption{Light GBM: wyniki klasyfikacji binarnej w zależności od maksymalnej liczby liści w pojedynczym drzewie}
+    \caption{Light GBM: wyniki klasyfikacji binarnej w zależności od maksymalnej liczby liści w pojedynczym drzewie.}
     \label{tab:lgbm_num_leaves_discrete}
 \end{table}
 
@@ -1491,7 +1491,7 @@ max   						  & 0.535666 &  0.533299 &  0.406716 \\ \hline
 1                           &  \textbf{0.825034} &  \textbf{0.959651} &  152.520538 \\ \hline
 
     \end{tabular}
-    \caption{Light GBM: wyniki klasyfikacji binarnej w zależności od rozmiaru zbioru testowego}
+    \caption{Light GBM: wyniki klasyfikacji binarnej w zależności od rozmiaru zbioru testowego.}
     \label{tab:lgbm_walk_forward_binary}
 \end{table}
 
@@ -1511,7 +1511,7 @@ max   						 &  0.386272 &  0.545294 &    0.239276 \\ \hline
 2                           &  0.536290 &  0.713070 &  108.588001 \\ \hline
 1                           &  \textbf{0.632690} &  \textbf{0.812767} &  218.438081 \\ \hline
     \end{tabular}
-    \caption{Light GBM: wyniki klasyfikacji na 3 klasy w zależności od rozmiaru zbioru testowego}
+    \caption{Light GBM: wyniki klasyfikacji na 3 klasy w zależności od rozmiaru zbioru testowego.}
     \label{tab:lgbm_walk_forward_discrete}
 \end{table}
 
@@ -1537,7 +1537,7 @@ QCOM   &  0.522748 &  0.706916 & 0.512999 & \textbf{0.836431} \\ \hline \hline
 \textbf{Średnia dokładność} &  0.525713 & 0.712145 & 0.501703 & \textbf{0.809715} \\  \hline  
 \textbf{Średnia AUC} &  0.508806 & 0.651943 & 0.509316 & \textbf{0.951182} \\  \hline
     \end{tabular}
-    \caption{Końcowe wyniki dokładności dla klasyfikacji binarnej różnych spółek}
+    \caption{Końcowe wyniki dokładności dla klasyfikacji binarnej różnych spółek.}
     \label{tab:comparison_final_binary}
 \end{table}   
 
@@ -1545,7 +1545,7 @@ Najlepszy średni wynik uzyskał model Light GBM ze średnią dokładnością $\
 
 \begin{figure}[H]
 \centering \includegraphics[scale=0.9]{img/summary-binary-summary.pdf}
-\caption{Porównanie średniej wydajności modeli w klasyfikacji binarnej (opracowanie własne)}
+\caption{Porównanie średniej wydajności modeli w klasyfikacji binarnej (opracowanie własne).}
 \label{img:summary-binary}
 \end{figure}
 
@@ -1559,7 +1559,7 @@ Dla modelu random forest można zauważyć pewną anomalię dla spółki \textit
 
 \begin{figure}[H]
 \centering \includegraphics[scale=1]{img/AMZN_GOOGL_close_comparison.pdf}
-\caption{Porównanie wykresów ceny zamknięcia spółek \textit{GOOGL} i \textit{AMZN} (opracowanie własne)}
+\caption{Porównanie wykresów ceny zamknięcia spółek \textit{GOOGL} i \textit{AMZN} (opracowanie własne).}
 \label{img:amzn_googl_adjusted_comparison}
 \end{figure}
 
@@ -1593,7 +1593,7 @@ Ponownie najlepszy okazał się model \textit{Light GBM} z dokładnością na po
 
 \begin{figure}[H]
 \centering \includegraphics[scale=0.9]{img/summary-discrete-summary.pdf}
-\caption{Porównanie średniej wydajności modeli w klasyfikacji wieloklasowej (opracowanie własne)}
+\caption{Porównanie średniej wydajności modeli w klasyfikacji wieloklasowej (opracowanie własne).}
 \label{img:summary-discrete}
 \end{figure}
 
@@ -1610,7 +1610,7 @@ Dodatkowo dla problemu wieloklasowego przeprowadzona została analiza jakości k
 
 \begin{figure}[H]
 \centering \includegraphics[scale=0.8]{img/AMZN_roc_lgbm.pdf}
-\caption{Wykres ROC predykcji modelu \textit{Light GBM} dla klasyfikacji na 3 klasy spółki \textit{AMZN} (opracowanie własne)}
+\caption{Wykres ROC predykcji modelu \textit{Light GBM} dla klasyfikacji na 3 klasy spółki \textit{AMZN} (opracowanie własne).}
 \label{img:lgbm_roc_amzn}
 \end{figure}
 
@@ -1618,15 +1618,15 @@ Dodatkowo dla problemu wieloklasowego przeprowadzona została analiza jakości k
 
 \section{Wspomaganie decyzji giełdowych}
 
-Mając do wykorzystania klasyfikatory o wybranych parametrach, można przystąpić do weryfikacji ich skuteczności na giełdzie. Ocena jakości odbyła się poprzez symulację uproszczonego modelu giełdy. Głównym założeniem było dokonywanie transakcji jedynie na początku sesji giełdowej, tj. po cenie otwarcia. Taki scenariusz odzwierciedla wykonanie predykcji klasyfikatorem, na podstawie danych z sesji giełdowej z dnia \textit{t} oraz podjęcie decyzji w najbliższym możliwym czasi,e tj. przy rozpoczęciu sesji w dniu \textit{t+1}. Jako zbiór treningowy dla każdej spółki wykorzystane zostały wszystkie dane od początku jej istnienia, aż do 31 grudnia 2018. Symulacja giełdowa została przeprowadzona na danych od 1 stycznia 2019, aż do 6 lipca 2019. W tym okresie przeprowadzono 127 sesji giełdowych. Symulacja uwzględniała prowizję od każdej transakcji na poziomie 0.2\% jej wartości. Każda spółka była testowana osobno. Budżet dla każdej spółki wynosił \textit{100~000} dolarów.
+Mając do wykorzystania klasyfikatory o wybranych parametrach, można przystąpić do weryfikacji ich skuteczności na giełdzie. Ocena jakości odbyła się poprzez symulację uproszczonego modelu giełdy. Głównym założeniem było dokonywanie transakcji jedynie na początku sesji giełdowej, tj. po cenie otwarcia. Taki scenariusz odzwierciedla wykonanie predykcji klasyfikatorem, na podstawie danych z sesji giełdowej z dnia \textit{t} oraz podjęcie decyzji w najbliższym możliwym czasi,e tj. przy rozpoczęciu sesji w dniu \textit{t+1}. Jako zbiór treningowy dla każdej spółki wykorzystane zostały wszystkie dane od początku jej istnienia, aż do 31~grudnia~2018. Symulacja giełdowa została przeprowadzona na danych od 1~stycznia~2019, aż do 6~lipca~2019. W tym okresie przeprowadzono 127 sesji giełdowych. Symulacja uwzględniała prowizję od każdej transakcji na poziomie 0.2\% jej wartości. Każda spółka była testowana osobno. Budżet dla każdej spółki wynosił \textit{100~000} dolarów.
 
 \bigskip
 
-Algorytm dokonujący transakcji opiera się na analizie kolejnych sesji giełdowych ze zbioru testowego. Jeżeli klasyfikator przewiduje wzrost ceny, algorytm kupuje maksymalną możliwą liczbę akcji (musi to być liczba naturalna, więc budżet nie zawsze jest całkowicie wykorzystany). Jeżeli algorytm jest w posiadaniu papierów wartościowych, a klasyfikator daje sygnał utrzymania ceny lub wzrostu, algorytm pozostaje bezczynny. Jeżeli algorytm jest w posiadaniu papierów wartościowych, a klasyfikator daje sygnał spadku ceny, algorytm wyprzedaje wszystkie posiadane akcje. Ostatnim krokiem algorytmu jest monetyzacja wszelkich zakupionych akcji w ostatniej sesji ze zbioru testowego, w celu oszacowania zysków.
+Algorytm dokonujący transakcji opiera się na analizie kolejnych sesji giełdowych ze zbioru testowego. Jeżeli klasyfikator przewiduje wzrost ceny, algorytm kupuje maksymalną możliwą liczbę akcji (musi to być liczba naturalna, więc budżet nie zawsze jest całkowicie wykorzystany). Jeżeli algorytm jest w posiadaniu papierów wartościowych, a~klasyfikator daje sygnał utrzymania ceny lub wzrostu, algorytm pozostaje bezczynny. Jeżeli algorytm jest w posiadaniu papierów wartościowych, a klasyfikator daje sygnał spadku ceny, algorytm wyprzedaje wszystkie posiadane akcje. Ostatnim krokiem algorytmu jest monetyzacja wszelkich zakupionych akcji w ostatniej sesji ze zbioru testowego, w celu oszacowania zysków.
 
 \bigskip
 
-Do porównania uzyskanych wyników zastosowana była technika \textit{buy and hold}, która polega na kupieniu akcji odpowiednich spółek i pozostaniu biernym na wahania rynku do czasu spieniężenia akcji. Ta metoda jest preferowaną formą inwestowania analityków fundamentalnych, którzy często twierdzą iż niemożliwym jest wypracowanie ponadprzeciętnych zysków w oparciu o analizę techniczną i predykcję trendów. Innym wskaźnikiem stosowanym do oceny wyników aktywnego grania na giełdzie jest indeks giełdowy, który jest odwzorowaniem średniej zmiany wartości dla konkretnej grupy spółek. Inwestowanie w fundusze inwestycyjne oparte o indeksy giełdowe uznawane jest często za wygodną alternatywę do handlu na konkretnych akcjach, gdyż odzwierciedla szeroki rynek i nie wymaga dogłębnej analizy spółek. Odpowiednim indeksem giełdowym do wybranych w tej pracy spółek jest \textit{S\&P 500}, zawierający 500 przedsiębiorstw o największej kapitalizacji notowanych na giełdach \textit{NYSE} oraz \textit{NASDAQ}. W okresie od 1 stycznia 2019 do 6 lipca 2019 indeks \textit{S\&P 500} zanotował wzrost o \textbf{18.45}\%.
+Do porównania uzyskanych wyników zastosowana była technika \textit{buy and hold}, która polega na kupieniu akcji odpowiednich spółek i pozostaniu biernym na wahania rynku do czasu spieniężenia akcji. Ta metoda jest preferowaną formą inwestowania analityków fundamentalnych, którzy często twierdzą iż niemożliwym jest wypracowanie ponadprzeciętnych zysków w oparciu o analizę techniczną i predykcję trendów. Innym wskaźnikiem stosowanym do oceny wyników aktywnego grania na giełdzie jest indeks giełdowy, który jest odwzorowaniem średniej zmiany wartości dla konkretnej grupy spółek. Inwestowanie w fundusze inwestycyjne oparte o indeksy giełdowe uznawane jest często za wygodną alternatywę do handlu na konkretnych akcjach, gdyż odzwierciedla szeroki rynek i nie wymaga dogłębnej analizy spółek. Odpowiednim indeksem giełdowym do wybranych w~tej pracy spółek jest \textit{S\&P 500}, zawierający 500 przedsiębiorstw o największej kapitalizacji notowanych na giełdach \textit{NYSE} oraz \textit{NASDAQ}. W okresie od 1 stycznia 2019 do 6 lipca 2019 indeks \textit{S\&P 500} zanotował wzrost o \textbf{18.45}\%.
 
 \bigskip
 
@@ -1658,7 +1658,7 @@ Najlepszy średni wynik na poziomie \textbf{140.01}\% kapitału początkowego uz
 
 \begin{figure}[H]
 \centering \includegraphics[scale=1]{img/QCOM_adj_close.pdf}
-\caption{Wykres ceny zamknięcia spółki \textit{QCOM} (opracowanie własne)}
+\caption{Wykres ceny zamknięcia spółki \textit{QCOM} (opracowanie własne).}
 \label{img:qcom_adj_close}
 \end{figure}
 
@@ -1666,7 +1666,7 @@ Model sieci neuronowej oraz model \textit{Light GBM} uzyskały dużo lepsze wyni
 
 \begin{figure}[H]
 \centering \includegraphics[scale=0.9]{img/summary-binary-gain-summary.pdf}
-\caption{Porównanie średniego zysku modeli z klasyfikacji binarnej (opracowanie własne)}
+\caption{Porównanie średniego zysku modeli z klasyfikacji binarnej (opracowanie własne).}
 \label{img:summary-binary-gain}
 \end{figure}
 
@@ -1698,18 +1698,18 @@ W symulacjach handlu na giełdzie z pomocą klasyfikatorów, widoczna jest zale�
 
 \begin{figure}[H]
 \centering \includegraphics[scale=0.9]{img/summary-discrete-gain-summary.pdf}
-\caption{Porównanie średniego zysku modeli z klasyfikacji wieloklasowej (opracowanie własne)}
+\caption{Porównanie średniego zysku modeli z klasyfikacji wieloklasowej (opracowanie własne).}
 \label{img:summary-discrete-gain}
 \end{figure}
 
 \bigskip
 
 
-Analizę symulacji można pogłębić o wgląd w decyzje algorytmu. Rysunek \ref{img:amgn_wallet_buy_sell} przedstawia decyzje dokonywane przez algorytm używający klasyfikatora binarnego w zestawieniu z rzeczywistą ceną zamknięcia z każdego dnia. Na czerwono oznaczone są okresy, gdy klasyfikator przewidywał spadek lub utrzymanie ceny, a w portfelu znajdowała się gotówka. Na zielono oznaczone zostały okresy, gdy klasyfikator przewidywał wzrost lub utrzymanie ceny, a w portfelu znajdowały się akcje spółki \textit{AMGN}. Łatwo dostrzec, że klasyfikator ma największą dokładność w momentach gwałtownych spadków lub wzrostów ceny. W przypadku delikatnych zmian, algorytm zazwyczaj nie zmienia strategii, co jest pożądanym zachowaniem, pozwalającym na uniknięcie częstych opłat transakcyjnych dla domu maklerskiego. Model nie jest jednak perfekcyjny i nie zawsze jest w stanie odpowiednio przewidzieć zmiany ceny. Widać to w szczególności w okresie końca maja 2019, gdy nastąpił znaczny spadek ceny, a model nie dał sygnału do sprzedaży akcji, co spowodowało utratę części kapitału.
+Analizę symulacji można pogłębić o wgląd w decyzje algorytmu. Rysunek \ref{img:amgn_wallet_buy_sell} przedstawia decyzje dokonywane przez algorytm używający klasyfikatora binarnego w zestawieniu z rzeczywistą ceną zamknięcia z każdego dnia. Na czerwono oznaczone są okresy, gdy klasyfikator przewidywał spadek lub utrzymanie ceny, a w portfelu znajdowała się gotówka. Na zielono oznaczone zostały okresy, gdy klasyfikator przewidywał wzrost lub utrzymanie ceny, a w portfelu znajdowały się akcje spółki \textit{AMGN}. Łatwo dostrzec, że klasyfikator ma największą dokładność w momentach gwałtownych spadków lub wzrostów ceny. W~przypadku delikatnych zmian, algorytm zazwyczaj nie zmienia strategii, co jest pożądanym zachowaniem, pozwalającym na uniknięcie częstych opłat transakcyjnych dla domu maklerskiego. Model nie jest jednak perfekcyjny i nie zawsze jest w stanie odpowiednio przewidzieć zmiany ceny. Widać to w szczególności w okresie końca maja 2019, gdy nastąpił znaczny spadek ceny, a model nie dał sygnału do sprzedaży akcji, co spowodowało utratę części kapitału.
 
 \begin{figure}[H]
 \centering \includegraphics[scale=1.1]{img/AMGN-buy_and_sell_plot.pdf}
-\caption{Wykres ceny akcji spółki \textit{AMGN} w zestawieniu z portfelem zarządzany przez algorytm używający wieloklasowego klasyfikatora MLP (opracowanie własne)}
+\caption{Wykres ceny akcji spółki \textit{AMGN} w zestawieniu z portfelem zarządzany przez algorytm używający wieloklasowego klasyfikatora MLP (opracowanie własne).}
 \label{img:amgn_wallet_buy_sell}
 \end{figure}
 
@@ -1717,7 +1717,7 @@ Na rysunku \ref{img:amgn_wallet_value} przedstawiona zostałą wartość portfel
 
 \begin{figure}[H]
 \centering \includegraphics[scale=0.9]{img/AMGN-balance-plot.pdf}
-\caption{Wykres wartości portfela algorytmu handlującego akcjami spółki \textit{AMGN} używającego wieloklasowego klasyfikatora MLP (opracowanie własne)}
+\caption{Wykres wartości portfela algorytmu handlującego akcjami spółki \textit{AMGN} używającego wieloklasowego klasyfikatora MLP (opracowanie własne).}
 \label{img:amgn_wallet_value}
 \end{figure}
 
@@ -1736,7 +1736,7 @@ Warto dogłębniej zastanowić się nad użytecznością klasyfikacji na 3 klasy
             Light GBM wieloklasowy & 128.14 & 23.3 \\ \hline
             \textbf{Średnia modeli wieloklasowych} & \textbf{133.1} & \textbf{31.2} \\ \hline
     \end{tabular}
-    \caption{Porównanie średniego zysku z aktywnością danego modelu na giełdzie}
+    \caption{Porównanie średniego zysku z aktywnością danego modelu na giełdzie.}
     \label{tab:simulation_avg_value_vs_transactions}
 \end{table} 
 
@@ -1744,15 +1744,15 @@ Warto dogłębniej zastanowić się nad użytecznością klasyfikacji na 3 klasy
  
 \begin{figure}[H]%
 \centering
-\subfigure[Stosunek końcowego kapitału do prowizji domu maklerskiego dla spółki \textit{AMZN}]{%
+\subfigure[Stosunek końcowego kapitału do prowizji domu maklerskiego dla spółki \textit{AMZN}.]{%
 \includegraphics[scale=0.7]{img/results-lgbm-market-simulation-binaryAMZN-summary.pdf}
 \label{img:profit_to_fee_amzn}}%
 \qquad
-\subfigure[Stosunek końcowego kapitału do prowizji domu maklerskiego dla spółki \textit{MSFT}]{%
+\subfigure[Stosunek końcowego kapitału do prowizji domu maklerskiego dla spółki \textit{MSFT}.]{%
 \includegraphics[scale=0.7]{img/results-lgbm-market-simulation-binaryMSFT-summary.pdf}
 \label{img:profit_to_fee_msft}}%
 
-\caption{Wykresy przedstawiające stosunek końcowego kapitału w zależności od wysokości prowizji domu maklerskiego. Obliczenia wykonane dla modelu \textit{Light GBM} zarówno w konfiguracji dla klasyfikacji binarnej jak i klasyfikacji wieloklasowej. (opracowanie własne)}
+\caption{Wykresy przedstawiające stosunek końcowego kapitału w zależności od wysokości prowizji domu maklerskiego. Obliczenia wykonane dla modelu \textit{Light GBM} zarówno w konfiguracji dla klasyfikacji binarnej jak i klasyfikacji wieloklasowej. (opracowanie własne).}
 \label{img:profit_to_fee}
 \end{figure} 
  
@@ -1939,6 +1939,14 @@ Guolin Ke, Qi Meng, Thomas Finley, Taifeng Wang,Wei Chen, Weidong Ma, Qiwei Ye, 
   \textit{LightGBM: A Highly Efficient Gradient Boosting Decision Tree}
 	MACHINE LEARNING  Volume: 45   Issue: 1   Pages: 5-32   Published: OCT 2001
 
+
+
+\bibitem{dectreescompare}
+	Decision trees comparison
+	\\\url{https://www.analyticsvidhya.com/blog/2017/06/which-algorithm-takes-the-crown-light-gbm-vs-xgboost} 
+	\\Data dostępu: 06.04.2019
+
+
 \bibitem{wikidecisiontree}
 	Decision tree learning
 	\\\url{https://www.wikiwand.com/en/Decision_tree_learning} 
@@ -1969,7 +1977,6 @@ Guolin Ke, Qi Meng, Thomas Finley, Taifeng Wang,Wei Chen, Weidong Ma, Qiwei Ye, 
 \listoftables
 
 \newpage
-%TODO jakiś ciekawszy fragment kodu dodać!
 
 \addcontentsline{toc}{section}{Dodatek: opis aplikacji}
 
@@ -1996,7 +2003,7 @@ Całość programu jest przygotowana w formie aplikacji konsolowych, które na w
 
 Głównym skryptem odpowiadającym za pobranie i przygotowanie danych, jest skrypt z pliku \textit{api\_to\_db\_importer.py}.~Pobranie odstawowych danych giełdowych oraz danych analizy technicznej z API \textit{Alpha Vantage} \cite{alphavantage} (listing \ref{code:ls1} linia 2 oraz 3) odbywa się za pomocą skryptu \textit{alpha.py}. Po otrzymaniu danych z API, dane są zapisywane do lokalnej instancji bazy danych MongoDB, służącej do przechowania pobranych informacji giełdowych. Dzięki bazie danych wielokrotne uruchomienia skryptu pobierającego, komunikują się z zewnętrznym API tylko raz, zapamiętując pobrane informacje. Operacje na bazie danych wydzielone zostały do pliku \textit{db\_access.py}. Po pobraniu wszystkich potrzebnych danych skrypt tworzy nowe kolumny z informacjami na podstawie istniejących wskaźników (np. kolumna różnicy między dwoma wskaźnikami) (listing \ref{code:ls1} linia 4). Ostatecznie przetworzone dane o spółkach są zapisywane do bazy danych oraz do plików \textit{csv} dla wygodniejszego dostępu i przenoszenia danych (listing \ref{code:ls1} linia 5). Zapis i odczyt z plików \textit{csv} odbywa się przez skrypt pomocniczy zawarty w pliku \textit{csv\_importer.py} (listing \ref{code:ls1} linia~6).
 
-\begin{lstlisting}[caption={Pobranie i wstępne przetworzenie danych (plik \textit{api\_to\_db\_importer.py})}, label={code:ls1},frame=single, captionpos=b, mathescape=true]
+\begin{lstlisting}[caption={Pobranie i wstępne przetworzenie danych (plik \textit{api\_to\_db\_importer.py}).}, label={code:ls1},frame=single, captionpos=b, mathescape=true]
  imp = Importer()
  imp.import_all(['AMZN', 'GOOGL'])
  imp.import_all_technical_indicators(['AMZN', 'GOOGL'])
@@ -2007,10 +2014,10 @@ Głównym skryptem odpowiadającym za pobranie i przygotowanie danych, jest skry
 
 \subsection*{Parametry modeli i uczenia}
 
-Ze względu na dużą wspólną część parametrów związanych z przeprowadzanymi eksperymentami niezależnie od wybranego modelu podzielone zostały one na klasy. Parametry wspólne zostały zebrane w klasie \textit{BenchmarkParams} - plik \textit{benchmark\_params.py}. W tym samym pliku zawarte są parametry dla poszczególnych modeli, w formie klas dziedziczących po klasie \textit{BenchmarkParams}. Są to kolejno klasy: \textit{NnBenchmarkParams}, \textit{SVMBenchmarkParams}, \textit{LightGBMBenchmarkParams} oraz \textit{RandomForestBenchmarkParams}. W każdej z tych podklas ustawione są domyślne wartości parametrów, które są optymalnymi dla danego modelu. Obowiązkowym parametrem w konstruktorze dla każdej z powyższych klas jest flaga \textit{binary\_classification}, oznaczająca czy dany test będzie oparty o klasyfikację binarną, czy też wieloklasową. Podstawowe parametry z klasy \textit{BenchmarkParams} zostały przedstawione w listingu \ref{code:params}.
+Ze względu na dużą wspólną część parametrów związanych z przeprowadzanymi eksperymentami niezależnie od wybranego modelu podzielone zostały one na klasy. Parametry wspólne zostały zebrane w klasie \textit{BenchmarkParams} - plik \textit{benchmark\_params.py}. W tym samym pliku zawarte są parametry dla poszczególnych modeli, w formie klas dziedziczących po klasie \textit{BenchmarkParams}. Są to kolejno klasy: \textit{NnBenchmarkParams}, \textit{SVMBenchmarkParams}, \textit{LightGBMBenchmarkParams} oraz \textit{RandomForestBenchmarkParams}. W każdej z tych podklas ustawione są domyślne wartości parametrów, które są optymalnymi dla danego modelu. Obowiązkowym parametrem w konstruktorze dla każdej z~powyższych klas jest flaga \textit{binary\_classification}, oznaczająca czy dany test będzie oparty o~klasyfikację binarną, czy też wieloklasową. Podstawowe parametry z klasy \textit{BenchmarkParams} zostały przedstawione w listingu \ref{code:params}.
 
 
-\begin{lstlisting}[caption={Parametry z klasy \textit{BenchmarkParams} (plik \textit{benchmark\_params.py})}, label={code:params},frame=single, captionpos=b, mathescape=true]
+\begin{lstlisting}[caption={Parametry z klasy \textit{BenchmarkParams} (plik \textit{benchmark\_params.py}).}, label={code:params},frame=single, captionpos=b, mathescape=true]
  self.benchmark_name = benchmark_name
  self.plot_partial = False
  self.csv_files_path = TARGET_PATH + '/data'
@@ -2051,7 +2058,7 @@ Przed uczeniem dowolnego modelu, należy najpierw odpowiednio przygotować dane.
 \item użycie metody \textit{PCA}.
 \end{itemize}
 
-\begin{lstlisting}[caption={Stworzenie zbiorów danych do testów metodą kroczącą (plik \textit{benchmark\_data\_preprocessing.py})}, label={code:walk_forward_data},frame=single, captionpos=b, mathescape=true]
+\begin{lstlisting}[caption={Stworzenie zbiorów danych do testów metodą kroczącą (plik \textit{benchmark\_data\_preprocessing.py}).}, label={code:walk_forward_data},frame=single, captionpos=b, mathescape=true]
  x_trains_list = []
  y_trains_list = []
  x_tests_list = []
@@ -2091,22 +2098,22 @@ Przed uczeniem dowolnego modelu, należy najpierw odpowiednio przygotować dane.
 
 Do testów klasyfikacji utworzona została bazowa klasa \textit{Benchmark} (plik \textit{benchmark.py}). Na wejściu przyjmuje ona listę symboli giełdowych spółek, dla których mają zostać wykonane testy oraz obiekt klasy \textit{BenchmarkParams} zawierający wszystkie parametry testu. Dla każdego z modeli klasyfikacyjnych powstała klasa implementująca odpowiednie metody dostosowujące klasę \textit{Benchmark} do potrzeb danego klasyfikatora: \textit{SVMBenchmark}, \textit{RandomForestBenchmark}, \textit{NnBenchmark} oraz \textit{LightGBMBenchmark}. Przykładowe wywołania testów z użyciem domyślnych parametrów dla problemu klasyfikacji binarnej zostały zawarte w listingach \ref{code:svm}, \ref{code:mlp}, \ref{code:rf} oraz \ref{code:lgbm}.
 
-\begin{lstlisting}[caption={Przykładowe wywołanie testu dla modelu \textit{SVM} (plik \textit{svm\_benchmark.py})}, label={code:svm},frame=single, captionpos=b, mathescape=true]
+\begin{lstlisting}[caption={Przykładowe wywołanie testu dla modelu \textit{SVM} (plik \textit{svm\_benchmark.py}).}, label={code:svm},frame=single, captionpos=b, mathescape=true]
  bench_params = SVMBenchmarkParams(True, benchmark_name='svm_bench')
  SVMBenchmark(['GOOGL'], bench_params)
 \end{lstlisting}
 
-\begin{lstlisting}[caption={Przykładowe wywołanie testu dla modelu sieci neuronowej (plik \textit{nn\_benchmark.py})}, label={code:mlp},frame=single, captionpos=b, mathescape=true]
+\begin{lstlisting}[caption={Przykładowe wywołanie testu dla modelu sieci neuronowej (plik \textit{nn\_benchmark.py}).}, label={code:mlp},frame=single, captionpos=b, mathescape=true]
  bench_params = NnBenchmarkParams(True, benchmark_name='nn_bench')
  NnBenchmark(['GOOGL'], bench_params)
 \end{lstlisting}
 
-\begin{lstlisting}[caption={Przykładowe wywołanie testu dla modelu lasu losowego (plik \textit{rf\_benchmark.py})}, label={code:rf},frame=single, captionpos=b, mathescape=true]
+\begin{lstlisting}[caption={Przykładowe wywołanie testu dla modelu lasu losowego (plik \textit{rf\_benchmark.py}).}, label={code:rf},frame=single, captionpos=b, mathescape=true]
  bench_params = RandomForestBenchmarkParams(True, benchmark_name='rf_bench')
  RandomForestBenchmark(['GOOGL'], bench_params)
 \end{lstlisting}
 
-\begin{lstlisting}[caption={Przykładowe wywołanie testu dla modelu \textit{Light GBM} (plik \textit{lgbm\_benchmark.py})}, label={code:lgbm},frame=single, captionpos=b, mathescape=true]
+\begin{lstlisting}[caption={Przykładowe wywołanie testu dla modelu \textit{Light GBM} (plik \textit{lgbm\_benchmark.py}).}, label={code:lgbm},frame=single, captionpos=b, mathescape=true]
  bench_params = LightGBMBenchmarkParams(True, benchmark_name='lgbm_bench')
  LightGBMBenchmark(['GOOGL'], bench_params)
 \end{lstlisting}
@@ -2115,7 +2122,7 @@ Do testów klasyfikacji utworzona została bazowa klasa \textit{Benchmark} (plik
 
 \subsection*{Symulacja giełdy}
 
-Kod symulacji giełdy został zaprojektowany w sposób analogiczny do kodu testów klasyfikacji. Bazowa klasa \textit{MarketSimulation} (plik \textit{market\_simulation.py}) zawierająca logikę symulacji giełdowej, została rozszerzona przez klasy dziedziczące o unikalne metody potrzebne do stworzenia każdego z klasyfikatorów ( \textit{SVMSimulation}, \textit{RandomForestSimulation}, \textit{NnMarketSimulation} oraz \textit{LightGBMSimulation}). Klasa \textit{MarketSimulation} oraz klasy pochodne w konstruktorze przyjmują listę symboli giełdowych konkretnych spółek i obiekt klasy \textit{BenchmarkParams} definiujący parametry modelu oraz uczenia. Dodatkowo, konstruktor klasy symulacji przyjmuje opcjonalne parametry daty początku oraz końca symulacji (format \textit{yyyy-mm-dd}), umożliwiając wykonanie symulacji na dowolnym zakresie czasowym. Symulacja giełdy odbywa się w pętli iterującej chronologicznie po kolejnych sesjach giełdowych, wykonując następne kroki:
+Kod symulacji giełdy został zaprojektowany w sposób analogiczny do kodu testów klasyfikacji. Bazowa klasa \textit{MarketSimulation} (plik \textit{market\_simulation.py}) zawierająca logikę symulacji giełdowej, została rozszerzona przez klasy dziedziczące o unikalne metody potrzebne do stworzenia każdego z klasyfikatorów ( \textit{SVMSimulation}, \textit{RandomForestSimulation}, \textit{NnMarketSimulation} oraz \textit{LightGBMSimulation}). Klasa \textit{MarketSimulation} oraz klasy pochodne w konstruktorze przyjmują listę symboli giełdowych konkretnych spółek i~obiekt klasy \textit{BenchmarkParams} definiujący parametry modelu oraz uczenia. Dodatkowo, konstruktor klasy symulacji przyjmuje opcjonalne parametry daty początku oraz końca symulacji (format \textit{yyyy-mm-dd}), umożliwiając wykonanie symulacji na dowolnym zakresie czasowym. Symulacja giełdy odbywa się w pętli iterującej chronologicznie po kolejnych sesjach giełdowych, wykonując następne kroki:
 \begin{itemize}
 \item stwórz lub zaktualizuj model na podstawie dostępnych do danego dnia sesji giełdowych,
 \item wykonaj predykcję trendu ceny zamknięcia następnej sesji giełdowej,
@@ -2169,22 +2176,22 @@ def manage_account(self, day, y_predicted_value, test_df):
 
 Przykładowe wywołania symulacji dla każdego z modelów zostały zaprezentowane w listingach \ref{code:svmsim}, \ref{code:mlpsim}, \ref{code:rfsim} oraz \ref{code:lgbmsim}.
 
-\begin{lstlisting}[caption={Przykładowe wywołanie symulacji giełdy dla modelu \textit{SVM} (plik \textit{market\_simulation.py})}, label={code:svmsim},frame=single, captionpos=b, mathescape=true]
+\begin{lstlisting}[caption={Przykładowe wywołanie symulacji giełdy dla modelu \textit{SVM} (plik \textit{market\_simulation.py}).}, label={code:svmsim},frame=single, captionpos=b, mathescape=true]
  bench_params = SVMBenchmarkParams(True, benchmark_name='svm_sim')
  SVMSimulation(['GOOGL'], bench_params)
 \end{lstlisting}
 
-\begin{lstlisting}[caption={Przykładowe wywołanie symulacji giełdy dla modelu sieci neuronowej (plik \textit{market\_simulation.py})}, label={code:mlpsim},frame=single, captionpos=b, mathescape=true]
+\begin{lstlisting}[caption={Przykładowe wywołanie symulacji giełdy dla modelu sieci neuronowej (plik \textit{market\_simulation.py}).}, label={code:mlpsim},frame=single, captionpos=b, mathescape=true]
  bench_params = NnBenchmarkParams(True, benchmark_name='nn_sim')
  NnMarketSimulation(['GOOGL'], bench_params)
 \end{lstlisting}
 
-\begin{lstlisting}[caption={Przykładowe wywołanie symulacji giełdy dla modelu lasu losowego (plik \textit{market\_simulation.py})}, label={code:rfsim},frame=single, captionpos=b, mathescape=true]
+\begin{lstlisting}[caption={Przykładowe wywołanie symulacji giełdy dla modelu lasu losowego (plik \textit{market\_simulation.py}).}, label={code:rfsim},frame=single, captionpos=b, mathescape=true]
  bench_params = RandomForestBenchmarkParams(True, benchmark_name='rf_sim')
  RandomForestSimulation(['GOOGL'], bench_params)
 \end{lstlisting}
 
-\begin{lstlisting}[caption={Przykładowe wywołanie symulacji giełdy dla modelu \textit{Light GBM} (plik \textit{market\_simulation.py})}, label={code:lgbmsim},frame=single, captionpos=b, mathescape=true]
+\begin{lstlisting}[caption={Przykładowe wywołanie symulacji giełdy dla modelu \textit{Light GBM} (plik \textit{market\_simulation.py}).}, label={code:lgbmsim},frame=single, captionpos=b, mathescape=true]
  bench_params = LightGBMBenchmarkParams(True, benchmark_name='lgbm_sim')
  LightGBMSimulation(['GOOGL'], bench_params)
 \end{lstlisting}
