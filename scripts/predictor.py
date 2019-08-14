@@ -14,27 +14,35 @@ import stock_constants
 from benchmark_params import BenchmarkParams, SVMBenchmarkParams, NnBenchmarkParams, LightGBMBenchmarkParams
 from data_import.api_to_db_importer import Importer
 
-SYMBOLS = stock_constants.BASE_COMPANIES #['AAL']
+SYMBOLS =['GOOGL']  # stock_constants.BASE_COMPANIES #
 TARGET_PATH = './../target'
 CSV_FILES_PATH = TARGET_PATH + '/data'
 
 
 def create_svm(x_train, y_train, bench_params):
-    svm = SVC(C=bench_params.c, kernel=bench_params.kernel, degree=bench_params.degree,
-              gamma=bench_params.gamma,
-              probability=True)
-    svm.fit(x_train, y_train)
-    acc = svm.score(x_train, y_train)
+    model = benchmark_nn_model.create_seq_model(bench_params)
+
+    earlyStopping = EarlyStopping(monitor=bench_params.metric
+                                  , min_delta=bench_params.early_stopping_min_delta
+                                  , patience=bench_params.early_stopping_patience
+                                  , verbose=1, mode='max'
+                                  , restore_best_weights=True)
+
+    model.fit(x_train, y_train, epochs=bench_params.epochs, batch_size=bench_params.batch_size,
+              callbacks=[earlyStopping], verbose=0)
+
+    acc = model.evaluate(x_train, y_train)[1]
+
     print("Finished training model for {0} train accuracy {1}".format(bench_params.curr_sym, acc))
-    return svm
+    return model
 
 if __name__ == '__main__':
     imp = Importer()
     imp.import_all(SYMBOLS, False)
     imp.import_all_technical_indicators(SYMBOLS)
-    imp.process_data(True)
+    imp.process_data(False)
     imp.export_to_csv_files('./../target/data')
-    bench_params = SVMBenchmarkParams(False)
+    bench_params = NnBenchmarkParams(False)
     bench_params.walk_forward_testing = False
     df_list, sym_list = csv_importer.import_data_from_files(SYMBOLS, CSV_FILES_PATH)
 
@@ -48,7 +56,7 @@ if __name__ == '__main__':
         print('{0} last index {1} close value {2}'.format(sym, last_idx, close_value))
         train_df = df[(df.index < last_idx)]
         test_processed_df = benchmark_data_preprocessing.manage_and_drop_helper_df_columns(df.copy(),
-                                                                                         bench_params.difference_non_stationary)
+                                                                                         bench_params.difference_non_stationary, False)
         test_df = test_processed_df[(test_processed_df.index >= last_idx)]
         x, y, x_train, _, y_train, _, std_scaler, pca_transformer = benchmark_data_preprocessing.preprocess(train_df, bench_params)
         bench_params.input_size = x_train.shape[1]
@@ -62,9 +70,11 @@ if __name__ == '__main__':
         if pca_transformer is not None:
             x_today = pca_transformer.transform(x_today)
 
-        svm = create_svm(x_train, y_train, bench_params)
+        model = create_svm(x_train, y_train, bench_params)
 
-        prediction = svm.predict(x_today)[0]
+        y_test_prediction = model.predict(x_today)
+        prediction = np.array(
+            [np.argmax(pred, axis=None, out=None) for pred in y_test_prediction]) [0]
         if prediction == 0:
             prediction_str = 'sell'
         elif prediction == 2:

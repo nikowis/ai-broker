@@ -99,7 +99,7 @@ def preprocess(df, benchmark_params: BenchmarkParams):
     return x, y, x_train, x_test, y_train, y_test, std_scaler, pca_transformer
 
 
-def manage_and_drop_helper_df_columns(df, difference_non_stationary=True):
+def manage_and_drop_helper_df_columns(df, difference_non_stationary=True, drop_first=True):
     if difference_non_stationary:
         df[const.ADJUSTED_CLOSE_COL] = df[const.ADJUSTED_CLOSE_COL].diff()
         df[const.OPEN_COL] = df[const.OPEN_COL].diff()
@@ -109,9 +109,12 @@ def manage_and_drop_helper_df_columns(df, difference_non_stationary=True):
         df[const.SMA_5_COL] = df[const.SMA_5_COL].diff()
         df[const.SMA_10_COL] = df[const.SMA_10_COL].diff()
         df[const.SMA_20_COL] = df[const.SMA_20_COL].diff()
-    df.dropna(inplace=True)
+    if drop_first:
+        df.dropna(inplace=True)
     df_without_helper_cols = df.drop(HELPER_COLS, axis=1)
     df_without_corelated_features = df_without_helper_cols.drop(CORRELATED_COLS, axis=1)
+    if not drop_first:
+        df_without_corelated_features.dropna(inplace=True)
     return df_without_corelated_features
 
 

@@ -28,8 +28,8 @@ CSV_DATE_COL = 'date'
 CSV_PRICE_COL = 'price'
 CSV_TRAIN_TIME_COL = 'train_time'
 
-TRANSACTION_PERCENT_FEE = 0.002
-AVERAGE_SPREAD = 0.000
+TRANSACTION_PERCENT_FEE = 0.003
+AVERAGE_SPREAD = 0.003
 
 
 class MarketSimulation:
@@ -174,42 +174,42 @@ class MarketSimulation:
         """Predict value for one day"""
         return None
 
-    def manage_account(self, day, y_predicted_value, test_df):
-        curr_date = test_df.index.values[day]
-        if day + 1 >= len(test_df):
-            return
-        next_day_values = test_df.iloc[day + 1]
-        next_day_open_price = next_day_values[stock_constants.OPEN_COL]
-        transaction_performed = False
-        if self.bench_params.binary_classification:
-            buy_signal = y_predicted_value == stock_constants.IDLE_VALUE
-            sell_signal = y_predicted_value == stock_constants.FALL_VALUE
-        else:
-            buy_signal = y_predicted_value == stock_constants.RISE_VALUE
-            sell_signal = y_predicted_value == stock_constants.FALL_VALUE
-        should_buy = self.current_stock_amount == 0 and buy_signal
-        should_sell = self.current_stock_amount > 0 and sell_signal
+def manage_account(self, day, y_predicted_value, test_df):
+    curr_date = test_df.index.values[day]
+    if day + 1 >= len(test_df):
+        return
+    next_day_values = test_df.iloc[day + 1]
+    next_day_open_price = next_day_values[stock_constants.OPEN_COL]
+    transaction_performed = False
+    if self.bench_params.binary_classification:
+        buy_signal = y_predicted_value == stock_constants.IDLE_VALUE
+        sell_signal = y_predicted_value == stock_constants.FALL_VALUE
+    else:
+        buy_signal = y_predicted_value == stock_constants.RISE_VALUE
+        sell_signal = y_predicted_value == stock_constants.FALL_VALUE
+    should_buy = self.current_stock_amount == 0 and buy_signal
+    should_sell = self.current_stock_amount > 0 and sell_signal
 
-        if day == 0:
-            price_plus_fee = next_day_open_price + next_day_open_price * (TRANSACTION_PERCENT_FEE + AVERAGE_SPREAD)
-            self.buy_and_hold_stock_amount = int(self.buy_and_hold_balance / (price_plus_fee))
-            self.buy_and_hold_balance = self.buy_and_hold_balance - self.buy_and_hold_stock_amount * price_plus_fee
+    if day == 0:
+        price_plus_fee = next_day_open_price + next_day_open_price * (TRANSACTION_PERCENT_FEE + AVERAGE_SPREAD)
+        self.buy_and_hold_stock_amount = int(self.buy_and_hold_balance / price_plus_fee)
+        self.buy_and_hold_balance = self.buy_and_hold_balance - self.buy_and_hold_stock_amount * price_plus_fee
 
-        if day == len(test_df) - 2:
-            transaction_performed = True
-            price_minus_fee = next_day_open_price - next_day_open_price * (TRANSACTION_PERCENT_FEE + AVERAGE_SPREAD)
-            self.buy_and_hold_balance = self.buy_and_hold_balance + self.buy_and_hold_stock_amount * price_minus_fee
-            self.buy_and_hold_stock_amount = 0
-            if self.current_stock_amount > 0:
-                self.sell(next_day_open_price)
-            if self.verbose:
-                print('Selling all stock at the end of learning')
-        elif should_buy:
-            transaction_performed = True
-            self.buy(next_day_open_price)
-        elif should_sell:
-            transaction_performed = True
+    if day == len(test_df) - 2:
+        transaction_performed = True
+        price_minus_fee = next_day_open_price - next_day_open_price * (TRANSACTION_PERCENT_FEE + AVERAGE_SPREAD)
+        self.buy_and_hold_balance = self.buy_and_hold_balance + self.buy_and_hold_stock_amount * price_minus_fee
+        self.buy_and_hold_stock_amount = 0
+        if self.current_stock_amount > 0:
             self.sell(next_day_open_price)
+        if self.verbose:
+            print('Selling all stock at the end of learning')
+    elif should_buy:
+        transaction_performed = True
+        self.buy(next_day_open_price)
+    elif should_sell:
+        transaction_performed = True
+        self.sell(next_day_open_price)
 
         if transaction_performed:
             if self.current_stock_amount > 0:

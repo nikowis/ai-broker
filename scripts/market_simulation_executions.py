@@ -13,11 +13,11 @@ if __name__ == '__main__':
     #     bench_params.walk_forward_test_window_size=2
     #     NnMarketSimulation([BASE_COMPANIES[i]], bench_params)
     #     print(datetime.datetime.now())
-    for i in range(3, 4):
-        bench_params = NnBenchmarkParams(False, benchmark_name='nn-market-simulation-discrete-walk-forward-2-it-' + str(i))
-        bench_params.walk_forward_test_window_size=2
-        NnMarketSimulation([BASE_COMPANIES[i]], bench_params)
-        print(datetime.datetime.now())
+    # for i in range(3, 4):
+    #     bench_params = NnBenchmarkParams(False, benchmark_name='nn-market-simulation-discrete-walk-forward-2-it-' + str(i))
+    #     bench_params.walk_forward_test_window_size=2
+    #     NnMarketSimulation([BASE_COMPANIES[i]], bench_params)
+    #     print(datetime.datetime.now())
 
     # bench_params = LightGBMBenchmarkParams(True, benchmark_name='lgbm-market-simulation-binary')
     # LightGBMSimulation(BASE_COMPANIES, bench_params)
@@ -40,3 +40,8 @@ if __name__ == '__main__':
 
     # bench_params = SVMBenchmarkParams(True, benchmark_name='svm-market-simulation-binary-tough-times')
     # SVMSimulation(BASE_COMPANIES, bench_params, date_simulation_start='2019-03-30', date_simulation_end='2019-06-01')
+
+    bench_params = LightGBMBenchmarkParams(True, benchmark_name='lgbm-market-simulation-binary-crisis')
+    LightGBMSimulation(BASE_COMPANIES, bench_params, date_simulation_start='2008-01-01', date_simulation_end='2009-01-01')
+    bench_params = LightGBMBenchmarkParams(False, benchmark_name='lgbm-market-simulation-discrete-crisis')
+    LightGBMSimulation(BASE_COMPANIES, bench_params, date_simulation_start='2008-01-01', date_simulation_end='2009-01-01')
