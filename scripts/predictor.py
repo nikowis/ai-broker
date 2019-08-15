@@ -14,7 +14,7 @@ import stock_constants
 from benchmark_params import BenchmarkParams, SVMBenchmarkParams, NnBenchmarkParams, LightGBMBenchmarkParams
 from data_import.api_to_db_importer import Importer
 
-SYMBOLS =['GOOGL']  # stock_constants.BASE_COMPANIES #
+SYMBOLS =['INTC']  # stock_constants.BASE_COMPANIES #
 TARGET_PATH = './../target'
 CSV_FILES_PATH = TARGET_PATH + '/data'
 
@@ -37,11 +37,13 @@ def create_svm(x_train, y_train, bench_params):
     return model
 
 if __name__ == '__main__':
+    reimport = False
     imp = Importer()
-    imp.import_all(SYMBOLS, False)
+    imp.import_all(SYMBOLS, reimport)
     imp.import_all_technical_indicators(SYMBOLS)
-    imp.process_data(False)
-    imp.export_to_csv_files('./../target/data')
+    imp.process_data(reimport)
+    if reimport:
+        imp.export_to_csv_files('./../target/data')
     bench_params = NnBenchmarkParams(False)
     bench_params.walk_forward_testing = False
     df_list, sym_list = csv_importer.import_data_from_files(SYMBOLS, CSV_FILES_PATH)
@@ -60,7 +62,7 @@ if __name__ == '__main__':
         test_df = test_processed_df[(test_processed_df.index >= last_idx)]
         x, y, x_train, _, y_train, _, std_scaler, pca_transformer = benchmark_data_preprocessing.preprocess(train_df, bench_params)
         bench_params.input_size = x_train.shape[1]
-        if test_df.isnull().any(axis=1).iloc[0]:
+        if len(test_df) == 0 or test_df.isnull().any(axis=1).iloc[0]:
             print("{0} CRITICAL ERR FOUND NULLS IN ROW".format(sym))
             continue
         x_today = np.array(test_df.iloc[0])

@@ -1,8 +1,5 @@
-import datetime
-
-from benchmark_params import SVMBenchmarkParams, NnBenchmarkParams, LightGBMBenchmarkParams, RandomForestBenchmarkParams
-from market_simulation import SVMSimulation, NnMarketSimulation, LightGBMSimulation, RandomForestSimulation
-from stock_constants import BASE_COMPANIES
+from benchmark_params import NnBenchmarkParams, LightGBMBenchmarkParams
+from market_simulation import NnMarketSimulation, LightGBMSimulation
 
 if __name__ == '__main__':
     # bench_params = NnBenchmarkParams(True, benchmark_name='nn-market-simulation-binary-walk-forward-5')
@@ -37,11 +34,28 @@ if __name__ == '__main__':
     # NnMarketSimulation(BASE_COMPANIES, bench_params, date_simulation_start='2019-03-30',
     #                    date_simulation_end='2019-06-01')
 
-
     # bench_params = SVMBenchmarkParams(True, benchmark_name='svm-market-simulation-binary-tough-times')
     # SVMSimulation(BASE_COMPANIES, bench_params, date_simulation_start='2019-03-30', date_simulation_end='2019-06-01')
 
-    bench_params = LightGBMBenchmarkParams(True, benchmark_name='lgbm-market-simulation-binary-crisis')
-    LightGBMSimulation(BASE_COMPANIES, bench_params, date_simulation_start='2008-01-01', date_simulation_end='2009-01-01')
-    bench_params = LightGBMBenchmarkParams(False, benchmark_name='lgbm-market-simulation-discrete-crisis')
-    LightGBMSimulation(BASE_COMPANIES, bench_params, date_simulation_start='2008-01-01', date_simulation_end='2009-01-01')
+    # bench_params = LightGBMBenchmarkParams(True, benchmark_name='lgbm-market-simulation-binary-crisis')
+    # LightGBMSimulation(['INTC'], bench_params, date_simulation_start='2008-01-01', date_simulation_end='2009-01-01')
+    # bench_params = LightGBMBenchmarkParams(False, benchmark_name='lgbm-market-simulation-discrete-crisis')
+    # LightGBMSimulation(['INTC'], bench_params, date_simulation_start='2008-01-01', date_simulation_end='2009-01-01')
+    # bench_params = LightGBMBenchmarkParams(True, benchmark_name='lgbm-market-simulation-binary-summer')
+    # LightGBMSimulation(['INTC'], bench_params, date_simulation_start='2019-06-01', date_simulation_end='2019-08-14')
+    # bench_params = LightGBMBenchmarkParams(False, benchmark_name='lgbm-market-simulation-discrete-summer')
+    # LightGBMSimulation(['INTC'], bench_params, date_simulation_start='2019-06-01', date_simulation_end='2019-08-14')
+
+    # bench_params = NnBenchmarkParams(True, benchmark_name='nn-market-simulation-binary-crisis')
+    # bench_params.walk_forward_test_window_size = 2
+    # NnMarketSimulation(['INTC'], bench_params, date_simulation_start='2008-01-01', date_simulation_end='2009-01-01')
+    bench_params = NnBenchmarkParams(False, benchmark_name='nn-market-simulation-discrete-crisis')
+    bench_params.walk_forward_test_window_size = 2
+    NnMarketSimulation(['INTC'], bench_params, date_simulation_start='2008-01-01', date_simulation_end='2009-01-01')
+
+    # bench_params = NnBenchmarkParams(True, benchmark_name='nn-market-simulation-binary-summer')
+    # bench_params.walk_forward_test_window_size = 2
+    # NnMarketSimulation(['INTC'], bench_params, date_simulation_start='2019-06-01', date_simulation_end='2019-08-14')
+    # bench_params = NnBenchmarkParams(False, benchmark_name='nn-market-simulation-discrete-summer')
+    # bench_params.walk_forward_test_window_size = 2
+    # NnMarketSimulation(['INTC'], bench_params, date_simulation_start='2019-06-01', date_simulation_end='2019-08-14')

@@ -760,7 +760,7 @@ Maszyny wektorów nośnych (ang. Support-Vector Machines)\cite{svm} są zbiorem 
 \label{img:wiki_svm}
 \end{figure}
 
-W celu użycia maszyn wektorów nośnych do klasyfikacji problemów nieliniowych stosuje się przekształcanie przestrzeni zadania za pomocą funkcji jądrowych. Wprowadzają one dodatkowe wymiary do zadania, w których znalezienie hiperpłaszczyzny rozdzielającej klasy może okazać się prostsze (rysunek \ref{img:wiki_svm2}). Do najpopularniejszych funkcji jądrowych zalicza się funkcje: liniową (zachowującą wymiar zadania w niezmienionym stanie), wielomianową, radialną oraz też sigmoidalną.
+W celu użycia maszyn wektorów nośnych do klasyfikacji problemów nieliniowych stosuje się przekształcanie przestrzeni zadania za pomocą funkcji jądra. Wprowadzają one dodatkowe wymiary do zadania, w których znalezienie hiperpłaszczyzny rozdzielającej klasy może okazać się prostsze (rysunek \ref{img:wiki_svm2}). Do najpopularniejszych funkcji jądrowych zalicza się funkcje: liniową (zachowującą wymiar zadania w niezmienionym stanie), wielomianową, radialną oraz też sigmoidalną.
 
 
 \begin{figure}[H]
@@ -776,7 +776,7 @@ Sieci neuronowe \cite{neural-nets} są zbiorem modeli matematycznych służącyc
 
 \bigskip
 
-Podstawowym elementem sieci neuronowej jest neuron, który na wejściu przyjmuje dane wejściowe, przetwarza i zwraca pojedynczy sygnał wyjściowy. Przetwarzanie sygnału przez neuron z polega zazwyczaj na zsumowaniu sygnałów dochodzących do niego, a~następnie obliczenie wartości funkcji aktywacji. Uzyskana wartość z funkcji aktywacji jest przekazywana jako wyjście z neuronu (rysunek \ref{img:neural-net}). Funkcje aktywacji mogą wprowadzić element nieliniowy do modelu dzięki czemu sieci neuronowe mogą posłużyć do klasyfikacji zbiorów, które nie są separowalne liniowo. Dodatkowo połączenia między neuronami posiadają przypisaną wagę mającą bezpośredni wpływ na wartość sygnału przechodzącego między nimi.
+Podstawowym elementem sieci neuronowej jest neuron, który na wejściu przyjmuje dane wejściowe, przetwarza i zwraca pojedynczy sygnał wyjściowy. Przetwarzanie sygnału przez neuron polega zazwyczaj na zsumowaniu sygnałów dochodzących do niego, a~następnie obliczenie wartości funkcji aktywacji. Uzyskana wartość z funkcji aktywacji jest przekazywana jako wyjście z neuronu (rysunek \ref{img:neural-net}). Funkcje aktywacji mogą wprowadzić element nieliniowy do modelu dzięki czemu sieci neuronowe mogą posłużyć do klasyfikacji zbiorów, które nie są separowalne liniowo. Dodatkowo połączenia między neuronami posiadają przypisaną wagę mającą bezpośredni wpływ na wartość sygnału przechodzącego między nimi.
 
 \bigskip
 
@@ -874,7 +874,7 @@ Wszystkie eksperymenty dla każdego zestawu parametrów zostały przeprowadzone 
 
 \bigskip
 
-Parametrem rozpatrywanym z osobna przy każdym z modeli jest użycie metody \textit{PCA} do wstępnego przetworzenia danych. W tabeli \ref{tab:pca_component_number} przedstawiona została liczba zmiennych w~zależności od wybranej wariancji przy reudukowaniu rozmiaru wektora wejściowego. Jak widać, zmniejszenie wariancji o jedną tysięczną pozwala na ograniczenie rozmiaru wejściowych problemów o $\frac{1}{4}$, a zmniejszenie o jedną setną redukuje rozmiar aż o połowę. Nie można jednak z góry, bez przeprowadzenia testów, przesądzić jak ograniczanie rozmiaru zadania wpłynie na końcowe wyniki. 
+Parametrem rozpatrywanym z osobna przy każdym z modeli jest użycie metody \textit{PCA} do wstępnego przetworzenia danych. W tabeli \ref{tab:pca_component_number} przedstawiona została liczba zmiennych w~zależności od wybranej wariancji przy redukowaniu rozmiaru wektora wejściowego. Jak widać, zmniejszenie wariancji o jedną tysięczną pozwala na ograniczenie rozmiaru wejściowych problemów o $\frac{1}{4}$, a zmniejszenie o jedną setną redukuje rozmiar aż o połowę. Nie można jednak z góry, bez przeprowadzenia testów, przesądzić jak ograniczanie rozmiaru zadania wpłynie na końcowe wyniki. 
 
 
 \begin{table}[H]
@@ -902,7 +902,7 @@ Kolejnym parametrem rozpatrywanym przy każdym modelu jest \textbf{rozmiar zbior
 
 \subsection{SVM}
 
-Początkowo do testów SVM wykorzystane zostały domyślne parametry z biblioteki \textit{sklearn} \cite{bib:sklearnsvm}. Analizę optymalizacji maszyn wektorów nośnych należy zacząć od wyboru odpowiedniej funkcji jądra. Tabele \ref{tab:svm_kernel_binary} oraz \ref{tab:svm_kernel_discrete} przedstawiają wyniki klasyfikacji w zależności od wybranej funkcji jądra. W obu przypadkach klasyfikacji maszyny wektorów nośnych dają wyniki zbliżone do klasyfikacji metodą losową. W klasyfikacji binarnej najlepszy wynik uzyskała funkcja wielomianowa (ang. \textit{poly}). Warto jednak zauważyć, iż dla tej funkcji metryka AUC jest bliska 0.5, podczas gdy SVM z funkcją rbf uzyskał AUC na poziomie 0.514.
+Początkowo do testów SVM wykorzystane zostały domyślne parametry z biblioteki \textit{scikit-learn} \cite{bib:sklearnsvm}. Analizę optymalizacji maszyn wektorów nośnych należy zacząć od wyboru odpowiedniej funkcji jądra. Tabele \ref{tab:svm_kernel_binary} oraz \ref{tab:svm_kernel_discrete} przedstawiają wyniki klasyfikacji na 2 i~3 klasy w zależności od wybranej funkcji jądra. W obu przypadkach klasyfikacji maszyny wektorów nośnych dają wyniki zbliżone do klasyfikacji metodą losową. W klasyfikacji binarnej najlepszy wynik uzyskała funkcja wielomianowa (ang. \textit{poly}). Warto jednak zauważyć, iż dla tej funkcji metryka AUC jest równa $\sim 0.5014$, podczas gdy SVM z funkcją rbf uzyskał AUC na poziomie $\sim 0.5044$.
 
 \begin{table}[H]
     \centering
@@ -952,7 +952,8 @@ sigmoid &  0.363392 &  0.518139 &    4.008035 \\ \hline
 \end{table}
 
 
-Kolejnym testem było porównanie wyników klasyfikacji w zależności od użycia metody PCA. W tabelach \ref{tab:svm_pca_binary} oraz \ref{tab:svm_pca_discrete} przedstawione zostały wyniki klasyfikacji w zależności od zachowanej wariancji danych przy użyciu metody PCA. Do klasyfikacji binarnej wybrana została wariancja $0.999$, zaś do klasyfikacji 3 klasy nie została użyta metoda PCA. W obu przypadkach różnice wynikające z użycia tej metody są marginalne.
+Kolejnym testem było porównanie wyników klasyfikacji w zależności od użycia metody PCA. W tabelach \ref{tab:svm_pca_binary} oraz \ref{tab:svm_pca_discrete} przedstawione zostały wyniki klasyfikacji w zależności od zachowanej wariancji danych przy użyciu metody PCA. Dla klasyfikacji wieloklasowej widoczny jest proporcjonalny spadek miary AUC przy zmniejszaniu użytej wariancji w~metodzie PCA. Wynika prawdopodobnie to ze zmniejszania liczby danych wejściowych, co zmniejsza ilość informacji przekazywanych do modelu.
+
 
 \begin{table}[H]
     \centering
@@ -974,7 +975,7 @@ Brak                &  0.518170 &  0.501021 &    3.428985 \\ \hline
     \label{tab:svm_pca_binary}
 \end{table}
 
-Dla klasyfikacji wieloklasowej widoczny jest proporcjonalny spadek miary AUC przy zmniejszaniu użytej wariancji w metodzie PCA. Wynika to ze zmniejszania liczby danych wejściowych, co zmniejsza ilość informacji przekazywanych do modelu.
+Do klasyfikacji binarnej wybrana została wariancja $0.999$, zaś do klasyfikacji na 3~klasy nie została użyta metoda PCA. W obu przypadkach różnice wynikające z użycia tej metody są marginalne.
 
 \begin{table}[H]
     \centering
@@ -1194,7 +1195,7 @@ max                           &  0.545666 &  0.532053 &   35.540564 \\  \hline
     \label{tab:nn_walk_forward_test_binary}
 \end{table}
 
-W tabeli \ref{tab:nn_walk_forward_test_discrete} przestawione zostały wyniki dla klasyfikacji na 3 klasy. Tutaj, analogicznie do prostszego zagadnienia klasyfikacji, widać znaczną poprawę wyników przy przeuczaniu modelu raz na miesiąc lub częściej. Wynik dokładności wzrósł aż o $\sim 18\%$ dla zbioru testowego o 11 próbkach. Jak widać, dane wejściowe z kolejnych dni muszą być w pewnym stopniu unikalne, jeżeli regularne dodawanie ich do zbioru treningowego tak istotnie poprawia wydajność modelu.
+W tabeli \ref{tab:nn_walk_forward_test_discrete} przestawione zostały wyniki dla klasyfikacji na 3 klasy. Tutaj, analogicznie do prostszego zagadnienia klasyfikacji, widać znaczną poprawę wyników przy uczeniu modelu raz na miesiąc lub częściej. Wynik dokładności wzrósł aż o $\sim 18\%$ dla zbioru testowego o 11 próbkach. Jak widać, dane wejściowe z kolejnych dni muszą być w pewnym stopniu unikalne, jeżeli regularne dodawanie ich do zbioru treningowego tak istotnie poprawia wydajność modelu.
 
 \begin{table}[H]
     \centering
@@ -1452,7 +1453,7 @@ goss     &  \textbf{0.386083} &  \textbf{0.545501} &    0.642004 \\ \hline
     \label{tab:lgbm_boosting_discrete}
 \end{table}
 
-Następnym optymalizowanym parametrem była maksymalna liczba w każdym z drzew wygenerowanych przez algorytm. Domyślną wartością jest liczba 31 liści na każde drzewo. Wyniki tego eksperymentu zostały przedstawione w tabelach \ref{tab:lgbm_num_leaves_binary} oraz \ref{tab:lgbm_num_leaves_discrete}. Dla klasyfikacji binarnej należało zwiększyć liczbę liści do 100, zaś dla klasyfikacji na 3 klasy domyślną wartość trzeba było zmniejszyć do 20 liści na drzewo. 
+Następnym optymalizowanym parametrem była maksymalna liczba liści w każdym z drzew wygenerowanych przez algorytm. Domyślną wartością jest liczba 31 liści na każde drzewo. Wyniki tego eksperymentu zostały przedstawione w tabelach \ref{tab:lgbm_num_leaves_binary} oraz \ref{tab:lgbm_num_leaves_discrete}. Dla klasyfikacji binarnej należało zwiększyć liczbę liści do 100, zaś dla klasyfikacji na 3 klasy domyślną wartość trzeba było zmniejszyć do 20 liści na drzewo. 
 
 \begin{table}[H]
     \centering
@@ -1495,7 +1496,7 @@ Następnym optymalizowanym parametrem była maksymalna liczba w każdym z drzew 
     \label{tab:lgbm_num_leaves_discrete}
 \end{table}
 
-Ostatnim badanym parametrem jest rozmiar zbioru testowego wykorzystanego podczas uczenia metodą kroczącą. Wyniki badania zostały przedstawione w tabelach \ref{tab:lgbm_walk_forward_binary} oraz \ref{tab:lgbm_walk_forward_discrete}. Dla modelu \textit{Light GBM} widać znaczną poprawę w klasyfikacji przy używaniu zbioru testowego o jak najmniejszej liczbie próbek. W przypadku tworzenia na nowo modelu po każdej sesji giełdowej, dla klasyfikacji binarnej ten model osiąga dokładność na poziomie $\sim 82.5\%$, zaś dla klasyfikacji na 3 klasy dokładność była na poziomie $\sim 63.3\%$. Dalsze zmniejszanie zbioru testowego pogarszało wyniki wbrew oczekiwaniom.
+Ostatnim badanym parametrem jest rozmiar zbioru testowego wykorzystanego podczas uczenia metodą kroczącą. Wyniki badania zostały przedstawione w tabelach \ref{tab:lgbm_walk_forward_binary} oraz \ref{tab:lgbm_walk_forward_discrete}. Dla modelu \textit{Light GBM} widać znaczną poprawę w klasyfikacji przy używaniu zbioru testowego o jak najmniejszej liczbie próbek. W przypadku tworzenia na nowo modelu po każdej sesji giełdowej, dla klasyfikacji binarnej, ten model osiąga dokładność na poziomie $\sim 82.5\%$, zaś dla klasyfikacji na 3 klasy dokładność była na poziomie $\sim 63.3\%$. Dalsze zmniejszanie zbioru testowego pogarszało wyniki wbrew oczekiwaniom.
 
 \begin{table}[H]
     \centering
@@ -1645,7 +1646,7 @@ Mając do wykorzystania klasyfikatory o wybranych parametrach, można przystąpi
 
 \bigskip
 
-Algorytm dokonujący transakcji opiera się na analizie kolejnych sesji giełdowych ze zbioru testowego. Jeżeli klasyfikator przewiduje wzrost ceny, algorytm kupuje maksymalną możliwą liczbę akcji (musi to być liczba naturalna, więc budżet nie zawsze jest całkowicie wykorzystany). Jeżeli algorytm jest w posiadaniu papierów wartościowych, a~klasyfikator daje sygnał utrzymania ceny lub wzrostu, algorytm pozostaje bezczynny. Jeżeli algorytm jest w posiadaniu papierów wartościowych, a klasyfikator daje sygnał spadku ceny, algorytm wyprzedaje wszystkie posiadane akcje. Ostatnim krokiem algorytmu jest monetyzacja wszelkich zakupionych akcji w ostatniej sesji ze zbioru testowego, w celu oszacowania zysków.
+Algorytm dokonujący transakcji opiera się na analizie kolejnych sesji giełdowych ze zbioru testowego. Jeżeli klasyfikator przewiduje wzrost ceny, algorytm kupuje maksymalną możliwą liczbę akcji (musi to być liczba naturalna, więc budżet nie zawsze jest całkowicie wykorzystany). Jeżeli algorytm jest w posiadaniu papierów wartościowych, a~klasyfikator daje sygnał utrzymania ceny lub wzrostu, algorytm pozostaje bezczynny. Jeżeli algorytm jest w posiadaniu papierów wartościowych, a klasyfikator daje sygnał spadku ceny, algorytm wyprzedaje wszystkie posiadane akcje. Ostatnim krokiem algorytmu jest spieniężenie wszelkich zakupionych akcji w ostatniej sesji ze zbioru testowego, w celu oszacowania zysków.
 
 \bigskip
 
@@ -1783,7 +1784,7 @@ Warto dogłębniej zastanowić się nad użytecznością klasyfikacji na 3 klasy
  
 \section{Podsumowanie}
 
-W pracy przedstawione zostały różnorodne dane mogące posłużyć do analiz cen giełdowych oraz różne podejścia do problemu przewidywania zmian cen akcji na giełdzie. Wykonane eksperymenty klasyfikacji demonstrują możliwości predykcji zmian cen na giełdzie, jedynie z wykorzystaniem podstawowych danych giełdowych oraz wskaźników analizy technicznej. Oba przedstawione problemy klasyfikacji uzyskały nad wyraz satysfakcjonujące wyniki przy użyciu różnorodnych metod uczenia maszynowego. Najlepsze wyniki uzyskał model sieci neuronowej oraz model \textit{Light GBM}. Dla zagadnienia klasyfikacji binarnej najlepszy wynik dokładności wyniósł $\sim 81\%$, zaś dla klasyfikacji wieloklasowej $\sim 59\%$. Nie wszystkie klasyfikatory jednak potrafią dobrze przewidywać ruchy giełdowe. Maszyna wektorów nośnych oraz model lasu losowego nie były w stanie poradzić sobie z zadanym problemem. Te dwa modele dla większości spółek były w stanie jedynie przewidzieć do kilku \% więcej od liczność najliczniejszej klasy ze zbioru danych.
+W pracy przedstawione zostały różnorodne dane mogące posłużyć do analiz cen giełdowych oraz różne podejścia do problemu przewidywania zmian cen akcji na giełdzie. Wykonane eksperymenty klasyfikacji demonstrują możliwości predykcji zmian cen na giełdzie, jedynie z wykorzystaniem podstawowych danych giełdowych oraz wskaźników analizy technicznej. Oba przedstawione problemy klasyfikacji uzyskały nad wyraz satysfakcjonujące wyniki przy użyciu różnorodnych metod uczenia maszynowego. Najlepsze wyniki uzyskał model sieci neuronowej oraz model \textit{Light GBM}. Dla zagadnienia klasyfikacji binarnej najlepszy wynik dokładności wyniósł $\sim 81\%$, zaś dla klasyfikacji wieloklasowej $\sim 59\%$. Nie wszystkie klasyfikatory jednak potrafią dobrze przewidywać ruchy giełdowe. Maszyna wektorów nośnych oraz model lasu losowego nie były w stanie poradzić sobie z zadanym problemem. Te dwa modele dla większości spółek były w stanie jedynie przewidzieć do kilku procent więcej od liczności najliczniejszej klasy ze zbioru danych.
 
 \bigskip
 
@@ -1791,7 +1792,7 @@ Symulacje z użyciem algorytmu opartego o nauczone klasyfikatory dały doskonał
 
 \bigskip
 
- Uzyskane rezultaty dają podstawę do rozważenia użycia wybranych modeli w handlu na prawdziwym rynku papierów wartościowych. Wyniki symulacji użycia klasyfikatorów w handlu, pomimo bardzo obiecujących wyników, oparte zostały o uproszczony model giełdy. Przy prawdziwych transakcjach trzeba brać pod uwagę \textit{spread} ceny, czyli różnicę między ceną kupna, a ceną sprzedaży danej akcji. Handlując dużą liczbą akcji, istotną rolę odgrywa podaż i popyt. Fakt, iż algorytm w danym momencie sugeruje sprzedaż jakiejś liczby akcji po danej cenie, nie oznacza, że znajdzie się na nie kupiec. Co za tym idzie, cena sprzedaży może zostać obniżona przez konkurencyjną ofertę. Należy więc mieć na uwadze, do jakiego stopnia opłaca się obniżać cenę przy zamiarze sprzedaży akcji oraz analogicznie wyznaczyć maksymalną cenę za jaką algorytm powinien kupić akcje. Ponadto, w Polsce, przy zyskach z gry na giełdzie trzeba pamiętać o podatku od dochodów kapitałowych (potocznie nazywany podatkiem Belki). Ze względu na symplifikację, w kodzie źródłowym, wszystkie operacje zostały oparte o typy zmiennoprzecinkowe, co oznacza utratę precyzji przy wykorzystywaniu ułamków, z tego powodu wszelkie wyniki w tej pracy należy traktować, jako zaokrąglenia. Ta aproksymacja nie ma żadnych implikacji, jeśli chodzi o meritum prezentowane w tej pracy, jednak z perspektywy automatycznych systemów do gry na giełdzie, takie uproszczenie jest nieakceptowalne. Powyższe argumenty mają na celu podkreślenie, iż wykorzystanie modeli z tej pracy na prawdziwej giełdzie, należy traktować zgodnie z regułą ograniczonego zaufania, analizując decyzje podejmowane przez algorytm.
+ Uzyskane rezultaty dają podstawę do rozważenia użycia wybranych modeli w handlu na prawdziwym rynku papierów wartościowych. Wyniki symulacji użycia klasyfikatorów w handlu, pomimo bardzo obiecujących wyników, oparte zostały o uproszczony model giełdy. Przy prawdziwych transakcjach trzeba brać pod uwagę \textit{spread} ceny, czyli różnicę między ceną kupna, a ceną sprzedaży danej akcji. Handlując dużą liczbą akcji, istotną rolę odgrywa podaż i popyt. Fakt, iż algorytm w danym momencie sugeruje sprzedaż jakiejś liczby akcji po danej cenie, nie oznacza, że znajdzie się na nie kupiec. Co za tym idzie, cena sprzedaży może zostać obniżona przez konkurencyjną ofertę. Należy więc mieć na uwadze, do jakiego stopnia opłaca się obniżać cenę przy zamiarze sprzedaży akcji oraz analogicznie wyznaczyć maksymalną cenę za jaką algorytm powinien kupić akcje. Ponadto, w Polsce, przy zyskach z gry na giełdzie trzeba pamiętać o podatku od dochodów kapitałowych (potocznie nazywany podatkiem Belki). Dla uproszczenia, w kodzie źródłowym, wszystkie operacje zostały oparte o typy zmiennoprzecinkowe, co oznacza utratę precyzji przy wykorzystywaniu ułamków, z tego powodu wszelkie wyniki w~tej pracy należy traktować, jako zaokrąglenia. Takie uproszenie nie ma żadnego wpływu na meritum prezentowane w tej pracy, jednak z perspektywy automatycznych systemów do gry na giełdzie, jest nieakceptowalne. Powyższe argumenty mają na celu podkreślenie, iż wykorzystanie modeli z tej pracy na prawdziwej giełdzie, należy traktować zgodnie z~regułą ograniczonego zaufania, analizując decyzje podejmowane przez algorytm.
 
 \bigskip
 
@@ -1976,7 +1977,7 @@ Guolin Ke, Qi Meng, Thomas Finley, Taifeng Wang,Wei Chen, Weidong Ma, Qiwei Ye, 
 	\\Data dostępu: 06.04.2019
 
 \bibitem{bib:sklearnsvm}
-	Biblioteka Sklearn implementacja SVM
+	Biblioteka scikit-learn implementacja SVM
 	\\\url{https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html#sklearn.svm.SVC}
 	\\Data dostępu: 23.06.2019
 
@@ -2037,7 +2038,7 @@ Głównym skryptem odpowiadającym za pobranie i przygotowanie danych, jest skry
 
 \subsection*{Parametry modeli i uczenia}
 
-Ze względu na dużą wspólną część parametrów związanych z przeprowadzanymi eksperymentami niezależnie od wybranego modelu podzielone zostały one na klasy. Parametry wspólne zostały zebrane w klasie \textit{BenchmarkParams} - plik \textit{benchmark\_params.py}. W tym samym pliku zawarte są parametry dla poszczególnych modeli, w formie klas dziedziczących po klasie \textit{BenchmarkParams}. Są to kolejno klasy: \textit{NnBenchmarkParams}, \textit{SVMBenchmarkParams}, \textit{LightGBMBenchmarkParams} oraz \textit{RandomForestBenchmarkParams}. W każdej z tych podklas ustawione są domyślne wartości parametrów, które są optymalnymi dla danego modelu. Obowiązkowym parametrem w konstruktorze dla każdej z~powyższych klas jest flaga \textit{binary\_classification}, oznaczająca czy dany test będzie oparty o~klasyfikację binarną, czy też wieloklasową. Podstawowe parametry z klasy \textit{BenchmarkParams} zostały przedstawione w listingu \ref{code:params}.
+Ze względu na dużą wspólną część parametrów związanych z przeprowadzanymi eksperymentami niezależnie od wybranego modelu podzielone zostały one na klasy. Parametry wspólne zostały zebrane w klasie \textit{BenchmarkParams} - plik \textit{benchmark\_params.py}. W~tym samym pliku zawarte są parametry dla poszczególnych modeli, w formie klas dziedziczących po klasie \textit{BenchmarkParams}. Są to kolejno klasy: \textit{NnBenchmarkParams}, \textit{SVMBenchmarkParams}, \textit{LightGBMBenchmarkParams} oraz \textit{RandomForestBenchmarkParams}. W każdej z tych podklas ustawione są domyślne wartości parametrów, które są optymalnymi dla danego modelu. Obowiązkowym parametrem w konstruktorze dla każdej z~powyższych klas jest flaga \textit{binary\_classification}, oznaczająca czy dany test będzie oparty o~klasyfikację binarną, czy też wieloklasową. Podstawowe parametry z klasy \textit{BenchmarkParams} zostały przedstawione w listingu \ref{code:params}.
 
 
 \begin{lstlisting}[caption={Parametry z klasy \textit{BenchmarkParams} (plik \textit{benchmark\_params.py}).}, label={code:params},frame=single, captionpos=b, mathescape=true]
@@ -2156,7 +2157,7 @@ Kod symulacji giełdy został zaprojektowany w sposób analogiczny do kodu test�
 
  W listingu \ref{code:simulation_manage_account} została przedstawiona metoda \textit{manage\_account} odpowiedzialna za zarządzanie portfelem inwestycyjnym na podstawie dostępnej predykcji.
 
-\begin{lstlisting}[caption={Funkcja \textit{manage\_account()} zarządzająca portfelem w symulacji giełdowej (plik \textit{market\_simulation.py})}, label={code:simulation_manage_account},frame=single, captionpos=b, mathescape=true]
+\begin{lstlisting}[caption={Funkcja \textit{manage\_account()} zarządzająca portfelem w symulacji giełdowej (plik \textit{market\_simulation.py}).}, label={code:simulation_manage_account},frame=single, captionpos=b, mathescape=true]
 def manage_account(self, day, y_predicted_value, test_df):
     transaction_performed = False	
     ...
