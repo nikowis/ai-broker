@@ -166,11 +166,11 @@ podpis promotora & \hspace*{100pt} & podpis autora
 
 \begin{abstract}
 
-Giełda jest miejscem przyciągającym rzesze inwestorów pragnących pomnożyć swój kapitał. Właściwy handel instrumentami finansowymi na giełdzie pozwala na osiąganie dochodów przekraczających zyski z~alternatywnych inwestycji takich jak na przykład nieruchomości. Skuteczna inwestycja na giełdzie zazwyczaj opiera się o wybór odpowiednich spółek. Przy aktywnym zarządzaniu portfelem akcji podejmowane decyzje o sprzedaży i kupnie są ważniejsze od doboru spółek. Wiąże się to oczywiście z dużym ryzykiem i wymaga wiedzy z~dziedziny ekonomii. Co jeżeli udałoby się opracować model decyzyjny, umożliwiający grę na giełdzie  bez wiedzy eksperckiej? 
+Giełda jest miejscem przyciągającym rzesze inwestorów pragnących pomnożyć swój kapitał. Właściwy handel instrumentami finansowymi na giełdzie pozwala na osiąganie dochodów przekraczających zyski z~alternatywnych inwestycji takich jak na przykład nieruchomości. Skuteczna inwestycja na giełdzie zazwyczaj opiera się o wybór odpowiednich spółek. Jednak przy aktywnym zarządzaniu portfelem akcji podejmowane decyzje o sprzedaży i kupnie są ważniejsze od doboru spółek. Wiąże się to oczywiście z dużym ryzykiem i wymaga wiedzy z~dziedziny ekonomii. Co jeżeli udałoby się opracować model decyzyjny, umożliwiający grę na giełdzie  bez wiedzy eksperckiej? 
 
 \bigskip
 
-Celem niniejszej pracy było stworzenie algorytmu decyzyjnego, który umożliwi skuteczne zarządzanie portfelem inwestycyjnym dowolnej osobie. W pracy opisano charakterystykę giełdy, dostępne dane giełdowe oraz różne podejścia do tematu przewidywania cen na giełdzie. Podjęto ponadto próbę stworzenia algorytmów do prognozowania za pomocą modeli z~dziedziny uczenia maszynowego. W pracy zostały wykorzystane takie modele, jak: sztuczne sieci neuronowe, maszyny wektorów nośnych, lasy losowe, czy też metoda \textit{Light GBM}. Do oceny i~porównywania jakości modeli użyto miary dokładności oraz miary \textit{AUC}. Następnie, w celu dalszej oceny skuteczności, wykonano symulacja zautomatyzowanego handlu na giełdzie za pomocą prostego algorytmu decyzyjnego wykorzystującego stworzone modele. 
+Celem niniejszej pracy było stworzenie algorytmu decyzyjnego, który umożliwi skuteczne zarządzanie portfelem inwestycyjnym dowolnej osobie. W pracy opisano charakterystykę giełdy, dostępne dane giełdowe oraz różne podejścia do tematu przewidywania cen na giełdzie. Podjęto ponadto próbę stworzenia algorytmów do prognozowania za pomocą modeli z~dziedziny uczenia maszynowego. W pracy zostały wykorzystane takie modele, jak: sztuczne sieci neuronowe, maszyny wektorów nośnych, lasy losowe, czy też metoda \textit{Light GBM}. Do oceny i~porównywania jakości modeli użyto miary dokładności oraz miary \textit{AUC}. Następnie, w celu dalszej oceny skuteczności, wykonano symulację zautomatyzowanego handlu na giełdzie za pomocą prostego algorytmu decyzyjnego wykorzystującego stworzone modele. 
 
 
 \bigskip
@@ -241,7 +241,7 @@ Zgodnie ze swoją definicją, giełda jest miejscem wymiany towarów przez sprze
 
 \bigskip
 
- Jednym z wymienianych na giełdzie towarów są akcje różnorodnych spółek. Każda spółka, która uczestniczy w obrocie na rynku regulowanym, jakim jest giełda, ma przypisany do siebie symbol giełdowy (\textit{ticker}). Symbol giełdowy jest skrótowym kodem do identyfikowania spółek na określonej giełdzie (przykładowe symbole: \textit{GOOGL}, \textit{MSFT}, \textit{AMZN}). Podczas każdej sesji dokonywane są transakcje milionów akcji, których cena regulowana jest przez wolny rynek. Wynikiem tego jest duża zmienność cen i nieprzewidywalność akcji. Jest ona spowodowana między innymi: spekulacjami inwestorów, upublicznianiem informacji o konkretnej spółce (np. raportów finansowych) lub wydarzeniami na arenie politycznej (np. ustawy wpływające na działalność spólek z konkretnego sektora). Poprawne przewidywanie zmian cen giełdowych oznacza dla inwestora możliwość wypracowania zysków na obrocie akcjami.
+ Jednym z wymienianych na giełdzie towarów są akcje różnorodnych spółek. Każda spółka, która uczestniczy w obrocie na rynku regulowanym, jakim jest giełda, ma przypisany do siebie symbol giełdowy (\textit{ticker}). Symbol giełdowy jest skrótowym kodem służącym do identyfikowania spółek na określonej giełdzie (przykładowe symbole: \textit{GOOGL}, \textit{MSFT}, \textit{AMZN}). Podczas każdej sesji dokonywane są transakcje milionów akcji, których cena regulowana jest przez wolny rynek. Wynikiem tego jest duża zmienność i nieprzewidywalność cen akcji. Jest ona spowodowana między innymi: spekulacjami inwestorów, upublicznianiem informacji o konkretnej spółce (np. raportów finansowych) lub wydarzeniami na arenie politycznej (np. ustawy wpływające na działalność spólek z konkretnego sektora). Poprawne przewidywanie zmian cen giełdowych oznacza dla inwestora możliwość wypracowania zysków na obrocie akcjami.
  
 \bigskip
 
@@ -286,9 +286,9 @@ Analiza fundamentalna \cite{fundamentalanalysis} spółek jest analizą ich kond
 \item{analiza ogólnej sytuacji spółki}.
 \end{itemize}
 
-Ten rodzaj badania spółek jest niezwykle czasochłonny i często wymaga eksperckiej wiedzy w dziedzinie finansów. Dodatkowo analiza fundamentalna wymaga posiadania danych (publicznych aczkolwiek czasami ciężko dostępnych) o spółkach i sektorach, w których się znajdują. Analizę fundamentalną stosuje się w szczególności przy inwestycjach długoterminowych (np. trwających kilka miesięcy).
+Ten rodzaj badania spółek jest niezwykle czasochłonny i często wymaga eksperckiej wiedzy w dziedzinie finansów. Dodatkowo analiza fundamentalna wymaga posiadania danych (publicznych, aczkolwiek czasami ciężko dostępnych) o spółkach i sektorach, w których się znajdują. Analizę fundamentalną stosuje się w szczególności przy inwestycjach długoterminowych (np. trwających kilka miesięcy).
 
-Najsłynniejszym analitykiem technicznym świata jest \textit{Warren Buffet} prezes amerykańskiego holdingu \textit{Berkshire Hathaway \cite{berkeshire}}. 
+Najsłynniejszym analitykiem fundamentalnym świata jest \textit{Warren Buffet} prezes amerykańskiego holdingu \textit{Berkshire Hathaway \cite{berkeshire}}. 
 
 \subsubsection{Analiza techniczna}
 
@@ -309,7 +309,7 @@ W pracy zostało wykorzystane darmowe źródło danych giełdowych \textit{Alpha
 
 \bigskip
 
-Na giełdach papierów obecne są wartościowych tysiące spółek. Ze względu na ograniczone zasoby obliczeniowe oraz dostępność danych, badania zostały przeprowadzone na wybranych spółkach z giełdy \textit{NASDAQ} o największej kapitalizacji.
+Na giełdach papierów wartościowych obecne są tysiące spółek. Ze względu na ograniczone zasoby obliczeniowe oraz dostępność danych, badania zostały przeprowadzone na wybranych spółkach z giełdy \textit{NASDAQ} o największej kapitalizacji.
 
 \subsection{Predykcja}
 
@@ -343,18 +343,18 @@ Do tematu prognozowania cen akcji można podejść na dwa sposoby:
 \item{\textbf{binarny}, predykcja wzrostu lub spadku ceny - tak zwana predykcja trendu.}
 \end{itemize}
 
-Potencjalnie korzystniejszym podejściem jest przewidywanie dokładnych cen akcji, gdyż sposób ten zakłada  dokładniejsze aproksymowanie ceny. Jednakże z perspektywy inwestora istotniejszym od dokładnych wartości ceny są trendy. To właśnie różnice w cenach akcji pozwalają zyskać na ich obrocie. Wobec tego zamiast przewidywania dokładnej ceny zamknięcia warto przewidywać wzrosty oraz spadki cen. W przeciwieństwie do danych ciągłych, wyjściowe dane dyskretne  dają jasny sygnał o działaniach, jakie należy podjąć, aby zarobić. Z tego powodu jako podstawowe wyjście z modeli predykcyjnych wybrany został \textbf{trend binarny}.
+Pozornie korzystniejszym podejściem jest przewidywanie dokładnych cen akcji, gdyż sposób ten zakłada dokładniejsze aproksymowanie ceny. Jednakże z perspektywy inwestora istotniejszym od dokładnych wartości cen są trendy. To właśnie różnice w cenach akcji pozwalają zyskać na ich obrocie. Wobec tego zamiast przewidywania dokładnej ceny zamknięcia warto przewidywać wzrosty oraz spadki cen. W przeciwieństwie do danych ciągłych, wyjściowe dane dyskretne  dają jasny sygnał o działaniach, jakie należy podjąć, aby zarobić. Z tego powodu jako podstawowe wyjście z modeli predykcyjnych wybrany został \textbf{trend binarny}.
 
 \bigskip
 
-Ze względu na to jak przebiega obrót akcjami, binarne przewidywanie z dnia na dzień może jednak okazać się niedostosowane do rzeczywistości. Akcje kupuje i sprzedaje się za pośrednictwem domu maklerskiego, który pobiera prowizje za każdą dokonaną transakcję. Obecnie najniższe prowizje na polskim rynku są na poziomie $0.19\%$ za transakcję. Pojedyncza operacja dająca zarobić na przewidzianej cenie wymaga kupienia, a następnie sprzedania akcji, wobec czego łączna prowizja wyniesie przy zaokrągleniu $0.40\%$. Wszystkie wahania cen poniżej tej wartości są teoretycznie bez znaczenia dla inwestora, ponieważ nie da się na nich zarobić. W związku z powyższym wnioskowaniem należy zastosować model dyskretny, będący rozwinięciem modelu binarnego o dodatkową klasę - klasę utrzymania ceny w pewnych ramach. Wyszczególnione są wówczas trzy klasy:
+Ze względu na to jak przebiega obrót akcjami, binarne przewidywanie z dnia na dzień może jednak okazać się niedostosowane do rzeczywistości. Akcje kupuje i sprzedaje się za pośrednictwem domu maklerskiego, który pobiera prowizje za każdą dokonaną transakcję. Obecnie najniższe prowizje na polskim rynku są na poziomie $0.19\%$ za transakcję. Pojedyncza operacja dająca zarobić na przewidzianej cenie wymaga kupienia, a następnie sprzedania akcji, wobec czego łączna prowizja wyniesie w zaokrągleniu $0.40\%$. Wszystkie wahania cen poniżej tej wartości są teoretycznie bez znaczenia dla inwestora, ponieważ nie da się na nich zarobić. W związku z powyższym wnioskowaniem należy zastosować model dyskretny, będący rozwinięciem modelu binarnego o dodatkową klasę - klasę utrzymania ceny w pewnych ramach. Wyszczególnione są wówczas trzy klasy:
 \begin{itemize}
 \item spadek ceny poniżej $0.40\%$,
 \item wzrost ceny powyżej $0.40\%$,
 \item utrzymanie zmiany ceny w przedziale $(-0.40; 0.40)\%$.
 \end{itemize}
 
-Dla potwierdzenia zasadności takiego modelu, należy upewnić się, że dzienne wahania cen na giełdzie są wystarczające. Na rysunku \ref{img:googl_pct_change_last_30} można zaobserwować, iż zmiany w kursie często przekraczają $0.40\%$, w związku z czym transakcje przynoszące zysk można wykonywać regularnie. Wniosek ten potwierdza zasadność powyższej konstrukcji modeli. W związku z większym stopniem złożoności takiej klasyfikacji, może okazać się, że dane wejściowe nie pozwalają na odseparowanie tych trzech klas. 
+Dla potwierdzenia zasadności takiego modelu, należy upewnić się, że dzienne wahania cen na giełdzie są wystarczające. Na rysunku \ref{img:googl_pct_change_last_30} można zaobserwować, iż zmiany ceny często przekraczają $0.40\%$, w związku z czym transakcje przynoszące zysk można wykonywać regularnie. Wniosek ten potwierdza zasadność powyższej konstrukcji modeli. W związku z większym stopniem złożoności takiej klasyfikacji, może okazać się, że dane wejściowe nie pozwalają na odseparowanie tych trzech klas. 
 
 \begin{figure}[H]
 \centering \includegraphics[scale=0.9]{img/googl_pct_change_last_30}
@@ -383,12 +383,12 @@ W przypadku klasyfikacji binarnej (klasy A i B), każdą predykcję można przyp
 \item TN (ang. True Negative) - gdy przewidziano klasę B dla etykiety B.
 \end{itemize}
 
-Graficzną reprezentację podziału klasyfikacji na powyższe kategorie nazywamy \textit{macierzą błędu}. Zastosowanie miar opartych o tablicę błędów dla problemów z większą liczbą klas wymaga dodatkowych kroków. W celu policzenia wartości TP, FN, FP i TN należy wyróżnić konkretną klasę, a pozostałe klasy należy zagregować w sztuczną klasę przeciwną. W ten sposób należy wyliczyć konkretną miarę tyle razy, ile jest klas. Ostatecznym krokiem w celu uzyskania jednolitej oceny modelu jest, na przykład, wyliczenie średniej ważonej z wyników dla każdej z klas.
+Graficzną reprezentację podziału klasyfikacji na powyższe kategorie nazywamy \textit{macierzą błędu}. Zastosowanie miar opartych o macierz błędów dla problemów z większą liczbą klas wymaga dodatkowych kroków. W celu policzenia wartości TP, FN, FP i TN należy wyróżnić konkretną klasę, a pozostałe klasy należy zagregować w sztuczną klasę przeciwną. W ten sposób należy wyliczyć konkretną miarę tyle razy, ile jest klas. Ostatecznym krokiem w celu uzyskania jednolitej oceny modelu jest, na przykład, wyliczenie średniej ważonej z wyników dla każdej z klas.
 
 
 \subsubsection{Procent prawidłowych klasyfikacji}
 
-Jednym z najprostszych sposobów do oceny dokładności klasyfikatorów jest określenie procentu prawidłowych przypisań przykładu do klasy. Metoda ta może dawać złudzenie zadowalających wyników, w których występują duże różnice w licznościach poszczególnych klas. Rozważmy dla takiego zadania naiwny model przypisujący do każdego postawionego przykładu klasę, której liczebność jest największa. Wówczas wyniki procentowe prawidłowej klasyfikacji będą wprost proporcjonalne do różnicy w~liczebności klasy największej w stosunku do innych klas. W większości przypadków, pomimo dobrego wyniku, model taki będzie uznany za bezużyteczny. Wobec tego powyższą miarę jakości należy stosować wraz z innymi miarami, które nie są podatne na tego typu zaburzenia.
+Jednym z najprostszych sposobów do oceny dokładności klasyfikatorów jest określenie procentu prawidłowych przypisań przykładu do klasy. W problemach gdzie występują duże różnice w licznościach poszczególnych klas, metoda ta może dawać mylące pozytywne wyniki. Rozważmy dla takiego problemu naiwny model przypisujący do każdego postawionego przykładu klasę, której liczebność jest największa. Wówczas wynik dla tego modelu będzie równy procentowemu udziałowi najliczniejszej klasy w całym zbiorze danych. Dla większości problemów, pomimo dobrego wyniku, model taki będzie uznany za bezużyteczny. Wobec tego powyższą miarę jakości należy stosować wraz z innymi miarami, które nie są podatne na tego typu zaburzenia.
 
 \subsubsection{Pole AUC pod krzywą ROC}
 
@@ -489,7 +489,7 @@ Ten model podziału jest najbardziej powszechny pośród zagadnień klasyfikacyj
 \begin{figure}[H]
 \centering 
 \includegraphics[scale=0.75]{img/train_test_split_time_series.png}
-\caption{Podział danych na zbiór treningowy i testowy metodą kroczącą \cite{train_test_split_time_series}.}
+\caption{Podział danych na zbiór treningowy i testowy metodą kroczącą (kolejne wiersze oznaczają kolejne iteracje podziału zbioru danych) \cite{train_test_split_time_series}.}
 \label{img:train_test_split_time_series}
 \end{figure}
 
@@ -498,7 +498,7 @@ Wykorzystanie metody kroczącej do podziału zbioru danych pozwala zmaksymalizow
 
 \subsection{Wnioski i uwagi}
 
-Do zagadnienia predykcji cen na giełdzie można podchodzić na kilka sposobów. Najbardziej intuicyjnym rozwiązaniem z perspektywy początkującego inwestora, jest model, który na wyjściu wyznacza jaką akcję powinien wykonać inwestor w stosunku do akcji konkretnej spółki. Doświadczony makler do wyznaczania cen zapewne wybrałby model regresyjny, który poza określeniem trendu daje możliwość oceny jak duże są wahania ceny. Dzięki temu mógłby dobrać spółki, dla których wzrost cen będzie największy. Przy ocenie jakości regresji błąd jest zazwyczaj określany za pomocą odległości przewidywanej wartości ceny od rzeczywistej wartości ceny. Informacja, że dany model aproksymuje wartość ceny z błędem $\pm 5 \$$ jest ciężka do zinterpretowania wprost. Na podstawie takiej oceny makler nie jest w stanie bezpośrednio stwierdzić, czy taki model nadaje się do użycia na giełdzie. Dla zagadnienia klasyfikacji błąd jest określony jako procent prawidłowych klasyfikacji, daje więc dużo lepsze wyobrażenie na temat jakości i możliwości wykorzystania modelu do obrotu akcjami.
+Do zagadnienia predykcji cen na giełdzie można podchodzić na kilka sposobów. Najbardziej intuicyjnym rozwiązaniem z perspektywy początkującego inwestora jest model, który na wyjściu wyznacza, jaką akcję powinien wykonać inwestor w stosunku do akcji konkretnej spółki. Doświadczony makler do wyznaczania cen zapewne wybrałby model regresyjny, który poza określeniem trendu daje możliwość oceny jak duże są wahania ceny. Dzięki temu mógłby dobrać spółki, dla których wzrost cen będzie największy. Przy ocenie jakości regresji błąd jest zazwyczaj określany za pomocą odległości przewidywanej wartości ceny od rzeczywistej wartości ceny. Informacja, że dany model aproksymuje wartość ceny z błędem $\pm 5$ USD jest ciężka do zinterpretowania wprost. Na podstawie takiej oceny makler nie jest w stanie bezpośrednio stwierdzić, czy taki model nadaje się do użycia na giełdzie. Dla zagadnienia klasyfikacji błąd jest określony jako procent prawidłowych klasyfikacji, daje więc dużo lepsze wyobrażenie na temat jakości i możliwości wykorzystania modelu do obrotu akcjami.
 
 \bigskip
 
@@ -520,7 +520,7 @@ Analiza fundamentalna, ze względu na swoją długoterminową naturę (raporty f
 
 \bigskip
 
-Wszystkie dane wejściowe, wraz z opisami, zaprezentowane są w tabeli \ref{tab:data_columns_table}. Dane te mają charakter dzienny. Najnowsze informacje pochodzą z dnia \textit{t}, zaś przewidywaną ceną jest cena z dnia \textit{t+1}.
+Wszystkie dane wejściowe, wraz z opisami, zaprezentowane są w tabeli \ref{tab:data_columns_table}. Dane te mają charakter dzienny. Najnowsze informacje pochodzą z dnia \textit{t}, zaś przewidywana jest cena zamknięcia z dnia \textit{t+1}.
 
 \begin{longtable}[c]{| m{0.5cm} m{5cm} m{10cm}|} 
 
