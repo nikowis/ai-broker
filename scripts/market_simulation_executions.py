@@ -41,17 +41,17 @@ if __name__ == '__main__':
     # LightGBMSimulation(['INTC'], bench_params, date_simulation_start='2008-01-01', date_simulation_end='2009-01-01')
     # bench_params = LightGBMBenchmarkParams(False, benchmark_name='lgbm-market-simulation-discrete-crisis')
     # LightGBMSimulation(['INTC'], bench_params, date_simulation_start='2008-01-01', date_simulation_end='2009-01-01')
-    # bench_params = LightGBMBenchmarkParams(True, benchmark_name='lgbm-market-simulation-binary-summer')
-    # LightGBMSimulation(['INTC'], bench_params, date_simulation_start='2019-06-01', date_simulation_end='2019-08-14')
-    # bench_params = LightGBMBenchmarkParams(False, benchmark_name='lgbm-market-simulation-discrete-summer')
-    # LightGBMSimulation(['INTC'], bench_params, date_simulation_start='2019-06-01', date_simulation_end='2019-08-14')
+    bench_params = LightGBMBenchmarkParams(True, benchmark_name='lgbm-market-simulation-binary-2k19')
+    LightGBMSimulation(['GOOGL'], bench_params, date_simulation_start='2019-01-01', date_simulation_end='2019-07-1')
+    bench_params = LightGBMBenchmarkParams(False, benchmark_name='lgbm-market-simulation-discrete-2k19')
+    LightGBMSimulation(['GOOGL'], bench_params, date_simulation_start='2019-01-01', date_simulation_end='2019-07-1')
 
     # bench_params = NnBenchmarkParams(True, benchmark_name='nn-market-simulation-binary-crisis')
     # bench_params.walk_forward_test_window_size = 2
     # NnMarketSimulation(['INTC'], bench_params, date_simulation_start='2008-01-01', date_simulation_end='2009-01-01')
-    bench_params = NnBenchmarkParams(False, benchmark_name='nn-market-simulation-discrete-crisis')
-    bench_params.walk_forward_test_window_size = 2
-    NnMarketSimulation(['INTC'], bench_params, date_simulation_start='2008-01-01', date_simulation_end='2009-01-01')
+    # bench_params = NnBenchmarkParams(False, benchmark_name='nn-market-simulation-discrete-crisis')
+    # bench_params.walk_forward_test_window_size = 2
+    # NnMarketSimulation(['INTC'], bench_params, date_simulation_start='2008-01-01', date_simulation_end='2009-01-01')
 
     # bench_params = NnBenchmarkParams(True, benchmark_name='nn-market-simulation-binary-summer')
     # bench_params.walk_forward_test_window_size = 2

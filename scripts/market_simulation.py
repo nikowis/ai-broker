@@ -29,7 +29,7 @@ CSV_PRICE_COL = 'price'
 CSV_TRAIN_TIME_COL = 'train_time'
 
 TRANSACTION_PERCENT_FEE = 0.003
-AVERAGE_SPREAD = 0.003
+AVERAGE_SPREAD = 0.002
 
 
 class MarketSimulation:
