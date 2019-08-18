@@ -392,7 +392,7 @@ Jednym z najprostszych sposobów do oceny dokładności klasyfikatorów jest okr
 
 \subsubsection{Pole AUC pod krzywą ROC}
 
-Krzywa ROC (ang. Receiver Operating Characteristic)\cite{roc} jest narzędziem, które opisuje dokładność klasyfikatora za pomocą oceny jego czułości i precyzji. Precyzją modelu nazywa się stosunek $\frac{TP}{TP+FP}$, zaś czułość jest oznaczona poprzez stosunek $\frac{TP}{TP+FN}$.
+Krzywa ROC (ang. Receiver Operating Characteristic) \cite{roc} jest narzędziem, które opisuje dokładność klasyfikatora za pomocą oceny jego czułości i precyzji. Precyzją modelu nazywa się stosunek $\frac{TP}{TP+FP}$, zaś czułość jest oznaczona poprzez stosunek $\frac{TP}{TP+FN}$.
 
 \bigskip
 
@@ -498,9 +498,11 @@ Wykorzystanie metody kroczącej do podziału zbioru danych pozwala zmaksymalizow
 
 \subsection{Wnioski i uwagi}
 
-Do zagadnienia predykcji cen na giełdzie można podchodzić na kilka sposobów. Najbardziej intuicyjnym rozwiązaniem z perspektywy początkującego inwestora jest model, który na wyjściu wyznacza, jaką akcję powinien wykonać inwestor w stosunku do akcji konkretnej spółki. Doświadczony makler do wyznaczania cen zapewne wybrałby model regresyjny, który poza określeniem trendu daje możliwość oceny jak duże są wahania ceny. Dzięki temu mógłby dobrać spółki, dla których wzrost cen będzie największy. Przy ocenie jakości regresji błąd jest zazwyczaj określany za pomocą odległości przewidywanej wartości ceny od rzeczywistej wartości ceny. Informacja, że dany model aproksymuje wartość ceny z błędem $\pm 5$ USD jest ciężka do zinterpretowania wprost. Na podstawie takiej oceny makler nie jest w stanie bezpośrednio stwierdzić, czy taki model nadaje się do użycia na giełdzie. Dla zagadnienia klasyfikacji błąd jest określony jako procent prawidłowych klasyfikacji, daje więc dużo lepsze wyobrażenie na temat jakości i możliwości wykorzystania modelu do obrotu akcjami.
+Do zagadnienia predykcji cen na giełdzie można podchodzić na kilka sposobów. Najbardziej intuicyjnym rozwiązaniem z perspektywy początkującego inwestora jest model, który na wyjściu wyznacza, jaką akcję powinien wykonać inwestor w stosunku do akcji konkretnej spółki. Doświadczony makler do wyznaczania cen zapewne wybrałby model regresyjny, który poza określeniem trendu daje możliwość oceny jak duże są wahania ceny. Dzięki temu mógłby dobrać spółki, dla których wzrost cen będzie największy. Przy ocenie jakości regresji błąd jest zazwyczaj określany za pomocą odległości przewidywanej wartości ceny od rzeczywistej wartości ceny. Informacja, że dany model aproksymuje wartość ceny z błędem $\pm 5$ USD jest ciężka do zinterpretowania wprost. Na podstawie takiej oceny makler nie jest w stanie bezpośrednio stwierdzić, czy taki model nadaje się do użycia na giełdzie.
 
 \bigskip
+
+ Dla zagadnienia klasyfikacji błąd jest określony jako procent prawidłowych klasyfikacji, daje więc dużo lepsze wyobrażenie na temat jakości i możliwości wykorzystania modelu do obrotu akcjami. Miara dokładności wyrażona w procentach prawidłowych klasyfikacji nie jest jednak wystarczająca do porównywania modeli ze względu na swoje niedoskonałości. Jeżeli wyniki procentowej dokładności są do siebie zbliżone, wówczas należy użyć dodatkowej miary jakości. Wobec tego do dokładniejszej analizy porównawczej modeli użyta została miara \textit{AUC}.
 
 \newpage
 
@@ -612,7 +614,7 @@ Na rysunku \ref{img:non_stationary_adjusted_close} zauważyć można zjawisko ni
 
 \begin{figure}[H]
 \centering 
-\includegraphics[scale=0.9]{img/GOOGL_adj_close.pdf}
+\includegraphics[scale=0.8]{img/GOOGL_adj_close.pdf}
 \caption{Wykres cen akcji spółki \textit{Alphabet Inc} (opracowanie własne).}
 \label{img:non_stationary_adjusted_close}
 \end{figure}
@@ -622,7 +624,7 @@ Zjawisko niestacjonarności szeregów czasowych negatywnie wpływa na wykorzysty
 
 \begin{figure}[H]
 \centering 
-\includegraphics[scale=0.9]{img/adjusted_close_stationary.pdf}
+\includegraphics[scale=0.8]{img/adjusted_close_stationary.pdf}
 \caption{Wykres cen akcji spółki \textit{Alphabet Inc} po przetworzeniu (opracowanie własne).}
 \label{img:stationary_adjusted_close}
 \end{figure}
@@ -702,7 +704,7 @@ Redukcja rozmiaru danych wejściowych jest zagadnieniem pozwalającym na poradze
 
 \begin{figure}[H]
 \centering 
-\includegraphics[scale=0.6]{img/corr_matrix.pdf}
+\includegraphics[scale=0.65]{img/corr_matrix.pdf}
 \caption{Macierz korelacji par zmiennych (opracowanie własne).}
 \label{img:correlation}
 \end{figure}
@@ -734,7 +736,7 @@ RSI-5 & RSI-10 &  0.964811 \\
 \end{table}
 
 
-Po odrzuceniu najmocniej skorelowanych danych można skorzystać z jednej z metod redukcji wymiaru zadania wejściowego, jaką jest \textbf{analiza głównych składowych} (ang. principal component analysis). Jest to statystyczna metoda analizy czynnikowej, która modyfikuje układ współrzędnych w taki sposób, aby maksymalizować wariancję kolejnych zmiennych. Dzięki temu tworzona jest nowa przestrzeń obserwacji, w której najwięcej zmienności przedstawiają początkowe czynniki. Metoda ta opiera się o macierz korelacji lub macierz kowariancji stworzonej z danych wejściowych. Rozmiar wejścia redukowany jest poprzez wybranie czynników, które reprezentują największą część wariancji w zbiorze danych. Stosunek liczby wybranych zmiennych do procenta całkowitej wariancji zbioru danych przedstawiony jest na rysunku \ref{img:pca_variance}. Zawarcie $90\%$ wariancji wymaga użycia 8 składowych,  $95\%$ wariancji wymaga użycia 12 składowych, $99\%$ wariancji wymaga użycia 19 składowych. Wybranie wartości $99\%$ wariancji pozwala ograniczyć rozmiar wejściowego wektora o ponad połowę bez utraty informacji w nim zawartych.
+Po odrzuceniu najmocniej skorelowanych danych można skorzystać z jednej z metod redukcji wymiaru zadania wejściowego, jaką jest \textbf{analiza głównych składowych} (ang. Principal Component Analysis). Jest to statystyczna metoda analizy czynnikowej, która modyfikuje układ współrzędnych w taki sposób, aby maksymalizować wariancję kolejnych zmiennych. Dzięki temu tworzona jest nowa przestrzeń obserwacji, w której najwięcej zmienności przedstawiają początkowe czynniki. Metoda ta opiera się o macierz korelacji lub macierz kowariancji stworzonej z danych wejściowych. Rozmiar wejścia redukowany jest poprzez wybranie czynników, które reprezentują największą część wariancji w zbiorze danych. Stosunek liczby wybranych zmiennych do procenta całkowitej wariancji zbioru danych przedstawiony jest na rysunku \ref{img:pca_variance}. Zawarcie $90\%$ wariancji wymaga użycia 8 składowych,  $95\%$ wariancji wymaga użycia 12 składowych, $99\%$ wariancji wymaga użycia 19 składowych. Wybranie wartości $99\%$ wariancji pozwala ograniczyć rozmiar wejściowego wektora o ponad połowę bez utraty informacji w nim zawartych.
 
 \begin{figure}[H]
 \centering 
@@ -742,6 +744,10 @@ Po odrzuceniu najmocniej skorelowanych danych można skorzystać z jednej z meto
 \caption{Liczba składowych, a całkowita wariancja zbioru (opracowanie własne).}
 \label{img:pca_variance}
 \end{figure}
+
+\subsection{Wnioski i uwagi}
+
+Dane pobrane bezpośrednio z giełdy nie nadają się do bezpośredniego użycia w zagadnieniach uczenia maszynowego. Dane te należy poddać odpowiedniej obróbce, która wyeliminuje braki w rekordach oraz dostosuje dane . W przypadku szeregów czasowych należy również pamiętać o wyeliminowaniu zjawiska niestacjonarności dla konkretnych cech.  W problemach, w których dostępna jest duża liczba cech wejściowych, warto rozważyć ich redukcję zachowując najprzydatniejsze informacje. Użytą w tej pracy metodą jest powszechnie używana w zagadnieniach przetwarzania danych analiza głównych składowych (\textit{PCA}). 
 
 \newpage
 
@@ -813,7 +819,7 @@ Najprostszą implementacja sieci do predykcji danych giełdowych jest sieć przy
 Las losowy (ang. Random Forest)\cite{randforest} jest modelem opartym o drzewa decyzyjne służącym do klasyfikacji lub regresji. Drzewa decyzyjne są graficzną metodą wspomagania procesu decyzyjnego. W przypadku zagadnień uczenia maszynowego drzewa decyzyje najprościej zobrazować na przykładzie problemu klasyfikacji binarnej. Na rysunku \ref{img:wiki_dec_tree} przedstawione zostało drzewo decyzyjne dla problemu predykcji losu pasażerów statku Titanic. Drzewo to oparte jest o trzy cechy: płeć, wiek oraz liczbę rodzeństwa oraz współmałżonków (\textit{sibsp}). 
 
 \begin{figure}[H]
-\centering \includegraphics[scale=0.6]{img/decision_tree.png}
+\centering \includegraphics[scale=0.7]{img/decision_tree.png}
 \caption{Drzewo decyzyjne dla problemu klasyfikacji losu pasażerów statku Titanic \cite{wikidecisiontree}.}
 \label{img:wiki_dec_tree}
 \end{figure}
@@ -822,18 +828,18 @@ Dla złożonych zagadnień predykcji, takich jak przewidywanie trendu giełdy, d
 
 \subsection{Light GBM}
 
-\textit{Light GBM} (Light Gradient Boosting Machine)\cite{lgbm} jest algorytmem z rodziny \textit{gradient boosting decision trees}. Algorytmy te oparte są o zespół drzew decyzyjnych. W~przeciwieństwie do metody \textit{lasu losowego} konstrukcja kolejnych drzew jest wykonywana w sposób sekwencyjny, oraz zależny od wyników poprzednich drzew. Dzięki takiemu zabiegowi, zespół drzew dąży do ulepszenia swoich wyników jako całości. Algorytm \textit{light GBM} przewyższa inne algorytmy ze swojej klasy takie jak \textit{XGBoost} dzięki innemu podejściu do tworzenia drzew. Podczas gdy większość algorytmów powiększa drzewa decyzyjne wgłąb (\textit{level-wise}  rysunek \ref{img:level-wise}), \textit{light GBM} powiększa drzewa decyzyjne ze względu na liście (\textit{leaf-wise} rysunek \ref{img:leaf-wise}). Ten zabieg wraz z innymi optymalizacjami sprawia, że algorytm ten osiąga porównywalne wyniki do innych algorytmów ze swojej klasy, przy dużym skrócenia czasu uczenia się. 
+\textit{Light GBM} (Light Gradient Boosting Machine) \cite{lgbm} jest algorytmem z rodziny \textit{gradient boosting decision trees}. Algorytmy te oparte są o zespół drzew decyzyjnych. W~przeciwieństwie do metody \textit{lasu losowego} konstrukcja kolejnych drzew jest wykonywana w sposób sekwencyjny, oraz zależny od wyników poprzednich drzew. Dzięki takiemu zabiegowi, zespół drzew dąży do ulepszenia swoich wyników jako całości. Algorytm \textit{light GBM} przewyższa inne algorytmy ze swojej klasy takie jak \textit{XGBoost} dzięki innemu podejściu do tworzenia drzew. Podczas gdy większość algorytmów powiększa drzewa decyzyjne wgłąb (\textit{level-wise}  rysunek \ref{img:level-wise}), \textit{light GBM} powiększa drzewa decyzyjne ze względu na liście (\textit{leaf-wise} rysunek \ref{img:leaf-wise}). Ten zabieg wraz z innymi optymalizacjami sprawia, że algorytm ten osiąga porównywalne wyniki do innych algorytmów ze swojej klasy, przy dużym skrócenia czasu uczenia się. 
 
 
 \begin{figure}[H]%
 \centering
 \subfigure[Konstrukcja drzewa algorytmu \textit{XGBoost}.]{%
 \label{img:level-wise}
-\includegraphics[scale=0.46]{img/lgbm-level-wise.png}}%
+\includegraphics[scale=0.7]{img/lgbm-level-wise.png}}%
 \qquad
 \subfigure[Konstrukcja drzewa algorytmu \textit{Light GBM}.]{%
 \label{img:leaf-wise}
-\includegraphics[scale=0.46]{img/lgbm-leaf-wise.png}}%
+\includegraphics[scale=0.7]{img/lgbm-leaf-wise.png}}%
 \caption{Porównanie konstrukcji drzew algorytmów z rodziny \textit{gradient boosting decision trees} \cite{dectreescompare}.}
 \label{img:level-leaf-wise}
 \end{figure}
@@ -841,7 +847,13 @@ Dla złożonych zagadnień predykcji, takich jak przewidywanie trendu giełdy, d
 
 \subsection{Wnioski i uwagi}
 
-Predykcja kursu cen na giełdzie jest zagadnieniem zaawansowanym pod względem trudności i złożoności danych. Z tego powodu w tej pracy zastosowane zostały różnorodne modele klasyfikacyjne zgodne z najnowszymi trendami w dziedzinie uczenia maszynowego. Użycie zarówno tradycyjnych modeli sieci neuronowych, jak i nowoczesnych technik, takich jak algorytm \textit{Light GBM}, pozwoliło na obszerne badanie w zakresie poszukiwania najlepszego klasyfikatora.
+Predykcja kursu cen na giełdzie jest zagadnieniem zaawansowanym pod względem trudności i złożoności danych. Z tego powodu w tej pracy zastosowane zostały różnorodne modele klasyfikacyjne zgodne z najnowszymi trendami w dziedzinie uczenia maszynowego. Użycie zarówno tradycyjnych modeli sieci neuronowych, jak i nowoczesnych technik, takich jak algorytm \textit{Light GBM}, pozwoliło na obszerne badanie w zakresie poszukiwania najlepszego klasyfikatora. 
+
+\bigskip
+
+Każdy z powyższych modeli jest oparty o inną koncepcję. Jest to szczególnie istotne, ponieważ nie można stwierdzić \textit{a priori}, jaka technika najlepiej poradzi sobie z wyprowadzeniem wniosków z tak skomplikowanych danych. Wobec tego końcowe wyniki klasyfikacji dla każdego z modeli najprawdopodobniej będą się diametralnie od siebie różnić. 
+
+\bigskip
 
 \newpage
 
@@ -1399,7 +1411,7 @@ Kolejnym parametrem, który został wykorzystany do optymalizacji modelu \textit
 90              &  0.520861 &  0.509935 &    0.222998 \\
 100              &  0.518170 &  0.522937 &    0.354000 \\ \hline
     \end{tabular}
-    \caption{\textit{Light GBM}: wyniki klasyfikacji binarnej w zależności od procenta cech wykorzystanych do tworzenia pojedynczego drzewa.}
+    \caption{\textit{Light GBM}: wyniki klasyfikacji binarnej w zależności od procenta cech wykorzystanych do konstruowania pojedynczego drzewa.}
     \label{tab:lgbm_feature_fraction_binary}
 \end{table}
 
@@ -1419,7 +1431,7 @@ Kolejnym parametrem, który został wykorzystany do optymalizacji modelu \textit
 90             &  0.368775 &  0.538629 &   10.570999 \\
 100              &  0.360700 &  0.537781 &    9.501997 \\ \hline
     \end{tabular}
-    \caption{\textit{Light GBM}: wyniki klasyfikacji na 3 klasy w zależności od procenta cech wykorzystanych do tworzenia pojedynczego drzewa.}
+    \caption{\textit{Light GBM}: wyniki klasyfikacji na 3 klasy w zależności od procenta cech wykorzystanych do konstruowania pojedynczego drzewa.}
     \label{tab:lgbm_feature_fraction_discrete}
 \end{table}
 
@@ -1539,7 +1551,7 @@ max   						 &  0.386272 &  0.545294 &    0.239276 \\ \hline
     \label{tab:lgbm_walk_forward_discrete}
 \end{table}
 
-\subsection{Podsumowanie i wnioski}
+\subsection{Wnioski i uwagi}
 
 Końcowe wyniki \textbf{klasyfikacji binarnej} dla każdego z klasyfikatorów zostały oparte o testy przeprowadzone na 10 spółkach. Wyniki dokładności dla każdej ze spółek zostały zawarte w tabeli \ref{tab:comparison_final_binary}, a średnie wyniki zostały przedstawione na rysunku \ref{img:summary-binary}. Dodatkowo podane zostały uśrednione wyniki dokładności i AUC dla każdego z modeli. 
 
@@ -1980,6 +1992,11 @@ Guolin Ke, Qi Meng, Thomas Finley, Taifeng Wang,Wei Chen, Weidong Ma, Qiwei Ye, 
 	Biblioteka scikit-learn implementacja SVM
 	\\\url{https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html#sklearn.svm.SVC}
 	\\Data dostępu: 23.06.2019
+	
+\bibitem{pycharm}
+	PyCharm IDE 
+	\\\url{https://www.jetbrains.com/pycharm/}
+	\\Data dostępu: 5.07.2019
 
 \bibitem{lightgbm:dart}
 	K. V. Rashmi, Ran Gilad-Bachrach
@@ -2004,10 +2021,10 @@ Guolin Ke, Qi Meng, Thomas Finley, Taifeng Wang,Wei Chen, Weidong Ma, Qiwei Ye, 
 
 \addcontentsline{toc}{section}{Dodatek: opis aplikacji}
 
-\section*{Dodatek: opis aplikacji}
+\section*{Dodatek. Opis aplikacji}
 
 
-Kod źródłowy dołączony do niniejszej pracy magisterskiej został napisany w języku \textit{Python 3.6}. Główne biblioteki użyte podczas realizacji projketu to:
+Kod źródłowy dołączony do niniejszej pracy magisterskiej został napisany w języku \textit{Python 3.6}. Jako edytor kodu oraz środowisko uruchomieniowe został użyty program \textit{Pycharm 2018.2} \cite{pycharm}. Główne biblioteki użyte podczas realizacji projektu to:
 \begin{itemize}
     \item \textit{numpy} - biblioteka do operacji na macierzach danych,
     \item \textit{pandas} - biblioteka do analizy i przetwarzania danych,

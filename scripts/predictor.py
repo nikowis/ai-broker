@@ -62,7 +62,7 @@ def teach_and_predict(params: NnBenchmarkParams, train_df, test_df):
 
 
 if __name__ == '__main__':
-    reimport = False
+    reimport = True
     imp = Importer()
     imp.import_all(SYMBOLS, reimport)
     imp.import_all_technical_indicators(SYMBOLS)
