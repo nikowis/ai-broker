@@ -237,7 +237,7 @@ Oświadczam, że pracę magisterską pod tytułem; „Metodyka porównania algor
 
 \section{Wprowadzenie}
 
-Zgodnie ze swoją definicją, giełda jest miejscem wymiany towarów przez sprzedawców i kupców. Giełdy, w zależności od przedmiotu obrotu, można podzielić na towarowe, pieniężne lub usługowe. Wymiany na tradycyjnych giełdach przebiegają przede wszystkim podczas sesji, które są organizowane w określonych dniach i godzinach. Najpopularniejszym rodzajem giełd są giełdy pieniężne, a w szczególności giełdy papierów wartościowych. Największymi giełdami papierów wartościowych są \textit{NYSE (New York Stock Exchange)}\cite{nyse}, \textit{Nasdaq}\cite{nasdaq} oraz \textit{JPX (Japan Exchange Group)}\cite{jpx}. Na każdej z tych giełd w dniach, w których prowadzone są sesje, dochodzi do transakcji opiewających na łączną kwotę rzędu miliardów dolarów amerykańskich.
+Giełda jest miejscem wymiany towarów przez sprzedawców i kupców. Giełdy, w zależności od przedmiotu obrotu, można podzielić na towarowe, pieniężne lub usługowe. Wymiany na tradycyjnych giełdach przebiegają przede wszystkim podczas sesji, które są organizowane w określonych dniach i godzinach. Najpopularniejszym rodzajem giełd są giełdy pieniężne, a w szczególności giełdy papierów wartościowych. Największymi giełdami papierów wartościowych są \textit{NYSE (New York Stock Exchange)}\cite{nyse}, \textit{Nasdaq}\cite{nasdaq} oraz \textit{JPX (Japan Exchange Group)}\cite{jpx}. Na każdej z tych giełd w dniach, w których prowadzone są sesje, dochodzi do transakcji opiewających na łączną kwotę rzędu miliardów dolarów amerykańskich.
 
 \bigskip
 
@@ -245,7 +245,7 @@ Zgodnie ze swoją definicją, giełda jest miejscem wymiany towarów przez sprze
  
 \bigskip
 
-Temat predykcji i spekulacji giełdowych był wielokrotnie poruszany na łamach prasy naukowej. Wielu naukowców pracowało nad predykcją dokładnej wartość ceny akcji na przykład za pomocą sieci radialnych (Guo \& Wang \& Yang \& Miller, 2015 \cite{paper_regression_radial}). Często można spotkać prace traktujące o problemie wyznaczania trendu ceny, a więc problemu klasyfikacji. Klasyfikacja trendu giełdowego za pomocą maszyn wektorów nośnych została opisana między innymi przez \textit{Kim} (2003) \cite{paper_classification_svm}. Większość prac skupia się jednak na przewidywaniu trendu indeksów, aniżeli konkretnych spółek (Kara \& Boyacioglu \& Baykan, 2011 \cite{paper_classification_index_istanbul}; Patel \& Shah \& Thakkar \& Kotecha, 2015 \cite{paper_classification_index_sp500}). Według najlepszej wiedzy autora tej pracy, brak jest źródeł naukowych opisujących prognozy dla konkretnych spółek giełdowych, wraz z wykorzystaniem przewidywanych wartości do wspomagania decyzji giełdowych. 
+Wielu naukowców pracowało nad predykcją dokładnej wartość ceny akcji na przykład za pomocą sieci radialnych (Guo \& Wang \& Yang \& Miller, 2015 \cite{paper_regression_radial}). Często można spotkać prace traktujące o problemie wyznaczania trendu ceny, a więc problemu klasyfikacji. Klasyfikacja trendu giełdowego za pomocą maszyn wektorów nośnych została opisana między innymi przez \textit{Kim} (2003) \cite{paper_classification_svm}. Większość prac skupia się jednak na przewidywaniu trendu indeksów, aniżeli konkretnych spółek (Kara \& Boyacioglu \& Baykan, 2011 \cite{paper_classification_index_istanbul}; Patel \& Shah \& Thakkar \& Kotecha, 2015 \cite{paper_classification_index_sp500}). Według wiedzy autora tej pracy, brak jest źródeł naukowych opisujących prognozy dla konkretnych spółek giełdowych, wraz z~wykorzystaniem przewidywanych wartości do wspomagania decyzji giełdowych. 
 
 \newpage
 
@@ -288,7 +288,7 @@ Analiza fundamentalna \cite{fundamentalanalysis} spółek jest analizą ich kond
 
 Ten rodzaj badania spółek jest niezwykle czasochłonny i często wymaga eksperckiej wiedzy w dziedzinie finansów. Dodatkowo analiza fundamentalna wymaga posiadania danych (publicznych, aczkolwiek czasami ciężko dostępnych) o spółkach i sektorach, w których się znajdują. Analizę fundamentalną stosuje się w szczególności przy inwestycjach długoterminowych (np. trwających kilka miesięcy).
 
-Najsłynniejszym analitykiem fundamentalnym świata jest \textit{Warren Buffet} prezes amerykańskiego holdingu \textit{Berkshire Hathaway \cite{berkeshire}}. 
+Najsłynniejszym analitykiem fundamentalnym jest \textit{Warren Buffet}, prezes amerykańskiego holdingu \textit{Berkshire Hathaway \cite{berkeshire}}. 
 
 \subsubsection{Analiza techniczna}
 
@@ -305,7 +305,7 @@ Najpopularniejsze wskaźniki techniczne obejmują:
 
 \subsubsection{Źródło danych}
 
-W pracy zostało wykorzystane darmowe źródło danych giełdowych \textit{Alpha Vantage} \cite{alphavantage}. Jest to API (ang. Application Programming Interface) pozwalające na pobranie historycznych danych giełdowych dla konkretnej spółki, poprzez podanie odpowiedniego symbolu giełdowego. Dostępne są zarówno podstawowe dane giełdowe, jak i wskaźniki analizy technicznej. 
+W pracy zostało wykorzystane bezpłatne źródło danych giełdowych \textit{Alpha Vantage} \cite{alphavantage}. Jest to API (ang. Application Programming Interface) pozwalające na pobranie historycznych danych giełdowych dla konkretnej spółki, poprzez podanie odpowiedniego symbolu giełdowego. Dostępne są zarówno podstawowe dane giełdowe, jak i wskaźniki analizy technicznej. 
 
 \bigskip
 
@@ -317,7 +317,7 @@ Na rysunku \ref{img:alphabet_history} widoczne są zmiany cen akcji spółki \te
 
  Zgodnie z \textit{hipotezą błądzenia losowego} \cite{randwalk}, krótkoterminowo, ceny akcji zmieniają się według nieprzewidywalnych schematów. Zmiany minutowe cen akcji są więc dużo trudniejsze do przewidzenia niż zmiany dobowe. 
  
- \textit{Hipoteza rynku efektywnego} \cite{efficientmarket} opiera się na założeniu, iż ceny obecne na giełdzie całkowicie odwzorowują wszystkie dostępne informacje na rynku. Oznacza to, że próby wyprzedzenia innych inwestorów na podstawie szybkiej reakcji na pojawiające się informacje nie będą skuteczne. Obie te hipotezy mają zarówno swoich zwolenników, jak i krytyków.
+ \textit{Hipoteza rynku efektywnego} \cite{efficientmarket} opiera się na założeniu, iż ceny obecne na giełdzie całkowicie odwzorowują wszystkie dostępne informacje na rynku. Oznacza to, że próby wyprzedzenia innych inwestorów na podstawie szybkiej reakcji na pojawiające się informacje nie będą skuteczne. Obie te hipotezy mają zarówno swoich zwolenników, jak i~krytyków.
 
 \begin{figure}[H]
 \centering \includegraphics[scale=0.9]{img/GOOGL_adj_close.png}
@@ -329,7 +329,7 @@ Rysunek \ref{img:alphabet_history} ilustruje fakt, że ceny zamknięcia akcji tw
 
 \subsubsection{Zakres prognozy}
 
-Przed przystąpieniem do konstruowania modeli predykcyjnych należy zdefiniować, co tak naprawdę warto przewidywać, bowiem każda akcja ma kilka atrybutów. Najbardziej pożytecznym parametrem akcji, którego wykorzystanie daje inwestorowi największe szanse na zysk, jest \textbf{cena zamknięcia}. Znajomość ceny zamknięcia z kolejnego dnia daje inwestorowi cały czas trwania sesji giełdowej na podjęcie skutecznych decyzji inwestycyjnych. Jest to najczęściej wybierany parametr akcji przy przewidywaniu ceny. Przykładem parametru, który nie jest istotny, jest liczba akcji w obrocie z kolejnych dni. Liczba ta sama w sobie nie niesie informacji o spadku lub wzroście cen.
+Przed przystąpieniem do konstruowania modeli predykcyjnych należy zdefiniować, co tak naprawdę warto przewidywać, bowiem każda akcja ma kilka atrybutów. Najbardziej pożytecznym parametrem akcji, którego wykorzystanie daje inwestorowi największe szanse na zysk, jest \textbf{cena zamknięcia}. Znajomość ceny zamknięcia z kolejnego dnia daje inwestorowi czas trwania sesji giełdowej na podjęcie skutecznych decyzji inwestycyjnych. Jest to najczęściej wybierany parametr akcji przy przewidywaniu ceny. Przykładem parametru, który nie jest istotny, jest liczba akcji w obrocie z kolejnych dni. Liczba ta sama w sobie nie niesie informacji o spadku lub wzroście cen.
 
 \bigskip
 
@@ -388,7 +388,7 @@ Graficzną reprezentację podziału klasyfikacji na powyższe kategorie nazywamy
 
 \subsubsection{Procent prawidłowych klasyfikacji}
 
-Jednym z najprostszych sposobów do oceny dokładności klasyfikatorów jest określenie procentu prawidłowych przypisań przykładu do klasy. W problemach gdzie występują duże różnice w licznościach poszczególnych klas, metoda ta może dawać mylące pozytywne wyniki. Rozważmy dla takiego problemu naiwny model przypisujący do każdego postawionego przykładu klasę, której liczebność jest największa. Wówczas wynik dla tego modelu będzie równy procentowemu udziałowi najliczniejszej klasy w całym zbiorze danych. Dla większości problemów, pomimo dobrego wyniku, model taki będzie uznany za bezużyteczny. Wobec tego powyższą miarę jakości należy stosować wraz z innymi miarami, które nie są podatne na tego typu zaburzenia.
+Jednym z najprostszych sposobów do oceny dokładności klasyfikatorów jest określenie procentu prawidłowych przypisań przykładu do klasy. W problemach, w których występują duże różnice w licznościach poszczególnych klas, metoda ta może dawać mylące pozytywne wyniki. Rozważmy dla takiego problemu naiwny model przypisujący do każdego postawionego przykładu klasę, której liczebność jest największa. Wówczas wynik dla tego modelu będzie równy procentowemu udziałowi najliczniejszej klasy w całym zbiorze danych. Dla większości problemów, pomimo dobrego wyniku, model taki będzie uznany za bezużyteczny. Wobec tego powyższą miarę jakości należy stosować wraz z innymi miarami, które nie są podatne na tego typu zaburzenia.
 
 \subsubsection{Pole AUC pod krzywą ROC}
 
@@ -557,7 +557,7 @@ Wszystkie dane wejściowe, wraz z opisami, zaprezentowane są w tabeli \ref{tab:
  13. & $MACD$ & Wskaźnik wyliczany z różnicy dwóch wykładniczych średnich kroczących.\\
  14. & $MACD\_SIGNAL$ & Wykładnicza średnia krocząca ze wskaźnika MACD \\
  15. & $ROC_{5}$ & Wskaźnik liczący procentową różnicę w cenie między dniem $t$ a $t-5$. \\
- 16. & $ROC_{10}$ & Wskaźnik liczący procentową różnicę w cenie między $t$ a $t-10$. \\
+ 16. & $ROC_{10}$ & Wskaźnik liczący procentową różnicę w cenie między $t$ a~$t-10$. \\
  17. & $ROC\_DIFF$ & $ROC_{10}-ROC_{5}$ \\
   18. & $MOM_{5}$ & Momentum - różnica w cenie między $t$ a $t-5$.  \\
  19. & $MOM_{10}$ & Momentum - różnica w cenie między $t$ a $t-10$. \\
@@ -700,7 +700,7 @@ W celu osiągnięcia etykiet do klasyfikacji, potrzeba wykonać dodatkowe kroki.
 
 \subsubsection{Redukcja danych wejściowych}
 
-Redukcja rozmiaru danych wejściowych jest zagadnieniem pozwalającym na poradzenie sobie ze zbyt dużą liczbą danych wejściowych. Jeżeli dwie zmienne są ze sobą mocno skorelowane, wówczas jedną z nich można odrzucić bez utraty zawartych w niej informacji. Macierz korelacji par zmiennych wejściowych przedstawiona jest na rysunku \ref{img:correlation}. Analizując macierz korelacji zauważyć można, że duża część zmiennych jest ze sobą mocno skorelowana (wartości bliskie $1$ oznaczają wysoką korelację, 0 brak korelacji, zaś $-1$ negatywną korelację).
+Redukcja rozmiaru danych wejściowych jest zagadnieniem pozwalającym na poradzenie sobie ze zbyt dużą liczbą danych wejściowych. Jeżeli dwie zmienne są ze sobą mocno skorelowane, wówczas jedną z nich można odrzucić bez utraty zawartych w niej informacji. Macierz korelacji par zmiennych wejściowych przedstawiona jest na rysunku \ref{img:correlation}. Analizując macierz korelacji, zauważyć można, że duża część zmiennych jest ze sobą mocno skorelowana (wartości bliskie $1$ oznaczają wysoką korelację, 0 brak korelacji, zaś $-1$ negatywną korelację).
 
 \begin{figure}[H]
 \centering 
@@ -753,7 +753,7 @@ Dane pobrane bezpośrednio z giełdy nie nadają się do bezpośredniego użycia
 
 \section{Wybrane algorytmy do prognozowania}
 
-Istnieje wiele algorytmów mogących posłużyć do zagadnień klasyfikacji lub regresji. W~tym rozdziale omówione zostały klasyfikatory, które później zostały użyte do predykcji na danych giełdowych.
+Istnieje szereg algorytmów mogących posłużyć do zagadnień klasyfikacji lub regresji. W~tym rozdziale omówione zostały klasyfikatory, które później zostały użyte do predykcji na danych giełdowych.
 
 \subsection{SVM}
 
@@ -778,7 +778,7 @@ W celu użycia maszyn wektorów nośnych do klasyfikacji problemów nieliniowych
 
 \subsection{Sztuczne sieci neuronowe}
 
-Sieci neuronowe \cite{neural-nets} są zbiorem modeli matematycznych służących do realizacji obliczeń lub przetwarzania sygnałów. Inspirowane działaniem mózgu, swoją nazwę czerpią z upodobnienia struktury do naturalnych neuronów oraz łączących je synaps. Głównymi zastosowaniami sieci neuronowych są zadania regresji, klasyfikacji oraz generowania danych. 
+Sieci neuronowe \cite{neural-nets} są zbiorem modeli służących do realizacji obliczeń lub przetwarzania sygnałów. Inspirowane działaniem mózgu, swoją nazwę czerpią z upodobnienia struktury do naturalnych neuronów oraz łączących je synaps. Głównymi zastosowaniami sieci neuronowych są zadania regresji, klasyfikacji oraz generowania danych. 
 
 \bigskip
 
@@ -828,7 +828,7 @@ Dla złożonych zagadnień predykcji, takich jak przewidywanie trendu giełdy, d
 
 \subsection{Light GBM}
 
-\textit{Light GBM} (Light Gradient Boosting Machine) \cite{lgbm} jest algorytmem z rodziny \textit{gradient boosting decision trees}. Algorytmy te oparte są o zespół drzew decyzyjnych. W~przeciwieństwie do metody \textit{lasu losowego} konstrukcja kolejnych drzew jest wykonywana w sposób sekwencyjny, oraz zależny od wyników poprzednich drzew. Dzięki takiemu zabiegowi, zespół drzew dąży do ulepszenia swoich wyników jako całości. Algorytm \textit{light GBM} przewyższa inne algorytmy ze swojej klasy takie jak \textit{XGBoost} dzięki innemu podejściu do tworzenia drzew. Podczas gdy większość algorytmów powiększa drzewa decyzyjne wgłąb (\textit{level-wise}  rysunek \ref{img:level-wise}), \textit{light GBM} powiększa drzewa decyzyjne ze względu na liście (\textit{leaf-wise} rysunek \ref{img:leaf-wise}). Ten zabieg wraz z innymi optymalizacjami sprawia, że algorytm ten osiąga porównywalne wyniki do innych algorytmów ze swojej klasy, przy dużym skrócenia czasu uczenia się. 
+\textit{Light GBM} (Light Gradient Boosting Machine) \cite{lgbm} jest algorytmem z rodziny \textit{gradient boosting decision trees}. Algorytmy te oparte są o zespół drzew decyzyjnych. W~przeciwieństwie do metody \textit{lasu losowego} konstrukcja kolejnych drzew jest wykonywana w sposób sekwencyjny, oraz zależny od wyników poprzednich drzew. Dzięki takiemu zabiegowi, zespół drzew dąży do ulepszenia swoich wyników jako całości. Algorytm \textit{light GBM} przewyższa inne algorytmy ze swojej klasy, takie jak \textit{XGBoost} dzięki innemu podejściu do tworzenia drzew. Podczas gdy większość algorytmów powiększa drzewa decyzyjne wgłąb (\textit{level-wise}  rysunek \ref{img:level-wise}), \textit{light GBM} powiększa drzewa decyzyjne ze względu na liście (\textit{leaf-wise} rysunek \ref{img:leaf-wise}). Ten zabieg wraz z innymi optymalizacjami sprawia, że algorytm ten osiąga porównywalne wyniki do innych algorytmów ze swojej klasy, przy dużym skrócenia czasu uczenia się. 
 
 
 \begin{figure}[H]%
@@ -910,11 +910,11 @@ Parametrem rozpatrywanym z osobna przy każdym z modeli jest użycie metody \tex
 
 \bigskip
 
-Kolejnym parametrem rozpatrywanym przy każdym modelu jest \textbf{rozmiar zbioru testowego} w kontekście uczenia metodą kroczącą. Domyślnie modele były uczone w jednej iteracji metody kroczącej z wielkością zbioru testowego równej $0,2$ całego zbioru danych. Dzieląc zbiór testowy na mniejsze części, w każdej iteracji włączając już przetestowane próbki danych do zbioru treningowego, potencjalnie powiększany jest zbiór informacji przekazywanych modelom w trakcie uczenia. Taki zabieg  powinien pozwolić na poprawę wyników i zbliżenie scenariusza testów do rzeczywistego wykorzystywania modelu predykcyjnego do handlu na giełdzie, gdzie model może być regularnie douczany wraz z upływem czasu. Poza maksymalnym rozmiarem zbioru testowego równego $0,2$ całego zbioru danych, wykorzystane zostały rozmiary $360, 180, 90, 45$ oraz $22$. Po każdym powiększeniu zbioru treningowego o nowe próbki, modele były uczone od zera, a ich jakość była oceniana na podstawie kolejnej partii zbioru testowego.
+Kolejnym parametrem rozpatrywanym przy każdym modelu jest \textbf{rozmiar zbioru testowego} w kontekście uczenia metodą kroczącą. Domyślnie modele były uczone w jednej iteracji metody kroczącej z wielkością zbioru testowego równej $0,2$ całego zbioru danych. Dzieląc zbiór testowy na mniejsze części, w każdej iteracji włączając już przetestowane próbki danych do zbioru treningowego, potencjalnie powiększany jest zbiór informacji przekazywanych modelom w trakcie uczenia. Taki zabieg  powinien pozwolić na poprawę wyników i zbliżenie scenariusza testów do rzeczywistego wykorzystywania modelu predykcyjnego do handlu na giełdzie, gdzie model może być regularnie douczany wraz z upływem czasu. Poza maksymalnym rozmiarem zbioru testowego równego $0,2$ całego zbioru danych, wykorzystane zostały rozmiary $360,\ 180,\ 90,\ 45$ oraz $22$. Po każdym powiększeniu zbioru treningowego o nowe próbki, modele były uczone od zera, a ich jakość była oceniana na podstawie kolejnej partii zbioru testowego.
 
 \subsection{SVM}
 
-Początkowo do testów SVM wykorzystane zostały domyślne parametry z biblioteki \textit{scikit-learn} \cite{bib:sklearnsvm}. Analizę optymalizacji maszyn wektorów nośnych należy zacząć od wyboru odpowiedniej funkcji jądra. Tabele \ref{tab:svm_kernel_binary} oraz \ref{tab:svm_kernel_discrete} przedstawiają wyniki klasyfikacji na 2 i~3 klasy w zależności od wybranej funkcji jądra. W obu przypadkach klasyfikacji maszyny wektorów nośnych dają wyniki zbliżone do klasyfikacji metodą losową. W klasyfikacji binarnej najlepszy wynik uzyskała funkcja wielomianowa (ang. \textit{poly}). Warto jednak zauważyć, iż dla tej funkcji metryka AUC jest równa $\sim 0,5014$, podczas gdy SVM z funkcją rbf uzyskał AUC na poziomie $\sim 0,5044$.
+Początkowo do testów SVM wykorzystane zostały domyślne parametry z biblioteki \textit{scikit-learn} \cite{bib:sklearnsvm}. Analizę optymalizacji maszyn wektorów nośnych należy zacząć od wyboru odpowiedniej funkcji jądra. Tabele \ref{tab:svm_kernel_binary} oraz \ref{tab:svm_kernel_discrete} przedstawiają wyniki klasyfikacji na 2~i~3 klasy w zależności od wybranej funkcji jądra. W obu przypadkach klasyfikacji maszyny wektorów nośnych dają wyniki zbliżone do klasyfikacji metodą losową. W klasyfikacji binarnej najlepszy wynik uzyskała funkcja wielomianowa (ang. \textit{poly}). Warto jednak zauważyć, iż dla tej funkcji metryka AUC jest równa $\sim 0,5014$, podczas gdy SVM z funkcją rbf uzyskał AUC na poziomie $\sim 0,5044$.
 
 \begin{table}[H]
     \centering
@@ -1465,7 +1465,7 @@ goss     &  \textbf{0,386083} &  \textbf{0,545501} &    0,642004 \\ \hline
     \label{tab:lgbm_boosting_discrete}
 \end{table}
 
-Następnym optymalizowanym parametrem była maksymalna liczba liści w każdym z drzew wygenerowanych przez algorytm. Domyślną wartością jest liczba 31 liści na każde drzewo. Wyniki tego eksperymentu zostały przedstawione w tabelach \ref{tab:lgbm_num_leaves_binary} oraz \ref{tab:lgbm_num_leaves_discrete}. Dla klasyfikacji binarnej należało zwiększyć liczbę liści do 100, zaś dla klasyfikacji na 3 klasy domyślną wartość trzeba było zmniejszyć do 20 liści na drzewo. 
+Następnym optymalizowanym parametrem była maksymalna liczba liści w każdym z~drzew wygenerowanych przez algorytm. Domyślną wartością jest liczba 31 liści na każde drzewo. Wyniki tego eksperymentu zostały przedstawione w tabelach \ref{tab:lgbm_num_leaves_binary} oraz \ref{tab:lgbm_num_leaves_discrete}. Dla klasyfikacji binarnej należało zwiększyć liczbę liści do 100, zaś dla klasyfikacji na 3 klasy domyślną wartość trzeba było zmniejszyć do 20 liści na drzewo. 
 
 \begin{table}[H]
     \centering
@@ -1642,7 +1642,7 @@ Klasyfikacja wieloklasowa jest jednak zauważalnie cięższym zagadnieniem od kl
 
 \bigskip
 
-Dodatkowo dla problemu wieloklasowego przeprowadzona została analiza jakości klasyfikacji konkretnych klas. Na wykresie \ref{img:lgbm_roc_amzn} przedstawione zostały krzywe ROC dla 3 klas, wraz z ich mikro-średnią, dla modelu \textit{Light GBM}. Analizując wykres łatwo zauważyć dysproporcję pomiędzy AUC poszczególnych klas. Model dla tej spółki zaskakująco dobrze radzi sobie z predykcją klasy \textit{utrzymanie}. Wynik AUC dla tej klasy jest aż o $0,14$ większy od pozostałych klas. Taka postać rzeczy nie jest jednak regułą. Dla różnych spółek miary AUC dla poszczególnych klas mogą być bardzo zróżnicowane. Taka rozbieżność może być problematyczna na etapie używania nauczonego modelu do predykcji. Im większa rozbieżność między AUC poszczególnych klas tym gorzej. Może się bowiem okazać, że dwa modele o porównywalnej mierze AUC będą uzyskiwały rozbieżne wyniki w grze na giełdzie. Hipotetycznie dany model mógłby w ogóle nie przypisywać wejściowych próbek do jednej z klas, zaś pozostałe klasy estymować z wysokim prawdopodobieństwem. Na przykład model nie wskazujący nigdy klasy spadku, nie dawałby sygnału do sprzedaży akcji. To całkowicie wyklucza jego praktyczne użycie.
+Dodatkowo dla problemu wieloklasowego przeprowadzona została analiza jakości klasyfikacji konkretnych klas. Na wykresie \ref{img:lgbm_roc_amzn} przedstawione zostały krzywe ROC dla 3 klas, wraz z ich mikro-średnią, dla modelu \textit{Light GBM}. Analizując wykres łatwo zauważyć dysproporcję pomiędzy AUC poszczególnych klas. Model dla tej spółki zaskakująco dobrze radzi sobie z predykcją klasy \textit{utrzymanie}. Wynik AUC dla tej klasy jest aż o $0,14$ większy od pozostałych klas. Taka postać rzeczy nie jest jednak regułą. Dla różnych spółek miary AUC dla poszczególnych klas mogą być bardzo zróżnicowane. Taka rozbieżność może być problematyczna na etapie używania nauczonego modelu do predykcji. Im większa rozbieżność między AUC poszczególnych klas tym gorzej. Może się bowiem okazać, że dwa modele o porównywalnej mierze AUC będą uzyskiwały rozbieżne wyniki w grze na giełdzie. Hipotetycznie dany model mógłby w ogóle nie przypisywać wejściowych próbek do jednej z klas, zaś pozostałe klasy estymować z wysokim prawdopodobieństwem. Na przykład model nie wskazujący klasy spadku, nie dawałby sygnału do sprzedaży akcji. To całkowicie wyklucza jego praktyczne użycie.
 
 \begin{figure}[H]
 \centering \includegraphics[scale=0.8]{img/AMZN_roc_lgbm.pdf}
@@ -1658,7 +1658,7 @@ Mając do wykorzystania klasyfikatory o wybranych parametrach, można przystąpi
 
 \bigskip
 
-Algorytm dokonujący transakcji opiera się na analizie kolejnych sesji giełdowych ze zbioru testowego. Jeżeli klasyfikator przewiduje wzrost ceny, algorytm kupuje maksymalną możliwą liczbę akcji (musi to być liczba naturalna, więc budżet nie zawsze jest całkowicie wykorzystany). Jeżeli algorytm jest w posiadaniu papierów wartościowych, a~klasyfikator daje sygnał utrzymania ceny lub wzrostu, algorytm pozostaje bezczynny. Jeżeli algorytm jest w posiadaniu papierów wartościowych, a klasyfikator daje sygnał spadku ceny, algorytm wyprzedaje wszystkie posiadane akcje. Ostatnim krokiem algorytmu jest spieniężenie wszelkich zakupionych akcji w ostatniej sesji ze zbioru testowego, w celu oszacowania zysków.
+Algorytm dokonujący transakcji opiera się na analizie kolejnych sesji giełdowych ze zbioru testowego. Jeżeli klasyfikator przewiduje wzrost ceny, algorytm kupuje maksymalną możliwą liczbę akcji (musi to być liczba naturalna, więc budżet nie zawsze jest całkowicie wykorzystany). Jeżeli algorytm jest w posiadaniu papierów wartościowych, a~klasyfikator daje sygnał utrzymania ceny lub wzrostu, algorytm pozostaje bezczynny. Jeżeli algorytm jest w posiadaniu papierów wartościowych, a klasyfikator daje sygnał spadku ceny, algorytm wyprzedaje wszystkie posiadane akcje. Ostatnim krokiem algorytmu jest spieniężenie wszelkich zakupionych akcji w~ostatniej sesji ze zbioru testowego, w~celu oszacowania zysków.
 
 \bigskip
 
@@ -1741,7 +1741,7 @@ W symulacjach handlu na giełdzie z pomocą klasyfikatorów, widoczna jest zale�
 \bigskip
 
 
-Analizę symulacji można pogłębić o wgląd w decyzje algorytmu. Rysunek \ref{img:amgn_wallet_buy_sell} przedstawia decyzje dokonywane przez algorytm używający klasyfikatora binarnego w zestawieniu z rzeczywistą ceną zamknięcia z każdego dnia. Na czerwono oznaczone są okresy, gdy klasyfikator przewidywał spadek lub utrzymanie ceny, a w portfelu znajdowała się gotówka. Na zielono oznaczone zostały okresy, gdy klasyfikator przewidywał wzrost lub utrzymanie ceny, a w portfelu znajdowały się akcje spółki \textit{AMGN}. Łatwo dostrzec, że klasyfikator ma największą dokładność w momentach gwałtownych spadków lub wzrostów ceny. W~przypadku delikatnych zmian, algorytm zazwyczaj nie zmienia strategii, co jest pożądanym zachowaniem, pozwalającym na uniknięcie częstych opłat transakcyjnych dla domu maklerskiego. Model nie jest jednak perfekcyjny i nie zawsze jest w stanie odpowiednio przewidzieć zmiany ceny. Widać to w szczególności w okresie końca maja 2019, gdy nastąpił znaczny spadek ceny, a model nie dał sygnału do sprzedaży akcji, co spowodowało utratę części kapitału.
+Analizę symulacji można pogłębić o wgląd w decyzje algorytmu. Rysunek \ref{img:amgn_wallet_buy_sell} przedstawia decyzje dokonywane przez algorytm używający klasyfikatora binarnego w zestawieniu z rzeczywistą ceną zamknięcia z każdego dnia. Na czerwono oznaczone są okresy, gdy klasyfikator przewidywał spadek lub utrzymanie ceny, a w portfelu znajdowała się gotówka. Na zielono oznaczone zostały okresy, gdy klasyfikator przewidywał wzrost lub utrzymanie ceny, a w portfelu znajdowały się akcje spółki \textit{AMGN}. Można dostrzec, że klasyfikator ma największą dokładność w momentach gwałtownych spadków lub wzrostów ceny. W~przypadku delikatnych zmian, algorytm zazwyczaj nie zmienia strategii, co jest pożądanym zachowaniem, pozwalającym na uniknięcie częstych opłat transakcyjnych dla domu maklerskiego. Model nie jest jednak perfekcyjny i nie zawsze jest w stanie odpowiednio przewidzieć zmiany ceny. Widać to w szczególności w okresie końca maja 2019, gdy nastąpił znaczny spadek ceny, a model nie dał sygnału do sprzedaży akcji, co spowodowało utratę części kapitału.
 
 \begin{figure}[H]
 \centering \includegraphics[scale=1.1]{img/AMGN-buy_and_sell_plot.pdf}
@@ -1749,7 +1749,7 @@ Analizę symulacji można pogłębić o wgląd w decyzje algorytmu. Rysunek \ref
 \label{img:amgn_wallet_buy_sell}
 \end{figure}
 
-Na rysunku \ref{img:amgn_wallet_value} przedstawiona zostałą wartość portfela algorytmu w zestawieniu z wartością portfela biernej inwestycji. To zestawienie pokazuje wyższość poprawnej predykcji nad biernym udziałem w giełdzie. Podczas gdy giełda odnotowuje spadki, klasyfikator spienięża akcje zachowując środki, zaś gdy ceny akcji rosną, algorytm poprawnie inwestuje zarabiając na wzroście ceny. W wykresach wartości obu portfeli widać znaczne podobieństwo, jednak straty dla portfela zarządzanego przez algorytm z klasyfikatorem są znacznie mniejsze. Pozwala to reinwestować większość kapitału i z czasem różnica pomiędzy wartością obu portfeli coraz bardziej rośnie.
+Na rysunku \ref{img:amgn_wallet_value} przedstawiono wartość portfela algorytmu w zestawieniu z wartością portfela biernej inwestycji. To zestawienie pokazuje wyższość poprawnej predykcji nad biernym udziałem w giełdzie. Podczas gdy giełda odnotowuje spadki, klasyfikator spienięża akcje zachowując środki, zaś gdy ceny akcji rosną, algorytm poprawnie inwestuje zarabiając na wzroście ceny. W wykresach wartości obu portfeli widać znaczne podobieństwo, jednak straty dla portfela zarządzanego przez algorytm z klasyfikatorem są znacznie mniejsze. Pozwala to reinwestować większość kapitału i z czasem różnica pomiędzy wartością obu portfeli coraz bardziej rośnie.
 
 \begin{figure}[H]
 \centering \includegraphics[scale=0.9]{img/AMGN-balance-plot.pdf}
@@ -1757,7 +1757,7 @@ Na rysunku \ref{img:amgn_wallet_value} przedstawiona zostałą wartość portfel
 \label{img:amgn_wallet_value}
 \end{figure}
 
-Warto dogłębniej zastanowić się nad użytecznością klasyfikacji na 3 klasy. Co prawda, średni zysk dla handlu na podstawie klasyfikacji binarnej był o kilka punktów procentowych wyższy, jednak wprowadzenie trzeciej klasy do podstawowego problemu niesie za sobą inną korzyść. W tabeli \ref{tab:simulation_avg_value_vs_transactions} przedstawiony został średni zysk dla najlepszych modeli oraz średnia liczba wykonanych transakcji podczas symulacji giełdowej.
+Warto zastanowić się nad użytecznością klasyfikacji na 3 klasy. Co prawda, średni zysk dla handlu na podstawie klasyfikacji binarnej był o kilka punktów procentowych wyższy, jednak wprowadzenie trzeciej klasy do podstawowego problemu niesie za sobą inną korzyść. W tabeli \ref{tab:simulation_avg_value_vs_transactions} przedstawiony został średni zysk dla najlepszych modeli oraz średnia liczba wykonanych transakcji podczas symulacji giełdowej.
 
  \begin{table}[H]
     \centering
@@ -2019,7 +2019,7 @@ Guolin Ke, Qi Meng, Thomas Finley, Taifeng Wang,Wei Chen, Weidong Ma, Qiwei Ye, 
 
 \newpage
 
-\addcontentsline{toc}{section}{Dodatek: opis aplikacji}
+\addcontentsline{toc}{section}{Dodatek. Opis aplikacji}
 
 \section*{Dodatek. Opis aplikacji}
 
