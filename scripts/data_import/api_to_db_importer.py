@@ -29,7 +29,7 @@ API_MAX_DAILY = 400
 SELECTED_SYM = 'GOOGL'
 
 # API_KEYS = ['W3IA0MGKNFNBHXTJ']
-API_KEYS = [ '41KVI2PCCMZ09Y69', 'I7RUE3LA4PSXDJU6', 'GZRMKKHORLBU3I8R', 'W3IA0MGKNFNBHXTJ', 'TX1OLY36K73S9MS9', 'yM2zzAs6_DxdeT86rtZY',  'ULDORYWPDU2S2E6X']
+API_KEYS = [ '41KVI2PCCMZ09Y69', 'yM2zzAs6_DxdeT86rtZY', 'GZRMKKHORLBU3I8R','I7RUE3LA4PSXDJU6',  'W3IA0MGKNFNBHXTJ', 'TX1OLY36K73S9MS9',  'ULDORYWPDU2S2E6X']
 
 
 class Importer:
@@ -180,6 +180,7 @@ class Importer:
         process = True
         for stock in stock_collection_raw.find({const.IMPORT_COMPLETED_KEY: True}):
             symbol = stock[const.SYMBOL_KEY]
+            print('Processing ', symbol)
             if stock_collection(self.db, True).count({const.SYMBOL_KEY: symbol}) > 0:
                 if reimport:
                     stock_collection(self.db, True).remove({const.SYMBOL_KEY: symbol})
