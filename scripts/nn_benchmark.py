@@ -59,12 +59,19 @@ class NnBenchmark(Benchmark):
 
 
 if __name__ == '__main__':
-    bench_params = benchmark_params.NnBenchmarkParams(False, examined_param='pca,regularizer',
-                                                      benchmark_name='bench-pca-regularizer')
-    bench_params.plot_partial = True
-    bench_params.pca = None
-    bench_params.iterations = 1
-    bench_params.walk_forward_testing = False
+
+    bench_params = benchmark_params.NnBenchmarkParams(
+        binary_classification=True
+        , examined_param='pca'
+        , benchmark_name='nn-benchmark-pca'
+
+    )
+    bench_params.iterations = 5
+    bench_params.walk_forward_testing = True
+    bench_params.walk_forward_test_window_size = 180
     bench_params.epochs = 10
-    bench_params.regularizer = 0.01
-    NnBenchmark(['GOOGL'], bench_params, {'regularizer': [None, 0.0025], 'pca': [0.9999]})
+    NnBenchmark(
+        ['GOOGL']
+        , bench_params
+        , changing_params_dict={'pca': [None, 0.9999, 0.999, 0.99]}
+    )

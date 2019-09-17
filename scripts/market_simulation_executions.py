@@ -1,5 +1,6 @@
 from benchmark_params import NnBenchmarkParams, LightGBMBenchmarkParams
 from market_simulation import NnMarketSimulation, LightGBMSimulation
+from stock_constants import BASE_COMPANIES
 
 if __name__ == '__main__':
     # bench_params = NnBenchmarkParams(True, benchmark_name='nn-market-simulation-binary-walk-forward-5')
@@ -16,8 +17,20 @@ if __name__ == '__main__':
     #     NnMarketSimulation([BASE_COMPANIES[i]], bench_params)
     #     print(datetime.datetime.now())
 
-    # bench_params = LightGBMBenchmarkParams(True, benchmark_name='lgbm-market-simulation-binary')
-    # LightGBMSimulation(BASE_COMPANIES, bench_params)
+    bench_params = LightGBMBenchmarkParams(
+        binary_classification=True
+        , benchmark_name='lgbm-market-simulation-binary'
+    )
+    LightGBMSimulation(
+        ['GOOGL', 'MSFT', 'AAPL', 'CSCO', 'INTC', 'FB', 'PEP', 'QCOM', 'AMZN', 'AMGN']
+        , bench_params
+        , date_simulation_start='2019-08-01'
+        , date_simulation_end='2019-09-01'
+        , budget=1000
+    )
+
+
+
     # bench_params = LightGBMBenchmarkParams(False, benchmark_name='lgbm-market-simulation-discrete')
     # LightGBMSimulation(BASE_COMPANIES, bench_params)
 
